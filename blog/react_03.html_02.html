@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>5. 폼(Form) 요소</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="#" class="nav-logo">dev.log</a>
+        <a href="#" class="nav-back">← 목록으로</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">HTML</span>
+          <span class="post-date">2025-03-10</span>
+        </div>
+        <h1 class="post-title">5. 폼(Form) 요소</h1>
+        <p class="post-subtitle">
+          로그인, 회원가입, 검색창까지. 사용자 데이터를 서버로 전송하는 모든
+          흐름의 시작, &lt;form&gt; 태그를 정리합니다.
+        </p>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER (본문 + 사이드바 TOC) -->
+    <div class="main-wrapper">
+      <!-- TOC SIDEBAR -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">목차</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-51"><span class="toc-num">5.1</span>폼(Form)</a>
+            </li>
+            <li>
+              <a href="#section-52"
+                ><span class="toc-num">5.2</span>주요 입력 태그와 속성</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#input">input</a></li>
+                <li><a href="#label">label</a></li>
+                <li><a href="#textarea">textarea</a></li>
+                <li><a href="#select">select · option</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-53"><span class="toc-num">5.3</span>버튼</a>
+            </li>
+            <li>
+              <a href="#section-54"
+                ><span class="toc-num">5.4</span>유효성 검사 속성</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <!-- 5.1 폼 -->
+        <section class="section" id="section-51">
+          <div class="sec-eyebrow">5.1</div>
+          <h2 class="sec-heading">폼(Form)</h2>
+
+          <p>
+            HTML에서 <strong>&lt;form&gt;</strong>은 사용자가 입력한 데이터를
+            <strong>서버로 전송하기 위한 입력 영역</strong>입니다.
+          </p>
+          <p>
+            로그인, 회원가입, 검색창, 설문조사 같은 기능이 모두 form을
+            사용합니다. 사용자가 입력한 데이터를 서버(백엔드)로 전송하기 위해
+            &lt;form&gt; 태그가 존재합니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">HTML</span>
+            </div>
+            <div class="code-body">
+              <pre><span class="t">&lt;</span><span class="tn">form</span> <span class="at">action</span>=<span class="av">"서버주소"</span> <span class="at">method</span>=<span class="av">"전송방식"</span><span class="t">&gt;</span>
+  <span class="cm">&lt;!-- 입력 요소들 --&gt;</span>
+<span class="t">&lt;/</span><span class="tn">form</span><span class="t">&gt;</span></pre>
+            </div>
+          </div>
+
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-title">action</div>
+              <p class="card-desc">
+                데이터를 보낼 목적지 URL<br /><strong>예</strong> /login,
+                /search
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-title">method</div>
+              <p class="card-desc">
+                데이터를 보내는 방법.<br /><strong>GET</strong> ·
+                <strong>POST</strong>
+              </p>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">GET vs POST</h3>
+
+          <div class="figure-row" style="width: 80%">
+            <figure class="post-figure">
+              <img
+                src="../assets/image1.png"
+                alt="GET 방식 설명 - URL에 파라미터를 붙여서 데이터를 전달하는 방식"
+                style="width: 80%"
+              />
+              <figcaption>GET — URL에 파라미터를 노출하여 전달</figcaption>
+            </figure>
+            <figure class="post-figure">
+              <img
+                src="../assets/image2.png"
+                alt="POST 방식 설명 - HTTP Request 헤더에 포함시켜 전달하는 방식"
+                style="width: 80%"
+              />
+              <figcaption>POST — HTTP 헤더에 데이터를 포함하여 전달</figcaption>
+            </figure>
+          </div>
+
+          <table style="width: 80%">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>GET</th>
+                <th>POST</th>
+              </tr>
+            </thead>
+            <tbody style="text-align: center">
+              <tr>
+                <td class="td-ko2" style="width: 20%">용도</td>
+                <td style="width: 40%">데이터 조회</td>
+                <td style="width: 40%">데이터 저장</td>
+              </tr>
+              <tr>
+                <td class="td-ko2">보안</td>
+                <td>낮음</td>
+                <td>상대적으로 높음</td>
+              </tr>
+              <tr>
+                <td class="td-ko2">길이 제한</td>
+                <td>있음</td>
+                <td>거의 없음</td>
+              </tr>
+              <tr>
+                <td class="td-ko2">캐싱</td>
+                <td>가능</td>
+                <td>불가능</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 5.2 주요 입력 태그 -->
+        <section class="section" id="section-52">
+          <div class="sec-eyebrow">5.2</div>
+          <h2 class="sec-heading">주요 입력 태그와 속성</h2>
+
+          <!-- input -->
+          <h3 class="sub-heading" id="input">input</h3>
+          <p>
+            가장 많이 쓰이며 <strong>type</strong> 속성에 따라 모습이 바뀝니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">HTML</span></div>
+            <div class="code-body">
+              <pre><span class="cm">&lt;!-- 텍스트 입력 --&gt;</span>
+<span class="t">&lt;</span><span class="tn">input</span> <span class="at">type</span>=<span class="av">"text"</span>     <span class="at">placeholder</span>=<span class="av">"이름을 입력하세요"</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">input</span> <span class="at">type</span>=<span class="av">"password"</span> <span class="at">placeholder</span>=<span class="av">"비밀번호"</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">input</span> <span class="at">type</span>=<span class="av">"email"</span>    <span class="at">placeholder</span>=<span class="av">"이메일 주소"</span><span class="t">&gt;</span>
+
+<span class="cm">&lt;!-- 숫자 입력 --&gt;</span>
+<span class="t">&lt;</span><span class="tn">label</span><span class="t">&gt;</span> 출생연도
+  <span class="t">&lt;</span><span class="tn">input</span> <span class="at">type</span>=<span class="av">"number"</span> <span class="at">min</span>=<span class="av">"1900"</span> <span class="at">max</span>=<span class="av">"2025"</span> <span class="at">value</span>=<span class="av">"2000"</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">label</span><span class="t">&gt;</span>
+
+<span class="cm">&lt;!-- 날짜 입력 --&gt;</span>
+<span class="t">&lt;</span><span class="tn">input</span> <span class="at">type</span>=<span class="av">"date"</span> <span class="at">name</span>=<span class="av">"birthday"</span><span class="t">&gt;</span>
+
+<span class="cm">&lt;!-- 체크박스(같은 name으로 그룹화 - 복수선택) --&gt;</span>
+<span class="t">&lt;</span><span class="tn">label</span><span class="t">&gt;&lt;</span><span class="tn">input</span> <span class="at">type</span>=<span class="av">"checkbox"</span> <span class="at">name</span>=<span class="av">"interests"</span> <span class="at">value</span>=<span class="av">"sports"</span><span class="t">/&gt;</span>스포츠<span class="t">&lt;/</span><span class="tn">label</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">label</span><span class="t">&gt;&lt;</span><span class="tn">input</span> <span class="at">type</span>=<span class="av">"checkbox"</span> <span class="at">name</span>=<span class="av">"interests"</span> <span class="at">value</span>=<span class="av">"music"</span> <span class="t">/&gt;</span>음악<span class="t">&lt;/</span><span class="tn">label</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">label</span><span class="t">&gt;&lt;</span><span class="tn">input</span> <span class="at">type</span>=<span class="av">"checkbox"</span> <span class="at">name</span>=<span class="av">"interests"</span> <span class="at">value</span>=<span class="av">"travel"</span><span class="t">/&gt;</span>여행<span class="t">&lt;/</span><span class="tn">label</span><span class="t">&gt;</span>
+
+<span class="cm">&lt;!-- 라디오버튼(같은 name으로 그룹화 - 단일선택) --&gt;</span>
+<span class="t">&lt;</span><span class="tn">label</span><span class="t">&gt;&lt;</span><span class="tn">input</span> <span class="at">type</span>=<span class="av">"radio"</span> <span class="at">name</span>=<span class="av">"member-type"</span> <span class="at">value</span>=<span class="av">"personal"</span><span class="t">/&gt;</span>개인회원<span class="t">&lt;/</span><span class="tn">label</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">label</span><span class="t">&gt;&lt;</span><span class="tn">input</span> <span class="at">type</span>=<span class="av">"radio"</span> <span class="at">name</span>=<span class="av">"member-type"</span> <span class="at">value</span>=<span class="av">"company"</span> <span class="t">/&gt;</span>사업자회원<span class="t">&lt;/</span><span class="tn">label</span><span class="t">&gt;</span></pre>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>type 값</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag2">text</td>
+                <td>일반 텍스트 (이름, 아이디)</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">password</td>
+                <td>비밀번호 (글자가 가려짐)</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">email</td>
+                <td>이메일 형식이 아니면 경고 (HTML5)</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">number</td>
+                <td>숫자만 입력</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">date</td>
+                <td>날짜 선택 달력 표시 (HTML5)</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">checkbox</td>
+                <td>여러 개 중복 선택 (취미, 옵션 추가)</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">radio</td>
+                <td>여러 개 중 하나만 선택 (동의/비동의)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr class="sec-divider" />
+
+          <!-- label -->
+          <h3 class="sub-heading" id="label">label</h3>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">HTML</span></div>
+            <div class="code-body">
+              <pre><span class="cm">&lt;!-- id와 for 값을 일치시켜야 연결됨 --&gt;</span>
+<span class="t">&lt;</span><span class="tn">label</span> <span class="at">for</span>=<span class="av">"username"</span><span class="t">&gt;</span>이름:<span class="t">&lt;/</span><span class="tn">label</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">input</span> <span class="at">type</span>=<span class="av">"text"</span> <span class="at">id</span>=<span class="av">"username"</span><span class="t">&gt;</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- textarea -->
+          <h3 class="sub-heading" id="textarea">textarea</h3>
+          <p>
+            자기소개, 가입 인사, 배송 요청 사항처럼
+            <strong>여러 줄의 긴 글을 입력받을 때</strong> 사용합니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">HTML</span></div>
+            <div class="code-body">
+              <pre><span class="t">&lt;</span><span class="tn">textarea</span>
+  <span class="at">id</span>=<span class="av">"req_memo"</span>
+  <span class="at">name</span>=<span class="av">"req_memo"</span>
+  <span class="at">rows</span>=<span class="av">"5"</span>
+  <span class="at">cols</span>=<span class="av">"40"</span>
+  <span class="at">maxlength</span>=<span class="av">"200"</span>
+  <span class="at">placeholder</span>=<span class="av">"배송 요청 사항을 적어주세요.(200자 이내)"</span>
+<span class="t">&gt;&lt;/</span><span class="tn">textarea</span><span class="t">&gt;</span></pre>
+            </div>
+          </div>
+
+          <p>
+            textarea는 <strong>value 속성이 없습니다</strong>. 여는 태그와 닫는
+            태그 사이에 내용을 작성합니다.
+          </p>
+
+          <div class="compare-grid">
+            <div class="compare-card">
+              <div class="compare-head inline">❌ 틀린 방법</div>
+              <div class="compare-body">
+                <p>
+                  <code
+                    >&lt;textarea value="안녕하세요"&gt;&lt;/textarea&gt;</code
+                  >
+                </p>
+              </div>
+            </div>
+            <div class="compare-card">
+              <div class="compare-head block">✅ 맞는 방법</div>
+              <div class="compare-body">
+                <p><code>&lt;textarea&gt;안녕하세요&lt;/textarea&gt;</code></p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- select, option -->
+          <h3 class="sub-heading" id="select">select · option</h3>
+          <p>
+            드롭다운 메뉴를 만들 때 사용하며,
+            <strong>&lt;select&gt;</strong>라는 큰 틀 안에 선택지 하나하나를
+            <strong>&lt;option&gt;</strong> 태그로 넣습니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">HTML</span></div>
+            <div class="code-body">
+              <pre><span class="cm">&lt;!-- 셀렉트 박스 --&gt;</span>
+<span class="t">&lt;</span><span class="tn">select</span> <span class="at">name</span>=<span class="av">"menu"</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">option</span> <span class="at">value</span>=<span class="av">""</span><span class="t">&gt;</span>선택하세요<span class="t">&lt;/</span><span class="tn">option</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">option</span> <span class="at">value</span>=<span class="av">"americano"</span><span class="t">&gt;</span>아메리카노<span class="t">&lt;/</span><span class="tn">option</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">option</span> <span class="at">value</span>=<span class="av">"cafe_latte"</span> <span class="at">selected</span><span class="t">&gt;</span>카페라떼<span class="t">&lt;/</span><span class="tn">option</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">option</span> <span class="at">value</span>=<span class="av">"ice_tea"</span><span class="t">&gt;</span>아이스티<span class="t">&lt;/</span><span class="tn">option</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">select</span><span class="t">&gt;</span></pre>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>속성</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag2">value</td>
+                <td>사용자가 선택했을 때 서버에 전송되는 값</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">selected</td>
+                <td>
+                  페이지가 열릴 때 기본으로 선택되어 있을 항목에 붙여줍니다
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 5.3 버튼 -->
+        <section class="section" id="section-53">
+          <div class="sec-eyebrow">5.3</div>
+          <h2 class="sec-heading">버튼</h2>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">HTML</span></div>
+            <div class="code-body">
+              <pre><span class="t">&lt;</span><span class="tn">button</span> <span class="at">type</span>=<span class="av">"button"</span><span class="t">&gt;</span>클릭하세요<span class="t">&lt;/</span><span class="tn">button</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">button</span> <span class="at">type</span>=<span class="av">"submit"</span><span class="t">&gt;</span>제출<span class="t">&lt;/</span><span class="tn">button</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">button</span> <span class="at">type</span>=<span class="av">"reset"</span><span class="t">&gt;</span>초기화<span class="t">&lt;/</span><span class="tn">button</span><span class="t">&gt;</span></pre>
+            </div>
+          </div>
+
+          <div class="tier-diagram">
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">submit</span>
+                <span class="tier-layer">type</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  <strong>폼의 내용(입력값)을 서버로 전송</strong> — 가장 중요한
+                  버튼 타입
+                </p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">button</span>
+                <span class="tier-layer">type</span>
+              </div>
+              <div class="tier-content">
+                <p>자바스크립트로 기능을 붙일 때 사용</p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">reset</span>
+                <span class="tier-layer">type</span>
+              </div>
+              <div class="tier-content">
+                <p>입력한 내용을 전부 지우고 초기화</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5.4 유효성 검사 -->
+        <section class="section" id="section-54">
+          <div class="sec-eyebrow">5.4</div>
+          <h2 class="sec-heading">유효성 검사를 위한 속성</h2>
+
+          <div class="highlight-box">
+            <p>자바스크립트 없이도 기본적인 검사가 가능합니다.</p>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>속성</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag2">placeholder="..."</td>
+                <td>입력 전 힌트 메시지 표시</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">required</td>
+                <td>필수 입력 항목 지정 (비어있으면 제출 안 됨)</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">readonly</td>
+                <td>읽기 전용 (수정 불가)</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">disabled</td>
+                <td>비활성화 (전송도 안 됨)</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">name</td>
+                <td>서버로 전송될 때 사용되는 이름</td>
+              </tr>
+              <tr>
+                <td class="td-tag2">value</td>
+                <td>초깃값 또는 사용자 입력값</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- POST FOOTER -->
+        <footer class="post-footer">
+          <a href="#" class="footer-back">← 목록으로</a>
+          <span class="footer-copy">© 2025 dev.log</span>
+        </footer>
+      </article>
+    </div>
+
+    <script>
+      // 스크롤 시 섹션 등장 애니메이션
+      const sections = document.querySelectorAll(".section");
+      const observer = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("visible");
+          }),
+        { threshold: 0.08 },
+      );
+      sections.forEach((s) => observer.observe(s));
+
+      // TOC 활성화
+      const tocLinks = document.querySelectorAll(".toc-list a");
+      const headings = document.querySelectorAll("section[id], h3[id]");
+      const tocObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              tocLinks.forEach((l) => l.classList.remove("active"));
+              const active = document.querySelector(
+                `.toc-list a[href="#${entry.target.id}"]`,
+              );
+              if (active) active.classList.add("active");
+            }
+          });
+        },
+        { rootMargin: "-30% 0px -60% 0px" },
+      );
+      headings.forEach((h) => tocObserver.observe(h));
+    </script>
+  </body>
+</html>

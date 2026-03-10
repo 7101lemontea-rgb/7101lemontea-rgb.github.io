@@ -710,8 +710,25 @@ table tr:hover td {
   font-weight: 400;
 }
 
+.td-tag2 {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--accent);
+  background-color: var(--card-bg) !important;
+  white-space: nowrap;
+  font-weight: 400;
+}
+
 .td-ko {
   color: var(--ink-muted);
+  background-color: var(--card-bg) !important;
+  font-weight: 400;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.td-ko2 {
+  color: var(--accent);
   background-color: var(--card-bg) !important;
   font-weight: 400;
   font-size: 1rem;
@@ -883,6 +900,42 @@ table tr:hover td {
   .toc-sticky {
     position: static;
     margin-bottom: 2rem;
+  }
+}
+
+/* ── FIGURE / IMAGE ── */
+figure.post-figure {
+  margin: 1.8rem 0;
+}
+figure.post-figure img {
+  max-width: 100%;
+  width: auto;
+  display: block;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+figure.post-figure figcaption {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.03em;
+}
+
+/* 두 이미지 나란히 */
+.figure-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem;
+  margin: 1.8rem 0;
+}
+.figure-row figure.post-figure {
+  margin: 0 auto;
+}
+@media (max-width: 600px) {
+  .figure-row {
+    grid-template-columns: 1fr;
   }
 }
 
