@@ -21,13 +21,6 @@
         .compare-grid {
           grid-template-columns: 1fr;
         }
-        .struct-row {
-          grid-template-columns: 1fr;
-        }
-        .struct-key {
-          border-right: none;
-          border-bottom: 1px solid var(--rule);
-        }
       }
     </style>
   </head>
@@ -157,29 +150,43 @@
 
           <p class="sub-heading" id="s2-1">1.1. HTML 기본 구조</p>
           <p>HTML 문서는 크게 4가지 핵심 요소로 구성됩니다.</p>
-          <div class="struct-card">
-            <div class="struct-row">
-              <span class="struct-key">&lt;!DOCTYPE html&gt;</span>
-              <span class="struct-val"
-                >HTML5 문서임을 브라우저에 선언 (최신 표준 모드로 렌더링하도록
-                지시)</span
+
+          <table>
+            <tr>
+              <th
+                class="td-style2"
               >
-            </div>
-            <div class="struct-row">
-              <span class="struct-key">&lt;html&gt;</span>
-              <span class="struct-val">HTML 문서의 루트(최상위) 요소</span>
-            </div>
-            <div class="struct-row">
-              <span class="struct-key">&lt;head&gt;</span>
-              <span class="struct-val"
-                >메타데이터 영역 (문자셋, 타이틀, CSS/JS 링크 등)</span
+                &lt;!DOCTYPE html&gt;
+              </th>
+              <td>HTML5 문서임을 브라우저에 선언 (최신 표준 모드로 렌더링하도록 지시)</td>
+            </tr>
+            <tr>
+              <th
+                class="td-style2"
               >
-            </div>
-            <div class="struct-row">
-              <span class="struct-key">&lt;body&gt;</span>
-              <span class="struct-val">실제 화면에 표시되는 콘텐츠 영역</span>
-            </div>
-          </div>
+                &lt;html&gt;
+              </th>
+              <td>HTML 문서의 루트(최상위) 요소</td>
+            </tr>
+
+            <tr>
+              <th
+                class="td-style2"
+              >
+                &lt;head&gt;
+              </th>
+              <td>메타데이터 영역 (문자셋, 타이틀, CSS/JS 링크 등)</td>
+            </tr>
+
+              <tr>
+              <th class="td-style2"
+              >
+                &lt;body&gt;
+              </th>
+              <td>실제 화면에 표시되는 콘텐츠 영역</td>
+            </tr>
+          </table>
+          
           <div class="code-block">
             <div class="code-header">
               <span class="code-lang">HTML</span>
@@ -255,329 +262,581 @@
           <p class="sec-eyebrow">03</p>
           <h2 class="sec-heading">HTML 주요 태그</h2>
 
-          <!-- 전체 태그 표 (img_026, img_027, img_028) -->
+          
+
           <table>
             <thead>
               <tr>
-                <th colspan="2">문서 구조 관련 태그</th>
+                <th>문서 구조 관련 태그</th>
+                <th>설명</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="td-tag">&lt;html&gt;&lt;/html&gt;</td>
+                <td class="td-style2">&lt;html&gt;&lt;/html&gt;</td>
                 <td>HTML 문서의 루트</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;head&gt;&lt;/head&gt;</td>
+                <td class="td-style2"
+                ">&lt;head&gt;&lt;/head&gt;</td>
                 <td>문서의 메타데이터를 포함</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;body&gt;&lt;/body&gt;</td>
+                <td class="td-style2"
+                ">&lt;body&gt;&lt;/body&gt;</td>
                 <td>문서의 본문 내용</td>
               </tr>
             </tbody>
+          </table>
+
+          <table>
             <thead>
               <tr>
-                <th colspan="2">메타 태그</th>
+                <th>메타 태그</th>
+                <th>설명</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="td-tag">&lt;meta&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;meta&gt;
+                </td>
                 <td>문서에 대한 메타데이터</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;title&gt;&lt;/title&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;title&gt;&lt;/title&gt;
+                </td>
                 <td>문서 제목</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;link&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;link&gt;
+                </td>
                 <td>외부 리소스 연결</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;style&gt;&lt;/style&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;style&gt;&lt;/style&gt;
+                </td>
                 <td>내부 CSS</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;script&gt;&lt;/script&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;script&gt;&lt;/script&gt;
+                </td>
                 <td>JavaScript 코드 또는 파일</td>
               </tr>
             </tbody>
+          </table>
+
+          <table>
             <thead>
               <tr>
-                <th colspan="2">텍스트 작성 관련 태그</th>
+                <th>텍스트 작성 관련 태그</th>
+                <th>내용</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="td-tag">
-                  &lt;h1&gt;&lt;/h1&gt; ~ &lt;h6&gt;&lt;/h6&gt;
+                <td
+                  class="td-style2"
+                >
+                  &lt;h1&gt;&lt;/h1&gt;
                 </td>
                 <td>제목</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;p&gt;&lt;/p&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;p&gt;&lt;/p&gt;
+                </td>
                 <td>단락</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;span&gt;&lt;/span&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;span&gt;&lt;/span&gt;
+                </td>
                 <td>인라인 텍스트 컨테이너</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;div&gt;&lt;/div&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;div&gt;&lt;/div&gt;
+                </td>
                 <td>블록 레벨 컨테이너</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;pre&gt;&lt;/pre&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;pre&gt;&lt;/pre&gt;
+                </td>
                 <td>미리 서식화된 텍스트</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;br&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;br&gt;
+                </td>
                 <td>줄바꿈</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;hr&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;hr&gt;
+                </td>
                 <td>수평선</td>
               </tr>
             </tbody>
+          </table>
+
+          <table>
             <thead>
               <tr>
-                <th colspan="2">텍스트 포맷팅을 위한 관련 태그</th>
+                <th>텍스트 포맷팅을 위한 관련 태그</th>
+                <th>내용</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="td-tag">&lt;strong&gt;&lt;/strong&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;strong&gt;&lt;/strong&gt;
+                </td>
                 <td>굵은 텍스트 (강조)</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;em&gt;&lt;/em&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;em&gt;&lt;/em&gt;
+                </td>
                 <td>기울임 (강조)</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;b&gt;&lt;/b&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;b&gt;&lt;/b&gt;
+                </td>
                 <td>굵은 텍스트</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;i&gt;&lt;/i&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;i&gt;&lt;/i&gt;
+                </td>
                 <td>기울임</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;u&gt;&lt;/u&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;u&gt;&lt;/u&gt;
+                </td>
                 <td>밑줄</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;mark&gt;&lt;/mark&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;mark&gt;&lt;/mark&gt;
+                </td>
                 <td>하이라이트</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;small&gt;&lt;/small&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;small&gt;&lt;/small&gt;
+                </td>
                 <td>작은 텍스트</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;del&gt;&lt;/del&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;del&gt;&lt;/del&gt;
+                </td>
                 <td>취소선</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;ins&gt;&lt;/ins&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;ins&gt;&lt;/ins&gt;
+                </td>
                 <td>삽입</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;sub&gt;&lt;/sub&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;sub&gt;&lt;/sub&gt;
+                </td>
                 <td>아래첨자</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;sup&gt;&lt;/sup&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;sup&gt;&lt;/sup&gt;
+                </td>
                 <td>위첨자</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;code&gt;&lt;/code&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;code&gt;&lt;/code&gt;
+                </td>
                 <td>컴퓨터 코드</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;blockquote&gt;&lt;/blockquote&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;blockquote&gt;&lt;/blockquote&gt;
+                </td>
                 <td>긴 인용문</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;q&gt;&lt;/q&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;q&gt;&lt;/q&gt;
+                </td>
                 <td>짧은 인용구</td>
               </tr>
             </tbody>
+          </table>
+
+          <table>
             <thead>
               <tr>
-                <th colspan="2">링크 태그</th>
+                <th>링크 태그</th>
+                <th>내용</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="td-tag">&lt;a&gt;&lt;/a&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;a&gt;&lt;/a&gt;
+                </td>
                 <td>하이퍼링크</td>
               </tr>
             </tbody>
+          </table>
+
+          <table>
             <thead>
               <tr>
-                <th colspan="2">목록 태그</th>
+                <th>목록 태그</th>
+                <th>내용</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="td-tag">&lt;ul&gt;&lt;/ul&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;ul&gt;&lt;/ul&gt;
+                </td>
                 <td>순서 없는 목록</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;ol&gt;&lt;/ol&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;ol&gt;&lt;/ol&gt;
+                </td>
                 <td>순서 있는 목록</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;li&gt;&lt;/li&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;li&gt;&lt;/li&gt;
+                </td>
                 <td>목록 아이템</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;dl&gt;&lt;/dl&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;dl&gt;&lt;/dl&gt;
+                </td>
                 <td>정의 목록</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;dt&gt;&lt;/dt&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;dt&gt;&lt;/dt&gt;
+                </td>
                 <td>정의 용어</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;dd&gt;&lt;/dd&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;dd&gt;&lt;/dd&gt;
+                </td>
                 <td>정의 설명</td>
               </tr>
             </tbody>
+          </table>
+
+          <table>
             <thead>
               <tr>
-                <th colspan="2">테이블 태그</th>
+                <th>테이블 태그</th>
+                <th>내용</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="td-tag">&lt;table&gt;&lt;/table&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;table&gt;&lt;/table&gt;
+                </td>
                 <td>테이블</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;tr&gt;&lt;/tr&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;tr&gt;&lt;/tr&gt;
+                </td>
                 <td>행</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;td&gt;&lt;/td&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;td&gt;&lt;/td&gt;
+                </td>
                 <td>데이터 셀</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;th&gt;&lt;/th&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;th&gt;&lt;/th&gt;
+                </td>
                 <td>헤더 셀</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;thead&gt;&lt;/thead&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;thead&gt;&lt;/thead&gt;
+                </td>
                 <td>헤더 그룹</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;tbody&gt;&lt;/tbody&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;tbody&gt;&lt;/tbody&gt;
+                </td>
                 <td>본문 그룹</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;tfoot&gt;&lt;/tfoot&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;tfoot&gt;&lt;/tfoot&gt;
+                </td>
                 <td>푸터 그룹</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;caption&gt;&lt;/caption&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;caption&gt;&lt;/caption&gt;
+                </td>
                 <td>캡션</td>
               </tr>
             </tbody>
+          </table>
+
+          <table>
             <thead>
               <tr>
-                <th colspan="2">이미지 및 멀티미디어 태그</th>
+                <th>이미지 및 멀티미디어 태그</th>
+                <th>내용</th>
               </tr>
             </thead>
+
             <tbody>
               <tr>
-                <td class="td-tag">&lt;img&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;img&gt;
+                </td>
                 <td>이미지</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;video&gt;&lt;/video&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;video&gt;&lt;/video&gt;
+                </td>
                 <td>비디오</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;audio&gt;&lt;/audio&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;audio&gt;&lt;/audio&gt;
+                </td>
                 <td>오디오</td>
               </tr>
             </tbody>
+          </table>
+
+          <table>
             <thead>
               <tr>
-                <th colspan="2">사용자 입력을 위한 태그</th>
+                <th>사용자 입력을 위한 태그</th>
+                <th>내용</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="td-tag">&lt;form&gt;&lt;/form&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;form&gt;&lt;/form&gt;
+                </td>
                 <td>폼</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;input&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;input&gt;
+                </td>
                 <td>입력 필드</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;textarea&gt;&lt;/textarea&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;textarea&gt;&lt;/textarea&gt;
+                </td>
                 <td>여러 줄 텍스트 입력</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;button&gt;&lt;/button&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;button&gt;&lt;/button&gt;
+                </td>
                 <td>버튼</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;select&gt;&lt;/select&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;select&gt;&lt;/select&gt;
+                </td>
                 <td>드롭다운 목록</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;option&gt;&lt;/option&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;option&gt;&lt;/option&gt;
+                </td>
                 <td>선택 옵션</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;label&gt;&lt;/label&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;label&gt;&lt;/label&gt;
+                </td>
                 <td>입력 요소의 레이블</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;fieldset&gt;&lt;/fieldset&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;fieldset&gt;&lt;/fieldset&gt;
+                </td>
                 <td>관련 폼 요소 그룹핑</td>
               </tr>
               <tr>
-                <td class="td-tag">&lt;legend&gt;&lt;/legend&gt;</td>
+                <td
+                  class="td-style2"
+                >
+                  &lt;legend&gt;&lt;/legend&gt;
+                </td>
                 <td>fieldset의 제목</td>
               </tr>
             </tbody>
-            <thead>
-              <tr>
-                <th colspan="2">레이아웃 관련 시맨틱 태그</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="td-tag">&lt;header&gt;&lt;/header&gt;</td>
-                <td>문서나 섹션의 헤더</td>
-              </tr>
-              <tr>
-                <td class="td-tag">&lt;footer&gt;&lt;/footer&gt;</td>
-                <td>문서나 섹션의 푸터</td>
-              </tr>
-              <tr>
-                <td class="td-tag">&lt;article&gt;&lt;/article&gt;</td>
-                <td>독립적인 컨텐츠 영역</td>
-              </tr>
-              <tr>
-                <td class="td-tag">&lt;section&gt;&lt;/section&gt;</td>
-                <td>문서의 섹션</td>
-              </tr>
-              <tr>
-                <td class="td-tag">&lt;aside&gt;&lt;/aside&gt;</td>
-                <td>사이드 바 등 간접적 내용을 위한 섹션</td>
-              </tr>
-              <tr>
-                <td class="td-tag">&lt;nav&gt;&lt;/nav&gt;</td>
-                <td>네비게이션 링크 모음</td>
-              </tr>
-            </tbody>
           </table>
+
+          <table>
+            <thead>
+                <tr>
+                  <th>레이아웃 관련 시맨틱 태그</th>
+                  <th>내용</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-style2">&lt;header&gt;&lt;/header&gt;</td>
+                  <td>문서나 섹션의 헤더</td>
+                </tr>
+                <tr>
+                  <td class="td-style2">&lt;footer&gt;&lt;/footer&gt;</td>
+                  <td>문서나 섹션의 푸터</td>
+                </tr>
+                <tr>
+                  <td class="td-style2">&lt;article&gt;&lt;/article&gt;</td>
+                  <td>독립적인 컨텐츠 영역</td>
+                </tr>
+                <tr>
+                  <td class="td-style2">&lt;section&gt;&lt;/section&gt;</td>
+                  <td>문서의 섹션</td>
+                </tr>
+                <tr>
+                  <td class="td-style2">&lt;aside&gt;&lt;/aside&gt;</td>
+                  <td>사이드 바 등 간접적 내용을 위한 섹션</td>
+                </tr>
+                <tr>
+                  <td class="td-style2">&lt;nav&gt;&lt;/nav&gt;</td>
+                  <td>네비게이션 링크 모음</td>
+                </tr>
+              </tbody>
+            </table>
+
 
           <hr class="sec-divider" />
 

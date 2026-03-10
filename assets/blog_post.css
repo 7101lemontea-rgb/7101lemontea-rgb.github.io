@@ -20,7 +20,7 @@
   --ink-muted: #7a7670;
   --accent: #39706d;
   --rule: #e2ded9;
-  --card-bg: #fffefb;
+  --card-bg: #f8f8f4;
   --code-bg: #efede9;
   --font-serif: "DM Serif Display", Georgia, serif;
   --font-mono: "DM Mono", "Courier New", monospace;
@@ -671,7 +671,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin: 1.2rem 0;
-  font-size: 0.88rem;
+  font-size: 1rem;
 }
 
 table thead tr {
@@ -680,84 +680,53 @@ table thead tr {
 
 table th {
   padding: 0.6rem 1rem;
-  text-align: left;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 1rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent);
-  border-bottom: 2px solid rgba(57, 112, 109, 0.2);
+  border: 1px solid var(--rule);
   font-weight: 500;
 }
 
 table td {
   padding: 0.7rem 1rem;
   color: var(--ink-muted);
-  border-bottom: 1px solid var(--rule);
+  border: 1px solid var(--rule);
   vertical-align: top;
   line-height: 1.65;
 }
 
-table tr:last-child td {
-  border-bottom: none;
-}
 table tr:hover td {
   background: rgba(57, 112, 109, 0.03);
 }
 
 .td-tag {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--accent);
   white-space: nowrap;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .td-ko {
-  color: var(--ink);
-  font-weight: 500;
+  color: var(--ink-muted);
+  background-color: var(--card-bg) !important;
+  font-weight: 400;
   font-size: 1rem;
   white-space: nowrap;
 }
 
-/* ── STRUCT CARD (key-value 다이어그램) ── */
-.struct-card {
-  background: var(--card-bg);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  overflow: hidden;
-  margin: 1.2rem 0;
-}
-
-.struct-row {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  border-bottom: 1px solid var(--rule);
-}
-
-.struct-row:last-child {
-  border-bottom: none;
-}
-
-.struct-key {
-  padding: 0.85rem 1.1rem;
-  background: rgba(57, 112, 109, 0.06);
-  border-right: 1px solid var(--rule);
+.td-style2 {
+  width: 20%;
   font-family: var(--font-mono);
   font-size: 1rem;
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-}
-
-.struct-val {
-  padding: 0.85rem 1.1rem;
-  font-size: 1rem;
   color: var(--ink-muted);
-  line-height: 1.6;
-  display: flex;
-  align-items: center;
+  white-space: nowrap;
+  font-weight: 400;
+  text-transform: none;
+  background: var(--card-bg);
 }
 
 /* ── CODE BLOCK (다크 테마) ── */
@@ -936,13 +905,6 @@ table tr:hover td {
   }
   .tier-row {
     grid-template-columns: 100px 1fr;
-  }
-  .struct-row {
-    grid-template-columns: 1fr;
-  }
-  .struct-key {
-    border-right: none;
-    border-bottom: 1px solid var(--rule);
   }
   .compare-grid {
     grid-template-columns: 1fr;
