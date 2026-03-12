@@ -37,14 +37,20 @@
           컴포넌트 구성, 계층 간 인터페이스, 데이터 흐름, 보안 모델, 배포 구조를
           명세한다.
         </p>
-        <div class="post-stats">
+
+        <div class="post-stats" id="post-timestamps">
           <div>
             <p class="stat-label">문서 버전</p>
             <p class="stat-val">v1.0</p>
           </div>
           <div>
             <p class="stat-label">작성일</p>
-            <p class="stat-val">2026년 3월 8일</p>
+            <p class="stat-val" id="date-created">불러오는 중...</p>
+          </div>
+
+          <div>
+            <p class="stat-label">최종 수정일</p>
+            <p class="stat-val" id="date-updated">불러오는 중...</p>
           </div>
           <div>
             <p class="stat-label">참조</p>
@@ -1665,6 +1671,28 @@
             </div>
           </section>
 
+                  </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+          <div class="sec-eyebrow" style="margin-bottom: 1.2rem;">Comments</div>
+          <script src="https://giscus.app/client.js"
+            data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+            data-repo-id="R_kgDORgqLUQ"
+            data-category="Announcements"
+            data-category-id="DIC_kwDORgqLUc4C4NNi"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="0"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="light"
+            data-lang="ko"
+            crossorigin="anonymous"
+            async>
+          </script>
+        </div>
+      </section>
+
           <div class="post-footer">
             <a class="footer-back" href="index.html">← 프로젝트 목록</a>
             <span class="footer-copy">© 2026 정서영</span>
@@ -1705,5 +1733,7 @@
       );
       secEls.forEach((s) => ioToc.observe(s));
     </script>
+
+    <script src="script.js"></script>
   </body>
 </html>

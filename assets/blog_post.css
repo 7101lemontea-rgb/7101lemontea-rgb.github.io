@@ -129,9 +129,13 @@ nav .inner {
 
 .post-date {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.72rem;
   color: var(--ink-muted);
   letter-spacing: 0.04em;
+}
+
+.post-date span {
+  margin-left: 0.4rem;
 }
 
 .post-title {
@@ -874,6 +878,22 @@ table tr:hover td {
 .chip.inline-t {
   background: rgba(74, 100, 200, 0.06);
   color: #3a5fa0;
+}
+
+.comments-section {
+  margin: 3rem 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.comments-wrap {
+  max-width: 1024px; /* ← 원하는 너비로 조정 */
+  margin: 0 auto; /* 가운데 정렬 (필요 시) */
+}
+
+/* giscus가 생성하는 iframe 태그에 직접 너비 강제 적용 */
+.comments-wrap iframe {
+  width: 100% !important;
 }
 
 /* ── ANIMATION ── */
