@@ -856,37 +856,7 @@
     </div>
     <!-- /.main-wrapper -->
 
-    <script>
-      // 섹션 등장 애니메이션
-      const sections = document.querySelectorAll(".section");
-      const io = new IntersectionObserver(
-        (entries) =>
-          entries.forEach((e) => {
-            if (e.isIntersecting) e.target.classList.add("visible");
-          }),
-        { threshold: 0.07 },
-      );
-      sections.forEach((s) => io.observe(s));
-
-      // TOC 활성화
-      const tocLinks = document.querySelectorAll(".toc-list a");
-      const headings = document.querySelectorAll("[id]");
-      const tocIo = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              tocLinks.forEach((l) => l.classList.remove("active"));
-              const a = document.querySelector(
-                `.toc-list a[href="#${entry.target.id}"]`,
-              );
-              if (a) a.classList.add("active");
-            }
-          });
-        },
-        { rootMargin: "-25% 0px -65% 0px" },
-      );
-      headings.forEach((h) => tocIo.observe(h));
-    </script>
+    
     <script src="/script.js"></script>
   </body>
 </html>

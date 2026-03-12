@@ -487,37 +487,7 @@
       </article>
     </div>
 
-    <script>
-      // 스크롤 시 섹션 등장 애니메이션
-      const sections = document.querySelectorAll(".section");
-      const observer = new IntersectionObserver(
-        (entries) =>
-          entries.forEach((e) => {
-            if (e.isIntersecting) e.target.classList.add("visible");
-          }),
-        { threshold: 0.08 },
-      );
-      sections.forEach((s) => observer.observe(s));
-
-      // TOC 활성화
-      const tocLinks = document.querySelectorAll(".toc-list a");
-      const headings = document.querySelectorAll("section[id], h3[id]");
-      const tocObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              tocLinks.forEach((l) => l.classList.remove("active"));
-              const active = document.querySelector(
-                `.toc-list a[href="#${entry.target.id}"]`,
-              );
-              if (active) active.classList.add("active");
-            }
-          });
-        },
-        { rootMargin: "-30% 0px -60% 0px" },
-      );
-      headings.forEach((h) => tocObserver.observe(h));
-    </script>
+    
     <script src="/script.js"></script>
   </body>
 </html>
