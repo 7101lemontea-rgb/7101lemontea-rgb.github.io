@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fortune Garden — 개발 환경 설정</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/project_post.css" />
+    <style>
+      /* ── FIGURE (이미지) — project_post.css에 미포함이므로 인라인 정의 ── */
+      figure.doc-figure {
+        margin: 1.4rem 0;
+      }
+      figure.doc-figure img {
+        max-width: 100%;
+        display: block;
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+      }
+      figure.doc-figure figcaption {
+        margin-top: 0.45rem;
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        color: var(--ink-muted);
+        letter-spacing: 0.03em;
+      }
+
+      /* 체크리스트 테이블 체크박스 열 */
+      .checklist-table td.check-col {
+        text-align: center;
+        font-size: 1rem;
+      }
+
+      /* 브랜치 트리를 component-box 안에서 더 읽기 좋게 */
+      .component-box .c-branch {
+        color: var(--accent);
+      }
+      .component-box .c-done {
+        color: #749b41;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="#" class="nav-logo">Fortune Garden</a>
+        <a href="index.html" class="nav-back">← 문서 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="page-wrap">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Setup</span>
+          <span class="badge badge-ver">Flutter 3.x</span>
+          <span class="badge badge-ver">Windows</span>
+          <span class="badge badge-status">진행중</span>
+        </div>
+        <h1 class="post-title">Fortune Garden</h1>
+        <p class="post-sub">Flutter 개발 환경 설정</p>
+        <p class="post-desc">
+          Windows 기준 Flutter SDK 설치부터 GitHub 브랜치 전략, 빌드 확인까지 —
+          Fortune Garden 프로젝트를 시작하기 위한 전체 환경 설정 가이드입니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val">2026년 3월 12일</div>
+          </div>
+          <div>
+            <div class="stat-label">Platform</div>
+            <div class="stat-val">Windows 10 / 11</div>
+          </div>
+          <div>
+            <div class="stat-label">Framework</div>
+            <div class="stat-val">Flutter (Dart)</div>
+          </div>
+          <div>
+            <div class="stat-label">Architecture</div>
+            <div class="stat-val">Clean Architecture + Riverpod</div>
+          </div>
+          <div>
+            <div class="stat-label">Target</div>
+            <div class="stat-val">Windows Desktop + Android</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- CONTENT GRID -->
+    <div class="page-wrap">
+      <div class="content-grid">
+        <!-- TOC SIDEBAR -->
+        <aside class="toc-sidebar">
+          <div class="toc-title">목차</div>
+          <ul class="toc-list">
+            <li><a href="#step1">1단계. 기본 환경 설정</a></li>
+            <li><a href="#flutter-sdk">① Flutter SDK 설치</a></li>
+            <li><a href="#env-path">※ 환경 변수 순서</a></li>
+            <li><a href="#visual-studio">② Visual Studio</a></li>
+            <li><a href="#android-studio">③ Android Studio</a></li>
+            <li><a href="#vscode-ext">④ VS Code 확장</a></li>
+            <li><a href="#step2">2단계. 프로젝트 생성</a></li>
+            <li><a href="#create-project">① 프로젝트 생성</a></li>
+            <li><a href="#pubspec">② pubspec.yaml</a></li>
+            <li><a href="#folder-structure">③ 폴더 구조</a></li>
+            <li><a href="#step3">3단계. GitHub 설정</a></li>
+            <li><a href="#gitignore">① .gitignore</a></li>
+            <li><a href="#remote">② 원격 저장소</a></li>
+            <li><a href="#branch">③ 브랜치 전략</a></li>
+            <li><a href="#feature-branch">다음 단계</a></li>
+            <li><a href="#step4">4단계. 빌드 확인</a></li>
+            <li><a href="#checklist">완료 체크리스트</a></li>
+          </ul>
+        </aside>
+
+        <!-- MAIN ARTICLE -->
+        <article>
+          <!-- ══════════════════ 1단계 ══════════════════ -->
+          <section class="section" id="step1">
+            <div class="sec-eyebrow">Step 01</div>
+            <h2 class="sec-heading">
+              기본 환경 설정
+              <span
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 0.75rem;
+                  color: var(--ink-muted);
+                  font-weight: 300;
+                "
+                >(Windows 기준)</span
+              >
+            </h2>
+
+            <!-- ① Flutter SDK -->
+            <h3 class="sub-heading" id="flutter-sdk">① Flutter SDK 설치</h3>
+
+            <div class="code-block">
+              <pre><span class="c-comment"># 1. Flutter 공식 사이트에서 SDK 다운로드</span>
+<span class="c-comment"># https://docs.flutter.dev/get-started/install/windows</span>
+
+<span class="c-comment"># 2. 압축 해제 후 환경변수 등록 (예: C:\flutter\bin)</span>
+<span class="c-comment"># 시스템 환경변수 > Path에 추가</span>
+
+<span class="c-comment"># 3. 설치 확인</span>
+flutter doctor</pre>
+            </div>
+
+            <p>Flutter doctor 결과에서 아래 항목이 모두 ✅ 인지 확인하세요:</p>
+
+            <ul class="bullet-list">
+              <li>Flutter SDK</li>
+              <li>Android toolchain (모바일 빌드용)</li>
+              <li>Visual Studio (Windows Desktop 빌드용)</li>
+              <li>VS Code 또는 Android Studio</li>
+            </ul>
+
+            <figure class="doc-figure">
+              <img
+                src="../assets/fortune_garden/fg_image3.png"
+                alt="flutter doctor 실행 결과 — 항목별 체크 상태"
+              />
+              <figcaption>
+                flutter doctor 실행 결과 예시 (환경 변수 경로 문제 포함)
+              </figcaption>
+            </figure>
+
+            <!-- 환경 변수 -->
+            <h3 class="sub-heading" id="env-path">※ 환경 변수 순서 바꾸기</h3>
+
+            <div class="highlight-box">
+              <p>
+                컴퓨터는 Path에 등록된 순서대로 명령어를 찾습니다.
+                <strong>C:\workspace\flutter\bin</strong>을 가장 위로 올려주면
+                해결됩니다.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-row">
+                <div class="info-key">Step 1</div>
+                <div class="info-val">
+                  윈도우 검색창에 <strong>'계정의 환경 변수 편집'</strong> 또는
+                  <strong>'시스템 환경 변수 편집'</strong>을 입력하고
+                  실행합니다.
+                </div>
+              </div>
+              <div class="info-card-row">
+                <div class="info-key">Step 2</div>
+                <div class="info-val">
+                  [사용자 변수] 또는 [시스템 변수] 항목에서
+                  <strong>Path</strong>를 찾아 선택하고
+                  <strong>[편집]</strong>을 누릅니다.
+                </div>
+              </div>
+              <div class="info-card-row">
+                <div class="info-key">Step 3</div>
+                <div class="info-val">
+                  목록에 <code>C:\workspace\flutter\bin</code>이 있는지
+                  확인합니다. 있다면 <strong>[위로 이동]</strong> 버튼으로 맨
+                  위로 올리고, 없다면 <strong>[새로 만들기]</strong>로 추가 후
+                  맨 위로 올립니다.
+                </div>
+              </div>
+              <div class="info-card-row">
+                <div class="info-key">Step 4</div>
+                <div class="info-val">
+                  모든 창에서 [확인]을 눌러 저장합니다.
+                  <strong>중요:</strong> 실행 중인 터미널(CMD, PowerShell, VS
+                  Code)을 완전히 껐다가 다시 켭니다.
+                </div>
+              </div>
+            </div>
+
+            <figure class="doc-figure">
+              <img
+                src="../assets/fortune_garden/fg_image1.png"
+                alt="환경 변수 수정 후 flutter doctor — No issues found"
+              />
+              <figcaption>
+                환경 변수 경로 수정 후 flutter doctor 결과 — No issues found
+              </figcaption>
+            </figure>
+
+            <!-- ② Visual Studio -->
+            <h3 class="sub-heading" id="visual-studio">
+              ② Visual Studio 설치
+              <span
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 0.72rem;
+                  color: var(--ink-muted);
+                  font-weight: 300;
+                "
+                >(Windows Desktop 빌드 필수)</span
+              >
+            </h3>
+
+            <p>
+              Flutter Desktop 앱(Windows 10/11)을 빌드하려면
+              <strong>Visual Studio 2022</strong>가 필요합니다.
+            </p>
+
+            <ul class="bullet-list">
+              <li>
+                <a
+                  href="https://visualstudio.microsoft.com"
+                  target="_blank"
+                  style="color: var(--accent2)"
+                  >https://visualstudio.microsoft.com</a
+                >에서 Community 버전 설치
+              </li>
+              <li>
+                설치 시 <strong>"C++를 사용한 데스크톱 개발"</strong> 워크로드
+                반드시 선택
+              </li>
+            </ul>
+
+            <!-- ③ Android Studio -->
+            <h3 class="sub-heading" id="android-studio">
+              ③ Android Studio / SDK 설치
+              <span
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 0.72rem;
+                  color: var(--ink-muted);
+                  font-weight: 300;
+                "
+                >(Android 빌드용)</span
+              >
+            </h3>
+
+            <div class="code-block">
+              <pre><span class="c-comment"># Android Studio 설치 후</span>
+flutter doctor --android-licenses  <span class="c-comment"># 라이선스 동의</span></pre>
+            </div>
+
+            <!-- ④ VS Code 확장 -->
+            <h3 class="sub-heading" id="vscode-ext">④ VS Code 확장 설치</h3>
+
+            <div class="arch-layers">
+              <div class="arch-row">
+                <div class="arch-label">
+                  <span class="arch-layer-name">Flutter</span>
+                  <span class="arch-layer-tech">공식 확장</span>
+                </div>
+                <div class="arch-content">
+                  <p>
+                    Flutter 앱 개발 전반 지원. 디버깅, 핫 리로드, 위젯 인스펙터
+                    등
+                  </p>
+                </div>
+              </div>
+              <div class="arch-row">
+                <div class="arch-label">
+                  <span class="arch-layer-name">Dart</span>
+                  <span class="arch-layer-tech">공식 확장</span>
+                </div>
+                <div class="arch-content">
+                  <p>Dart 언어 지원. 자동완성, 타입 분석, 포매팅</p>
+                </div>
+              </div>
+              <div class="arch-row">
+                <div class="arch-label">
+                  <span class="arch-layer-name">Riverpod Snippets</span>
+                  <span class="arch-layer-tech">선택</span>
+                </div>
+                <div class="arch-content">
+                  <p>Riverpod 코드 스니펫 자동완성</p>
+                </div>
+              </div>
+              <div class="arch-row">
+                <div class="arch-label">
+                  <span class="arch-layer-name">Pubspec Assist</span>
+                  <span class="arch-layer-tech">선택</span>
+                </div>
+                <div class="arch-content">
+                  <p>pubspec.yaml 패키지 검색 및 추가를 VS Code 내에서 처리</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ══════════════════ 2단계 ══════════════════ -->
+          <section class="section" id="step2">
+            <div class="sec-eyebrow">Step 02</div>
+            <h2 class="sec-heading">
+              Flutter 프로젝트 생성 및 가상환경(패키지) 설정
+            </h2>
+
+            <p>
+              Flutter는 Python의 venv 같은 별도 가상환경 대신
+              <strong>pubspec.yaml</strong>로 의존성을 관리합니다.
+            </p>
+
+            <!-- ① 프로젝트 생성 -->
+            <h3 class="sub-heading" id="create-project">① 프로젝트 생성</h3>
+
+            <div class="code-block">
+              <pre><span class="c-comment"># Windows + Android 멀티플랫폼 프로젝트 생성</span>
+flutter create --org com.yourname --platforms=windows,android fortune_garden
+
+cd fortune_garden
+
+<span class="c-comment"># Windows Desktop 활성화</span>
+flutter config --enable-windows-desktop</pre>
+            </div>
+
+            <!-- ② pubspec.yaml -->
+            <h3 class="sub-heading" id="pubspec">② pubspec.yaml 의존성 설정</h3>
+
+            <p>
+              pubspec.yaml을 열고 아키텍처 문서에 명시된 패키지들을 추가합니다:
+            </p>
+
+            <div class="code-block">
+              <pre><span class="c-key">name</span>: fortune_garden
+<span class="c-key">description</span>: <span class="c-str">2인 가구용 자동 동기화 가계부</span>
+
+<span class="c-key">environment</span>:
+  <span class="c-key">sdk</span>: <span class="c-str">">=3.0.0 <4.0.0"</span>
+
+<span class="c-key">dependencies</span>:
+  flutter:
+    sdk: flutter
+
+  <span class="c-comment"># 상태관리 (Riverpod)</span>
+  <span class="c-key">flutter_riverpod</span>: ^2.5.1
+  <span class="c-key">riverpod_annotation</span>: ^2.3.5
+
+  <span class="c-comment"># 로컬 DB (drift ORM + SQLite)</span>
+  <span class="c-key">drift</span>: ^2.18.0
+  <span class="c-key">sqlite3_flutter_libs</span>: ^0.5.0
+  <span class="c-key">path_provider</span>: ^2.1.3
+  <span class="c-key">path</span>: ^1.9.0
+
+  <span class="c-comment"># Shelf 로컬 서버 (CODEF 프록시)</span>
+  <span class="c-key">shelf</span>: ^1.4.1
+  <span class="c-key">shelf_router</span>: ^1.1.4
+  <span class="c-key">http</span>: ^1.2.1
+
+  <span class="c-comment"># 보안 (OS Keychain)</span>
+  <span class="c-key">flutter_secure_storage</span>: ^9.0.0
+
+  <span class="c-comment"># 암호화 (AES-256)</span>
+  <span class="c-key">encrypt</span>: ^5.0.3
+
+  <span class="c-comment"># 네트워크 상태</span>
+  <span class="c-key">connectivity_plus</span>: ^6.0.3
+
+  <span class="c-comment"># 유틸</span>
+  <span class="c-key">intl</span>: ^0.19.0
+  <span class="c-key">freezed_annotation</span>: ^2.4.1
+
+<span class="c-key">dev_dependencies</span>:
+  flutter_test:
+    sdk: flutter
+  <span class="c-key">build_runner</span>: ^2.4.9
+  <span class="c-key">drift_dev</span>: ^2.18.0
+  <span class="c-key">riverpod_generator</span>: ^2.4.0
+  <span class="c-key">freezed</span>: ^2.5.2
+  <span class="c-key">json_serializable</span>: ^6.7.1
+  <span class="c-key">flutter_lints</span>: ^3.0.0</pre>
+            </div>
+
+            <!-- ③ 폴더 구조 -->
+            <h3 class="sub-heading" id="folder-structure">
+              ③ Clean Architecture 폴더 구조 생성
+            </h3>
+
+            <div class="code-block">
+              <pre><span class="c-comment"># lib 하위 구조 생성 (PowerShell)</span>
+$dirs = @(
+  <span class="c-str">"lib/presentation/screens/dashboard"</span>,
+  <span class="c-str">"lib/presentation/screens/transaction"</span>,
+  <span class="c-str">"lib/presentation/screens/report"</span>,
+  <span class="c-str">"lib/presentation/screens/settings"</span>,
+  <span class="c-str">"lib/presentation/widgets"</span>,
+  <span class="c-str">"lib/presentation/providers"</span>,
+  <span class="c-str">"lib/application/usecases"</span>,
+  <span class="c-str">"lib/application/services"</span>,
+  <span class="c-str">"lib/infrastructure/shelf_server"</span>,
+  <span class="c-str">"lib/infrastructure/codef"</span>,
+  <span class="c-str">"lib/data/repositories"</span>,
+  <span class="c-str">"lib/data/datasources"</span>,
+  <span class="c-str">"lib/data/database"</span>,
+  <span class="c-str">"lib/domain/entities"</span>,
+  <span class="c-str">"lib/domain/repositories"</span>
+)
+
+$dirs | ForEach-Object { New-Item -ItemType Directory -Force -Path $_ }</pre>
+            </div>
+
+            <div class="component-box">
+              <span class="c-title">📁 lib/ — Clean Architecture 구조</span
+              ><span class="c-layer">├─ presentation/</span>
+              <span class="c-ext"
+                >│ ├─ screens/ (dashboard · transaction · report ·
+                settings)</span
+              >
+              <span class="c-ext">│ ├─ widgets/</span>
+              <span class="c-ext">│ └─ providers/</span>
+              <span class="c-layer">├─ application/</span>
+              <span class="c-ext">│ ├─ usecases/</span>
+              <span class="c-ext">│ └─ services/</span>
+              <span class="c-layer">├─ infrastructure/</span>
+              <span class="c-ext">│ ├─ shelf_server/</span>
+              <span class="c-ext">│ └─ codef/</span>
+              <span class="c-layer">├─ data/</span>
+              <span class="c-ext">│ ├─ repositories/</span>
+              <span class="c-ext">│ ├─ datasources/</span>
+              <span class="c-ext">│ └─ database/</span>
+              <span class="c-layer">└─ domain/</span>
+              <span class="c-ext"> ├─ entities/</span>
+              <span class="c-ext"> └─ repositories/</span>
+            </div>
+          </section>
+
+          <!-- ══════════════════ 3단계 ══════════════════ -->
+          <section class="section" id="step3">
+            <div class="sec-eyebrow">Step 03</div>
+            <h2 class="sec-heading">GitHub 설정</h2>
+
+            <!-- ① .gitignore -->
+            <h3 class="sub-heading" id="gitignore">
+              ① Git 초기화 및 .gitignore 설정
+            </h3>
+
+            <div class="code-block">
+              <pre>
+cd fortune_garden
+git init</pre
+              >
+            </div>
+
+            <p>
+              .gitignore 파일을 열고 Flutter 기본 항목에
+              <strong>보안 관련 항목</strong>을 추가합니다:
+            </p>
+
+            <div class="code-block">
+              <pre><span class="c-comment"># Flutter/Dart</span>
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+*.g.dart         <span class="c-comment"># 생성 코드 (빌드 시 자동 생성)</span>
+*.freezed.dart
+
+<span class="c-comment"># 환경 변수 / 시크릿 (절대 커밋 금지)</span>
+.env
+.env.*
+lib/infrastructure/shelf_server/secret_config.dart
+android/key.properties
+android/app/*.jks
+
+<span class="c-comment"># IDE</span>
+.vscode/settings.json
+.idea/
+*.iml
+
+<span class="c-comment"># OS</span>
+.DS_Store
+Thumbs.db
+
+<span class="c-comment"># 빌드 아웃풋</span>
+windows/flutter/ephemeral/</pre>
+            </div>
+
+            <!-- ② 원격 저장소 -->
+            <h3 class="sub-heading" id="remote">② GitHub 원격 저장소 연결</h3>
+
+            <div class="code-block">
+              <pre><span class="c-comment"># GitHub에서 새 저장소(fortune_garden) 생성 후</span>
+git remote add origin https://github.com/&lt;your-username&gt;/fortune_garden.git
+
+<span class="c-comment"># 초기 커밋</span>
+git add .
+git commit -m <span class="c-str">"chore: initial Flutter project setup with Fortune Garden architecture"</span>
+git branch -M main
+git push -u origin main</pre>
+            </div>
+
+            <!-- ③ 브랜치 전략 -->
+            <h3 class="sub-heading" id="branch">③ 브랜치 전략 설정 (권장)</h3>
+
+            <p>
+              아키텍처 문서 기반 <strong>2인 개발 환경</strong>에 적합한 브랜치
+              구조입니다:
+            </p>
+
+            <div class="component-box">
+              <span class="c-layer">main</span>
+              <span class="c-comment">← 배포용 (직접 push 금지)</span>
+              <span class="c-arrow">└─</span>
+              <span class="c-layer">develop</span>
+              <span class="c-comment">← 통합 브랜치</span>
+              <span class="c-arrow">├─</span>
+              <span class="c-ext">feature/dashboard-screen</span>
+              <span class="c-arrow">├─</span>
+              <span class="c-ext">feature/codef-sync</span>
+              <span class="c-arrow">├─</span>
+              <span class="c-ext">feature/shelf-server</span>
+              <span class="c-arrow">└─</span>
+              <span class="c-ext">feature/db-drift-setup</span>
+            </div>
+
+            <h3 class="sub-heading" id="develop-branch">
+              ※ 로컬에서 develop 브랜치 생성 및 푸시
+            </h3>
+
+            <p>
+              터미널이나 Git Bash를 열고 프로젝트 루트 폴더에서 다음 명령어를
+              순서대로 입력하세요.
+            </p>
+
+            <div class="code-block">
+              <pre><span class="c-comment"># 1. 현재 브랜치가 main인지 확인</span>
+git checkout main
+
+<span class="c-comment"># 2. 최신 상태 업데이트</span>
+git pull origin main
+
+<span class="c-comment"># 3. main을 바탕으로 develop 브랜치 생성 및 이동</span>
+git checkout -b develop
+
+<span class="c-comment"># 4. 생성한 develop 브랜치를 원격 저장소(GitHub 등)에 올리기</span>
+git push -u origin develop</pre>
+            </div>
+
+            <!-- 다음 단계 -->
+            <h3 class="sub-heading" id="feature-branch">
+              다음 단계: Feature 브랜치 시작하기
+            </h3>
+
+            <div class="highlight-box">
+              <p>
+                이제 develop 브랜치가 준비되었습니다. 대시보드 화면 작업을
+                시작하려면 develop 상태에서 아래와 같이 진행하세요.
+              </p>
+            </div>
+
+            <div class="code-block">
+              <pre><span class="c-comment"># 항상 develop에서 시작</span>
+git checkout develop
+git pull origin develop
+
+<span class="c-comment"># 새로운 기능 브랜치 생성</span>
+git checkout -b feature/dashboard-screen</pre>
+            </div>
+          </section>
+
+          <!-- ══════════════════ 4단계 ══════════════════ -->
+          <section class="section" id="step4">
+            <div class="sec-eyebrow">Step 04</div>
+            <h2 class="sec-heading">빌드 확인</h2>
+
+            <div class="code-block">
+              <pre><span class="c-comment"># Windows Desktop 실행 테스트</span>
+flutter run -d windows
+
+<span class="c-comment"># Android 에뮬레이터 실행</span>
+flutter run -d android
+
+<span class="c-comment"># 코드 생성기 실행 (drift, riverpod, freezed)</span>
+dart run build_runner build --delete-conflicting-outputs</pre>
+            </div>
+
+            <figure class="doc-figure">
+              <img
+                src="../assets/fortune_garden/fg_image2.png"
+                alt="Fortune Garden — Windows Desktop 앱 첫 실행 화면"
+              />
+              <figcaption>
+                flutter run -d windows 성공 — Fortune Garden 앱 첫 실행 화면
+              </figcaption>
+            </figure>
+          </section>
+
+          <!-- ══════════════════ 체크리스트 ══════════════════ -->
+          <section class="section" id="checklist">
+            <div class="sec-eyebrow">Checklist</div>
+            <h2 class="sec-heading">완료 체크리스트</h2>
+
+            <table class="gen-table checklist-table">
+              <thead>
+                <tr>
+                  <th>항목</th>
+                  <th style="width: 80px; text-align: center">확인</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>flutter doctor 전체 확인</td>
+                  <td class="check-col">☑</td>
+                </tr>
+                <tr>
+                  <td>Visual Studio (C++ 워크로드) 설치</td>
+                  <td class="check-col">☑</td>
+                </tr>
+                <tr>
+                  <td>flutter pub get 성공</td>
+                  <td class="check-col">☑</td>
+                </tr>
+                <tr>
+                  <td>폴더 구조 생성 완료</td>
+                  <td class="check-col">☑</td>
+                </tr>
+                <tr>
+                  <td>.gitignore 에 시크릿 파일 제외</td>
+                  <td class="check-col">☑</td>
+                </tr>
+                <tr>
+                  <td>GitHub 원격 연결 &amp; 초기 커밋</td>
+                  <td class="check-col">☑</td>
+                </tr>
+                <tr>
+                  <td>flutter run -d windows 정상 실행</td>
+                  <td class="check-col">☑</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- FOOTER -->
+          <footer class="post-footer">
+            <a href="#" class="footer-back">← 문서 목록</a>
+            <span class="footer-copy">© 2026 Fortune Garden</span>
+          </footer>
+        </article>
+      </div>
+      <!-- /.content-grid -->
+    </div>
+    <!-- /.page-wrap -->
+
+    <script>
+      // 섹션 등장 애니메이션
+      const sections = document.querySelectorAll(".section");
+      const io = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("visible");
+          }),
+        { threshold: 0.06 },
+      );
+      sections.forEach((s) => io.observe(s));
+
+      // TOC 활성화
+      const tocLinks = document.querySelectorAll(".toc-list a");
+      const headings = document.querySelectorAll("[id]");
+      const tocIo = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              tocLinks.forEach((l) => l.classList.remove("active"));
+              const a = document.querySelector(
+                `.toc-list a[href="#${entry.target.id}"]`,
+              );
+              if (a) a.classList.add("active");
+            }
+          });
+        },
+        { rootMargin: "-25% 0px -65% 0px" },
+      );
+      headings.forEach((h) => tocIo.observe(h));
+    </script>
+  </body>
+</html>
