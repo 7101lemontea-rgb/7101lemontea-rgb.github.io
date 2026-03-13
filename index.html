@@ -44,6 +44,12 @@
       }
 
       /* ── LAYOUT ── */
+      .container-hero {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 1.8rem;
+        padding-left: 4rem;
+      }
       .container {
         max-width: 760px;
         margin: 0 auto;
@@ -62,9 +68,10 @@
         border-bottom: 1px solid var(--rule);
       }
       nav .inner {
-        max-width: 760px;
+        max-width: 1024px;
         margin: 0 auto;
         padding: 0 2rem;
+        padding-left: 60px;
         height: 56px;
         display: flex;
         align-items: center;
@@ -99,9 +106,14 @@
 
       /* ── HERO ── */
       #hero {
-        padding: 140px 0 80px;
+        padding: 100px 0 0px;
         border-bottom: 1px solid var(--rule);
       }
+
+      .hero-image {
+        gap: 2rem; /* 그림과 글자 사이 간격 */
+      }
+
       .hero-label {
         font-family: var(--font-mono);
         font-size: 0.75rem;
@@ -114,8 +126,9 @@
       }
       .hero-title {
         font-family: var(--font-serif);
-        font-size: clamp(2.8rem, 6vw, 4.5rem);
-        line-height: 1.1;
+        font-size: clamp(2.2rem, 3.2vw, 2.8rem);
+        font-weight: 700;
+        line-height: 1.5;
         letter-spacing: -0.02em;
         color: var(--ink);
         margin-bottom: 1.5rem;
@@ -123,8 +136,9 @@
         animation: fadeUp 0.6s 0.2s ease forwards;
       }
       .hero-title em {
-        font-style: italic;
-        color: var(--accent);
+        font-style: normal;
+        color: #9db57d;
+        font-size: clamp(1.8rem, 2.4vw, 2.4rem);
       }
       .hero-desc {
         font-size: 1.05rem;
@@ -142,6 +156,21 @@
         opacity: 0;
         animation: fadeUp 0.6s 0.45s ease forwards;
       }
+
+      .hero-body {
+        display: flex;
+        align-items: center;
+        gap: 4rem;
+      }
+
+      .hero-text {
+        flex: 1;
+      }
+
+      .hero-image {
+        flex-shrink: 0;
+      }
+
       .btn-primary {
         display: inline-block;
         padding: 0.65rem 1.6rem;
@@ -161,24 +190,31 @@
         background: var(--accent);
         transform: translateY(-1px);
       }
-      .btn-ghost {
+
+      .btn-secondary {
+        display: inline-block;
+        padding: 0.65rem 1.6rem;
+        background: var(--ink-muted);
+        color: var(--bg);
         font-family: var(--font-mono);
         font-size: 0.8rem;
         letter-spacing: 0.04em;
         text-transform: uppercase;
-        color: var(--ink-muted);
         text-decoration: none;
-        border-bottom: 1px solid currentColor;
-        padding-bottom: 1px;
-        transition: color 0.2s;
+        border-radius: 2px;
+        transition:
+          background 0.2s,
+          transform 0.15s;
       }
-      .btn-ghost:hover {
-        color: var(--accent);
+      .btn-secondary:hover {
+        background: #9db57d;
+        transform: translateY(-1px);
       }
 
       /* ── SECTION HEADER ── */
       .section-header {
         display: flex;
+        flex-wrap: wrap;
         align-items: baseline;
         gap: 1rem;
         margin-bottom: 2.5rem;
@@ -198,6 +234,16 @@
         font-size: 0.72rem;
         color: var(--ink-muted);
         letter-spacing: 0.06em;
+      }
+
+      .section-view {
+        font-family: var(--font-sans);
+        font-size: 0.85rem;
+        color: var(--ink-muted);
+        letter-spacing: 0.06em;
+        width: 100%;
+        text-align: right;
+        margin-top: -0.5rem;
       }
 
       /* ── ABOUT ── */
@@ -374,9 +420,9 @@
       }
       .contact-heading {
         font-family: var(--font-serif);
-        font-size: clamp(1.8rem, 4vw, 2.6rem);
-        line-height: 1.2;
-        letter-spacing: -0.02em;
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        line-height: 1.6;
+        letter-spacing: 0em;
         max-width: 340px;
       }
       .contact-heading em {
@@ -502,18 +548,36 @@
 
     <!-- HERO -->
     <section id="hero">
-      <div class="container">
+      <div class="container-hero">
         <p class="hero-label">Frontend / Backend Developer</p>
-        <h1 class="hero-title">
-          코드로 아이디어를<br /><em>현실로</em> 만드는<br />개발자입니다.
-        </h1>
-        <p class="hero-desc">
-          깔끔한 코드와 좋은 사용자 경험을 좋아합니다.<br />
-          배운 것을 기록하고, 만든 것을 공유합니다.
-        </p>
-        <div class="hero-cta">
-          <a class="btn-primary" href="project/index.html">프로젝트 보기</a>
-          <a class="btn-ghost" href="blog/index.html">블로그 글 읽기</a>
+
+        <div class="hero-body">
+          <!-- 왼쪽 텍스트 영역 -->
+          <div class="hero-text">
+            <h1 class="hero-title">
+              <em>배우고 기록하며</em> <br />성장하는 개발자입니다.
+            </h1>
+            <p class="hero-desc">
+              깔끔한 코드와 좋은 사용자 경험을 좋아합니다.<br />
+              배운 것을 기록하고, 만든 것을 공유합니다.
+            </p>
+            <div class="hero-cta">
+              <a class="btn-primary" href="project/index.html">프로젝트 보기</a>
+              <a class="btn-secondary" href="blog/index.html">블로그 글 읽기</a>
+            </div>
+          </div>
+
+          <!-- 오른쪽 Lottie 영역 -->
+          <div class="hero-image">
+            <lottie-player
+              src="./assets/lottie/Female Employee Working on Data Security.json"
+              background="transparent"
+              style="width: 400px; height: 400px"
+              speed="1"
+              loop
+              autoplay
+            ></lottie-player>
+          </div>
         </div>
       </div>
     </section>
@@ -564,6 +628,7 @@
           <h2 class="section-title">Projects</h2>
           <div class="section-line"></div>
           <span class="section-count">03</span>
+          <a class="section-view" href="project/index.html">전체 보기</a>
         </div>
         <div class="project-list">
           <a
@@ -612,9 +677,10 @@
         <div class="section-header reveal">
           <h2 class="section-title">Blog</h2>
           <div class="section-line"></div>
-          <a class="blog-view-all" href="blog/index.html">전체 보기 →</a>
           <span class="section-count">04</span>
+          <a class="section-view" href="blog/index.html">전체 보기</a>
         </div>
+
         <div class="post-list">
           <a
             class="post-item reveal"
@@ -635,7 +701,7 @@
             <span class="post-date">2026.03.09</span>
           </a>
 
-          <a class="post-item reveal" href="blog/react_03.html_02.html">
+          <a class="post-item reveal" href="blog/react_03_html_02.html">
             <div class="post-left">
               <p class="post-tag">React</p>
               <p class="post-title">React 03. HTML 기초 02</p>
@@ -719,5 +785,6 @@
       );
       reveals.forEach((el) => observer.observe(el));
     </script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   </body>
 </html>
