@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS — 반응형 웹 & 미디어 쿼리</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">dev.log</a>
+        <a href="../blog/index.html" class="nav-back">← 목록으로</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta" id="post-timestamps">
+          <span class="post-tag">CSS 기초 03</span>
+          <span class="post-date"
+            >작성일 <span id="date-created">불러오는 중…</span></span
+          >
+          <span class="post-date"
+            >최종 수정일 <span id="date-updated">불러오는 중…</span></span
+          >
+        </div>
+        <h1 class="post-title">반응형 웹 &amp; 미디어 쿼리</h1>
+        <p class="post-subtitle">
+          반응형 웹은 하나의 HTML로 모바일·태블릿·데스크탑을 모두 커버하는
+          방법입니다. 뷰포트 메타 태그, 유동적 단위, 미디어 쿼리 — 반응형 웹의
+          3가지 핵심을 정리합니다.
+        </p>
+        <div class="post-info">
+          <div>
+            <div class="info-label">Topics</div>
+            <div class="info-value">
+              반응형 웹 · 뷰포트 메타 태그 · 유동적 단위 · 미디어 쿼리
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC SIDEBAR -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">목차</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-intro">
+                <span class="toc-num">8</span>반응형 웹이란?
+              </a>
+            </li>
+            <li>
+              <a href="#section-81">
+                <span class="toc-num">8.1</span>3가지 핵심 요소
+              </a>
+              <ul class="toc-sub-list">
+                <li><a href="#section-81a">a. 뷰포트 메타 태그</a></li>
+                <li><a href="#section-81b">b. 유동적 단위</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-82">
+                <span class="toc-num">8.2</span>미디어 쿼리
+              </a>
+              <ul class="toc-sub-list">
+                <li><a href="#section-82-syntax">기본 문법</a></li>
+                <li><a href="#section-82-condition">조건 종류</a></li>
+                <li><a href="#section-82-example">예시</a></li>
+                <li><a href="#section-82-breakpoint">브레이크포인트</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <!-- ══════════ 8. 반응형 웹이란? ══════════ -->
+        <section class="section" id="section-intro">
+          <div class="sec-eyebrow">Section 08</div>
+          <h2 class="sec-heading">반응형 웹 (Responsive Web)</h2>
+
+          <p>
+            반응형 웹은 <strong>하나의 웹사이트</strong>가 다양한 화면 크기에
+            맞춰 <strong>자동으로 레이아웃이 변하는</strong> 웹 디자인
+            방식입니다.
+          </p>
+
+          <figure class="post-figure">
+            <img
+              width="300px"
+              src="../assets/blog_image/rwd_img4.png"
+              alt="반응형 웹 — 데스크탑, 태블릿, 노트북, 모바일 등 다양한 기기에서 레이아웃이 자동 조정됨"
+            />
+            <figcaption>
+              하나의 HTML이 Desktop · Tablet · Laptop · Phone 모든 화면에 맞게
+              자동 조정됩니다
+            </figcaption>
+          </figure>
+
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-icon">📱</div>
+              <div class="card-title">모바일 퍼스트</div>
+              <p class="card-desc">
+                현재 웹 트래픽의 절반 이상이 모바일에서 발생합니다. 작은
+                화면부터 설계하는 방식이 표준입니다.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-icon">🔧</div>
+              <div class="card-title">유지보수 효율</div>
+              <p class="card-desc">
+                모바일·PC 버전을 따로 관리할 필요 없이 하나의 코드베이스로 모든
+                기기를 대응합니다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════ 8.1 핵심 요소 ══════════ -->
+        <section class="section" id="section-81">
+          <div class="sec-eyebrow">Section 08 — 1</div>
+          <h2 class="sec-heading">반응형 웹의 3가지 핵심 요소</h2>
+
+          <div class="tier-diagram">
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">a</span>
+                <span class="tier-layer">Viewport</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  <strong>뷰포트 메타 태그</strong> — 브라우저에게 화면 크기를
+                  알려줍니다.
+                </p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">b</span>
+                <span class="tier-layer">Units</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  <strong>유동적 단위</strong> — px 대신 %, vw, rem 등 상대
+                  단위를 사용합니다.
+                </p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">c</span>
+                <span class="tier-layer">Media Query</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  <strong>미디어 쿼리</strong> — 화면 크기 조건에 따라 다른
+                  CSS를 적용합니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- a. 뷰포트 메타 태그 -->
+          <h3 class="sub-heading" id="section-81a">a. 뷰포트 메타 태그</h3>
+
+          <p>모바일 브라우저에게 화면을 어떻게 렌더링할지 알려줍니다.</p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">HTML</span></div>
+            <div class="code-body">
+              <pre><span class="t">&lt;</span><span class="tn">head</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">meta</span> <span class="at">name</span>=<span class="av">"viewport"</span> <span class="at">content</span>=<span class="av">"width=device-width, initial-scale=1.0"</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">head</span><span class="t">&gt;</span></pre>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>속성</th>
+                <th>의미</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">width=device-width</td>
+                <td>뷰포트 너비를 기기 화면 너비에 맞춤</td>
+              </tr>
+              <tr>
+                <td class="td-tag">initial-scale=1.0</td>
+                <td>초기 확대/축소 비율 100%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr class="sec-divider" />
+
+          <!-- b. 유동적 단위 -->
+          <h3 class="sub-heading" id="section-81b">
+            b. 유동적 단위 (Fluid Units)
+          </h3>
+
+          <p>고정 단위(px) 대신 상대적 단위를 사용합니다.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>단위</th>
+                <th>기준</th>
+                <th>용도</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">%</td>
+                <td>부모 요소</td>
+                <td>너비, 높이</td>
+              </tr>
+              <tr>
+                <td class="td-tag">vw</td>
+                <td>뷰포트 너비의 1%</td>
+                <td>전체 화면 기준 너비</td>
+              </tr>
+              <tr>
+                <td class="td-tag">vh</td>
+                <td>뷰포트 높이의 1%</td>
+                <td>전체 화면 기준 높이</td>
+              </tr>
+              <tr>
+                <td class="td-tag">em</td>
+                <td>부모의 font-size</td>
+                <td>여백, 크기</td>
+              </tr>
+              <tr>
+                <td class="td-tag">rem</td>
+                <td>html의 font-size (기본 16px)</td>
+                <td>폰트, 여백 <strong>(가장 권장)</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>고정 단위와 유동적 단위를 실제 코드로 비교하면 다음과 같습니다.</p>
+
+          <div class="compare-grid">
+            <div class="compare-card">
+              <div class="compare-head inline">
+                ❌ 고정 단위 — 반응형에 불리
+              </div>
+              <div class="compare-body">
+                <div class="code-block" style="margin: 0">
+                  <div class="code-body">
+                    <pre><span class="tx">.box </span><span class="t">{</span>
+  <span class="at">width</span><span class="t">:</span>     <span class="av">960px</span><span class="t">;</span> <span class="cm">/* 화면이 작으면 잘림 */</span>
+  <span class="at">font-size</span><span class="t">:</span> <span class="av">16px</span><span class="t">;</span>  <span class="cm">/* 기기마다 다르게 보임 */</span>
+<span class="t">}</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="compare-card">
+              <div class="compare-head block">
+                ✅ 유동적 단위 — 반응형에 유리
+              </div>
+              <div class="compare-body">
+                <div class="code-block" style="margin: 0">
+                  <div class="code-body">
+                    <pre><span class="tx">.box </span><span class="t">{</span>
+  <span class="at">width</span><span class="t">:</span>     <span class="av">90%</span><span class="t">;</span>   <span class="cm">/* 부모의 90% */</span>
+  <span class="at">max-width</span><span class="t">:</span> <span class="av">960px</span><span class="t">;</span> <span class="cm">/* 최대 960px까지만 */</span>
+  <span class="at">font-size</span><span class="t">:</span> <span class="av">1rem</span><span class="t">;</span>  <span class="cm">/* html 기준 1배(16px) */</span>
+<span class="t">}</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════ 8.2 미디어 쿼리 ══════════ -->
+        <section class="section" id="section-82">
+          <div class="sec-eyebrow">Section 08 — 2</div>
+          <h2 class="sec-heading">핵심 문법: 미디어 쿼리 (Media Query)</h2>
+
+          <p>
+            특정 조건에서 다른 CSS를 적용합니다. 반응형 웹의
+            <strong>핵심</strong>입니다.
+          </p>
+
+          <!-- 기본 문법 -->
+          <h3 class="sub-heading" id="section-82-syntax">기본 문법</h3>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">@media screen </span><span class="t">and</span><span class="tx"> </span><span class="t">(</span><span class="tx">조건</span><span class="t">)</span><span class="tx"> </span><span class="t">{</span>
+  <span class="cm">/* 조건이 맞을 때 적용할 스타일 */</span>
+  <span class="tx">선택자 </span><span class="t">{</span>
+    <span class="at">속성</span><span class="t">:</span> <span class="av">값</span><span class="t">;</span>
+  <span class="t">}</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- 조건 종류 -->
+          <h3 class="sub-heading" id="section-82-condition">조건 종류</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>조건</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">max-width: 768px</td>
+                <td>너비가 768px <strong>이하</strong>일 때</td>
+              </tr>
+              <tr>
+                <td class="td-tag">min-width: 768px</td>
+                <td>너비가 768px <strong>이상</strong>일 때</td>
+              </tr>
+              <tr>
+                <td class="td-tag">orientation: portrait</td>
+                <td>세로 모드</td>
+              </tr>
+              <tr>
+                <td class="td-tag">orientation: landscape</td>
+                <td>가로 모드</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr class="sec-divider" />
+
+          <!-- 예시 -->
+          <h3 class="sub-heading" id="section-82-example">※ 예시</h3>
+
+          <div class="highlight-box">
+            <p>
+              기본 스타일을 먼저 작성하고, 미디어 쿼리 안에서 조건에 맞을 때만
+              덮어쓰는 방식입니다.
+            </p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="cm">/* 기본 스타일 */</span>
+<span class="tx">.container </span><span class="t">{</span>
+  <span class="at">background-color</span><span class="t">:</span> <span class="av">blue</span><span class="t">;</span>
+<span class="t">}</span>
+
+<span class="cm">/* 화면 너비가 768px 이하일 때 */</span>
+<span class="tx">@media </span><span class="t">(</span><span class="at">max-width</span><span class="t">:</span> <span class="av">768px</span><span class="t">)</span><span class="tx"> </span><span class="t">{</span>
+  <span class="tx">.container </span><span class="t">{</span>
+    <span class="at">background-color</span><span class="t">:</span> <span class="av">red</span><span class="t">;</span>
+  <span class="t">}</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- 브레이크포인트 -->
+          <h3 class="sub-heading" id="section-82-breakpoint">
+            자주 사용하는 브레이크포인트
+          </h3>
+
+          <ul class="tech-list">
+            <li><strong>모바일</strong> : ~767px</li>
+            <li><strong>태블릿</strong> : 768~1023px</li>
+            <li><strong>데스크탑</strong> : 1024px~</li>
+          </ul>
+
+          <div class="tier-diagram">
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">Mobile</span>
+                <span class="tier-layer">~ 767px</span>
+              </div>
+              <div class="tier-content">
+                <p>스마트폰. 단일 열 레이아웃, 큰 터치 영역이 필요합니다.</p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">Tablet</span>
+                <span class="tier-layer">768 ~ 1023px</span>
+              </div>
+              <div class="tier-content">
+                <p>태블릿. 2열 레이아웃을 사용하는 경우가 많습니다.</p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">Desktop</span>
+                <span class="tier-layer">1024px ~</span>
+              </div>
+              <div class="tier-content">
+                <p>데스크탑. 다단 레이아웃과 넓은 콘텐츠 영역을 활용합니다.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">CSS — 브레이크포인트 적용 예시</span>
+            </div>
+            <div class="code-body">
+              <pre><span class="cm">/* Mobile First — 기본이 모바일 스타일 */</span>
+<span class="tx">.container </span><span class="t">{</span>
+  <span class="at">width</span><span class="t">:</span> <span class="av">100%</span><span class="t">;</span>
+<span class="t">}</span>
+
+<span class="cm">/* Tablet: 768px 이상 */</span>
+<span class="tx">@media </span><span class="t">(</span><span class="at">min-width</span><span class="t">:</span> <span class="av">768px</span><span class="t">)</span><span class="tx"> </span><span class="t">{</span>
+  <span class="tx">.container </span><span class="t">{</span>
+    <span class="at">width</span><span class="t">:</span> <span class="av">90%</span><span class="t">;</span>
+  <span class="t">}</span>
+<span class="t">}</span>
+
+<span class="cm">/* Desktop: 1024px 이상 */</span>
+<span class="tx">@media </span><span class="t">(</span><span class="at">min-width</span><span class="t">:</span> <span class="av">1024px</span><span class="t">)</span><span class="tx"> </span><span class="t">{</span>
+  <span class="tx">.container </span><span class="t">{</span>
+    <span class="at">max-width</span><span class="t">:</span> <span class="av">1200px</span><span class="t">;</span>
+    <span class="at">margin</span><span class="t">:</span>    <span class="av">0 auto</span><span class="t">;</span>
+  <span class="t">}</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>범위</th>
+                <th>미디어 쿼리 조건</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>모바일</td>
+                <td>~ 767px</td>
+                <td class="td-tag">기본 스타일 (조건 없음)</td>
+              </tr>
+              <tr>
+                <td>태블릿</td>
+                <td>768 ~ 1023px</td>
+                <td class="td-tag">@media (min-width: 768px)</td>
+              </tr>
+              <tr>
+                <td>데스크탑</td>
+                <td>1024px ~</td>
+                <td class="td-tag">@media (min-width: 1024px)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+
+        <!-- POST FOOTER -->
+        <footer class="post-footer">
+          <a href="../blog/index.html" class="footer-back">← 목록으로</a>
+          <span class="footer-copy">© 2026 dev.log</span>
+        </footer>
+      </article>
+    </div>
+    <!-- /.main-wrapper -->
+
+    <script src="../script.js"></script>
+  </body>
+</html>
