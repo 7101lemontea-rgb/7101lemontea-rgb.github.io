@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS — 박스 모델 & Flexbox</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">dev.log</a>
+        <a href="../blog/index.html" class="nav-back">← 목록으로</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta" id="post-timestamps">
+          <span class="post-tag">CSS 기초 02</span>
+          <span class="post-date"
+            >작성일 <span id="date-created">불러오는 중…</span></span
+          >
+          <span class="post-date"
+            >최종 수정일 <span id="date-updated">불러오는 중…</span></span
+          >
+        </div>
+        <h1 class="post-title">박스 모델 &amp; Flexbox</h1>
+        <p class="post-subtitle">
+          박스 모델의 4가지 레이어를 이해하고, Flexbox로 레이아웃을 자유롭게
+          제어하는 방법을 정리합니다.
+        </p>
+        <div class="post-info">
+          <div>
+            <div class="info-label">Topics</div>
+            <div class="info-value">
+              박스 모델 · padding · border · margin · Flexbox
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC SIDEBAR -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">목차</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"><span class="toc-num">1</span>박스 모델</a>
+              <ul class="toc-sub-list">
+                <li><a href="#section-11">1.1 박스 모델 개요</a></li>
+                <li><a href="#section-12">1.2 Content</a></li>
+                <li><a href="#section-13">1.3 Padding</a></li>
+                <li><a href="#section-14">1.4 Border</a></li>
+                <li><a href="#section-15">1.5 Margin</a></li>
+                <li><a href="#section-16">1.6 Margin Collapse</a></li>
+                <li><a href="#section-17">1.7 box-sizing</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-2"><span class="toc-num">2</span>Flexbox</a>
+              <ul class="toc-sub-list">
+                <li><a href="#section-21">2.1 핵심 개념</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3</span>Flexbox 주요 속성</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#section-31">3-1. 부모 속성</a></li>
+                <li><a href="#section-32">3-2. 자식 속성</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <!-- ══════════════ 1. 박스 모델 ══════════════ -->
+        <section class="section" id="section-1">
+          <div class="sec-eyebrow">Section 01</div>
+          <h2 class="sec-heading">박스 모델</h2>
+
+          <!-- 1.1 개요 -->
+          <h3 class="sub-heading" id="section-11">1.1 박스 모델 개요</h3>
+
+          <ul class="tech-list">
+            <li>
+              웹 브라우저는 모든 HTML 태그를 <strong>네모난 박스</strong>로
+              취급합니다.
+            </li>
+            <li>
+              이 박스는 <strong>4개의 겹(Layer)</strong>으로 이루어져 있습니다.
+            </li>
+          </ul>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/bm_img8.png"
+              alt="박스 모델 구조 — content, padding, border, margin 4개 레이어"
+            />
+            <figcaption>
+              박스 모델 구조 — 안쪽부터 content → padding → border → margin
+            </figcaption>
+          </figure>
+
+          <!-- 1.2 Content -->
+          <h3 class="sub-heading" id="section-12">1.2 Content (내용)</h3>
+
+          <ul class="tech-list">
+            <li>
+              텍스트나 이미지가 들어가는 <strong>실제 알맹이</strong>입니다.
+            </li>
+            <li>
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(57, 112, 109, 0.1);
+                  color: var(--accent);
+                  padding: 0.1rem 0.4rem;
+                  border-radius: 3px;
+                "
+                >width</code
+              >와
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(57, 112, 109, 0.1);
+                  color: var(--accent);
+                  padding: 0.1rem 0.4rem;
+                  border-radius: 3px;
+                "
+                >height</code
+              >가 적용되는 영역입니다.
+            </li>
+          </ul>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">div </span><span class="t">{</span>
+  <span class="at">width</span><span class="t">:</span>  <span class="av">300px</span><span class="t">;</span>  <span class="cm">/* 내용 영역의 너비 */</span>
+  <span class="at">height</span><span class="t">:</span> <span class="av">200px</span><span class="t">;</span>  <span class="cm">/* 내용 영역의 높이 */</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <!-- 1.3 Padding -->
+          <h3 class="sub-heading" id="section-13">1.3 Padding (안쪽 여백)</h3>
+
+          <ul class="tech-list">
+            <li>내용물과 테두리 사이의 <strong>공간</strong>입니다.</li>
+            <li>
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(57, 112, 109, 0.1);
+                  color: var(--accent);
+                  padding: 0.1rem 0.4rem;
+                  border-radius: 3px;
+                "
+                >background-color</code
+              >는 padding 영역까지 칠해집니다.
+            </li>
+          </ul>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">div </span><span class="t">{</span>
+  <span class="cm">/* 개별 지정 */</span>
+  <span class="at">padding-top</span><span class="t">:</span>    <span class="av">10px</span><span class="t">;</span>
+  <span class="at">padding-right</span><span class="t">:</span>  <span class="av">20px</span><span class="t">;</span>
+  <span class="at">padding-bottom</span><span class="t">:</span> <span class="av">10px</span><span class="t">;</span>
+  <span class="at">padding-left</span><span class="t">:</span>   <span class="av">20px</span><span class="t">;</span>
+
+  <span class="cm">/* 축약형 — 상 우 하 좌 (시계방향) */</span>
+  <span class="at">padding</span><span class="t">:</span> <span class="av">10px 20px 10px 20px</span><span class="t">;</span>
+
+  <span class="cm">/* 축약형 — 상하 좌우 */</span>
+  <span class="at">padding</span><span class="t">:</span> <span class="av">10px 20px</span><span class="t">;</span>
+
+  <span class="cm">/* 축약형 — 모든 방향 동일 */</span>
+  <span class="at">padding</span><span class="t">:</span> <span class="av">10px</span><span class="t">;</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <!-- 1.4 Border -->
+          <h3 class="sub-heading" id="section-14">1.4 Border (테두리)</h3>
+
+          <ul class="tech-list">
+            <li>박스의 <strong>경계선</strong>입니다.</li>
+          </ul>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">div </span><span class="t">{</span>
+  <span class="cm">/* 개별 지정 */</span>
+  <span class="at">border-width</span><span class="t">:</span> <span class="av">1px</span><span class="t">;</span>
+  <span class="at">border-style</span><span class="t">:</span> <span class="av">solid</span><span class="t">;</span>  <span class="cm">/* solid, dashed, dotted, double, none */</span>
+  <span class="at">border-color</span><span class="t">:</span> <span class="av">black</span><span class="t">;</span>
+
+  <span class="cm">/* 축약형 (가장 많이 사용) */</span>
+  <span class="at">border</span><span class="t">:</span> <span class="av">1px solid black</span><span class="t">;</span>
+
+  <span class="cm">/* 특정 방향만 */</span>
+  <span class="at">border-bottom</span><span class="t">:</span> <span class="av">2px solid red</span><span class="t">;</span>
+  <span class="at">border-left</span><span class="t">:</span>   <span class="av">3px dashed blue</span><span class="t">;</span>
+
+  <span class="cm">/* 둥근 테두리 */</span>
+  <span class="at">border-radius</span><span class="t">:</span> <span class="av">10px</span><span class="t">;</span>  <span class="cm">/* 모든 모서리 */</span>
+  <span class="at">border-radius</span><span class="t">:</span> <span class="av">50%</span><span class="t">;</span>   <span class="cm">/* 원형 */</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <!-- 1.5 Margin -->
+          <h3 class="sub-heading" id="section-15">1.5 Margin (바깥 여백)</h3>
+
+          <ul class="tech-list">
+            <li>
+              요소와 요소 사이의 여백 —
+              <strong>테두리 바깥의 공간</strong>입니다.
+            </li>
+            <li>배경색이 적용되지 않는 <strong>투명한 공간</strong>입니다.</li>
+          </ul>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">div </span><span class="t">{</span>
+  <span class="cm">/* padding과 동일한 방식 */</span>
+  <span class="at">margin-top</span><span class="t">:</span> <span class="av">20px</span><span class="t">;</span>
+  <span class="at">margin</span><span class="t">:</span>     <span class="av">20px 10px</span><span class="t">;</span>  <span class="cm">/* 상하 좌우 */</span>
+  <span class="at">margin</span><span class="t">:</span>     <span class="av">10px</span><span class="t">;</span>       <span class="cm">/* 모든 방향 */</span>
+
+  <span class="cm">/* 가운데 정렬 (블록 요소) */</span>
+  <span class="at">margin</span><span class="t">:</span> <span class="av">0 auto</span><span class="t">;</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- 1.6 Margin Collapse -->
+          <h3 class="sub-heading" id="section-16">
+            1.6 마진 상쇄 (Margin Collapse)
+          </h3>
+
+          <p>
+            두 블록 요소가 세로로 인접할 때, 위 요소의
+            <code
+              style="
+                font-family: var(--font-mono);
+                background: rgba(57, 112, 109, 0.1);
+                color: var(--accent);
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+              "
+              >margin-bottom</code
+            >과 아래 요소의
+            <code
+              style="
+                font-family: var(--font-mono);
+                background: rgba(57, 112, 109, 0.1);
+                color: var(--accent);
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+              "
+              >margin-top</code
+            >이 <strong>더 큰 값 하나로 합쳐집니다.</strong>
+          </p>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/bm_img1.png"
+              alt="마진 상쇄 — 30px + 20px가 아니라 더 큰 값인 30px만 적용"
+              style="width: 50%"
+            />
+            <figcaption>
+              margin-bottom: 30px + margin-top: 20px → 실제 간격은 50px이 아닌
+              30px
+            </figcaption>
+          </figure>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">HTML + CSS</span>
+            </div>
+            <div class="code-body">
+              <pre><span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"box1"</span><span class="t">&gt;</span><span class="tx">박스1</span><span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"box2"</span><span class="t">&gt;</span><span class="tx">박스2</span><span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span>
+
+<span class="tx">.box1 </span><span class="t">{</span> <span class="at">margin-bottom</span><span class="t">:</span> <span class="av">30px</span><span class="t">;</span> <span class="t">}</span>
+<span class="tx">.box2 </span><span class="t">{</span> <span class="at">margin-top</span><span class="t">:</span>    <span class="av">20px</span><span class="t">;</span> <span class="t">}</span>
+
+<span class="cm">/* 실제 간격은 50px이 아닌 30px */</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- 1.7 box-sizing -->
+          <h3 class="sub-heading" id="section-17">1.7 box-sizing 속성</h3>
+
+          <ul class="tech-list">
+            <li>
+              기본적으로
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(57, 112, 109, 0.1);
+                  color: var(--accent);
+                  padding: 0.1rem 0.4rem;
+                  border-radius: 3px;
+                "
+                >width</code
+              >
+              /
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(57, 112, 109, 0.1);
+                  color: var(--accent);
+                  padding: 0.1rem 0.4rem;
+                  border-radius: 3px;
+                "
+                >height</code
+              >는 <strong>content 영역만</strong>의 크기입니다.
+            </li>
+            <li>
+              padding과 border를 추가하면 <strong>전체 크기가 커집니다.</strong>
+            </li>
+          </ul>
+
+          <div class="compare-grid">
+            <div class="compare-card">
+              <div class="compare-head inline">content-box (기본값)</div>
+              <div class="compare-body">
+                <div class="code-block" style="margin: 0">
+                  <div class="code-body">
+                    <pre><span class="tx">div </span><span class="t">{</span>
+  <span class="at">width</span><span class="t">:</span>   <span class="av">300px</span><span class="t">;</span>
+  <span class="at">padding</span><span class="t">:</span> <span class="av">20px</span><span class="t">;</span>
+  <span class="at">border</span><span class="t">:</span>  <span class="av">10px solid black</span><span class="t">;</span>
+<span class="t">}</span>
+<span class="cm">/* 실제 너비: 300+40+20 = 360px */</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="compare-card">
+              <div class="compare-head block">border-box (권장)</div>
+              <div class="compare-body">
+                <div class="code-block" style="margin: 0">
+                  <div class="code-body">
+                    <pre><span class="tx">div </span><span class="t">{</span>
+  <span class="at">box-sizing</span><span class="t">:</span> <span class="av">border-box</span><span class="t">;</span>
+  <span class="at">width</span><span class="t">:</span>     <span class="av">300px</span><span class="t">;</span>
+  <span class="at">padding</span><span class="t">:</span>   <span class="av">20px</span><span class="t">;</span>
+  <span class="at">border</span><span class="t">:</span>    <span class="av">10px solid black</span><span class="t">;</span>
+<span class="t">}</span>
+<span class="cm">/* 실제 너비: 300px 고정 */</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(57, 112, 109, 0.1);
+                  color: var(--accent);
+                  padding: 0.1rem 0.4rem;
+                  border-radius: 3px;
+                "
+                >box-sizing: border-box</code
+              >를 사용하면
+              <strong>width가 전체 크기(padding, border 포함)</strong>가 됩니다.
+              content 영역이 자동으로 줄어들어 크기 계산이 직관적입니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ══════════════ 2. Flexbox ══════════════ -->
+        <section class="section" id="section-2">
+          <div class="sec-eyebrow">Section 02</div>
+          <h2 class="sec-heading">Flexbox</h2>
+
+          <ul class="tech-list">
+            <li>
+              Flexbox(Flexible Box)는 <strong>1차원 레이아웃</strong>을 위한 CSS
+              모듈입니다. 한 번에 가로 또는 세로,
+              <strong>한 방향의 배치</strong>만 다룹니다.
+            </li>
+            <li>
+              예전에는 float, position 등을 복잡하게 조합해야 했지만, Flexbox는
+              이런 문제를 해결하기 위해 등장한
+              <strong>1차원 레이아웃 시스템</strong>입니다.
+            </li>
+            <li>
+              <strong>Flexbox 하나만 써도</strong> 웬만한 레이아웃은 커버
+              가능합니다.
+            </li>
+          </ul>
+
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-title">직관적인 문법</div>
+              <p class="card-desc">
+                간단한 속성 몇 줄로 복잡한 정렬을 구현합니다.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-title">가로/세로 정렬</div>
+              <p class="card-desc">
+                주축과 교차축으로 2방향 정렬을 자유롭게 제어합니다.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-title">반응형 구현</div>
+              <p class="card-desc">
+                flex-wrap, flex-grow로 반응형 레이아웃을 간편하게 만듭니다.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-title">유연한 공간 분배</div>
+              <p class="card-desc">
+                아이템 순서 변경과 공간 분배가 자유롭습니다.
+              </p>
+            </div>
+          </div>
+
+          <!-- 2.1 핵심 개념 -->
+          <h3 class="sub-heading" id="section-21">2.1 Flexbox 핵심 개념</h3>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/bm_img6.png"
+              alt="Flexbox — Flex Container와 Flex Item, Main Axis와 Cross Axis"
+              style="width: 50%"
+            />
+            <figcaption>
+              Flex Container(부모)가 Flex Item(자식)을 Main Axis 방향으로
+              배치합니다
+            </figcaption>
+          </figure>
+
+          <div class="tier-diagram">
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">Container</span>
+                <span class="tier-layer">부모</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  <code
+                    style="
+                      font-family: var(--font-mono);
+                      background: rgba(57, 112, 109, 0.1);
+                      color: var(--accent);
+                      padding: 0.1rem 0.4rem;
+                      border-radius: 3px;
+                    "
+                    >display: flex</code
+                  >를 적용하는 요소. 자식(Items)의 배치를 제어합니다.
+                </p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">Items</span>
+                <span class="tier-layer">자식</span>
+              </div>
+              <div class="tier-content">
+                <p>Container 안에 직접 배치되는 자식 요소들입니다.</p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">Main Axis</span>
+                <span class="tier-layer">주축</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  아이템이 배치되는 방향.
+                  <code
+                    style="
+                      font-family: var(--font-mono);
+                      background: rgba(57, 112, 109, 0.1);
+                      color: var(--accent);
+                      padding: 0.1rem 0.4rem;
+                      border-radius: 3px;
+                    "
+                    >flex-direction</code
+                  >으로 결정됩니다.
+                </p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">Cross Axis</span>
+                <span class="tier-layer">교차축</span>
+              </div>
+              <div class="tier-content">
+                <p>주축과 <strong>수직인 방향</strong>입니다.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════ 3. Flexbox 주요 속성 ══════════════ -->
+        <section class="section" id="section-3">
+          <div class="sec-eyebrow">Section 03</div>
+          <h2 class="sec-heading">Flexbox 주요 속성</h2>
+
+          <!-- 3-1. 부모 속성 -->
+          <h3 class="sub-heading" id="section-31">3-1. 부모 속성</h3>
+
+          <p>
+            <strong>부모 요소에 다음의 속성들을 적용</strong>하여 자식 요소의
+            위치를 제어합니다.
+          </p>
+
+          <!-- display: flex -->
+          <div class="sec-eyebrow" style="margin-top: 1.8rem"
+            >display: flex</div
+          >
+
+          <ul class="tech-list">
+            <li>flexbox의 <strong>시작점</strong>입니다.</li>
+            <li>
+              이것만으로 자식 요소들이
+              <strong>가로로 나란히 배치</strong>됩니다.
+            </li>
+          </ul>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/bm_img7.png"
+              alt="display:flex 적용 — 자식 요소들이 가로로 나란히 배치됨"
+              style="width: 50%"
+            />
+            <figcaption>
+              display: flex 적용 결과 — Flex Item 1, 2, 3이 가로로 배치됩니다
+            </figcaption>
+          </figure>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">CSS + HTML</span>
+            </div>
+            <div class="code-body">
+              <pre><span class="tx">.container </span><span class="t">{</span>
+  <span class="at">display</span><span class="t">:</span> <span class="av">flex</span><span class="t">;</span>
+<span class="t">}</span>
+
+<span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"container"</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"item"</span><span class="t">&gt;</span><span class="tx">[1]</span><span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"item"</span><span class="t">&gt;</span><span class="tx">[2]</span><span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"item"</span><span class="t">&gt;</span><span class="tx">[3]</span><span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- flex-direction -->
+          <div class="sec-eyebrow">flex-direction</div>
+          <p>주축 방향 설정 — 아이템이 배치되는 방향을 결정합니다.</p>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/bm_img5.png"
+              alt="flex-direction — row, row-reverse, column, column-reverse 4가지 방향"
+              style="width: 70%"
+            />
+            <figcaption>
+              flex-direction 4가지 값 — row(→) / row-reverse(←) / column(↓) /
+              column-reverse(↑)
+            </figcaption>
+          </figure>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">.container </span><span class="t">{</span>
+  <span class="at">display</span><span class="t">:</span> <span class="av">flex</span><span class="t">;</span>
+  <span class="at">flex-direction</span><span class="t">:</span> <span class="av">row</span><span class="t">;</span>            <span class="cm">/* 기본값: 가로 방향 → */</span>
+  <span class="cm">/* flex-direction: row-reverse;    가로 역방향 ← */</span>
+  <span class="cm">/* flex-direction: column;         세로 방향 ↓ */</span>
+  <span class="cm">/* flex-direction: column-reverse; 세로 역방향 ↑ */</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- justify-content -->
+          <div class="sec-eyebrow">justify-content</div>
+          <p>주축 정렬 — 아이템을 주축 방향으로 어떻게 배치할지 결정합니다.</p>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/bm_img4.png"
+              alt="justify-content — flex-start, center, flex-end, space-between, space-around, space-evenly"
+              style="width: 70%"
+            />
+            <figcaption>justify-content 6가지 값 비교</figcaption>
+          </figure>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">.container </span><span class="t">{</span>
+  <span class="at">display</span><span class="t">:</span> <span class="av">flex</span><span class="t">;</span>
+  <span class="at">justify-content</span><span class="t">:</span> <span class="av">flex-start</span><span class="t">;</span>    <span class="cm">/* 시작점 정렬 (기본값) */</span>
+  <span class="cm">/* justify-content: flex-end;      끝점 정렬 */</span>
+  <span class="cm">/* justify-content: center;        가운데 정렬 */</span>
+  <span class="cm">/* justify-content: space-between; 양끝 붙이고 균등 분배 */</span>
+  <span class="cm">/* justify-content: space-around;  각 아이템 주변 균등 여백 */</span>
+  <span class="cm">/* justify-content: space-evenly;  모든 간격 완전 균등 */</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- align-items -->
+          <div class="sec-eyebrow">align-items</div>
+          <p>
+            교차축 정렬 — 아이템을 교차축 방향으로 어떻게 정렬할지 결정합니다.
+          </p>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/bm_img2.png"
+              alt="align-items — flex-start, center, flex-end, stretch 4가지 값"
+              style="width: 70%"
+            />
+            <figcaption>
+              align-items 4가지 값 비교 — stretch(기본값)는 교차축을 꽉 채웁니다
+            </figcaption>
+          </figure>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">.container </span><span class="t">{</span>
+  <span class="at">display</span><span class="t">:</span> <span class="av">flex</span><span class="t">;</span>
+  <span class="at">height</span><span class="t">:</span>  <span class="av">200px</span><span class="t">;</span>           <span class="cm">/* 높이가 있어야 효과가 보임 */</span>
+  <span class="at">align-items</span><span class="t">:</span> <span class="av">stretch</span><span class="t">;</span>    <span class="cm">/* 늘려서 채움 (기본값) */</span>
+  <span class="cm">/* align-items: flex-start; 위쪽 정렬 */</span>
+  <span class="cm">/* align-items: flex-end;   아래쪽 정렬 */</span>
+  <span class="cm">/* align-items: center;     세로 가운데 정렬 */</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- flex-wrap -->
+          <div class="sec-eyebrow">flex-wrap</div>
+          <p>
+            줄바꿈 설정 — 아이템이 한 줄을 넘을 때 어떻게 처리할지 결정합니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">.container </span><span class="t">{</span>
+  <span class="at">flex-wrap</span><span class="t">:</span> <span class="av">nowrap</span><span class="t">;</span>  <span class="cm">/* 한 줄에 모두 배치 (기본값) */</span>
+  <span class="at">flex-wrap</span><span class="t">:</span> <span class="av">wrap</span><span class="t">;</span>    <span class="cm">/* 넘치면 다음 줄로 */</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- gap -->
+          <div class="sec-eyebrow">gap</div>
+          <p>아이템 간격 — 아이템 사이의 공백을 한 번에 설정합니다.</p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">.container </span><span class="t">{</span>
+  <span class="at">gap</span><span class="t">:</span>        <span class="av">20px</span><span class="t">;</span>      <span class="cm">/* 모든 방향 간격 */</span>
+  <span class="at">gap</span><span class="t">:</span>        <span class="av">20px 10px</span><span class="t">;</span> <span class="cm">/* 세로 가로 간격 */</span>
+  <span class="at">row-gap</span><span class="t">:</span>    <span class="av">20px</span><span class="t">;</span>      <span class="cm">/* 행 간격만 */</span>
+  <span class="at">column-gap</span><span class="t">:</span> <span class="av">10px</span><span class="t">;</span>      <span class="cm">/* 열 간격만 */</span>
+<span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <!-- 부모 속성 요약표 -->
+          <table>
+            <thead>
+              <tr>
+                <th>속성</th>
+                <th>기본값</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">display: flex</td>
+                <td>—</td>
+                <td>Flexbox 활성화</td>
+              </tr>
+              <tr>
+                <td class="td-tag">flex-direction</td>
+                <td class="td-tag">row</td>
+                <td>주축 방향 설정</td>
+              </tr>
+              <tr>
+                <td class="td-tag">justify-content</td>
+                <td class="td-tag">flex-start</td>
+                <td>주축 정렬</td>
+              </tr>
+              <tr>
+                <td class="td-tag">align-items</td>
+                <td class="td-tag">stretch</td>
+                <td>교차축 정렬</td>
+              </tr>
+              <tr>
+                <td class="td-tag">flex-wrap</td>
+                <td class="td-tag">nowrap</td>
+                <td>줄바꿈 설정</td>
+              </tr>
+              <tr>
+                <td class="td-tag">gap</td>
+                <td class="td-tag">0</td>
+                <td>아이템 간격</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr class="sec-divider" />
+
+          <!-- 3-2. 자식 속성 -->
+          <h3 class="sub-heading" id="section-32">3-2. 자식 속성</h3>
+
+          <!-- flex-grow -->
+          <div class="sec-eyebrow" style="margin-top: 1.8rem">flex-grow</div>
+          <p>남는 공간을 얼마나 차지할지 <strong>비율</strong>을 정합니다.</p>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/bm_img3.png"
+              alt="flex-grow 0 vs 1 — 0이면 콘텐츠 크기 유지, 1이면 남은 공간 균등 배분"
+              style="width: 50%"
+            />
+            <figcaption>
+              flex-grow: 0(기본) — 콘텐츠 크기 유지 / flex-grow: 1 — 남은 공간을
+              균등하게 채움
+            </figcaption>
+          </figure>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">HTML + CSS</span>
+            </div>
+            <div class="code-body">
+              <pre><span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"container"</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"item item1"</span><span class="t">&gt;</span><span class="tx">1</span><span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"item item2"</span><span class="t">&gt;</span><span class="tx">2</span><span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"item item3"</span><span class="t">&gt;</span><span class="tx">3</span><span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span>
+
+<span class="tx">.container </span><span class="t">{</span>
+  <span class="at">display</span><span class="t">:</span>          <span class="av">flex</span><span class="t">;</span>
+  <span class="at">background-color</span><span class="t">:</span> <span class="av">#2c3e50</span><span class="t">;</span>
+  <span class="at">padding</span><span class="t">:</span>          <span class="av">10px</span><span class="t">;</span>
+  <span class="at">gap</span><span class="t">:</span>               <span class="av">10px</span><span class="t">;</span>
+<span class="t">}</span>
+<span class="tx">.item </span><span class="t">{</span>
+  <span class="at">background-color</span><span class="t">:</span> <span class="av">#d0d0bf</span><span class="t">;</span>
+  <span class="at">padding</span><span class="t">:</span>          <span class="av">20px</span><span class="t">;</span>
+  <span class="at">text-align</span><span class="t">:</span>        <span class="av">center</span><span class="t">;</span>
+  <span class="at">font-weight</span><span class="t">:</span>       <span class="av">bold</span><span class="t">;</span>
+<span class="t">}</span>
+<span class="tx">.item1 </span><span class="t">{</span> <span class="at">flex-grow</span><span class="t">:</span> <span class="av">0</span><span class="t">;</span> <span class="t">}</span>
+<span class="tx">.item2 </span><span class="t">{</span> <span class="at">flex-grow</span><span class="t">:</span> <span class="av">0</span><span class="t">;</span> <span class="t">}</span>
+<span class="tx">.item3 </span><span class="t">{</span> <span class="at">flex-grow</span><span class="t">:</span> <span class="av">0</span><span class="t">;</span> <span class="t">}</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- flex-shrink -->
+          <div class="sec-eyebrow">flex-shrink</div>
+          <p>
+            공간이 부족할 때 얼마나 줄어들지 <strong>비율</strong>을 정합니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">.item </span><span class="t">{</span> <span class="at">flex-shrink</span><span class="t">:</span> <span class="av">1</span><span class="t">;</span> <span class="t">}</span>  <span class="cm">/* 기본값: 줄어듦 */</span>
+<span class="tx">.item </span><span class="t">{</span> <span class="at">flex-shrink</span><span class="t">:</span> <span class="av">0</span><span class="t">;</span> <span class="t">}</span>  <span class="cm">/* 줄어들지 않음 (고정 크기 유지) */</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- flex-basis -->
+          <div class="sec-eyebrow">flex-basis</div>
+          <p>아이템의 <strong>기본 크기</strong>를 설정합니다.</p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="tx">.item </span><span class="t">{</span> <span class="at">flex-basis</span><span class="t">:</span> <span class="av">auto</span><span class="t">;</span>   <span class="t">}</span>  <span class="cm">/* 기본값: 콘텐츠 크기 */</span>
+<span class="tx">.item </span><span class="t">{</span> <span class="at">flex-basis</span><span class="t">:</span> <span class="av">200px</span><span class="t">;</span>  <span class="t">}</span>  <span class="cm">/* 200px 기본 크기 */</span>
+<span class="tx">.item </span><span class="t">{</span> <span class="at">flex-basis</span><span class="t">:</span> <span class="av">30%</span><span class="t">;</span>    <span class="t">}</span>  <span class="cm">/* 부모의 30% 기본 크기 */</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- flex 단축 -->
+          <div class="sec-eyebrow">flex (단축 속성)</div>
+          <p>
+            <code
+              style="
+                font-family: var(--font-mono);
+                background: rgba(57, 112, 109, 0.1);
+                color: var(--accent);
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+              "
+              >flex-grow</code
+            >,
+            <code
+              style="
+                font-family: var(--font-mono);
+                background: rgba(57, 112, 109, 0.1);
+                color: var(--accent);
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+              "
+              >flex-shrink</code
+            >,
+            <code
+              style="
+                font-family: var(--font-mono);
+                background: rgba(57, 112, 109, 0.1);
+                color: var(--accent);
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+              "
+              >flex-basis</code
+            >를 한 번에 설정합니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">CSS</span></div>
+            <div class="code-body">
+              <pre><span class="cm">/* flex: grow shrink basis */</span>
+<span class="tx">.item </span><span class="t">{</span> <span class="at">flex</span><span class="t">:</span> <span class="av">0 1 auto</span><span class="t">;</span>     <span class="t">}</span>  <span class="cm">/* 기본값 */</span>
+<span class="tx">.item </span><span class="t">{</span> <span class="at">flex</span><span class="t">:</span> <span class="av">1</span><span class="t">;</span>            <span class="t">}</span>  <span class="cm">/* flex: 1 1 0%  (가장 자주 사용!) */</span>
+<span class="tx">.item </span><span class="t">{</span> <span class="at">flex</span><span class="t">:</span> <span class="av">2</span><span class="t">;</span>            <span class="t">}</span>  <span class="cm">/* flex: 2 1 0% */</span>
+<span class="tx">.item </span><span class="t">{</span> <span class="at">flex</span><span class="t">:</span> <span class="av">1 0 200px</span><span class="t">;</span>   <span class="t">}</span>  <span class="cm">/* 늘어나되, 줄지 않고, 기본 200px */</span></pre>
+            </div>
+          </div>
+
+          <!-- 자식 속성 요약표 -->
+          <table>
+            <thead>
+              <tr>
+                <th>속성</th>
+                <th>기본값</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">flex-grow</td>
+                <td class="td-tag">0</td>
+                <td>남는 공간 차지 비율 (0 = 늘어나지 않음)</td>
+              </tr>
+              <tr>
+                <td class="td-tag">flex-shrink</td>
+                <td class="td-tag">1</td>
+                <td>부족한 공간 감소 비율 (0 = 줄어들지 않음)</td>
+              </tr>
+              <tr>
+                <td class="td-tag">flex-basis</td>
+                <td class="td-tag">auto</td>
+                <td>아이템 기본 크기</td>
+              </tr>
+              <tr>
+                <td class="td-tag">flex</td>
+                <td class="td-tag">0 1 auto</td>
+                <td>grow + shrink + basis 단축 속성</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box">
+            <p>
+              실무에서는
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(57, 112, 109, 0.1);
+                  color: var(--accent);
+                  padding: 0.1rem 0.4rem;
+                  border-radius: 3px;
+                "
+                >flex: 1</code
+              >을 가장 자주 사용합니다. 모든 아이템에 적용하면
+              <strong>남은 공간을 균등하게 나눠 갖는</strong> 레이아웃이 됩니다.
+            </p>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+
+        <!-- POST FOOTER -->
+        <footer class="post-footer">
+          <a href="../blog/index.html" class="footer-back">← 목록으로</a>
+          <span class="footer-copy">© 2026 dev.log</span>
+        </footer>
+      </article>
+    </div>
+    <!-- /.main-wrapper -->
+
+    <script src="../script.js"></script>
+  </body>
+</html>

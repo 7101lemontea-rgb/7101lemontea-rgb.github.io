@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS — Tailwind CSS 기초</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">dev.log</a>
+        <a href="../blog/index.html" class="nav-back">← 목록으로</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta" id="post-timestamps">
+          <span class="post-tag">CSS 기초 04</span>
+          <span class="post-date"
+            >작성일 <span id="date-created">불러오는 중…</span></span
+          >
+          <span class="post-date"
+            >최종 수정일 <span id="date-updated">불러오는 중…</span></span
+          >
+        </div>
+        <h1 class="post-title">Tailwind CSS</h1>
+        <p class="post-subtitle">
+          Tailwind는 별도의 .css 파일 없이 HTML class 속성에 단어만 적으면
+          디자인이 완성되는 유틸리티 퍼스트 CSS 프레임워크입니다. Tailwind의
+          핵심 규칙부터 자주 쓰는 클래스까지 정리합니다.
+        </p>
+        <div class="post-info">
+          <div>
+            <div class="info-label">Topics</div>
+            <div class="info-value">
+              Tailwind 개요 · 핵심 규칙 · 색상 · 박스모델 · Flexbox · 텍스트 ·
+              배경/테두리 · hover · 반응형
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC SIDEBAR -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">목차</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-intro"
+                ><span class="toc-num">9</span>Tailwind란?</a
+              >
+            </li>
+            <li>
+              <a href="#section-91"
+                ><span class="toc-num">9.1</span>핵심 규칙</a
+              >
+            </li>
+            <li>
+              <a href="#section-92"
+                ><span class="toc-num">9.2</span>자주 쓰는 기초 단어</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#section-92a">a. 색상</a></li>
+                <li><a href="#section-92b">b. 박스모델</a></li>
+                <li><a href="#section-92c">c. Flexbox</a></li>
+                <li><a href="#section-92d">d. 텍스트</a></li>
+                <li><a href="#section-92e">e. 배경 / 테두리</a></li>
+                <li><a href="#section-92f">f. 색상 체계</a></li>
+                <li><a href="#section-92g">g. hover</a></li>
+                <li><a href="#section-92h">h. 반응형</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <!-- ══════════ 9. Tailwind란? ══════════ -->
+        <section class="section" id="section-intro">
+          <div class="sec-eyebrow">Section 09</div>
+          <h2 class="sec-heading">Tailwind CSS란?</h2>
+
+          <ul class="tech-list">
+            <li><strong>미리 만들어놓은 CSS 클래스 모음집</strong>입니다.</li>
+            <li>
+              별도의
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(57, 112, 109, 0.1);
+                  color: var(--accent);
+                  padding: 0.1rem 0.4rem;
+                  border-radius: 3px;
+                "
+                >.css</code
+              >
+              파일을 만들어서 클래스 이름을 고민할 필요 없이, HTML 태그의
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(57, 112, 109, 0.1);
+                  color: var(--accent);
+                  padding: 0.1rem 0.4rem;
+                  border-radius: 3px;
+                "
+                >class</code
+              >
+              속성에 미리 정의된 단어들을 적기만 하면 디자인이 완성됩니다.
+            </li>
+          </ul>
+
+          <div class="compare-grid">
+            <div class="compare-card">
+              <div class="compare-head inline">기존 CSS 방식</div>
+              <div class="compare-body">
+                <p>HTML과 CSS 파일을 따로 작성합니다.</p>
+                <div class="code-block" style="margin: 0.5rem 0 0.3rem">
+                  <div class="code-header">
+                    <span class="code-lang">HTML</span>
+                  </div>
+                  <div class="code-body">
+                    <pre><span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"card"</span><span class="t">&gt;</span><span class="tx">안녕하세요</span><span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span></pre>
+                  </div>
+                </div>
+                <div class="code-block" style="margin: 0.3rem 0 0">
+                  <div class="code-header">
+                    <span class="code-lang">CSS</span>
+                  </div>
+                  <div class="code-body">
+                    <pre><span class="tx">.card </span><span class="t">{</span>
+  <span class="at">padding</span><span class="t">:</span>          <span class="av">16px</span><span class="t">;</span>
+  <span class="at">margin</span><span class="t">:</span>           <span class="av">8px</span><span class="t">;</span>
+  <span class="at">background-color</span><span class="t">:</span> <span class="av">white</span><span class="t">;</span>
+  <span class="at">border-radius</span><span class="t">:</span>    <span class="av">8px</span><span class="t">;</span>
+<span class="t">}</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="compare-card">
+              <div class="compare-head block">Tailwind 방식</div>
+              <div class="compare-body">
+                <p>
+                  CSS 파일을 따로 안 만들고, HTML의 class에 직접 스타일을 적는
+                  방식입니다.
+                </p>
+                <div class="code-block" style="margin: 0.5rem 0 0">
+                  <div class="code-header">
+                    <span class="code-lang">HTML</span>
+                  </div>
+                  <div class="code-body">
+                    <pre><span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"p-4 m-2 bg-white rounded-lg"</span><span class="t">&gt;</span>
+  <span class="tx">안녕하세요</span>
+<span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════ 9.1 핵심 규칙 ══════════ -->
+        <section class="section" id="section-91">
+          <div class="sec-eyebrow">Section 09 — 1</div>
+          <h2 class="sec-heading">핵심 규칙</h2>
+
+          <div class="highlight-box">
+            <p>Tailwind의 숫자는 <strong>0.25rem (4px) 단위</strong>입니다.</p>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>숫자</th>
+                <th>실제 크기</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">1</td>
+                <td>4px (0.25rem)</td>
+              </tr>
+              <tr>
+                <td class="td-tag">2</td>
+                <td>8px (0.5rem)</td>
+              </tr>
+              <tr>
+                <td class="td-tag">4</td>
+                <td>16px (1rem)</td>
+              </tr>
+              <tr>
+                <td class="td-tag">8</td>
+                <td>32px (2rem)</td>
+              </tr>
+              <tr>
+                <td class="td-tag">16</td>
+                <td>64px (4rem)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ══════════ 9.2 자주 쓰는 기초 단어 ══════════ -->
+        <section class="section" id="section-92">
+          <div class="sec-eyebrow">Section 09 — 2</div>
+          <h2 class="sec-heading">자주 쓰는 기초 단어</h2>
+
+          <!-- a. 색상 -->
+          <h3 class="sub-heading" id="section-92a">a. 색상 (Color)</h3>
+
+          <ul class="tech-list">
+            <li>
+              <strong>text-</strong> — 글자 색상
+              <span
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 0.85rem;
+                  color: var(--accent);
+                "
+                >( text-blue-600 )</span
+              >
+            </li>
+            <li>
+              <strong>bg-</strong> — 배경 색상
+              <span
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 0.85rem;
+                  color: var(--accent);
+                "
+                >( bg-gray-100 )</span
+              >
+            </li>
+            <li>
+              <strong>border-</strong> — 테두리 색상
+              <span
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 0.85rem;
+                  color: var(--accent);
+                "
+                >( border-black )</span
+              >
+            </li>
+            <li>숫자(100~900)가 커질수록 색이 진해집니다.</li>
+          </ul>
+
+          <hr class="sec-divider" />
+
+          <!-- b. 박스모델 -->
+          <h3 class="sub-heading" id="section-92b">
+            b. 박스모델 (간격과 크기)
+          </h3>
+
+          <p><strong>m (margin)</strong> — 외곽 여백</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Tailwind</th>
+                <th>CSS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">m-4</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >margin: 1rem;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">mt-4</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >margin-top: 1rem;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">mb-4</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >margin-bottom: 1rem;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">ml-4</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >margin-left: 1rem;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">mr-4</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >margin-right: 1rem;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">
+                  mx-4
+                  <span style="font-weight: 300; font-size: 0.85rem"
+                    >(horizontal)</span
+                  >
+                </td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >margin-left: 1rem; margin-right: 1rem;</code
+                  >
+                  — 좌우 한꺼번에
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">
+                  my-4
+                  <span style="font-weight: 300; font-size: 0.85rem"
+                    >(vertical)</span
+                  >
+                </td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >margin-top: 1rem; margin-bottom: 1rem;</code
+                  >
+                  — 상하 한꺼번에
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p style="margin-top: 1.2rem">
+            <strong>p (padding)</strong> — 내부 여백
+            <span
+              style="
+                font-family: var(--font-mono);
+                font-size: 0.85rem;
+                color: var(--accent);
+              "
+              >( p-5, px-3 등 )</span
+            >
+          </p>
+          <p>
+            padding도 margin과 동일한 방식으로
+            <code
+              style="
+                font-family: var(--font-mono);
+                background: rgba(57, 112, 109, 0.1);
+                color: var(--accent);
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+              "
+              >pt-</code
+            >,
+            <code
+              style="
+                font-family: var(--font-mono);
+                background: rgba(57, 112, 109, 0.1);
+                color: var(--accent);
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+              "
+              >pb-</code
+            >,
+            <code
+              style="
+                font-family: var(--font-mono);
+                background: rgba(57, 112, 109, 0.1);
+                color: var(--accent);
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+              "
+              >pl-</code
+            >,
+            <code
+              style="
+                font-family: var(--font-mono);
+                background: rgba(57, 112, 109, 0.1);
+                color: var(--accent);
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+              "
+              >pr-</code
+            >,
+            <code
+              style="
+                font-family: var(--font-mono);
+                background: rgba(57, 112, 109, 0.1);
+                color: var(--accent);
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+              "
+              >px-</code
+            >,
+            <code
+              style="
+                font-family: var(--font-mono);
+                background: rgba(57, 112, 109, 0.1);
+                color: var(--accent);
+                padding: 0.1rem 0.4rem;
+                border-radius: 3px;
+              "
+              >py-</code
+            >를 사용합니다.
+          </p>
+
+          <p style="margin-top: 1.2rem">
+            <strong>w / h</strong> — 너비와 높이
+            <span
+              style="
+                font-family: var(--font-mono);
+                font-size: 0.85rem;
+                color: var(--accent);
+              "
+              >( w-full, w-20, h-screen )</span
+            >
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Tailwind</th>
+                <th>CSS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">w-20</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >width: 5rem;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">w-full</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >width: 100%;</code
+                  >
+                  — 부모 요소 너비의 100%
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">w-1/2</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >width: 50%;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">h-screen</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >height: 1vh;</code
+                  >
+                  — 현재 보고 있는 <strong>화면 높이 전체</strong>를 채움
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr class="sec-divider" />
+
+          <!-- c. Flexbox -->
+          <h3 class="sub-heading" id="section-92c">c. Flexbox</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Tailwind</th>
+                <th>CSS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">flex</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >display: flex;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">flex-col</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >flex-direction: column;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">items-center</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >align-items: center;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">justify-center</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >justify-content: center;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">justify-between</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >justify-content: space-between;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">gap-4</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >gap: 16px;</code
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr class="sec-divider" />
+
+          <!-- d. 텍스트 -->
+          <h3 class="sub-heading" id="section-92d">d. 텍스트</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Tailwind</th>
+                <th>CSS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">text-lg</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >font-size: 18px;</code
+                  >
+                  — 큰 글씨
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">text-sm</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >font-size: 14px;</code
+                  >
+                  — 작은 글씨
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">font-bold</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >font-weight: bold;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">text-center</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >text-align: center;</code
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p style="margin-top: 1.2rem"><strong>폰트 크기</strong></p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>클래스</th>
+                <th>픽셀(px)</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">text-xs</td>
+                <td>12px</td>
+                <td>아주 작은 주석, 캡션</td>
+              </tr>
+              <tr>
+                <td class="td-tag">text-sm</td>
+                <td>14px</td>
+                <td>부가 설명, 작은 본문</td>
+              </tr>
+              <tr>
+                <td class="td-tag">text-base</td>
+                <td><strong>16px</strong></td>
+                <td><strong>기본값 (대부분의 본문)</strong></td>
+              </tr>
+              <tr>
+                <td class="td-tag">text-lg</td>
+                <td><strong>18px</strong></td>
+                <td><strong>강조하고 싶은 본문, 소제목</strong></td>
+              </tr>
+              <tr>
+                <td class="td-tag">text-xl</td>
+                <td>20px</td>
+                <td>게시글 제목</td>
+              </tr>
+              <tr>
+                <td class="td-tag">text-2xl</td>
+                <td>24px</td>
+                <td>큰 제목</td>
+              </tr>
+              <tr>
+                <td class="td-tag">text-4xl</td>
+                <td>36px</td>
+                <td>메인 타이틀 (Hero 섹션)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr class="sec-divider" />
+
+          <!-- e. 배경 / 테두리 -->
+          <h3 class="sub-heading" id="section-92e">e. 배경 / 테두리</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Tailwind</th>
+                <th>CSS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">rounded-lg</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >border-radius: 8px;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">border</td>
+                <td>
+                  <code
+                    style="font-family: var(--font-mono); font-size: 0.88rem"
+                    >border: 1px solid;</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">shadow-md</td>
+                <td>중간 크기 그림자 효과</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p style="margin-top: 1.2rem"><strong>둥글기 정도</strong></p>
+
+          <div class="tier-diagram">
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">rounded-sm</span>
+              </div>
+              <div class="tier-content"><p>아주 살짝 둥글게 (2px)</p></div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">rounded</span>
+              </div>
+              <div class="tier-content"><p>기본 둥글게 (4px)</p></div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">rounded-md</span>
+              </div>
+              <div class="tier-content"><p>조금 더 둥글게 (6px)</p></div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">rounded-lg</span>
+              </div>
+              <div class="tier-content"><p>확연히 둥글게 (8px)</p></div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">rounded-xl</span>
+              </div>
+              <div class="tier-content"><p>많이 둥글게 (12px)</p></div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">rounded-full</span>
+              </div>
+              <div class="tier-content">
+                <p>완전히 둥글게 — 알약 모양이나 원형 만들 때 사용</p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- f. 색상 체계 -->
+          <h3 class="sub-heading" id="section-92f">f. 색상 체계</h3>
+
+          <p>
+            Tailwind 색상은 <strong>이름 + 밝기(100~900)</strong> 조합으로
+            사용합니다.
+          </p>
+
+          <div class="highlight-box">
+            <p>
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(57, 112, 109, 0.1);
+                  color: var(--accent);
+                  padding: 0.1rem 0.4rem;
+                  border-radius: 3px;
+                "
+                >색상명-숫자</code
+              >
+              형태로 작성합니다. 숫자가 클수록 색이 진해집니다.
+            </p>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>밝기</th>
+                <th>느낌</th>
+                <th>사용 예</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">100</td>
+                <td>가장 연함 (거의 흰색)</td>
+                <td>배경, hover 효과</td>
+              </tr>
+              <tr>
+                <td class="td-tag">300 ~ 400</td>
+                <td>연함</td>
+                <td>비활성 버튼, 보조 텍스트</td>
+              </tr>
+              <tr>
+                <td class="td-tag">500</td>
+                <td>기본 (표준 색상)</td>
+                <td>기본 버튼, 아이콘</td>
+              </tr>
+              <tr>
+                <td class="td-tag">600 ~ 700</td>
+                <td>진함</td>
+                <td>주요 텍스트, 강조 버튼</td>
+              </tr>
+              <tr>
+                <td class="td-tag">900</td>
+                <td>가장 진함 (거의 검정)</td>
+                <td>제목, 본문 텍스트</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr class="sec-divider" />
+
+          <!-- g. hover -->
+          <h3 class="sub-heading" id="section-92g">g. hover</h3>
+
+          <ul class="tech-list">
+            <li>
+              클래스 앞에
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(57, 112, 109, 0.1);
+                  color: var(--accent);
+                  padding: 0.1rem 0.4rem;
+                  border-radius: 3px;
+                "
+                >hover:</code
+              >
+              만 붙이면 됩니다.
+            </li>
+          </ul>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">HTML</span></div>
+            <div class="code-body">
+              <pre><span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"bg-blue-500 hover:bg-blue-700"</span><span class="t">&gt;&lt;/</span><span class="tn">div</span><span class="t">&gt;</span>
+<span class="cm">→ 평소엔 파란색, 마우스를 올리면 진한 파란색</span></pre>
+            </div>
+          </div>
+
+          <hr class="sec-divider" />
+
+          <!-- h. 반응형 -->
+          <h3 class="sub-heading" id="section-92h">h. 반응형</h3>
+
+          <div class="highlight-box">
+            <p>
+              Tailwind의 킬러 기능.
+              <strong>접두사 하나로 미디어쿼리 끝.</strong>
+            </p>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>접두사</th>
+                <th>의미 (최소 너비)</th>
+                <th>실제 장치 느낌</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">(없음)</td>
+                <td>0px ~</td>
+                <td>모바일 (기본)</td>
+              </tr>
+              <tr>
+                <td class="td-tag">sm:</td>
+                <td>640px ~</td>
+                <td>큰 스마트폰 / 가로모드</td>
+              </tr>
+              <tr>
+                <td class="td-tag">md:</td>
+                <td>768px ~</td>
+                <td>태블릿 (iPad 등)</td>
+              </tr>
+              <tr>
+                <td class="td-tag">lg:</td>
+                <td>1024px ~</td>
+                <td>노트북 / 데스크탑</td>
+              </tr>
+              <tr>
+                <td class="td-tag">xl:</td>
+                <td>1280px ~</td>
+                <td>큰 모니터</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">HTML — 반응형 텍스트 크기 예시</span>
+            </div>
+            <div class="code-body">
+              <pre><span class="t">&lt;</span><span class="tn">div</span> <span class="at">class</span>=<span class="av">"text-sm md:text-lg lg:text-2xl"</span><span class="t">&gt;</span>
+  <span class="tx">모바일에선 작게, 태블릿에선 크게, 데스크탑에선 더 크게</span>
+<span class="t">&lt;/</span><span class="tn">div</span><span class="t">&gt;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- POST FOOTER -->
+        <footer class="post-footer">
+          <a href="../blog/index.html" class="footer-back">← 목록으로</a>
+          <span class="footer-copy">© 2026 dev.log</span>
+        </footer>
+      </article>
+    </div>
+    <!-- /.main-wrapper -->
+
+    <script src="../script.js"></script>
+  </body>
+</html>
