@@ -1,0 +1,1469 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fortune Garden — Drift ORM 구현 작업일지</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Pretendard:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/project_post.css" />
+
+    <style>
+      /* ── 작업일지 전용 스타일 ── */
+
+      /* 파일 상태 배지 */
+      .file-status {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        padding: 0.1rem 0.4rem;
+        border-radius: 2px;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        vertical-align: middle;
+        margin-left: 0.35rem;
+      }
+      .file-status.new {
+        background: rgba(46, 125, 50, 0.12);
+        color: #2e7d32;
+      }
+      .file-status.mod {
+        background: rgba(230, 81, 0, 0.1);
+        color: #e65100;
+      }
+
+      /* NEW 배지 (인라인용) */
+      .new-badge {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: 0.58rem;
+        padding: 0.08rem 0.38rem;
+        border-radius: 2px;
+        font-weight: 600;
+        background: rgba(230, 81, 0, 0.12);
+        color: #e65100;
+        margin-left: 0.3rem;
+        letter-spacing: 0.04em;
+        vertical-align: middle;
+      }
+
+      /* 변경 before/after 노트 */
+      .change-note {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        margin: 0.8rem 0;
+      }
+      .change-row {
+        display: grid;
+        grid-template-columns: 50px 1fr;
+        gap: 0 0.8rem;
+        font-size: 0.83rem;
+        line-height: 1.6;
+        align-items: start;
+      }
+      .change-ver {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        font-weight: 600;
+        padding: 0.18rem 0.45rem;
+        border-radius: 2px;
+        text-align: center;
+        flex-shrink: 0;
+        margin-top: 0.15rem;
+      }
+      .change-ver.before {
+        background: rgba(192, 57, 43, 0.1);
+        color: #c0392b;
+      }
+      .change-ver.after {
+        background: rgba(46, 125, 50, 0.12);
+        color: #2e7d32;
+      }
+      .change-text {
+        color: var(--ink-muted);
+      }
+
+      /* 오류 카드 */
+      .error-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+        margin: 1rem 0;
+      }
+      .error-card {
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .error-card-header {
+        padding: 0.65rem 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .error-card-header .err-icon {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        padding: 0.12rem 0.5rem;
+        border-radius: 2px;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+      .err-type-error .err-icon {
+        background: rgba(192, 57, 43, 0.12);
+        color: #c0392b;
+      }
+      .err-type-error {
+        border-top: 3px solid #e53935;
+      }
+      .err-type-fix .err-icon {
+        background: rgba(46, 125, 50, 0.12);
+        color: #2e7d32;
+      }
+      .err-type-fix {
+        border-top: 3px solid #43a047;
+      }
+
+      .error-card-body {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        border-top: 1px solid var(--rule);
+      }
+      .error-card-body + .error-card-body {
+        border-top: 1px solid var(--rule);
+      }
+      .err-label {
+        padding: 0.75rem 0.9rem;
+        background: rgba(247, 245, 242, 0.7);
+        border-right: 1px solid var(--rule);
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        display: flex;
+        align-items: flex-start;
+        padding-top: 0.9rem;
+      }
+      .err-content {
+        padding: 0.75rem 1rem;
+        font-size: 0.83rem;
+        color: var(--ink-muted);
+        line-height: 1.7;
+      }
+
+      /* 파일 트리 */
+      .file-tree {
+        background: #1e1e1b;
+        border-radius: 4px;
+        padding: 1.2rem 1.5rem;
+        margin: 1rem 0;
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        line-height: 2;
+        overflow-x: auto;
+      }
+      .file-tree .ft-dir {
+        color: #749b41;
+        font-weight: 500;
+      }
+      .file-tree .ft-file {
+        color: #c9c5be;
+      }
+      .ft-new {
+        color: #4fc3f7;
+      }
+      .ft-mod {
+        color: #ffcc02;
+      }
+      .ft-auto {
+        color: #6a6a5e;
+        font-style: italic;
+      }
+      .ft-comment {
+        color: #6a6a5e;
+      }
+
+      /* 의존 관계 트리 */
+      .dep-tree {
+        background: var(--card-bg);
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        padding: 1.2rem 1.5rem;
+        margin: 1rem 0;
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        line-height: 1.95;
+        overflow-x: auto;
+        white-space: pre;
+        color: var(--ink-muted);
+      }
+      .dep-tree .dep-file {
+        color: var(--ink);
+        font-weight: 500;
+      }
+      .dep-tree .dep-import {
+        color: var(--accent2);
+      }
+      .dep-tree .dep-note {
+        color: var(--ink-muted);
+        font-style: italic;
+      }
+
+      /* 인라인 강조 배지들 */
+      .badge-pk {
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        padding: 0.08rem 0.35rem;
+        border-radius: 2px;
+        background: rgba(192, 57, 43, 0.1);
+        color: #c0392b;
+        font-weight: 600;
+      }
+      .badge-fk {
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        padding: 0.08rem 0.35rem;
+        border-radius: 2px;
+        background: rgba(37, 99, 235, 0.1);
+        color: #2563eb;
+        font-weight: 600;
+      }
+
+      /* 커맨드 블록 */
+      .cmd-block {
+        background: #1e1e1b;
+        border-radius: 4px;
+        padding: 1.1rem 1.4rem;
+        margin: 0.8rem 0;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        line-height: 1.8;
+        overflow-x: auto;
+      }
+      .cmd-block .cmd-comment {
+        color: #6a6a5e;
+      }
+      .cmd-block .cmd-prompt {
+        color: #749b41;
+        user-select: none;
+      }
+      .cmd-block .cmd-text {
+        color: #c9c5be;
+      }
+
+      /* 체크리스트 */
+      .checklist {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin: 0.8rem 0;
+      }
+      .checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+        font-size: 0.88rem;
+        color: var(--ink-muted);
+        line-height: 1.6;
+      }
+      .checklist li .check-icon {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        padding: 0.1rem 0.4rem;
+        border-radius: 2px;
+        flex-shrink: 0;
+        margin-top: 0.1rem;
+      }
+      .check-todo {
+        background: rgba(26, 25, 22, 0.06);
+        color: var(--ink-muted);
+      }
+      .check-warn {
+        background: rgba(230, 81, 0, 0.1);
+        color: #e65100;
+      }
+
+      /* 스키마 테이블 (컬럼 명세용) — col-key 추가 */
+      .col-key-cell {
+        text-align: center;
+      }
+
+      /* 반응형 */
+      @media (max-width: 760px) {
+        .error-card-body {
+          grid-template-columns: 1fr;
+        }
+        .err-label {
+          border-right: none;
+          border-bottom: 1px solid var(--rule);
+        }
+        .change-row {
+          grid-template-columns: 1fr;
+        }
+        .change-ver {
+          display: inline-block;
+          margin-bottom: 0.2rem;
+        }
+      }
+
+      /* comments section */
+      .comments-section {
+        padding: 2rem 0 3rem;
+        border-top: 1px solid var(--rule);
+      }
+      .comments-wrap {
+        max-width: 720px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a class="nav-logo" href="../index.html">your.name</a>
+        <a class="nav-back" href="index.html">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="page-wrap">
+      <!-- HEADER -->
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Log</span>
+          <span class="badge badge-ver">v1.1</span>
+          <span class="badge badge-status draft">작업 완료</span>
+        </div>
+        <h1 class="post-title">Fortune Garden</h1>
+        <p class="post-sub">Drift ORM 구현 작업일지 — Data Layer v1.1</p>
+        <p class="post-desc">
+          SAD v1.1 및 DB ERD v1.1 기반으로 데이터 영속성 계층(L3)을 재구성한
+          작업 기록입니. CODEF API → CSV 가져오기 방식 전환에 따른 스키마 변경,
+          신규 테이블 추가, 쿼리 확장, 발생 오류 및 해결 내역을 포함합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <p class="stat-label">작업 일자</p>
+            <p class="stat-val">2026-03-16</p>
+          </div>
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val" id="date-created">불러오는 중...</p>
+          </div>
+          <div>
+            <p class="stat-label">최종 수정일</p>
+            <p class="stat-val" id="date-updated">불러오는 중...</p>
+          </div>
+          <div>
+            <p class="stat-label">참조</p>
+            <p class="stat-val">SAD v1.1 · DB ERD v1.1</p>
+          </div>
+          <div>
+            <p class="stat-label">DB 스키마 버전</p>
+            <p class="stat-val">schemaVersion: 2</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-grid">
+        <!-- TOC -->
+        <aside class="toc-sidebar">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li><a href="#s1">1. 작업 개요</a></li>
+            <li><a href="#s2">2. 생성 파일 목록</a></li>
+            <li><a href="#s3">3. 핵심 변경 상세</a></li>
+            <li><a href="#s4">4. 오류 및 해결 내역</a></li>
+            <li><a href="#s5">5. build_runner 가이드</a></li>
+            <li><a href="#s6">6. 파일 의존 관계</a></li>
+            <li><a href="#s7">7. 후속 작업</a></li>
+            <li><a href="#s8">8. 변경 이력</a></li>
+          </ul>
+        </aside>
+
+        <!-- ARTICLE -->
+        <article class="article">
+          <!-- 1. 작업 개요 -->
+          <section class="section" id="s1">
+            <p class="sec-eyebrow">01</p>
+            <h2 class="sec-heading">작업 개요</h2>
+
+            <p>
+              SAD v1.1 및 DB ERD v1.1을 기반으로 Fortune Garden의 Drift ORM
+              데이터 계층(L3)을 v1.0에서 v1.1로 재작성하였습니다.
+              <strong>CODEF API 방식 폐기 → CSV 파일 가져오기 방식 전환</strong
+              >이 핵심 변경사항이며, DB 스키마와 쿼리 구조가 함께
+              변경되었습니다.
+            </p>
+
+            <div class="info-card">
+              <div class="info-card-row">
+                <span class="info-key">작업 유형</span>
+                <span class="info-val"
+                  >Drift ORM 스키마 코드 v1.0 → v1.1 재작성</span
+                >
+              </div>
+              <div class="info-card-row">
+                <span class="info-key">변경 동인</span>
+                <span class="info-val"
+                  >CODEF API 폐기 → CSV 파일 가져오기 방식 전환 (SAD v1.1)</span
+                >
+              </div>
+              <div class="info-card-row">
+                <span class="info-key">테이블 변화</span>
+                <span class="info-val"
+                  >8개 → 9개 &nbsp;(+<code>csv_parser_profiles</code>,
+                  <code>sync_history</code> → <code>import_history</code>)</span
+                >
+              </div>
+              <div class="info-card-row">
+                <span class="info-key">쿼리 변화</span>
+                <span class="info-val"
+                  >4개 → 6개 &nbsp;(+<code>getParserProfile</code>,
+                  +<code>getImportHistory</code>)</span
+                >
+              </div>
+              <div class="info-card-row">
+                <span class="info-key">인덱스 변화</span>
+                <span class="info-val"
+                  >8개 → 9개 &nbsp;(<code>idx_sync_profile_start</code> 제거,
+                  신규 2개 추가)</span
+                >
+              </div>
+              <div class="info-card-row">
+                <span class="info-key">Seed Data</span>
+                <span class="info-val"
+                  >app_settings 8개 → 7개 &nbsp;(<code>auto_sync_enabled</code>
+                  제거)</span
+                >
+              </div>
+              <div class="info-card-row">
+                <span class="info-key">의존성 변화</span>
+                <span class="info-val"
+                  ><code>shelf</code> · <code>dio</code> 제거 &nbsp;/&nbsp;
+                  <code>csv</code> · <code>file_picker</code> 추가</span
+                >
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. 생성 파일 목록 -->
+          <section class="section" id="s2">
+            <p class="sec-eyebrow">02</p>
+            <h2 class="sec-heading">생성 파일 목록</h2>
+
+            <p>
+              작업으로 생성·수정된 파일 5개는
+              <code>lib/data/database/</code> 디렉터리에 위치한다.
+            </p>
+
+            <div class="file-tree">
+              <span class="ft-dir">lib/data/database/</span><br />
+              ├── <span class="ft-file ft-mod">tables.dart</span>
+              <span class="ft-comment">
+                # 수정 — connectedIdEnc 제거, CsvParserProfiles·ImportHistory
+                추가</span
+              ><br />
+              ├── <span class="ft-file ft-mod">app_database.dart</span>
+              <span class="ft-comment">
+                # 수정 — schemaVersion 2, 쿼리 6개, Seed Data 7개,
+                onUpgrade</span
+              ><br />
+              ├── <span class="ft-auto">app_database.g.dart</span>
+              <span class="ft-comment">
+                # [자동생성] build_runner 실행 후 생성</span
+              ><br />
+              ├── <span class="ft-file ft-mod">database_provider.dart</span>
+              <span class="ft-comment">
+                # 수정 — drift import 추가, activeCsvParserProfilesProvider
+                신규</span
+              ><br />
+              ├── <span class="ft-file ft-mod">seed_institutions.dart</span>
+              <span class="ft-comment">
+                # 수정 — 코드 체계 변경, seedCsvParserProfiles() 신규</span
+              ><br />
+              └── <span class="ft-file ft-new">drift_indexes.dart</span>
+              <span class="ft-comment">
+                # 신규 — 9개 인덱스 @TableIndex 선언 참고 파일</span
+              >
+            </div>
+
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>파일명</th>
+                  <th>상태</th>
+                  <th>주요 변경 내용</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>tables.dart</code></td>
+                  <td><span class="file-status mod">수정</span></td>
+                  <td>
+                    <code>connectedIdEnc</code> 제거,
+                    <code>CsvParserProfiles</code>·<code>ImportHistory</code>
+                    신규, <code>SyncHistory</code> 제거
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>app_database.dart</code></td>
+                  <td><span class="file-status mod">수정</span></td>
+                  <td>
+                    schemaVersion 2, tables 9개, 쿼리 6개, Seed Data 7개,
+                    onUpgrade 마이그레이션
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>database_provider.dart</code></td>
+                  <td><span class="file-status mod">수정</span></td>
+                  <td>
+                    <code>import 'package:drift/drift.dart'</code> 추가,
+                    <code>activeCsvParserProfilesProvider</code> 신규
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>seed_institutions.dart</code></td>
+                  <td><span class="file-status mod">수정</span></td>
+                  <td>
+                    기관 코드 체계 변경(숫자 → 식별자),
+                    <code>seedCsvParserProfiles()</code> 신규 추가
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>drift_indexes.dart</code></td>
+                  <td><span class="file-status new">신규</span></td>
+                  <td>
+                    ERD v1.1 §5 인덱스 9개 <code>@TableIndex</code> 어노테이션
+                    선언 참고 파일
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 3. 핵심 변경 상세 -->
+          <section class="section" id="s3">
+            <p class="sec-eyebrow">03</p>
+            <h2 class="sec-heading">핵심 변경 상세</h2>
+
+            <!-- 3.1 테이블 -->
+            <p class="sub-heading">3.1 테이블 변경 (tables.dart)</p>
+
+            <p
+              style="
+                margin-top: 0.4rem;
+                font-size: 0.85rem;
+                color: var(--accent2);
+                font-family: var(--font-mono);
+              "
+            >
+              3.1.1 profiles — connectedIdEnc 컬럼 제거
+            </p>
+            <p>
+              CODEF API 인증 방식 폐기에 따라 Connected ID를 저장하는 컬럼을
+              제거하였다.
+            </p>
+            <div class="change-note">
+              <div class="change-row">
+                <span class="change-ver before">v1.0</span>
+                <span class="change-text"
+                  ><code>BlobColumn connectedIdEnc</code> — AES-256-GCM 암호화된
+                  CODEF Connected ID</span
+                >
+              </div>
+              <div class="change-row">
+                <span class="change-ver after">v1.1</span>
+                <span class="change-text"
+                  >해당 컬럼 삭제. <code>profiles</code>는 <code>id</code>,
+                  <code>name</code>, <code>colorHex</code>,
+                  <code>defaultViewMode</code>, <code>createdAt</code> 5개
+                  컬럼만 유지.</span
+                >
+              </div>
+            </div>
+
+            <p
+              style="
+                margin-top: 1.4rem;
+                font-size: 0.85rem;
+                color: var(--accent2);
+                font-family: var(--font-mono);
+              "
+            >
+              3.1.2 sync_history 테이블 제거
+            </p>
+            <p>
+              자동 동기화 개념이 폐기됨에 따라 동기화 이력 테이블을 완전히
+              제거하였다.
+            </p>
+            <div class="highlight-box">
+              <p>
+                제거된 컬럼: <code>startedAt</code>, <code>completedAt</code>,
+                <code>status</code> (running|success|partial|failed),
+                <code>txnCount</code>, <code>errorMsg</code>
+              </p>
+            </div>
+
+            <p
+              style="
+                margin-top: 1.4rem;
+                font-size: 0.85rem;
+                color: var(--accent2);
+                font-family: var(--font-mono);
+              "
+            >
+              3.1.3 csv_parser_profiles — 신규 추가
+              <span class="new-badge">NEW</span>
+            </p>
+            <p>
+              기관별 CSV 파싱 설정을 DB로 관리. 앱 업데이트 없이 신규 기관 CSV
+              형식을 추가·수정할 수 있다.
+            </p>
+            <table class="schema-table">
+              <thead>
+                <tr>
+                  <th>컬럼명 (Dart)</th>
+                  <th>Dart 타입</th>
+                  <th>Key</th>
+                  <th>제약</th>
+                  <th>설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="col-name">id</td>
+                  <td class="col-type">IntColumn</td>
+                  <td class="col-key-cell"><span class="badge-pk">PK</span></td>
+                  <td class="col-constraint">AUTOINCREMENT</td>
+                  <td class="col-desc">파서 프로필 고유 ID</td>
+                </tr>
+                <tr>
+                  <td class="col-name">institutionCode</td>
+                  <td class="col-type">TextColumn</td>
+                  <td class="col-key-cell"><span class="badge-fk">FK</span></td>
+                  <td class="col-constraint">RESTRICT</td>
+                  <td class="col-desc">institutions.code 참조</td>
+                </tr>
+                <tr>
+                  <td class="col-name">dateCol</td>
+                  <td class="col-type">TextColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">NOT NULL</td>
+                  <td class="col-desc">거래일시 컬럼명 (CSV 헤더)</td>
+                </tr>
+                <tr>
+                  <td class="col-name">amountCol</td>
+                  <td class="col-type">TextColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">NOT NULL</td>
+                  <td class="col-desc">금액 컬럼명</td>
+                </tr>
+                <tr>
+                  <td class="col-name">merchantCol</td>
+                  <td class="col-type">TextColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">NOT NULL</td>
+                  <td class="col-desc">거래처명 컬럼명</td>
+                </tr>
+                <tr>
+                  <td class="col-name">dateFormat</td>
+                  <td class="col-type">TextColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">NOT NULL</td>
+                  <td class="col-desc">날짜 파싱 형식</td>
+                </tr>
+                <tr>
+                  <td class="col-name">encoding</td>
+                  <td class="col-type">TextColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">DEFAULT 'UTF-8'</td>
+                  <td class="col-desc">파일 인코딩 (UTF-8, EUC-KR)</td>
+                </tr>
+                <tr>
+                  <td class="col-name">delimiter</td>
+                  <td class="col-type">TextColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">DEFAULT ','</td>
+                  <td class="col-desc">컬럼 구분자</td>
+                </tr>
+                <tr>
+                  <td class="col-name">skipRows</td>
+                  <td class="col-type">IntColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">DEFAULT 1</td>
+                  <td class="col-desc">건너뛸 헤더 행 수</td>
+                </tr>
+                <tr>
+                  <td class="col-name">isActive</td>
+                  <td class="col-type">IntColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">DEFAULT 1</td>
+                  <td class="col-desc">비활성화 플래그</td>
+                </tr>
+              </tbody>
+            </table>
+            <p
+              style="
+                font-size: 0.8rem;
+                color: var(--ink-muted);
+                font-style: italic;
+              "
+            >
+              ※ TEXT DEFAULT 구현:
+              <code>withDefault(const Constant('UTF-8'))</code> — Dart const로
+              컴파일 타임 상수 처리.
+            </p>
+
+            <p
+              style="
+                margin-top: 1.6rem;
+                font-size: 0.85rem;
+                color: var(--accent2);
+                font-family: var(--font-mono);
+              "
+            >
+              3.1.4 import_history — 신규 추가
+              <span class="new-badge">NEW</span>
+            </p>
+            <p>
+              <code>sync_history</code>를 대체하는 CSV 가져오기 이력 테이블.
+              자동 동기화 상태 대신 파일 단위 통계를 기록한다.
+            </p>
+            <table class="schema-table">
+              <thead>
+                <tr>
+                  <th>컬럼명 (Dart)</th>
+                  <th>Dart 타입</th>
+                  <th>Key</th>
+                  <th>제약</th>
+                  <th>설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="col-name">id</td>
+                  <td class="col-type">IntColumn</td>
+                  <td class="col-key-cell"><span class="badge-pk">PK</span></td>
+                  <td class="col-constraint">AUTOINCREMENT</td>
+                  <td class="col-desc">이력 고유 ID</td>
+                </tr>
+                <tr>
+                  <td class="col-name">profileId</td>
+                  <td class="col-type">IntColumn</td>
+                  <td class="col-key-cell"><span class="badge-fk">FK</span></td>
+                  <td class="col-constraint">CASCADE</td>
+                  <td class="col-desc">profiles.id</td>
+                </tr>
+                <tr>
+                  <td class="col-name">accountId</td>
+                  <td class="col-type">IntColumn</td>
+                  <td class="col-key-cell"><span class="badge-fk">FK</span></td>
+                  <td class="col-constraint">CASCADE</td>
+                  <td class="col-desc">accounts.id</td>
+                </tr>
+                <tr>
+                  <td class="col-name">fileName</td>
+                  <td class="col-type">TextColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">NOT NULL</td>
+                  <td class="col-desc">원본 파일명</td>
+                </tr>
+                <tr>
+                  <td class="col-name">importedAt</td>
+                  <td class="col-type">IntColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">NOT NULL</td>
+                  <td class="col-desc">가져오기 일시 Unix ms</td>
+                </tr>
+                <tr>
+                  <td class="col-name">totalRows</td>
+                  <td class="col-type">IntColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">DEFAULT 0</td>
+                  <td class="col-desc">전체 파싱 행 수</td>
+                </tr>
+                <tr>
+                  <td class="col-name">newRows</td>
+                  <td class="col-type">IntColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">DEFAULT 0</td>
+                  <td class="col-desc">신규 저장 건수</td>
+                </tr>
+                <tr>
+                  <td class="col-name">duplicateRows</td>
+                  <td class="col-type">IntColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">DEFAULT 0</td>
+                  <td class="col-desc">중복으로 건너뛴 건수</td>
+                </tr>
+                <tr>
+                  <td class="col-name">errorRows</td>
+                  <td class="col-type">IntColumn</td>
+                  <td class="col-key-cell">—</td>
+                  <td class="col-constraint">DEFAULT 0</td>
+                  <td class="col-desc">오류 건수</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- 3.2 쿼리 -->
+            <p class="sub-heading">3.2 신규 쿼리 (app_database.dart)</p>
+
+            <p
+              style="
+                margin-top: 0.4rem;
+                font-size: 0.85rem;
+                color: var(--accent2);
+                font-family: var(--font-mono);
+              "
+            >
+              5.5 getParserProfile() <span class="new-badge">NEW</span>
+            </p>
+            <p>
+              institution_code 기준으로 활성화된 파서 프로필을 반환. SCR-008 CSV
+              가져오기 화면에서 계좌 선택 시 자동 호출.
+            </p>
+            <div class="code-block">
+              <pre><span class="c-key">Future</span>&lt;CsvParserProfile?&gt; getParserProfile({
+  <span class="c-key">required</span> <span class="c-key">String</span> institutionCode,
+}) {
+  <span class="c-key">return</span> (select(csvParserProfiles)
+        ..where((t) =>
+            t.institutionCode.equals(institutionCode) &
+            t.isActive.equals(1))
+        ..limit(1))
+      .getSingleOrNull();
+}</pre>
+            </div>
+
+            <p
+              style="
+                margin-top: 1.2rem;
+                font-size: 0.85rem;
+                color: var(--accent2);
+                font-family: var(--font-mono);
+              "
+            >
+              5.6 getImportHistory() <span class="new-badge">NEW</span>
+            </p>
+            <p>
+              accountId 기준 최신 이력을 limit 건 반환. SCR-007 계좌 관리 화면
+              ImportHistoryList에서 사용.
+            </p>
+            <div class="code-block">
+              <pre><span class="c-key">Future</span>&lt;<span class="c-key">List</span>&lt;ImportHistoryEntry&gt;&gt; getImportHistory({
+  <span class="c-key">required</span> <span class="c-key">int</span> accountId,
+  <span class="c-key">int</span> limit = 20,
+}) {
+  <span class="c-key">return</span> (select(importHistory)
+        ..where((t) => t.accountId.equals(accountId))
+        ..orderBy([(t) => OrderingTerm.desc(t.importedAt)])
+        ..limit(limit))
+      .get();
+}</pre>
+            </div>
+
+            <!-- 3.3 마이그레이션 -->
+            <p class="sub-heading">3.3 마이그레이션 전략 (onUpgrade)</p>
+            <p>
+              schemaVersion을 1 → 2로 상향하고 v1 → v2 업그레이드 경로를
+              구현하였다.
+            </p>
+            <div class="code-block">
+              <pre>onUpgrade: (m, from, to) <span class="c-key">async</span> {
+  <span class="c-key">if</span> (from &lt; 2) {
+    <span class="c-comment">// 1. sync_history 테이블 제거</span>
+    <span class="c-key">await</span> m.database.customStatement(
+      <span class="c-str">'DROP TABLE IF EXISTS sync_history'</span>,
+    );
+
+    <span class="c-comment">// 2. 신규 테이블 생성</span>
+    <span class="c-key">await</span> m.createTable(csvParserProfiles);
+    <span class="c-key">await</span> m.createTable(importHistory);
+
+    <span class="c-comment">// 3. 신규 인덱스 생성</span>
+    <span class="c-key">await</span> m.database.customStatement(
+      <span class="c-str">'CREATE INDEX IF NOT EXISTS idx_import_account_date '</span>
+      <span class="c-str">'ON import_history (account_id, imported_at DESC)'</span>,
+    );
+    <span class="c-key">await</span> m.database.customStatement(
+      <span class="c-str">'CREATE INDEX IF NOT EXISTS idx_parser_institution '</span>
+      <span class="c-str">'ON csv_parser_profiles (institution_code)'</span>,
+    );
+  }
+},</pre>
+            </div>
+            <div class="highlight-box">
+              <p>
+                <strong>주의:</strong>
+                <code>profiles.connected_id_enc</code> 컬럼 제거는 onUpgrade에서
+                처리하지 않는다. SQLite 컬럼 삭제 지원(v3.35.0+)이 모든 기기에서
+                보장되지 않으므로 신규 설치(onCreate)에서만 컬럼 없이 생성되며,
+                기존 사용자 DB는 컬럼을 그대로 유지한다(무해함).
+              </p>
+            </div>
+
+            <!-- 3.4 인덱스 -->
+            <p class="sub-heading">3.4 인덱스 전략 변경 (drift_indexes.dart)</p>
+            <p>
+              ERD v1.1 §5 기준 총 9개 인덱스. v1.0 대비 1개 제거, 2개 신규 추가.
+            </p>
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>구분</th>
+                  <th>인덱스명</th>
+                  <th>테이블</th>
+                  <th>변경 사유</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>제거</td>
+                  <td><code>idx_sync_profile_start</code></td>
+                  <td><code>sync_history</code></td>
+                  <td>sync_history 테이블 자체 제거</td>
+                </tr>
+                <tr>
+                  <td>신규</td>
+                  <td><code>idx_import_account_date</code></td>
+                  <td><code>import_history</code></td>
+                  <td>SCR-007 ImportHistoryList 계좌별 이력 조회</td>
+                </tr>
+                <tr>
+                  <td>신규</td>
+                  <td><code>idx_parser_institution</code></td>
+                  <td><code>csv_parser_profiles</code></td>
+                  <td>SCR-008 파서 프로필 자동 매칭</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- 3.5 Seed Data -->
+            <p class="sub-heading">3.5 Seed Data 변경</p>
+
+            <p
+              style="
+                margin-top: 0.4rem;
+                font-size: 0.85rem;
+                color: var(--accent2);
+                font-family: var(--font-mono);
+              "
+            >
+              app_settings — 8개 → 7개
+            </p>
+            <div class="change-note" style="margin-bottom: 0.8rem">
+              <div class="change-row">
+                <span class="change-ver before">제거</span>
+                <span class="change-text"
+                  ><code>auto_sync_enabled</code> = <code>true</code> — 자동
+                  동기화 기능 폐기에 따라 제거</span
+                >
+              </div>
+            </div>
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>key</th>
+                  <th>기본값</th>
+                  <th>설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>theme</td>
+                  <td><code>system</code></td>
+                  <td>'light' | 'dark' | 'system'</td>
+                </tr>
+                <tr>
+                  <td>default_view_mode</td>
+                  <td><code>combined</code></td>
+                  <td>'personal' | 'combined'</td>
+                </tr>
+                <tr>
+                  <td>active_profile_id</td>
+                  <td><code>1</code></td>
+                  <td>개인 뷰 기본 활성 프로필 ID</td>
+                </tr>
+                <tr>
+                  <td>pin_enabled</td>
+                  <td><code>false</code></td>
+                  <td>PIN 잠금 활성화 여부</td>
+                </tr>
+                <tr>
+                  <td>pin_hash</td>
+                  <td><code>null</code></td>
+                  <td>SHA-256 해시된 PIN</td>
+                </tr>
+                <tr>
+                  <td>auto_lock_seconds</td>
+                  <td><code>30</code></td>
+                  <td>백그라운드 자동 잠금 대기 시간(초)</td>
+                </tr>
+                <tr>
+                  <td>db_version</td>
+                  <td><code>1</code></td>
+                  <td>DB 스키마 버전 (마이그레이션 추적)</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p
+              style="
+                margin-top: 1.2rem;
+                font-size: 0.85rem;
+                color: var(--accent2);
+                font-family: var(--font-mono);
+              "
+            >
+              seedCsvParserProfiles() — 신규 추가
+              <span class="new-badge">NEW</span>
+            </p>
+            <p>
+              주요 기관 7개의 CSV 파서 기본값을
+              <code>seed_institutions.dart</code>에 함께 관리.
+            </p>
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>기관</th>
+                  <th>dateCol</th>
+                  <th>amountCol</th>
+                  <th>encoding</th>
+                  <th>dateFormat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>KB</td>
+                  <td>거래일시</td>
+                  <td>거래금액</td>
+                  <td>EUC-KR</td>
+                  <td>yyyy.MM.dd HH:mm:ss</td>
+                </tr>
+                <tr>
+                  <td>NH</td>
+                  <td>거래일자</td>
+                  <td>거래금액</td>
+                  <td>EUC-KR</td>
+                  <td>yyyyMMdd</td>
+                </tr>
+                <tr>
+                  <td>SHINHAN</td>
+                  <td>거래날짜</td>
+                  <td>거래금액</td>
+                  <td>UTF-8</td>
+                  <td>yyyy-MM-dd</td>
+                </tr>
+                <tr>
+                  <td>HANA</td>
+                  <td>거래일시</td>
+                  <td>출금금액</td>
+                  <td>EUC-KR</td>
+                  <td>yyyy-MM-dd HH:mm:ss</td>
+                </tr>
+                <tr>
+                  <td>WOORI</td>
+                  <td>거래일자</td>
+                  <td>출금액</td>
+                  <td>EUC-KR</td>
+                  <td>yyyyMMdd</td>
+                </tr>
+                <tr>
+                  <td>KB_CARD</td>
+                  <td>이용일</td>
+                  <td>이용금액</td>
+                  <td>EUC-KR</td>
+                  <td>yyyy.MM.dd</td>
+                </tr>
+                <tr>
+                  <td>SHINHAN_CARD</td>
+                  <td>이용일자</td>
+                  <td>이용금액</td>
+                  <td>EUC-KR</td>
+                  <td>yyyyMMdd</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 4. 오류 및 해결 내역 -->
+          <section class="section" id="s4">
+            <p class="sec-eyebrow">04</p>
+            <h2 class="sec-heading">발생한 오류 및 해결 내역</h2>
+            <p>
+              코드 작성 및 프로젝트 적용 과정에서 발생한 오류와 예방 수정 내역을
+              기록한다.
+            </p>
+
+            <div class="error-list">
+              <!-- 오류 1 -->
+              <div class="error-card err-type-error">
+                <div class="error-card-header">
+                  <span class="err-icon">ERROR</span>
+                  Target of URI hasn't been generated: 'app_database.g.dart'
+                </div>
+                <div class="error-card-body">
+                  <span class="err-label">원인</span>
+                  <span class="err-content"
+                    ><code>part 'app_database.g.dart'</code> 선언은 있으나
+                    build_runner를 실행하지 않아 파일이 생성되지 않은 상태. Dart
+                    분석기가 코드 생성 파일 없음을 감지해 48개 이상의 연쇄 오류
+                    발생.</span
+                  >
+                </div>
+                <div class="error-card-body">
+                  <span class="err-label">해결</span>
+                  <span class="err-content"
+                    ><code>pubspec.yaml</code>에 <code>drift_dev</code>·<code
+                      >build_runner</code
+                    >
+                    dev 의존성 추가 후
+                    <code
+                      >dart run build_runner build
+                      --delete-conflicting-outputs</code
+                    >
+                    실행.</span
+                  >
+                </div>
+              </div>
+
+              <!-- 오류 2 -->
+              <div class="error-card err-type-error">
+                <div class="error-card-header">
+                  <span class="err-icon">ERROR</span>
+                  Undefined name 'OrderingTerm'
+                </div>
+                <div class="error-card-body">
+                  <span class="err-label">원인</span>
+                  <span class="err-content"
+                    ><code>database_provider.dart</code>에
+                    <code>import 'package:drift/drift.dart'</code>가 누락됨.
+                    <code>OrderingTerm</code>, <code>Category</code>,
+                    <code>Institution</code> 등 drift 타입을 사용하지만 import
+                    없이 작성되었음.</span
+                  >
+                </div>
+                <div class="error-card-body">
+                  <span class="err-label">해결</span>
+                  <span class="err-content"
+                    ><code>database_provider.dart</code> 상단에
+                    <code>import 'package:drift/drift.dart';</code> 한 줄
+                    추가.</span
+                  >
+                </div>
+              </div>
+
+              <!-- 예방 수정 1 -->
+              <div class="error-card err-type-fix">
+                <div class="error-card-header">
+                  <span class="err-icon">FIX</span>
+                  Transactions.uniqueKeys 중복 선언 제거 (예방)
+                </div>
+                <div class="error-card-body">
+                  <span class="err-label">내용</span>
+                  <span class="err-content"
+                    ><code>txnHash</code> 컬럼에 <code>.unique()</code>와
+                    <code>uniqueKeys</code> 오버라이드가 동시 선언되어
+                    build_runner 충돌 가능성 존재.
+                    <code>uniqueKeys</code> 블록을 제거하고
+                    <code>.unique()</code> 하나만 유지.</span
+                  >
+                </div>
+              </div>
+
+              <!-- 예방 수정 2 -->
+              <div class="error-card err-type-fix">
+                <div class="error-card-header">
+                  <span class="err-icon">FIX</span>
+                  onUpgrade의 잘못된 addColumn 호출 제거 (예방)
+                </div>
+                <div class="error-card-body">
+                  <span class="err-label">내용</span>
+                  <span class="err-content"
+                    ><code>onUpgrade</code>에서 이미 존재하는
+                    컬럼(<code>profiles.defaultViewMode</code>)에
+                    <code>m.addColumn()</code>을 호출하는 불필요한 코드 제거.
+                    해당 컬럼은 v1.0부터 존재하므로 마이그레이션 불필요.</span
+                  >
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. build_runner 가이드 -->
+          <section class="section" id="s5">
+            <p class="sec-eyebrow">05</p>
+            <h2 class="sec-heading">build_runner 실행 가이드</h2>
+            <p>
+              <code>app_database.g.dart</code> 생성을 위한 전체 실행 절차. VS
+              Code 터미널(<code>Ctrl + `</code>)에서 프로젝트 루트 위치에서
+              실행한다.
+            </p>
+
+            <p class="sub-heading">Step 1 — 의존성 추가 (최초 1회)</p>
+            <div class="cmd-block">
+              <span class="cmd-comment"># runtime 의존성</span><br />
+              <span class="cmd-prompt">$</span>
+              <span class="cmd-text"
+                >flutter pub add drift sqlite3_flutter_libs path_provider path
+                \</span
+              ><br />
+              <span class="cmd-text"
+                >&nbsp;&nbsp;&nbsp;&nbsp;flutter_riverpod csv file_picker</span
+              ><br />
+              <br />
+              <span class="cmd-comment"># dev 의존성</span><br />
+              <span class="cmd-prompt">$</span>
+              <span class="cmd-text"
+                >flutter pub add --dev drift_dev build_runner</span
+              >
+            </div>
+
+            <p class="sub-heading">Step 2 — 코드 생성 (테이블 변경 시마다)</p>
+            <div class="cmd-block">
+              <span class="cmd-comment"># 1회 빌드 (권장)</span><br />
+              <span class="cmd-prompt">$</span>
+              <span class="cmd-text"
+                >dart run build_runner build --delete-conflicting-outputs</span
+              ><br />
+              <br />
+              <span class="cmd-comment"
+                ># 파일 변경 감지 자동 재생성 (개발 중)</span
+              ><br />
+              <span class="cmd-prompt">$</span>
+              <span class="cmd-text"
+                >dart run build_runner watch --delete-conflicting-outputs</span
+              >
+            </div>
+
+            <div class="highlight-box">
+              <p>
+                <strong>재실행 필요 시점:</strong> 테이블 클래스 수정, 쿼리
+                메서드 시그니처 변경, <code>@DriftDatabase</code> tables 목록
+                변경 시 반드시 재실행.
+              </p>
+            </div>
+
+            <p class="sub-heading">Step 3 — 생성 결과 확인</p>
+            <p>
+              빌드 성공 시 <code>app_database.g.dart</code>가 자동 생성되며 아래
+              항목이 포함된다.
+            </p>
+            <ul class="bullet-list">
+              <li>
+                <code>_$AppDatabase</code> mixin — 테이블 접근자 및 DatabaseInfo
+              </li>
+              <li>
+                9개 Companion 클래스 (<code>TransactionsCompanion</code>,
+                <code>CsvParserProfilesCompanion</code> 등)
+              </li>
+              <li>
+                <code>$ProfilesTable</code>, <code>$AccountsTable</code> 등
+                런타임 테이블 클래스
+              </li>
+            </ul>
+          </section>
+
+          <!-- 6. 파일 의존 관계 -->
+          <section class="section" id="s6">
+            <p class="sec-eyebrow">06</p>
+            <h2 class="sec-heading">파일 간 의존 관계</h2>
+            <p>생성된 5개 파일의 import 구조 및 의존 관계.</p>
+
+            <div class="dep-tree">
+              <span class="dep-file">tables.dart</span> └──
+              <span class="dep-import">import: package:drift/drift.dart</span>
+
+              <span class="dep-file">app_database.dart</span>
+              ├── <span class="dep-import">import: dart:io</span> ├──
+              <span class="dep-import">import: package:drift/drift.dart</span>
+              ├──
+              <span class="dep-import">import: package:drift/native.dart</span>
+              ├──
+              <span class="dep-import">import: package:path/path.dart</span> ├──
+              <span class="dep-import"
+                >import: package:path_provider/path_provider.dart</span
+              >
+              ├── <span class="dep-import">import: tables.dart</span>
+              <span class="dep-note">← 테이블 정의</span> └──
+              <span class="dep-import">part: app_database.g.dart</span>
+              <span class="dep-note">← build_runner 생성</span>
+
+              <span class="dep-file">database_provider.dart</span>
+              ├──
+              <span class="dep-import">import: package:drift/drift.dart</span>
+              <span class="dep-note">← OrderingTerm 등 (v1.1 추가)</span> ├──
+              <span class="dep-import"
+                >import: package:flutter_riverpod/flutter_riverpod.dart</span
+              >
+              └── <span class="dep-import">import: app_database.dart</span>
+              <span class="dep-note">← AppDatabase, 생성 타입</span>
+
+              <span class="dep-file">seed_institutions.dart</span>
+              ├──
+              <span class="dep-import">import: package:drift/drift.dart</span>
+              ├── <span class="dep-import">import: app_database.dart</span> └──
+              <span class="dep-import">import: tables.dart</span>
+
+              <span class="dep-file">drift_indexes.dart</span>
+              <span class="dep-note">(참고 파일)</span> ├──
+              <span class="dep-import">import: package:drift/drift.dart</span>
+              └── <span class="dep-import">import: tables.dart</span>
+            </div>
+          </section>
+
+          <!-- 7. 후속 작업 -->
+          <section class="section" id="s7">
+            <p class="sec-eyebrow">07</p>
+            <h2 class="sec-heading">후속 작업 및 주의사항</h2>
+
+            <p class="sub-heading">즉시 필요한 작업</p>
+            <ul class="checklist">
+              <li>
+                <span class="check-icon check-todo">TODO</span>build_runner
+                실행으로 <code>app_database.g.dart</code> 생성 확인
+              </li>
+              <li>
+                <span class="check-icon check-todo">TODO</span
+                ><code>main.dart</code>에서 <code>seedInstitutions(db)</code> 및
+                <code>seedCsvParserProfiles(db)</code> 호출 추가
+              </li>
+              <li>
+                <span class="check-icon check-todo">TODO</span>기존 v1.0 DB를
+                가진 테스트 기기에서 onUpgrade(1→2) 마이그레이션 동작 검증
+              </li>
+            </ul>
+
+            <p class="sub-heading">향후 고려사항</p>
+            <ul class="bullet-list">
+              <li>
+                각 금융기관 실제 CSV 형식 검증 후
+                <code>seed_institutions.dart</code>의 파서 프로필 데이터 정밀화
+              </li>
+              <li>
+                EUC-KR 인코딩 처리: Dart의 기본 UTF-8 디코더는 EUC-KR 파일 처리
+                불가.
+                <code>charset_converter</code> 또는
+                <code>flutter_charset_detector</code> 패키지 도입 검토 필요
+              </li>
+              <li>
+                <code>profiles.connected_id_enc</code> 컬럼: 기존 사용자 DB에
+                잔존하나 무해. 향후 major 버전 업그레이드 시 VACUUM으로 정리
+                가능
+              </li>
+              <li>
+                <code>drift_indexes.dart</code>는 <code>@TableIndex</code> 적용
+                참고 파일. <code>tables.dart</code>에 직접 통합하거나 별도 유지
+                여부 팀 합의 필요
+              </li>
+            </ul>
+
+            <p class="sub-heading">Repository 레이어 구현 시 참고</p>
+            <p>
+              본 작업의 제외 범위인 Repository 레이어 구현 시 SAD v1.1 §4.3.1
+              기준 아래 인터페이스를 구현한다.
+            </p>
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>Repository 인터페이스</th>
+                  <th>주요 메서드</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>IProfileRepository</td>
+                  <td>
+                    <code>getAll()</code>, <code>getById(id)</code>,
+                    <code>upsert(profile)</code>, <code>delete(id)</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>IAccountRepository</td>
+                  <td>
+                    <code>getByProfile(profileId)</code>,
+                    <code>upsert(account)</code>,
+                    <code>updateBalance(id, balance)</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ITransactionRepository</td>
+                  <td>
+                    <code>getList(filter)</code>, <code>upsert(txn)</code>,
+                    <code>delete(id)</code>, <code>existsByHash(hash)</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ICategoryRepository</td>
+                  <td>
+                    <code>getAll()</code>, <code>upsert(cat)</code>,
+                    <code>delete(id)</code>, <code>getRules()</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ICsvParserProfileRepository</td>
+                  <td>
+                    <code>getByInstitution(code)</code>, <code>getAll()</code>,
+                    <code>upsert(profile)</code>, <code>deactivate(id)</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>IImportHistoryRepository</td>
+                  <td>
+                    <code>insert(record)</code>,
+                    <code>getByAccount(accountId)</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ISettingsRepository</td>
+                  <td>
+                    <code>get(key)</code>, <code>set(key, value)</code>,
+                    <code>delete(key)</code>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </article>
+      </div>
+
+      <section class="comments-section">
+        <div class="comments-wrap">
+          <div class="sec-eyebrow" style="margin-bottom: 1.2rem">Comments</div>
+          <script
+            src="https://giscus.app/client.js"
+            data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+            data-repo-id="R_kgDORgqLUQ"
+            data-category="Announcements"
+            data-category-id="DIC_kwDORgqLUc4C4NNi"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="0"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="light"
+            data-lang="ko"
+            crossorigin="anonymous"
+            async
+          ></script>
+        </div>
+      </section>
+
+      <div class="post-footer">
+        <a class="footer-back" href="index.html">← 프로젝트 목록</a>
+        <span class="footer-copy">© 2026 정서영</span>
+      </div>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>
