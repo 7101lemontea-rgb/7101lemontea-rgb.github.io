@@ -32,8 +32,8 @@
         --c-categories: #00695c; /* 틸       */
         --c-cat-rules: #e65100; /* 오렌지   */
         --c-institutions: #546e7a; /* 그레이   */
-        --c-csv-parser: #00838f; /* 청록 ★신규 */
-        --c-import: #4e342e; /* 브라운 ★신규 */
+        --c-csv-parser: #00838f; /* 청록 [신규] */
+        --c-import: #4e342e; /* 브라운 [신규] */
         --c-settings: #1b5e20; /* 다크그린 */
       }
 
@@ -811,9 +811,9 @@
             <p class="sec-eyebrow">02</p>
             <h2 class="sec-heading">테이블 관계 다이어그램 (ERD Overview)</h2>
             <p>
-              아래 다이어그램은 9개 테이블 간의 참조 관계를 나타낸다. 각 엔티티
-              박스의 컬럼은 PK/FK만 표시하며, 화살표 방향은 FK 참조 방향을
-              의미한다.
+              아래 다이어그램은 9개 테이블 간의 참조 관계를 나타냅니다. 각
+              엔티티 박스의 컬럼은 PK/FK만 표시하며, 화살표 방향은 FK 참조
+              방향을 의미합니다.
             </p>
 
             <div class="erd-diagram">
@@ -1117,7 +1117,7 @@
             <h2 class="sec-heading">테이블 간 관계 명세</h2>
             <p>
               아래 표는 모든 외래 키 관계의 Cardinality, 삭제/수정 정책,
-              비즈니스 의미를 정의한다.
+              비즈니스 의미를 정의합니다.
             </p>
 
             <table class="rel-table">
@@ -1270,11 +1270,11 @@
             <p class="sec-eyebrow">04</p>
             <h2 class="sec-heading">테이블 상세 스키마</h2>
             <p>
-              각 테이블의 컬럼 명세를 상세히 정의한다.
+              각 테이블의 컬럼 명세를 상세히 정의합니다.
               <span style="color: #c0392b; font-weight: 500">PK(기본 키)</span
               >는 적색,
               <span style="color: #2563eb; font-weight: 500">FK(외래 키)</span
-              >는 청색으로 표시한다.
+              >는 청색으로 표시합니다.
             </p>
 
             <!-- profiles -->
@@ -2050,8 +2050,8 @@
             <h2 class="sec-heading">인덱스 전략</h2>
             <p>
               조회 성능에 직접 영향을 주는 쿼리 패턴을 분석하여 아래 인덱스를
-              정의한다. drift ORM은 <code>@Index</code> 어노테이션으로 자동
-              생성한다.
+              정의합니다. drift ORM은 <code>@Index</code> 어노테이션으로 자동
+              생성합니다.
             </p>
 
             <table class="idx-table">
@@ -2156,8 +2156,8 @@
             <p class="sec-eyebrow">06</p>
             <h2 class="sec-heading">주요 쿼리 패턴</h2>
             <p>
-              drift ORM으로 작성할 핵심 쿼리의 SQL 의사 코드를 정의한다. 실제
-              구현은 drift Query Builder로 변환한다.
+              drift ORM으로 작성할 핵심 쿼리의 SQL 의사 코드를 정의합니다. 실제
+              구현은 drift Query Builder로 변환합니다.
             </p>
 
             <p class="sub-heading">6.1 개인 뷰 — 이번 달 수입/지출 합계</p>
@@ -2248,7 +2248,7 @@
           <section class="section" id="s7">
             <p class="sec-eyebrow">07</p>
             <h2 class="sec-heading">기본 데이터 (Seed Data)</h2>
-            <p>앱 최초 설치 시 자동으로 삽입되는 기본 데이터를 정의한다.</p>
+            <p>앱 최초 설치 시 자동으로 삽입되는 기본 데이터를 정의합니다.</p>
 
             <p class="sub-heading">7.1 기본 카테고리 (categories)</p>
             <table class="seed-table">
@@ -2497,30 +2497,32 @@
               </div>
             </div>
           </section>
+
+          <section class="comments-section">
+            <div class="comments-wrap">
+              <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+                Comments
+              </div>
+              <script
+                src="https://giscus.app/client.js"
+                data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+                data-repo-id="R_kgDORgqLUQ"
+                data-category="Announcements"
+                data-category-id="DIC_kwDORgqLUc4C4NNi"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="0"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="light"
+                data-lang="ko"
+                crossorigin="anonymous"
+                async
+              ></script>
+            </div>
+          </section>
         </article>
       </div>
-
-      <section class="comments-section">
-        <div class="comments-wrap">
-          <div class="sec-eyebrow" style="margin-bottom: 1.2rem">Comments</div>
-          <script
-            src="https://giscus.app/client.js"
-            data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
-            data-repo-id="R_kgDORgqLUQ"
-            data-category="Announcements"
-            data-category-id="DIC_kwDORgqLUc4C4NNi"
-            data-mapping="pathname"
-            data-strict="0"
-            data-reactions-enabled="0"
-            data-emit-metadata="0"
-            data-input-position="bottom"
-            data-theme="light"
-            data-lang="ko"
-            crossorigin="anonymous"
-            async
-          ></script>
-        </div>
-      </section>
 
       <div class="post-footer">
         <a class="footer-back" href="index.html">← 프로젝트 목록</a>

@@ -121,14 +121,14 @@
         color: #c0392b;
       }
       .err-type-error {
-        border-top: 3px solid #e53935;
+        border-top: 3px solid #e28886;
       }
       .err-type-fix .err-icon {
         background: rgba(46, 125, 50, 0.12);
         color: #2e7d32;
       }
       .err-type-fix {
-        border-top: 3px solid #43a047;
+        border-top: 3px solid #79af5e;
       }
 
       .error-card-body {
@@ -345,8 +345,9 @@
         <p class="post-sub">Drift ORM 구현 작업일지 — Data Layer v1.1</p>
         <p class="post-desc">
           SAD v1.1 및 DB ERD v1.1 기반으로 데이터 영속성 계층(L3)을 재구성한
-          작업 기록입니. CODEF API → CSV 가져오기 방식 전환에 따른 스키마 변경,
-          신규 테이블 추가, 쿼리 확장, 발생 오류 및 해결 내역을 포함합니다.
+          작업 기록입니다. CODEF API → CSV 가져오기 방식 전환에 따른 스키마
+          변경, 신규 테이블 추가, 쿼리 확장, 발생 오류 및 해결 내역을
+          포함합니다.
         </p>
         <div class="post-stats">
           <div>
@@ -461,7 +462,7 @@
 
             <p>
               작업으로 생성·수정된 파일 5개는
-              <code>lib/data/database/</code> 디렉터리에 위치한다.
+              <code>lib/data/database/</code> 디렉터리에 위치합니다.
             </p>
 
             <div class="file-tree">
@@ -569,7 +570,7 @@
             </p>
             <p>
               CODEF API 인증 방식 폐기에 따라 Connected ID를 저장하는 컬럼을
-              제거하였다.
+              제거하였습니다.
             </p>
             <div class="change-note">
               <div class="change-row">
@@ -602,7 +603,7 @@
             </p>
             <p>
               자동 동기화 개념이 폐기됨에 따라 동기화 이력 테이블을 완전히
-              제거하였다.
+              제거하였습니다.
             </p>
             <div class="highlight-box">
               <p>
@@ -625,7 +626,7 @@
             </p>
             <p>
               기관별 CSV 파싱 설정을 DB로 관리. 앱 업데이트 없이 신규 기관 CSV
-              형식을 추가·수정할 수 있다.
+              형식을 추가·수정할 수 있습니다.
             </p>
             <table class="schema-table">
               <thead>
@@ -735,7 +736,7 @@
             </p>
             <p>
               <code>sync_history</code>를 대체하는 CSV 가져오기 이력 테이블.
-              자동 동기화 상태 대신 파일 단위 통계를 기록한다.
+              자동 동기화 상태 대신 파일 단위 통계를 기록합니다.
             </p>
             <table class="schema-table">
               <thead>
@@ -828,8 +829,8 @@
               5.5 getParserProfile() <span class="new-badge">NEW</span>
             </p>
             <p>
-              institution_code 기준으로 활성화된 파서 프로필을 반환. SCR-008 CSV
-              가져오기 화면에서 계좌 선택 시 자동 호출.
+              institution_code 기준으로 활성화된 파서 프로필을 반환합니다.
+              SCR-008 CSV 가져오기 화면에서 계좌 선택 시 자동으로 호출합니다.
             </p>
             <div class="code-block">
               <pre><span class="c-key">Future</span>&lt;CsvParserProfile?&gt; getParserProfile({
@@ -855,8 +856,8 @@
               5.6 getImportHistory() <span class="new-badge">NEW</span>
             </p>
             <p>
-              accountId 기준 최신 이력을 limit 건 반환. SCR-007 계좌 관리 화면
-              ImportHistoryList에서 사용.
+              accountId 기준 최신 이력을 20건 반환합니다. SCR-007 계좌 관리 화면
+              ImportHistoryList에서 사용합니다.
             </p>
             <div class="code-block">
               <pre><span class="c-key">Future</span>&lt;<span class="c-key">List</span>&lt;ImportHistoryEntry&gt;&gt; getImportHistory({
@@ -875,7 +876,7 @@
             <p class="sub-heading">3.3 마이그레이션 전략 (onUpgrade)</p>
             <p>
               schemaVersion을 1 → 2로 상향하고 v1 → v2 업그레이드 경로를
-              구현하였다.
+              구현하였습니다.
             </p>
             <div class="code-block">
               <pre>onUpgrade: (m, from, to) <span class="c-key">async</span> {
@@ -905,16 +906,17 @@
               <p>
                 <strong>주의:</strong>
                 <code>profiles.connected_id_enc</code> 컬럼 제거는 onUpgrade에서
-                처리하지 않는다. SQLite 컬럼 삭제 지원(v3.35.0+)이 모든 기기에서
-                보장되지 않으므로 신규 설치(onCreate)에서만 컬럼 없이 생성되며,
-                기존 사용자 DB는 컬럼을 그대로 유지한다(무해함).
+                처리하지 않습니다. SQLite 컬럼 삭제 지원(v3.35.0+)이 모든
+                기기에서 보장되지 않으므로 신규 설치(onCreate)에서만 컬럼 없이
+                생성되며, 기존 사용자 DB는 컬럼을 그대로 유지합니다(무해함).
               </p>
             </div>
 
             <!-- 3.4 인덱스 -->
             <p class="sub-heading">3.4 인덱스 전략 변경 (drift_indexes.dart)</p>
             <p>
-              ERD v1.1 §5 기준 총 9개 인덱스. v1.0 대비 1개 제거, 2개 신규 추가.
+              ERD v1.1 §5 기준 총 9개 인덱스가 있습니다. v1.0 대비 1개를
+              제거하였으며, 2개를 신규로 추가했습니다.
             </p>
             <table class="gen-table">
               <thead>
@@ -1029,7 +1031,7 @@
             </p>
             <p>
               주요 기관 7개의 CSV 파서 기본값을
-              <code>seed_institutions.dart</code>에 함께 관리.
+              <code>seed_institutions.dart</code>에 함께 관리합니다.
             </p>
             <table class="gen-table">
               <thead>
@@ -1101,7 +1103,7 @@
             <h2 class="sec-heading">발생한 오류 및 해결 내역</h2>
             <p>
               코드 작성 및 프로젝트 적용 과정에서 발생한 오류와 예방 수정 내역을
-              기록한다.
+              기록했습니다.
             </p>
 
             <div class="error-list">
@@ -1204,9 +1206,9 @@
             <p class="sec-eyebrow">05</p>
             <h2 class="sec-heading">build_runner 실행 가이드</h2>
             <p>
-              <code>app_database.g.dart</code> 생성을 위한 전체 실행 절차. VS
-              Code 터미널(<code>Ctrl + `</code>)에서 프로젝트 루트 위치에서
-              실행한다.
+              <code>app_database.g.dart</code> 생성을 위한 전체 실행 절차입니다.
+              VS Code 터미널(<code>Ctrl + `</code>)에서 프로젝트 루트 위치에서
+              실행합니다.
             </p>
 
             <p class="sub-heading">Step 1 — 의존성 추가 (최초 1회)</p>
@@ -1256,7 +1258,7 @@
             <p class="sub-heading">Step 3 — 생성 결과 확인</p>
             <p>
               빌드 성공 시 <code>app_database.g.dart</code>가 자동 생성되며 아래
-              항목이 포함된다.
+              항목이 포함됩니다.
             </p>
             <ul class="bullet-list">
               <li>
@@ -1277,7 +1279,7 @@
           <section class="section" id="s6">
             <p class="sec-eyebrow">06</p>
             <h2 class="sec-heading">파일 간 의존 관계</h2>
-            <p>생성된 5개 파일의 import 구조 및 의존 관계.</p>
+            <p>생성된 5개 파일의 import 구조 및 의존 관계입니다.</p>
 
             <div class="dep-tree">
               <span class="dep-file">tables.dart</span> └──
@@ -1433,30 +1435,31 @@
               </tbody>
             </table>
           </section>
+          <section class="comments-section">
+            <div class="comments-wrap">
+              <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+                Comments
+              </div>
+              <script
+                src="https://giscus.app/client.js"
+                data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+                data-repo-id="R_kgDORgqLUQ"
+                data-category="Announcements"
+                data-category-id="DIC_kwDORgqLUc4C4NNi"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="0"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="light"
+                data-lang="ko"
+                crossorigin="anonymous"
+                async
+              ></script>
+            </div>
+          </section>
         </article>
       </div>
-
-      <section class="comments-section">
-        <div class="comments-wrap">
-          <div class="sec-eyebrow" style="margin-bottom: 1.2rem">Comments</div>
-          <script
-            src="https://giscus.app/client.js"
-            data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
-            data-repo-id="R_kgDORgqLUQ"
-            data-category="Announcements"
-            data-category-id="DIC_kwDORgqLUc4C4NNi"
-            data-mapping="pathname"
-            data-strict="0"
-            data-reactions-enabled="0"
-            data-emit-metadata="0"
-            data-input-position="bottom"
-            data-theme="light"
-            data-lang="ko"
-            crossorigin="anonymous"
-            async
-          ></script>
-        </div>
-      </section>
 
       <div class="post-footer">
         <a class="footer-back" href="index.html">← 프로젝트 목록</a>

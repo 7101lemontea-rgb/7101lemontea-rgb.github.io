@@ -30,9 +30,9 @@
         <h1 class="post-title">Fortune Garden</h1>
         <p class="post-sub">시스템 아키텍처 설계서 — Software Architecture Document (SAD)</p>
         <p class="post-desc">
-          Flutter 기반 2인 가구용 가계부 Fortune Garden의 전체 시스템 아키텍처를 정의한다.
+          Flutter 기반 2인 가구용 가계부 Fortune Garden의 전체 시스템 아키텍처를 정의합니다.
           개발팀이 일관된 구조로 구현할 수 있도록 컴포넌트 구성, 계층 간 인터페이스,
-          데이터 흐름, 보안 모델, 배포 구조를 명세한다.
+          데이터 흐름, 보안 모델, 배포 구조를 명세합니다.
         </p>
 
         <div class="post-stats" id="post-timestamps">
@@ -84,9 +84,9 @@
 
             <p class="sub-heading">1.1 목적</p>
             <p>
-              본 문서는 Flutter 기반 2인 가구용 가계부 애플리케이션 Fortune Garden의
-              전체 시스템 아키텍처를 정의한다. 개발팀이 일관된 구조로 구현할 수 있도록
-              컴포넌트 구성, 계층 간 인터페이스, 데이터 흐름, 보안 모델, 배포 구조를 명세한다.
+              Flutter 기반 2인 가구용 가계부 애플리케이션 Fortune Garden의
+              전체 시스템 아키텍처를 정의합니다. 개발팀이 일관된 구조로 구현할 수 있도록
+              컴포넌트 구성, 계층 간 인터페이스, 데이터 흐름, 보안 모델, 배포 구조를 명세합니다.
             </p>
 
             <p class="sub-heading">1.2 범위</p>
@@ -145,9 +145,9 @@
 
             <p class="sub-heading">3.1 계층형 아키텍처 개요</p>
             <p>
-              Fortune Garden은 v1.2에서 <strong>4개의 논리 계층</strong>으로 구성된다.
-              v1.1의 Infrastructure(Shelf Local Server) 계층(L3)이 제거되었다.
-              각 계층은 인접 계층과만 통신하며, 계층을 건너뛰는 직접 호출은 허용하지 않는다.
+              Fortune Garden은 v1.2에서 <strong>4개의 논리 계층</strong>으로 구성됩니다.
+              v1.1의 Infrastructure(Shelf Local Server) 계층(L3)이 제거되었습니다.
+              각 계층은 인접 계층과만 통신하며, 계층을 건너뛰는 직접 호출은 허용하지 않습니다.
             </p>
             <div class="layer-diagram">
               <div class="layer-row">
@@ -173,7 +173,7 @@
             </div>
 
             <p class="sub-heading">3.2 컴포넌트 다이어그램</p>
-            <p>아래는 Fortune Garden v1.2의 주요 컴포넌트 간 관계를 나타낸다. Shelf Server 계층이 제거되고 CSV Parser가 Application 계층 내로 통합되었다.</p>
+            <p>아래는 Fortune Garden v1.2의 주요 컴포넌트 간 관계를 나타냅니다. Shelf Server 계층이 제거되고 CSV Parser가 Application 계층 내로 통합되었습니다.</p>
             <div class="component-box">
 <span class="c-title">┌─────────────────────────── Flutter App Process ────────────────────────────┐</span>
 │                                                                              │
@@ -207,7 +207,7 @@
 
             <p class="sub-heading">4.1 Presentation Layer (L1) — Flutter UI</p>
             <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--accent2);font-family:var(--font-mono);">4.1.1 상태 관리</p>
-            <p>상태 관리 라이브러리로 <strong>Riverpod 2.x</strong>를 사용한다. 각 화면은 <code>ConsumerWidget</code> 또는 <code>ConsumerStatefulWidget</code>으로 구현하며, Provider를 통해 UseCase 결과를 구독한다.</p>
+            <p>상태 관리 라이브러리로 <strong>Riverpod 2.x</strong>를 사용합니다. 각 화면은 <code>ConsumerWidget</code> 또는 <code>ConsumerStatefulWidget</code>으로 구현하며, Provider를 통해 UseCase 결과를 구독합니다.</p>
             <table class="gen-table">
               <thead><tr><th>Provider 이름</th><th>상태 타입</th><th>역할</th></tr></thead>
               <tbody>
@@ -220,7 +220,7 @@
             </table>
 
             <p style="margin-top:1.5rem;font-size:0.85rem;color:var(--accent2);font-family:var(--font-mono);">4.1.2 화면 구성 및 네비게이션</p>
-            <p>Windows Desktop은 <code>NavigationRail</code> 기반 사이드바 레이아웃을, Android는 <code>BottomNavigationBar</code> 레이아웃을 사용한다. 공통 라우팅은 <code>go_router</code> 패키지로 관리한다.</p>
+            <p>Windows Desktop은 <code>NavigationRail</code> 기반 사이드바 레이아웃을, Android는 <code>BottomNavigationBar</code> 레이아웃을 사용합니다. 공통 라우팅은 <code>go_router</code> 패키지로 관리합니다.</p>
             <table class="gen-table">
               <thead><tr><th>화면 ID</th><th>라우트</th><th>화면명</th><th>주요 위젯</th></tr></thead>
               <tbody>
@@ -231,7 +231,7 @@
                 <tr><td>SCR-005</td><td>/transactions/new</td><td>수동 거래 입력</td><td>ManualTxnForm</td></tr>
                 <tr><td>SCR-006</td><td>/report</td><td>리포트</td><td>DonutChart, BarChart, ViewModeToggle, MonthPicker</td></tr>
                 <tr><td>SCR-007</td><td>/accounts</td><td>계좌 관리</td><td>AccountListTile, BalanceSummary, ImportHistoryList</td></tr>
-                <tr><td>SCR-008</td><td>/import</td><td>CSV 파일 가져오기 ★변경</td><td>FilePicker, ParserProfileSelector, ImportProgressWidget, ImportResultCard</td></tr>
+                <tr><td>SCR-008</td><td>/import</td><td>CSV 파일 가져오기 [변경]</td><td>FilePicker, ParserProfileSelector, ImportProgressWidget, ImportResultCard</td></tr>
                 <tr><td>SCR-009</td><td>/categories</td><td>카테고리 설정</td><td>CategoryGrid, RuleListView, AddRuleForm</td></tr>
                 <tr><td>SCR-010</td><td>/settings</td><td>앱 설정</td><td>ThemeToggle, PinLockToggle, BackupSection</td></tr>
                 <tr><td>SCR-011</td><td>/profiles</td><td>프로필 관리</td><td>ProfileCard (×2), ColorPicker, NameField</td></tr>
@@ -239,7 +239,7 @@
             </table>
 
             <p class="sub-heading">4.2 Application Layer (L2) — UseCase / Service</p>
-            <p>Domain Layer에 해당하며, 순수 Dart 코드로만 구성한다. Flutter, SQLite, HTTP 패키지에 의존하지 않아 단위 테스트가 용이하다.</p>
+            <p>Domain Layer에 해당하며, 순수 Dart 코드로만 구성합니다. Flutter, SQLite, HTTP 패키지에 의존하지 않아 단위 테스트가 용이합니다.</p>
             <table class="gen-table">
               <thead><tr><th>UseCase 클래스</th><th>메서드</th><th>설명</th></tr></thead>
               <tbody>
@@ -255,7 +255,7 @@
 
             <p class="sub-heading">4.3 Data Layer (L3) — Repository + SQLite</p>
             <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--accent2);font-family:var(--font-mono);">4.3.1 Repository 패턴</p>
-            <p>모든 데이터 접근은 추상 Repository 인터페이스를 통해 이루어진다. UseCase는 인터페이스에만 의존하므로 테스트 시 Mock Repository로 교체 가능하다.</p>
+            <p>모든 데이터 접근은 추상 Repository 인터페이스를 통해 이루어집니다. UseCase는 인터페이스에만 의존하므로 테스트 시 Mock Repository로 교체 가능합니다.</p>
             <table class="gen-table">
               <thead><tr><th>Repository 인터페이스</th><th>주요 메서드</th></tr></thead>
               <tbody>
@@ -270,7 +270,7 @@
             </table>
 
             <p style="margin-top:1.5rem;font-size:0.85rem;color:var(--accent2);font-family:var(--font-mono);">4.3.2 SQLite 데이터베이스 상세 스키마</p>
-            <p>drift ORM을 사용하며, DB 파일명은 <code>fortune_garden.db</code>이다. 저장 경로는 OS별 표준 앱 데이터 디렉터리를 따른다.</p>
+            <p>drift ORM을 사용하며, DB 파일명은 <code>fortune_garden.db</code>입니다. 저장 경로는 OS별 표준 앱 데이터 디렉터리를 따릅니다.</p>
             <ul class="bullet-list">
               <li>Windows: <code>%APPDATA%\FortuneGarden\fortune_garden.db</code></li>
               <li>Android: <code>/data/data/com.fortunegarden.app/databases/fortune_garden.db</code></li>
@@ -323,7 +323,7 @@
             </table>
             <p>인덱스: <code>(profile_id, txn_date)</code>, <code>(account_id, txn_date)</code>, <code>(category_id)</code>, <code>(txn_hash UNIQUE)</code></p>
 
-            <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">csv_parser_profiles 테이블 ★신규</p>
+            <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">csv_parser_profiles 테이블 [신규]</p>
             <table class="schema-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
@@ -340,7 +340,7 @@
               </tbody>
             </table>
 
-            <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">import_history 테이블 ★신규</p>
+            <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">import_history 테이블 [신규]</p>
             <table class="schema-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
@@ -405,7 +405,7 @@
             </ul>
 
             <p class="sub-heading">5.4 개인 뷰 / 통합 뷰 전환 흐름</p>
-            <p>뷰 모드 전환은 <code>viewModeProvider</code> 값 변경 → <code>transactionListProvider</code> / <code>dashboardSummaryProvider</code> 자동 재계산의 Riverpod 반응형 흐름으로 처리된다. DB 재쿼리가 아닌 파라미터 변경만으로 즉시 반영된다.</p>
+            <p>뷰 모드 전환은 <code>viewModeProvider</code> 값 변경 → <code>transactionListProvider</code> / <code>dashboardSummaryProvider</code> 자동 재계산의 Riverpod 반응형 흐름으로 처리됩니다. DB 재쿼리가 아닌 파라미터 변경만으로 즉시 반영됩니다.</p>
             <table class="gen-table">
               <thead><tr><th>뷰 모드</th><th>데이터 쿼리 방식</th><th>표시 내용</th></tr></thead>
               <tbody>
@@ -475,7 +475,7 @@
             <h2 class="sec-heading">배포 및 빌드 구조</h2>
 
             <p class="sub-heading">8.1 디렉터리 구조</p>
-            <p>Clean Architecture를 반영한 Flutter 프로젝트 디렉터리 구조는 아래와 같다. v1.2에서 <code>infrastructure/</code> 디렉터리가 제거되고 <code>csv_parser/</code> 디렉터리가 <code>application/</code> 하위에 추가된다.</p>
+            <p>Clean Architecture를 반영한 Flutter 프로젝트 디렉터리 구조는 아래와 같습니다. v1.2에서 <code>infrastructure/</code> 디렉터리가 제거되고 <code>csv_parser/</code> 디렉터리가 <code>application/</code> 하위에 추가되었습니다.</p>
             <div class="code-block">
               <pre><span class="c-key">lib/</span>
   ├── main.dart                   <span class="c-comment"># 앱 진입점</span>
@@ -536,7 +536,7 @@
           <section class="section" id="s10">
             <p class="sec-eyebrow">10</p>
             <h2 class="sec-heading">아키텍처 결정 기록 (ADR)</h2>
-            <p>주요 기술 결정의 배경과 대안을 기록한다.</p>
+            <p>주요 기술 결정의 배경과 대안을 기록합니다.</p>
             <div class="adr-list">
               <div class="adr-card">
                 <div class="adr-header"><span class="adr-num">ADR-01</span><span class="adr-title">CSV 파일 가져오기 방식 채택</span></div>
