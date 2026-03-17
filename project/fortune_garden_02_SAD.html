@@ -277,7 +277,7 @@
             </ul>
 
             <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">profiles 테이블</p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
                 <tr><td class="col-name">id</td><td class="col-type">INTEGER</td><td class="col-constraint">PK, AUTO</td><td class="col-desc">프로필 고유 ID (1 또는 2)</td></tr>
@@ -290,7 +290,7 @@
             <p>※ v1.2: <code>connected_id_enc</code> 컬럼 제거 (CODEF 방식 폐기)</p>
 
             <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">accounts 테이블</p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
                 <tr><td class="col-name">id</td><td class="col-type">INTEGER</td><td class="col-constraint">PK, AUTO</td><td class="col-desc">계좌 고유 ID</td></tr>
@@ -304,7 +304,7 @@
             </table>
 
             <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">transactions 테이블</p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
                 <tr><td class="col-name">id</td><td class="col-type">INTEGER</td><td class="col-constraint">PK, AUTO</td><td class="col-desc">거래 고유 ID</td></tr>
@@ -324,7 +324,7 @@
             <p>인덱스: <code>(profile_id, txn_date)</code>, <code>(account_id, txn_date)</code>, <code>(category_id)</code>, <code>(txn_hash UNIQUE)</code></p>
 
             <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">csv_parser_profiles 테이블 [신규]</p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
                 <tr><td class="col-name">id</td><td class="col-type">INTEGER</td><td class="col-constraint">PK, AUTO</td><td class="col-desc">파서 프로필 고유 ID</td></tr>
@@ -341,7 +341,7 @@
             </table>
 
             <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">import_history 테이블 [신규]</p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
                 <tr><td class="col-name">id</td><td class="col-type">INTEGER</td><td class="col-constraint">PK, AUTO</td><td class="col-desc">이력 고유 ID</td></tr>

@@ -428,60 +428,18 @@ code {
   font-size: 0.75rem;
 }
 
-/* ── REQUIREMENT TABLE (req-table) — 01 파일 ── */
-.req-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
-  font-size: 0.83rem;
-}
-.req-table thead tr {
-  background: rgba(116, 155, 65, 0.08);
-}
-.req-table th {
-  padding: 0.65rem 0.9rem;
-  text-align: left;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent2);
-  border-bottom: 2px solid rgba(116, 155, 65, 0.25);
-  font-weight: 500;
-}
-.req-table td {
-  padding: 0.7rem 0.9rem;
-  color: var(--ink-muted);
-  line-height: 1.6;
-  border-bottom: 1px solid var(--rule);
-  vertical-align: top;
-}
-.req-table tr:last-child td {
-  border-bottom: none;
-}
-.req-table tr:hover td {
-  background: rgba(116, 155, 65, 0.03);
-}
-.req-id {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--accent2);
-  white-space: nowrap;
-  font-weight: 500;
-}
-
-/* ── SCHEMA TABLE ── */
-.schema-table {
+/* ── NORMAL TABLE ── */
+.normal-table {
   width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
   font-size: 0.82rem;
 }
-.schema-table th {
+.normal-table th {
   padding: 0.6rem 0.9rem;
   text-align: left;
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent2);
@@ -489,18 +447,18 @@ code {
   background: rgba(116, 155, 65, 0.06);
   font-weight: 500;
 }
-.schema-table td {
+.normal-table td {
   padding: 0.65rem 0.9rem;
   color: var(--ink-muted);
   border-bottom: 1px solid var(--rule);
   vertical-align: top;
   line-height: 1.6;
 }
-.schema-table tr:last-child td {
+.normal-table tr:last-child td {
   border-bottom: none;
 }
 /* 01 파일 — inline code in schema */
-.schema-table code {
+.normal-table code {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--accent2);
@@ -509,26 +467,26 @@ code {
   border-radius: 2px;
 }
 /* 02 파일 — column classes */
-.schema-table .col-name {
+.normal-table .col-name {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--accent2);
   font-weight: 500;
   white-space: nowrap;
 }
-.schema-table .col-type {
+.normal-table .col-type {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: #8a6820;
   white-space: nowrap;
 }
-.schema-table .col-constraint {
+.normal-table .col-constraint {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--ink-muted);
   white-space: nowrap;
 }
-.schema-table .col-desc {
+.normal-table .col-desc {
   font-size: 0.82rem;
   color: var(--ink-muted);
 }
@@ -573,35 +531,6 @@ code {
   font-size: 0.75rem;
   color: var(--ink);
   font-weight: 500;
-}
-
-/* ── GLOSSARY ── */
-.glossary-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.glossary-item {
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  border-bottom: 1px solid var(--rule);
-  padding: 1rem 0;
-}
-.glossary-item:last-child {
-  border-bottom: none;
-}
-.glossary-term {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--ink);
-  font-weight: 500;
-  padding-right: 1rem;
-  padding-top: 0.1rem;
-}
-.glossary-def {
-  font-size: 0.85rem;
-  color: var(--ink-muted);
-  line-height: 1.7;
 }
 
 /* ── STAKEHOLDER CARDS ── */
@@ -700,7 +629,7 @@ code {
 }
 
 /* ── ARCH LAYERS (01 파일) ── */
-.arch-layers {
+.white-column-table {
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -709,22 +638,22 @@ code {
   overflow: hidden;
   margin: 1rem 0;
 }
-.arch-row {
+.white-column-row {
   display: grid;
   grid-template-columns: 130px 1fr;
   border-bottom: 1px solid var(--rule);
 }
 
-.arch-row-wide {
+.white-column-row-wide {
   display: grid;
   grid-template-columns: 160px 1fr;
   border-bottom: 1px solid var(--rule);
 }
 
-.arch-row:last-child {
+.white-column-row:last-child {
   border-bottom: none;
 }
-.arch-label {
+.white-column-label {
   padding: 1rem 1.1rem;
   background: var(--card-bg);
   border-right: 1px solid var(--rule);
@@ -734,37 +663,37 @@ code {
   gap: 0.2rem;
 }
 
-.arch-layer-name {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
+.white-column-layer-name {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
   font-weight: 500;
   color: var(--ink);
 }
-.arch-layer-tech {
+.white-column-layer-tech {
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   color: var(--accent);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.arch-content {
+.white-column-content {
   padding: 1rem 1.2rem;
   font-size: 0.85rem;
   background: var(--bg);
 }
-.arch-content p {
+.white-column-content p {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
 }
-.arch-tags {
+.white-column-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem;
   margin-top: 0.5rem;
 }
-.arch-tag {
+.white-column-tag {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.72rem;
   padding: 0.15rem 0.5rem;
   border: 1px solid var(--rule);
   border-radius: 2px;
@@ -920,8 +849,8 @@ code {
 .tree-block .t-line {
   color: var(--ink-muted);
 }
-/* ── PRIORITY GRID ── */
-.priority-grid {
+/* ── TABLE2 GRID ── */
+.table-second-grid {
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -930,28 +859,28 @@ code {
   overflow: hidden;
   margin: 1rem 0;
 }
-.priority-row {
+.table-second-row {
   display: grid;
   grid-template-columns: 90px 120px 1fr 120px;
   gap: 0;
   border-bottom: 1px solid var(--rule);
 }
-.priority-row:last-child {
+.table-second-row:last-child {
   border-bottom: none;
 }
-.priority-row.header {
+.table-second-row.header {
   background: rgba(116, 155, 65, 0.08);
 }
-.priority-row > div {
+.table-second-row > div {
   padding: 0.75rem 1rem;
   font-size: 0.82rem;
   color: var(--ink-muted);
   border-right: 1px solid var(--rule);
 }
-.priority-row > div:last-child {
+.table-second-row > div:last-child {
   border-right: none;
 }
-.priority-row.header > div {
+.table-second-row.header > div {
   font-family: var(--font-mono);
   font-size: 0.62rem;
   letter-spacing: 0.08em;
@@ -959,7 +888,8 @@ code {
   color: var(--accent2);
   font-weight: 500;
 }
-.priority-badge {
+/* ── COLOR BADGE ── */
+.color-badge {
   display: inline-block;
   align-self: flex-start;
   font-family: var(--font-mono);
@@ -989,20 +919,20 @@ code {
   color: #e65100;
 }
 
-/* ── SCREEN GRID ── */
-.screen-grid {
+/* ── CARD STYLE GRID ── */
+.card-style-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.7rem;
   margin: 1rem 0;
 }
-.screen-card {
+.card-style {
   background: var(--card-bg);
   border: 1px solid var(--rule);
   border-radius: 4px;
   padding: 1rem 1.2rem;
 }
-.screen-id {
+.card-id {
   font-family: var(--font-mono);
   font-size: 0.65rem;
   color: var(--accent);
@@ -1010,13 +940,13 @@ code {
   text-transform: uppercase;
   margin-bottom: 0.3rem;
 }
-.screen-name {
+.card-name {
   font-size: 0.88rem;
   font-weight: 500;
   color: var(--ink);
   margin-bottom: 0.35rem;
 }
-.screen-desc {
+.card-desc {
   font-size: 0.78rem;
   color: var(--ink-muted);
   line-height: 1.55;
@@ -1102,12 +1032,12 @@ code {
   border-right: none;
 }
 .changelog-row.header > div {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent2);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* Image */
@@ -1179,28 +1109,25 @@ figure.doc-figure figcaption {
   .stakeholder-grid {
     grid-template-columns: 1fr;
   }
-  .screen-grid {
+  .card-style-grid {
     grid-template-columns: 1fr;
   }
-  .arch-row,
-  .priority-row {
+  .white-column-row,
+  .table-second-row {
     grid-template-columns: 1fr;
   }
-  .arch-label {
+  .white-column-label {
     border-right: none;
     border-bottom: 1px solid var(--rule);
   }
-  .priority-row > div {
+  .table-second-row > div {
     border-right: none;
     border-bottom: 1px solid var(--rule);
   }
-  .priority-row > div:last-child {
+  .table-second-row > div:last-child {
     border-bottom: none;
   }
-  .glossary-item {
-    grid-template-columns: 1fr;
-    gap: 0.3rem;
-  }
+
   .info-card-row {
     grid-template-columns: 1fr;
   }

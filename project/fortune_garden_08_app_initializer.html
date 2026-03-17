@@ -175,14 +175,14 @@
 
             <p class="sub-heading">파일별 역할</p>
 
-            <div class="arch-layers">
-              <div class="arch-row-wide">
-                <div class="arch-label">
-                  <span class="priority-badge p5">수정</span>
-                  <span class="arch-layer-name">main.dart</span>
-                  <span class="arch-layer-tech">앱 진입점</span>
+            <div class="white-column-table">
+              <div class="white-column-row-wide">
+                <div class="white-column-label">
+                  <span class="color-badge p5">수정</span>
+                  <span class="white-column-layer-name">main.dart</span>
+                  <span class="white-column-layer-tech">앱 진입점</span>
                 </div>
-                <div class="arch-content">
+                <div class="white-column-content">
                   <span>
                     <code>WidgetsFlutterBinding.ensureInitialized()</code> 호출
                     후 <code>ProviderScope</code>로 <code>MyApp</code>을 감싸
@@ -192,15 +192,15 @@
                   </span>
                 </div>
               </div>
-              <div class="arch-row-wide">
-                <div class="arch-label">
-                  <span class="priority-badge p1">신규</span>
-                  <span class="arch-layer-name">app.dart</span>
-                  <span class="arch-layer-tech"
+              <div class="white-column-row-wide">
+                <div class="white-column-label">
+                  <span class="color-badge p1">신규</span>
+                  <span class="white-column-layer-name">app.dart</span>
+                  <span class="white-column-layer-tech"
                     >루트 위젯 + 초기화 오케스트레이터</span
                   >
                 </div>
-                <div class="arch-content">
+                <div class="white-column-content">
                   <span>
                     <code>ConsumerStatefulWidget</code>으로 구현.
                     <code>initState()</code>에서 <code>_init()</code>을 호출해
@@ -214,14 +214,16 @@
                 </div>
               </div>
 
-              <div class="arch-row-wide">
-                <div class="arch-label">
-                  <span class="priority-badge p1">신규</span>
-                  <span class="arch-layer-name">app_initializer</span>
-                  <span class="arch-layer-name">.dart</span>
-                  <span class="arch-layer-tech">앱 초기화 함수 모음</span>
+              <div class="white-column-row-wide">
+                <div class="white-column-label">
+                  <span class="color-badge p1">신규</span>
+                  <span class="white-column-layer-name">app_initializer</span>
+                  <span class="white-column-layer-name">.dart</span>
+                  <span class="white-column-layer-tech"
+                    >앱 초기화 함수 모음</span
+                  >
                 </div>
-                <div class="arch-content">
+                <div class="white-column-content">
                   <span>
                     <code>initializeApp(WidgetRef ref)</code> 함수 하나를
                     export. <code>appDatabaseProvider</code>로 DB 인스턴스를

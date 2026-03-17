@@ -303,7 +303,7 @@
               2인 가구의 각 사용자 프로필을 저장하는 루트 엔티티입니다. id는 1
               또는 2로 운용합니다.
             </p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead>
                 <tr>
                   <th>컬럼명</th>
@@ -369,7 +369,7 @@
               CODEF 지원 금융기관 코드를 DB로 관리합니다. code 컬럼이 TEXT PK.
               is_active로 비활성화 처리합니다.
             </p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead>
                 <tr>
                   <th>컬럼명</th>
@@ -423,7 +423,7 @@
               프로필별 금융 계좌 정보를 저장합니다. 계좌번호는 AES-256-GCM으로
               암호화된 BLOB으로 저장합니다.
             </p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead>
                 <tr>
                   <th>컬럼명</th>
@@ -499,7 +499,7 @@
               계층 구조를 지원합니다. Drift 자기참조 제약 특성상 쿼리 레벨에서
               JOIN 처리합니다.
             </p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead>
                 <tr>
                   <th>컬럼명</th>
@@ -566,7 +566,7 @@
               중복을 자동으로 방지합니다. amount 음수=지출, 양수=수입으로
               산정합니다.
             </p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead>
                 <tr>
                   <th>컬럼명</th>
@@ -676,7 +676,7 @@
               거래처명 키워드를 LIKE 검색으로 카테고리를 자동 분류합니다.
               profile_id=NULL은 두 프로필 공용 규칙입니다.
             </p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead>
                 <tr>
                   <th>컬럼명</th>
@@ -735,7 +735,7 @@
               동기화 시작/완료 시각, 상태, 수집 건수, 오류 메시지를 기록합니다.
               completedAt=NULL은 진행 중 상태입니다.
             </p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead>
                 <tr>
                   <th>컬럼명</th>
@@ -810,7 +810,7 @@
               Key-Value 저장소입니다. key가 TEXT PK. value는 JSON 직렬화를
               허용합니다. 8개 기본값 Seed data를 포함합니다.
             </p>
-            <table class="schema-table">
+            <table class="normal-table">
               <thead>
                 <tr>
                   <th>컬럼명</th>
@@ -1401,62 +1401,125 @@ dart run build_runner watch --delete-conflicting-outputs</pre>
             <div class="sec-eyebrow">Section 08</div>
             <h2 class="sec-heading">기술 결정 사항 및 주의사항</h2>
 
-            <div class="glossary-list">
-              <div class="glossary-item">
-                <div class="glossary-term">자기 참조 FK<br />(categories)</div>
-                <div class="glossary-def">
-                  Drift는 자기 참조 FK 어노테이션을 미지원. parentId를 일반
-                  IntColumn으로 선언하고, 쿼리 레벨에서 수동 JOIN으로 처리
+            <div class="white-column-table">
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >자기 참조 FK<br />(categories)</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    각 금융기관의 앱 또는 웹사이트에서 제공하는 거래내역
+                    CSV/엑셀 파일을 앱으로 불러오는 기능. 별도 API 계약 없이
+                    사용 가능하며 대부분의 국내 금융기관이 지원한다.
+                  </p>
                 </div>
               </div>
-              <div class="glossary-item">
-                <div class="glossary-term">암호화 컬럼 (BLOB)</div>
-                <div class="glossary-def">
-                  connectedIdEnc, accountNumberEnc는 BlobColumn으로 선언. 실제
-                  AES-256-GCM 암호화/복호화는 flutter_secure_storage + encrypt
-                  패키지에서 별도 처리
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >자기 참조 FK<br />(categories)</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    각 금융기관의 앱 또는 웹사이트에서 제공하는 거래내역
+                    CSV/엑셀 파일을 앱으로 불러오는 기능. 별도 API 계약 없이
+                    사용 가능하며 대부분의 국내 금융기관이 지원한다.
+                  </p>
                 </div>
               </div>
-              <div class="glossary-item">
-                <div class="glossary-term">app_database.g.dart</div>
-                <div class="glossary-def">
-                  build_runner 자동 생성 파일. 직접 수정 금지. .gitignore에
-                  *.g.dart 추가하여 형상 관리 제외
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >암호화 컬럼 (BLOB)</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    connectedIdEnc, accountNumberEnc는 BlobColumn으로 선언. 실제
+                    AES-256-GCM 암호화/복호화는 flutter_secure_storage + encrypt
+                    패키지에서 별도 처리
+                  </p>
                 </div>
               </div>
-              <div class="glossary-item">
-                <div class="glossary-term">institutions.code PK</div>
-                <div class="glossary-def">
-                  CODEF 코드는 TEXT 타입 PK. Drift에서
-                  <code>Set&lt;Column&gt; get primaryKey</code> 오버라이드로
-                  구현
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >app_database<br />.g.dart</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    build_runner 자동 생성 파일. 직접 수정 금지. .gitignore에
+                    *.g.dart 추가하여 형상 관리 제외
+                  </p>
                 </div>
               </div>
-              <div class="glossary-item">
-                <div class="glossary-term">app_settings.key PK</div>
-                <div class="glossary-def">
-                  앱 설정도 TEXT 타입 PK. 동일하게 primaryKey 오버라이드 적용
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >institutions.code PK</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    CODEF 코드는 TEXT 타입 PK. Drift에서
+                    <code>Set&lt;Column&gt; get primaryKey</code> 오버라이드로
+                    구현
+                  </p>
                 </div>
               </div>
-              <div class="glossary-item">
-                <div class="glossary-term">Unix timestamp (ms)</div>
-                <div class="glossary-def">
-                  모든 날짜/시각 컬럼은 IntColumn으로 Unix timestamp(밀리초)
-                  저장. DateTime 변환은 Repository 레이어에서 처리
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >app_settings.key PK</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    앱 설정도 TEXT 타입 PK. 동일하게 primaryKey 오버라이드 적용
+                  </p>
                 </div>
               </div>
-              <div class="glossary-item">
-                <div class="glossary-term">amount 부호 규칙</div>
-                <div class="glossary-def">
-                  지출은 음수(−), 수입은 양수(+). UI 렌더링 시 절댓값 표시는
-                  Presentation 레이어 책임
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >Unix timestamp (ms)</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    모든 날짜/시각 컬럼은 IntColumn으로 Unix timestamp(밀리초)
+                    저장. DateTime 변환은 Repository 레이어에서 처리
+                  </p>
                 </div>
               </div>
-              <div class="glossary-item">
-                <div class="glossary-term">insertOnConflictUpdate</div>
-                <div class="glossary-def">
-                  중복 거래 방지에 사용. txn_hash 충돌 시 기존 레코드 유지(무시)
-                  동작
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >amount<br />부호 규칙</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    지출은 음수(−), 수입은 양수(+). UI 렌더링 시 절댓값 표시는
+                    Presentation 레이어 책임
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >insertOn<br />ConflictUpdate</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    중복 거래 방지에 사용. txn_hash 충돌 시 기존 레코드
+                    유지(무시) 동작
+                  </p>
                 </div>
               </div>
             </div>
