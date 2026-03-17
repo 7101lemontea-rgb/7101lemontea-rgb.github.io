@@ -119,13 +119,13 @@ nav .inner {
   background: rgba(26, 25, 22, 0.06);
   color: var(--ink-muted);
 }
-/* 초안(Draft) 상태 — 01 파일의 .badge-status (초록 계열) */
+/* (초록 계열) */
 .badge-status {
   background: rgba(116, 155, 65, 0.18);
   color: var(--accent2);
   border: 1px solid rgba(116, 155, 65, 0.3);
 }
-/* 초안(Draft) 상태 — 02 파일의 .badge-status (앰버 계열). 필요 시 인라인 override 가능 */
+/* (앰버 계열) */
 .badge-status.draft {
   background: rgba(200, 160, 80, 0.15);
   color: #8a6820;
@@ -406,6 +406,26 @@ code {
   color: var(--accent2);
   white-space: nowrap;
   font-weight: 500;
+}
+.txt-ink {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.txt-muted {
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.txt-accent {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.txt-red {
+  color: #ba3030;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
 }
 
 /* ── REQUIREMENT TABLE (req-table) — 01 파일 ── */
@@ -694,6 +714,13 @@ code {
   grid-template-columns: 130px 1fr;
   border-bottom: 1px solid var(--rule);
 }
+
+.arch-row-wide {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  border-bottom: 1px solid var(--rule);
+}
+
 .arch-row:last-child {
   border-bottom: none;
 }
@@ -706,6 +733,7 @@ code {
   justify-content: center;
   gap: 0.2rem;
 }
+
 .arch-layer-name {
   font-family: var(--font-mono);
   font-size: 0.9rem;
@@ -721,11 +749,12 @@ code {
 }
 .arch-content {
   padding: 1rem 1.2rem;
+  font-size: 0.85rem;
   background: var(--bg);
 }
 .arch-content p {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: 0.75rem;
 }
 .arch-tags {
   display: flex;
@@ -848,7 +877,7 @@ code {
   white-space: pre;
 }
 .code-block .c-comment {
-  color: #6a6a5e;
+  color: #8b8985;
 }
 .code-block .c-key {
   color: #749b41;
@@ -856,7 +885,41 @@ code {
 .code-block .c-str {
   color: #ce9178;
 }
-
+.code-block .c-line {
+  color: #c9c5be;
+}
+.code-block .c-white {
+  color: var(--card-bg);
+}
+/* ── TREE BLOCK ── */
+.tree-block {
+  background: var(--card-bg);
+  border-radius: 4px;
+  padding: 1.3rem 1.5rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+.tree-block pre {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #c9c5be;
+  line-height: 1.8;
+  white-space: pre;
+}
+.tree-block .t-ink {
+  color: var(--ink);
+}
+.tree-block .t-key {
+  color: #749b41;
+  font-weight: 400;
+}
+.tree-block .t-str {
+  color: #ba785e;
+  font-weight: 400;
+}
+.tree-block .t-line {
+  color: var(--ink-muted);
+}
 /* ── PRIORITY GRID ── */
 .priority-grid {
   display: flex;
@@ -898,9 +961,10 @@ code {
 }
 .priority-badge {
   display: inline-block;
+  align-self: flex-start;
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  padding: 0.15rem 0.5rem;
+  padding: 0.1rem 0.3rem;
   border-radius: 2px;
   font-weight: 500;
 }
@@ -919,6 +983,10 @@ code {
 .p4 {
   background: rgba(26, 25, 22, 0.04);
   color: #a0998f;
+}
+.p5 {
+  background: rgba(230, 81, 0, 0.1);
+  color: #e65100;
 }
 
 /* ── SCREEN GRID ── */
@@ -1040,6 +1108,25 @@ code {
   text-transform: uppercase;
   color: var(--accent2);
   font-weight: 500;
+}
+
+/* Image */
+figure.doc-figure {
+  margin: 1.4rem 0;
+}
+figure.doc-figure img {
+  max-width: 100%;
+  display: block;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+figure.doc-figure figcaption {
+  margin-top: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.03em;
 }
 
 /* ── FOOTER ── */

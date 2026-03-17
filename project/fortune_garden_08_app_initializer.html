@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fortune Garden — 앱 초기화 구조 설계 작업일지</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Pretendard:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a class="nav-logo" href="../index.html">your.name</a>
+        <a class="nav-back" href="index.html">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="page-wrap">
+      <!-- HEADER -->
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Log</span>
+          <span class="badge badge-ver">v1.0</span>
+          <span class="badge badge-status draft">작업 완료</span>
+        </div>
+        <h1 class="post-title">Fortune Garden</h1>
+        <p class="post-sub">
+          앱 초기화 구조 설계 작업일지 — App Initialization Architecture
+        </p>
+        <p class="post-desc">
+          main.dart를 단순하게 유지하면서 앱 시작 시 Seed Data를 안전하게
+          삽입하는 구조를 설계한 작업 기록입니다. main.dart · app.dart ·
+          app_initializer.dart 세 파일의 역할 분리 과정을 담았습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <p class="stat-label">작업 일자</p>
+            <p class="stat-val">2026-03-17</p>
+          </div>
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val" id="date-created">불러오는 중...</p>
+          </div>
+          <div>
+            <p class="stat-label">최종 수정일</p>
+            <p class="stat-val" id="date-updated">불러오는 중...</p>
+          </div>
+          <div>
+            <p class="stat-label">참조</p>
+            <p class="stat-val">Drift ORM 작업일지 (2026-03-16)</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="content-grid">
+        <!-- TOC -->
+        <aside class="toc-sidebar">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li><a href="#s1">1. 작업 배경</a></li>
+            <li><a href="#s2">2. 파일 구조</a></li>
+            <li><a href="#s3">3. 실행 흐름</a></li>
+            <li><a href="#s4">4. 파일별 코드</a></li>
+            <li><a href="#s5">5. 의존 관계</a></li>
+            <li><a href="#s6">6. 변경 전후 비교</a></li>
+            <li><a href="#s7">7. 주의사항 및 확장</a></li>
+            <li><a href="#s8">8. 변경 이력</a></li>
+          </ul>
+        </aside>
+
+        <!-- ARTICLE -->
+        <article class="article">
+          <!-- 1. 작업 배경 -->
+          <section class="section" id="s1">
+            <p class="sec-eyebrow">01</p>
+            <h2 class="sec-heading">작업 배경 및 목적</h2>
+
+            <p>
+              Drift ORM 구현(<code>app_database.dart</code>) 완료 후, 앱 시작 시
+              금융기관 Seed Data(<code>seedInstitutions</code>)와 CSV 파서
+              프로필 Seed Data(<code>seedCsvParserProfiles</code>)를 삽입하는
+              초기화 코드가 필요해졌습니다. 이를 <code>main.dart</code>에 직접
+              작성하면 진입점 파일이 복잡해지므로, 역할별로 파일을 분리하는
+              구조를 설계하였습니다.
+            </p>
+
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>결정 사항</th>
+                  <th>내용</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>main.dart 역할</td>
+                  <td>
+                    <code>ProviderScope</code> 래핑 + <code>MyApp</code> 호출만
+                    담당. 초기화 로직 없음
+                  </td>
+                </tr>
+                <tr>
+                  <td>app.dart 역할</td>
+                  <td>
+                    <code>MyApp</code> 위젯 정의 +
+                    <code>initializeApp()</code> 호출 + 로딩 처리
+                  </td>
+                </tr>
+                <tr>
+                  <td>app_initializer.dart</td>
+                  <td>
+                    <code>seedInstitutions()</code> +
+                    <code>seedCsvParserProfiles()</code> 실행
+                  </td>
+                </tr>
+                <tr>
+                  <td>선택 이유</td>
+                  <td>
+                    main.dart를 단순하게 유지. 초기화 로직 교체·테스트 용이
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 2. 파일 구조 -->
+          <section class="section" id="s2">
+            <p class="sec-eyebrow">02</p>
+            <h2 class="sec-heading">파일 구조 및 역할</h2>
+
+            <p>
+              3개 파일은 <code>lib/</code> 루트에 위치하며,
+              <code>data/database/</code> 하위 파일들과 의존 관계를 가집니다.
+            </p>
+
+            <div class="code-block">
+              <span class="c-key">lib/</span><br />
+              <span class="c-line">├── main.dart</span>
+              <span class="c-comment"
+                ># 수정 — ProviderScope + MyApp 호출만</span
+              ><br />
+
+              <span class="c-line">├── app.dart</span>
+              <span class="c-comment"
+                ># 신규 — MyApp 위젯 + initializeApp() 호출</span
+              ><br />
+
+              <span class="c-line">├── app_initializer.dart</span>
+              <span class="c-comment"># 신규 — Seed Data 삽입 초기화 함수</span
+              ><br />
+
+              <span class="c-line">└──</span> <span class="c-key">data/</span
+              ><br />
+              <span class="c-line">&nbsp;&nbsp;&nbsp;&nbsp;└──</span>
+              <span class="c-key">database/</span><br />
+              <span class="c-line"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──
+                app_database.dart</span
+              ><br />
+              <span class="c-line"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──</span
+              >
+              <span class="c-line">database_provider.dart </span
+              ><span class="c-comment">← app_initializer가 참조</span><br />
+              <span class="c-line"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──</span
+              >
+              <span class="c-line">seed_institutions.dart </span
+              ><span class="c-comment">← app_initializer가 참조</span>
+            </div>
+
+            <p class="sub-heading">파일별 역할</p>
+
+            <div class="arch-layers">
+              <div class="arch-row-wide">
+                <div class="arch-label">
+                  <span class="priority-badge p5">수정</span>
+                  <span class="arch-layer-name">main.dart</span>
+                  <span class="arch-layer-tech">앱 진입점</span>
+                </div>
+                <div class="arch-content">
+                  <span>
+                    <code>WidgetsFlutterBinding.ensureInitialized()</code> 호출
+                    후 <code>ProviderScope</code>로 <code>MyApp</code>을 감싸
+                    실행. 초기화·UI 로직 없음. <code>MyApp</code>과
+                    <code>MyHomePage</code> 클래스를 <code>app.dart</code>로
+                    이동.
+                  </span>
+                </div>
+              </div>
+              <div class="arch-row-wide">
+                <div class="arch-label">
+                  <span class="priority-badge p1">신규</span>
+                  <span class="arch-layer-name">app.dart</span>
+                  <span class="arch-layer-tech"
+                    >루트 위젯 + 초기화 오케스트레이터</span
+                  >
+                </div>
+                <div class="arch-content">
+                  <span>
+                    <code>ConsumerStatefulWidget</code>으로 구현.
+                    <code>initState()</code>에서 <code>_init()</code>을 호출해
+                    <code>initializeApp()</code>을 실행. Seed 완료 전 로딩 화면,
+                    완료 후 <code>MaterialApp</code> 렌더링. 기존
+                    <code>main.dart</code>의 <code>MyApp</code>·<code
+                      >MyHomePage</code
+                    >
+                    클래스를 이동.
+                  </span>
+                </div>
+              </div>
+
+              <div class="arch-row-wide">
+                <div class="arch-label">
+                  <span class="priority-badge p1">신규</span>
+                  <span class="arch-layer-name">app_initializer</span>
+                  <span class="arch-layer-name">.dart</span>
+                  <span class="arch-layer-tech">앱 초기화 함수 모음</span>
+                </div>
+                <div class="arch-content">
+                  <span>
+                    <code>initializeApp(WidgetRef ref)</code> 함수 하나를
+                    export. <code>appDatabaseProvider</code>로 DB 인스턴스를
+                    획득한 후 <code>seedInstitutions()</code>,
+                    <code>seedCsvParserProfiles()</code>를 순서대로 실행. 향후
+                    초기화 항목 추가 시 이 파일에만 추가.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. 실행 흐름 -->
+          <section class="section" id="s3">
+            <p class="sec-eyebrow">03</p>
+            <h2 class="sec-heading">실행 흐름</h2>
+
+            <div class="tree-block">
+              <span class="t-str">main()</span><br />
+              <span class="t-line">└──</span>
+              <span class="t-key"
+                >WidgetsFlutterBinding.ensureInitialized()</span
+              ><br />
+              <span class="t-line">└──</span>
+              <span class="t-ink">runApp(ProviderScope(child: MyApp()))</span
+              ><br />
+              <span class="t-line">└──</span>
+              <span class="t-str">MyApp.initState()</span><br />
+              <span class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;└──</span>
+              <span class="t-str">_init()</span><br />
+              <span class="t-line"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──</span
+              >
+              <span class="t-ink">initializeApp(ref)</span><br />
+
+              <span class="t-line"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──</span
+              >
+              <span class="t-ink">appDatabaseProvider</span>
+              <span class="t-line">→ AppDatabase 인스턴스 획득</span><br />
+
+              <span class="t-line"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──</span
+              >
+              <span class="t-ink">seedInstitutions(db)</span>
+              <span class="t-line">// 기관 20개 upsert</span><br />
+
+              <span class="t-line"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──</span
+              >
+              <span class="t-ink">seedCsvParserProfiles(db)</span>
+              <span class="t-line">// 파서 프로필 7개 upsert</span><br />
+
+              <span class="t-line"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──</span
+              >
+              <span class="t-ink">_initialized = true</span><br />
+              <span class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;└──</span>
+              <span class="t-str">MyHomePage 렌더링</span>
+            </div>
+
+            <table class="seq-table" style="margin-top: 1rem">
+              <thead>
+                <tr>
+                  <th>단계</th>
+                  <th>주체</th>
+                  <th>설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="seq-num">1</td>
+                  <td class="seq-subject">main()</td>
+                  <td>
+                    <code>ensureInitialized()</code> — Flutter 엔진 바인딩
+                    초기화. DB 파일 I/O 등 비동기 작업 전에 반드시 필요
+                  </td>
+                </tr>
+                <tr>
+                  <td class="seq-num">2</td>
+                  <td class="seq-subject">main()</td>
+                  <td>
+                    <code>ProviderScope</code> — Riverpod의 필수 최상위 래퍼.
+                    모든 Provider가 이 범위 안에서 동작
+                  </td>
+                </tr>
+                <tr>
+                  <td class="seq-num">3</td>
+                  <td class="seq-subject">MyApp</td>
+                  <td>
+                    <code>initState() → _init()</code> — ConsumerStatefulWidget
+                    생명주기. 위젯 트리 생성 직후 1회 실행
+                  </td>
+                </tr>
+                <tr>
+                  <td class="seq-num">4</td>
+                  <td class="seq-subject">app_initializer</td>
+                  <td>
+                    <code>initializeApp(ref)</code> — WidgetRef로
+                    <code>appDatabaseProvider</code>에서 DB 인스턴스 획득 후
+                    Seed 실행
+                  </td>
+                </tr>
+                <tr>
+                  <td class="seq-num">5</td>
+                  <td class="seq-subject">seed_institutions</td>
+                  <td>
+                    <code>insertAllOnConflictUpdate()</code> — 중복 실행 안전.
+                    앱 재시작 시에도 기존 데이터 유지하며 upsert
+                  </td>
+                </tr>
+                <tr>
+                  <td class="seq-num">6</td>
+                  <td class="seq-subject">MyApp</td>
+                  <td>
+                    <code>_initialized = true</code> → <code>setState()</code> —
+                    로딩 화면에서 <code>MyHomePage</code>로 전환
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 4. 파일별 코드 -->
+          <section class="section" id="s4">
+            <p class="sec-eyebrow">04</p>
+            <h2 class="sec-heading">파일별 전체 코드</h2>
+
+            <p class="sub-heading">4.1 main.dart</p>
+            <p>
+              변경 전 대비 추가된 부분: <code>flutter_riverpod</code> import,
+              <code>app.dart</code> import,
+              <code>WidgetsFlutterBinding.ensureInitialized()</code>,
+              <code>ProviderScope</code> 래핑이 추가되었습니다.
+              <code>MyApp</code>·<code>MyHomePage</code> 클래스는
+              <code>app.dart</code>로 이동하여 삭제했습니다.
+            </p>
+            <div class="code-block">
+              <pre><span class="c-comment">// lib/main.dart</span>
+
+<span class="c-key">import</span> <span class="c-str">'package:flutter/material.dart'</span>;
+<span class="c-key">import</span> <span class="c-str">'package:flutter_riverpod/flutter_riverpod.dart'</span>;
+
+<span class="c-key">import</span> <span class="c-str">'app.dart'</span>;
+
+<span class="c-key">void</span> main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    <span class="c-key">const</span> ProviderScope(
+      child: MyApp(),
+    ),
+  );
+}</pre>
+            </div>
+
+            <p class="sub-heading">4.2 app.dart</p>
+            <p>
+              기존 <code>main.dart</code>의 <code>MyApp</code> +
+              <code>MyHomePage</code>를 이동했습니다. <code>MyApp</code>을
+              <code>ConsumerStatefulWidget</code>으로 변경하여
+              <code>initializeApp()</code> 호출 및 로딩 처리를 추가하였습니다.
+              이후 화면이 추가될 때 <code>MaterialApp</code>의
+              <code>home:</code> 또는 <code>routerConfig:</code> 설정을 이
+              파일에서 관리합니다.
+            </p>
+            <div class="code-block">
+              <pre><span class="c-ink">// lib/app.dart</span>
+
+<span class="c-key">import</span> <span class="c-str">'package:flutter/material.dart'</span>;
+<span class="c-key">import</span> <span class="c-str">'package:flutter_riverpod/flutter_riverpod.dart'</span>;
+
+<span class="c-key">import</span> <span class="c-str">'app_initializer.dart'</span>;
+
+<span class="c-key">class</span> MyApp <span class="c-key">extends</span> ConsumerStatefulWidget {
+  <span class="c-key">const</span> MyApp({super.key});
+
+  @override
+  ConsumerState&lt;MyApp&gt; createState() =&gt; _MyAppState();
+}
+
+<span class="c-key">class</span> _MyAppState <span class="c-key">extends</span> ConsumerState&lt;MyApp&gt; {
+  <span class="c-key">bool</span> _initialized = <span class="c-key">false</span>;
+
+  @override
+  <span class="c-key">void</span> initState() {
+    super.initState();
+    _init();
+  }
+
+  Future&lt;<span class="c-key">void</span>&gt; _init() <span class="c-key">async</span> {
+    <span class="c-key">await</span> initializeApp(ref);
+    <span class="c-key">if</span> (mounted) setState(() =&gt; _initialized = <span class="c-key">true</span>);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    <span class="c-key">if</span> (!_initialized) {
+      <span class="c-key">return const</span> MaterialApp(
+        debugShowCheckedModeBanner: <span class="c-key">false</span>,
+        home: Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        ),
+      );
+    }
+
+    <span class="c-key">return</span> MaterialApp(
+      debugShowCheckedModeBanner: <span class="c-key">false</span>,
+      title: <span class="c-str">'Fortune Garden'</span>,
+      theme: ThemeData(
+        useMaterial3: <span class="c-key">true</span>,
+        colorSchemeSeed: Colors.green,
+      ),
+      home: <span class="c-key">const</span> MyHomePage(),
+    );
+  }
+}
+
+<span class="c-key">class</span> MyHomePage <span class="c-key">extends</span> StatefulWidget {
+  <span class="c-key">const</span> MyHomePage({super.key});
+
+  @override
+  State&lt;MyHomePage&gt; createState() =&gt; _MyHomePageState();
+}
+
+<span class="c-key">class</span> _MyHomePageState <span class="c-key">extends</span> State&lt;MyHomePage&gt; {
+  @override
+  Widget build(BuildContext context) {
+    <span class="c-key">return</span> Scaffold(
+      appBar: AppBar(
+        title: <span class="c-key">const</span> Text(<span class="c-str">'Fortune Garden'</span>),
+        centerTitle: <span class="c-key">true</span>,
+      ),
+      body: <span class="c-key">const</span> Center(
+        child: Text(
+          <span class="c-str">'빈 페이지'</span>,
+          style: TextStyle(
+            fontSize: 18,
+            color: Color.fromARGB(255, 97, 126, 102),
+          ),
+        ),
+      ),
+    );
+  }
+}</pre>
+            </div>
+
+            <p class="sub-heading">4.3 app_initializer.dart</p>
+            <p>
+              앱 시작 시 1회 실행되는 초기화 함수입니다.
+              <code>WidgetRef</code>를 파라미터로 받아
+              <code>appDatabaseProvider</code>에서 DB 인스턴스를 획득한 후 Seed
+              함수를 순서대로 호출합니다.
+            </p>
+            <div class="code-block">
+              <pre><span class="c-ink">// lib/app_initializer.dart</span>
+
+<span class="c-key">import</span> <span class="c-str">'package:flutter_riverpod/flutter_riverpod.dart'</span>;
+
+<span class="c-key">import</span> <span class="c-str">'data/database/database_provider.dart'</span>;
+<span class="c-key">import</span> <span class="c-str">'data/database/seed_institutions.dart'</span>;
+
+<span class="c-comment">/// 앱 시작 시 1회 실행되는 초기화 함수.</span>
+<span class="c-comment">/// WidgetRef를 통해 Provider에 접근한다.</span>
+Future&lt;<span class="c-key">void</span>&gt; initializeApp(WidgetRef ref) <span class="c-key">async</span> {
+  <span class="c-key">final</span> db = ref.read(appDatabaseProvider);
+
+  <span class="c-comment">// 금융기관 코드 20개 upsert (중복 실행 안전)</span>
+  <span class="c-key">await</span> seedInstitutions(db);
+
+  <span class="c-comment">// CSV 파서 프로필 기본값 upsert (중복 실행 안전)</span>
+  <span class="c-key">await</span> seedCsvParserProfiles(db);
+}</pre>
+            </div>
+          </section>
+
+          <!-- 5. 의존 관계 -->
+          <section class="section" id="s5">
+            <p class="sec-eyebrow">05</p>
+            <h2 class="sec-heading">파일 간 의존 관계</h2>
+
+            <div class="tree-block">
+              <span class="t-key">main.dart</span><br />
+              <span class="t-line">├── </span
+              ><span class="t-ink">'package:flutter/material.dart'</span><br />
+              <span class="t-line">├── </span
+              ><span class="t-ink"
+                >'package:flutter_riverpod/flutter_riverpod.dart'</span
+              ><br />
+              <span class="t-line">└── </span
+              ><span class="t-ink">'app.dart'</span><br /><br />
+
+              <span class="t-key">app.dart</span><br />
+              <span class="t-line">├── </span
+              ><span class="t-ink">'package:flutter/material.dart'</span><br />
+              <span class="t-line">├── </span
+              ><span class="t-ink"
+                >'package:flutter_riverpod/flutter_riverpod.dart'</span
+              ><br />
+              <span class="t-line">└── </span
+              ><span class="t-ink">'app_initializer.dart'</span><br /><br />
+
+              <span class="t-key">app_initializer.dart</span><br />
+              <span class="t-line">├── </span
+              ><span class="t-ink"
+                >'package:flutter_riverpod/flutter_riverpod.dart'</span
+              ><br />
+              <span class="t-line">├── </span
+              ><span class="t-ink">'data/database/database_provider.dart'</span
+              ><br />
+              <span class="t-line">└── </span
+              ><span class="t-ink">'data/database/seed_institutions.dart'</span>
+            </div>
+          </section>
+
+          <!-- 6. 변경 전후 비교 -->
+          <section class="section" id="s6">
+            <p class="sec-eyebrow">06</p>
+            <h2 class="sec-heading">main.dart 변경 전후 비교</h2>
+
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>항목</th>
+                  <th>변경 전 (원본)</th>
+                  <th>변경 후 (v1.1)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>파일 수</td>
+                  <td><span class="txt-red">main.dart 1개</span></td>
+                  <td>
+                    <span class="txt-ink"
+                      >main.dart + app.dart + app_initializer.dart 3개</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>MyApp 위치</td>
+                  <td>
+                    <span class="txt-red">main.dart 내 StatelessWidget</span>
+                  </td>
+                  <td>
+                    <span class="txt-ink"
+                      >app.dart의 ConsumerStatefulWidget</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>MyHomePage 위치</td>
+                  <td><span class="txt-red">main.dart 내</span></td>
+                  <td>
+                    <span class="txt-ink">app.dart 내 (동일 코드)</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ProviderScope</td>
+                  <td><span class="txt-red">없음</span></td>
+                  <td>
+                    <span class="txt-ink">main.dart에서 MyApp을 감쌈</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Seed 실행</td>
+                  <td><span class="txt-red">없음</span></td>
+                  <td>
+                    <span class="txt-ink"
+                      >app.dart initState() → app_initializer.dart</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>로딩 처리</td>
+                  <td><span class="txt-red">없음</span></td>
+                  <td>
+                    <span class="txt-ink"
+                      >Seed 완료 전 CircularProgressIndicator</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>ensureInitialized</td>
+                  <td><span class="txt-red">없음</span></td>
+                  <td>
+                    <span class="txt-ink">main() 최상단에서 호출</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>flutter_riverpod</td>
+                  <td><span class="txt-red">없음</span></td>
+                  <td>
+                    <span class="txt-ink">main.dart + app.dart에 import</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 7. 주의사항 및 확장 -->
+          <section class="section" id="s7">
+            <p class="sec-eyebrow">07</p>
+            <h2 class="sec-heading">주의사항 및 향후 확장 가이드</h2>
+
+            <p class="sub-heading">7.1 주의사항</p>
+            <ul class="bullet-list">
+              <li>
+                <span
+                  ><code>WidgetsFlutterBinding.ensureInitialized()</code>는
+                  <code>runApp()</code> 이전에 반드시 호출해야 합니다. DB 파일
+                  경로 획득 (<code>path_provider</code>)이 Flutter 엔진 초기화
+                  완료 후에만 동작하기 때문입니다.</span
+                >
+              </li>
+              <li>
+                <span
+                  ><code>initializeApp()</code>은 <code>WidgetRef</code>를
+                  파라미터로 받으므로
+                  <code>ConsumerWidget</code>
+                  계열(<code>ConsumerStatefulWidget</code>)에서만 호출
+                  가능합니다. 일반
+                  <code>StatelessWidget</code>에서는 호출할 수 없습니다.</span
+                >
+              </li>
+              <li>
+                <span
+                  ><code>seedInstitutions()</code>와
+                  <code>seedCsvParserProfiles()</code>는 모두
+                  <code>insertAllOnConflictUpdate()</code> 기반이므로 앱 재시작
+                  시 중복 삽입 없이 안전하게 재실행됩니다.</span
+                >
+              </li>
+              <li>
+                <span
+                  ><code>_initialized</code> 플래그가 <code>false</code>인 동안
+                  로딩 화면이 표시됩니다. Seed 데이터 양이 적어 체감 시간은 거의
+                  없습니다 (수십 ms 수준).</span
+                >
+              </li>
+            </ul>
+
+            <p class="sub-heading">7.2 초기화 항목 추가 방법</p>
+            <p>
+              앱 시작 시 추가로 초기화해야 할 작업이 생기면
+              <code>app_initializer.dart</code>에만 추가하면 됩니다.
+              <code>main.dart</code>와 <code>app.dart</code>는 수정하지 않아도
+              됩니다.
+            </p>
+            <div class="code-block">
+              <pre><span class="c-comment">// app_initializer.dart에 추가 예시</span>
+Future&lt;<span class="c-key">void</span>&gt; initializeApp(WidgetRef ref) <span class="c-key">async</span> {
+  <span class="c-key">final</span> db = ref.read(appDatabaseProvider);
+
+  <span class="c-key">await</span> seedInstitutions(db);
+  <span class="c-key">await</span> seedCsvParserProfiles(db);
+
+  <span class="c-comment">// 향후 추가 예시:</span>
+  <span class="c-comment">// await migrateLocalSettings(db);   // 설정 마이그레이션</span>
+  <span class="c-comment">// await warmUpCache(ref);           // 캐시 워밍업</span>
+}</pre>
+            </div>
+
+            <p class="sub-heading">7.3 라우터 도입 시 수정 위치</p>
+            <p>
+              <code>go_router</code> 등 라우터를 도입하거나 홈 화면이 변경될 때
+              <code>app.dart</code>의 <code>MaterialApp</code> 설정만 수정하면
+              됩니다.
+            </p>
+            <div class="code-block">
+              <pre><span class="c-comment">// app.dart — go_router 도입 예시</span>
+<span class="c-key">return</span> MaterialApp.router(
+  debugShowCheckedModeBanner: <span class="c-key">false</span>,
+  title: <span class="c-str">'Fortune Garden'</span>,
+  theme: ThemeData(
+    useMaterial3: <span class="c-key">true</span>,
+    colorSchemeSeed: Colors.green,
+  ),
+  routerConfig: appRouter, <span class="c-comment">// go_router 인스턴스</span>
+);</pre>
+            </div>
+          </section>
+
+          <section class="comments-section">
+            <div class="comments-wrap">
+              <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+                Comments
+              </div>
+              <script
+                src="https://giscus.app/client.js"
+                data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+                data-repo-id="R_kgDORgqLUQ"
+                data-category="Announcements"
+                data-category-id="DIC_kwDORgqLUc4C4NNi"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="0"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="light"
+                data-lang="ko"
+                crossorigin="anonymous"
+                async
+              ></script>
+            </div>
+          </section>
+        </article>
+      </div>
+
+      <div class="post-footer">
+        <a class="footer-back" href="index.html">← 프로젝트 목록</a>
+        <span class="footer-copy">© 2026 정서영</span>
+      </div>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>

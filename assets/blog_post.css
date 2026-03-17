@@ -89,9 +89,10 @@ nav .inner {
 
 /* ── LAYOUT ── */
 .container {
-  max-width: 760px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
+  padding-left: 20rem;
 }
 
 .main-wrapper {
@@ -151,7 +152,7 @@ nav .inner {
 .post-subtitle {
   font-size: 1rem;
   color: var(--ink-muted);
-  max-width: 520px;
+  max-width: 720px;
   line-height: 1.7;
   opacity: 0;
   animation: fadeUp 0.6s 0.2s ease forwards;

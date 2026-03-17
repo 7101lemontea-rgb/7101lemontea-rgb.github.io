@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 1 — React Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <!-- ── NAV ── -->
+    <nav>
+      <div class="inner">
+        <a href="/" class="nav-logo">lemontea.dev</a>
+        <a href="/react" class="nav-back">← React 목록</a>
+      </div>
+    </nav>
+
+    <!-- ── POST HEADER ── -->
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">JavaScript 01</span>
+          <span class="post-date">
+            작성일 <span id="date-created">—</span> &nbsp;·&nbsp; 최종 수정일
+            <span id="date-updated">—</span>
+          </span>
+        </div>
+        <h1 class="post-title">JavaScript 1</h1>
+        <p class="post-subtitle">
+          HTML이 웹의 뼈대를 만들고, CSS가 스타일을 꾸민다면, JavaScript는
+          사용자와 상호작용하는 <strong>동작</strong>을 담당합니다.
+        </p>
+      </header>
+    </div>
+
+    <!-- ── MAIN WRAPPER (본문 + 사이드바 TOC) ── -->
+    <div class="main-wrapper">
+      <!-- ── TOC SIDEBAR ── -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1">
+                <span class="toc-num">1.</span>Javascript 실행 환경
+              </a>
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-1-1">
+                    <span class="toc-num">1.1</span>HTML 파일 내에서 실행
+                  </a>
+                </li>
+                <li>
+                  <a href="#section-1-2">
+                    <span class="toc-num">1.2</span>외부 파일로 분리
+                  </a>
+                </li>
+                <li>
+                  <a href="#section-1-3">
+                    <span class="toc-num">1.3</span>브라우저 개발자 도구
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-2">
+                <span class="toc-num">2.</span>Javascript 출력 방법
+              </a>
+            </li>
+            <li>
+              <a href="#section-3">
+                <span class="toc-num">3.</span>Javascript 코드 작성 규칙
+              </a>
+            </li>
+            <li>
+              <a href="#section-4"> <span class="toc-num">※</span>실습 </a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- ── POST BODY ── -->
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <!-- ── SECTION 1 ── -->
+        <section class="section" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">Javascript 실행 환경</h2>
+          <p>
+            HTML 파일 내에서 JavaScript를 실행하는 방법은 크게 두 가지로
+            나뉩니다. HTML 태그 사이에 직접 코드를 작성하거나, 외부 .js 파일을
+            불러오는 방식입니다.
+          </p>
+
+          <!-- 1.1 -->
+          <div class="section" id="section-1-1">
+            <h3 class="sub-heading">1.1. HTML 파일 내에서 실행</h3>
+            <p>HTML 파일의 <head> 또는 <body> 태그 안에 직접 자바스크립트 코드를 작성하는 방식입니다. 간단한 동적 기능을 구현할 때 주로 사용합니다.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">html</span>
+              </div>
+              <div class="code-body">
+                <pre><span class="t">&lt;!</span><span class="tn">DOCTYPE</span> <span class="at">html</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">html</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">head</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">title</span><span class="t">&gt;</span><span class="tx">JS 연습</span><span class="t">&lt;/</span><span class="tn">title</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">head</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">body</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">h1</span><span class="t">&gt;</span><span class="tx">JavaScript 시작!</span><span class="t">&lt;/</span><span class="tn">h1</span><span class="t">&gt;</span>
+  <span class="cm">&lt;!-- body 닫히기 직전에 위치 권장 --&gt;</span>
+  <span class="t">&lt;</span><span class="tn">script</span><span class="t">&gt;</span>
+    <span class="tx">console.log(</span><span class="av">"안녕하세요!"</span><span class="tx">);</span>
+    <span class="tx">alert(</span><span class="av">"환영합니다!"</span><span class="tx">);</span>
+  <span class="t">&lt;/</span><span class="tn">script</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">body</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">html</span><span class="t">&gt;</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1.2 -->
+          <div class="section" id="section-1-2">
+            <h3 class="sub-heading">1.2. 외부 파일로 분리</h3>
+            <p>자바스크립트 코드를 별도의 .js 파일로 저장하고, HTML에서 경로를 지정해 불러오는 방식입니다. 코드의 재사용성이 높고 HTML 구조와 로직을 분리할 수 있습니다.</p>
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">html</span>
+                <span class="code-lang" style="font-size: 0.8rem; color: #555"
+                  >index.html</span
+                >
+              </div>
+              <div class="code-body">
+                <pre><span class="cm">&lt;!-- index.html --&gt;</span>
+<span class="t">&lt;!</span><span class="tn">DOCTYPE</span> <span class="at">html</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">html</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">head</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">title</span><span class="t">&gt;</span><span class="tx">JS 연습</span><span class="t">&lt;/</span><span class="tn">title</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">head</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">body</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">h1</span><span class="t">&gt;</span><span class="tx">JavaScript 시작!</span><span class="t">&lt;/</span><span class="tn">h1</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">script</span> <span class="at">src</span><span class="t">=</span><span class="av">"script.js"</span><span class="t">&gt;&lt;/</span><span class="tn">script</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">body</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">html</span><span class="t">&gt;</span></pre>
+              </div>
+            </div>
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">js</span>
+                <span class="code-lang" style="font-size: 0.8rem; color: #555"
+                  >script.js</span
+                >
+              </div>
+              <div class="code-body">
+                <pre><span class="cm">// script.js</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"외부 파일에서 실행!"</span><span class="tx">);</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1.3 -->
+          <div class="section" id="section-1-3">
+            <h3 class="sub-heading">1.3. 브라우저 개발자 도구</h3>
+            <ul class="tech-list">
+              <li>F12 → Console 탭에서 바로 실행해볼 수 있습니다.</li>
+            </ul>
+            <p style="margin-top: 1rem">
+              개발자 도구 Console 탭에서 직접 입력해보세요:
+            </p>
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">console</span>
+              </div>
+              <div class="code-body">
+                <pre><span class="av">&gt;</span> <span class="tx">1 + 1</span>
+<span class="cm">&lt; 2</span>
+
+<span class="av">&gt;</span> <span class="av">"Hello"</span> <span class="tx">+</span> <span class="av">" World"</span>
+<span class="cm">&lt; "Hello World"</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 2 ── -->
+        <section class="section" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">Javascript 출력 방법</h2>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">js</span>
+            </div>
+            <div class="code-body">
+              <pre><span class="cm">// 1. 콘솔 출력 (개발자 도구에서 확인) - 가장 많이 사용</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"콘솔에 출력"</span><span class="tx">);</span>
+
+<span class="cm">// 2. 알림창</span>
+<span class="tn">alert</span><span class="tx">(</span><span class="av">"알림창 출력"</span><span class="tx">);</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 3 ── -->
+        <section class="section" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">Javascript 코드 작성 규칙</h2>
+          <ul class="tech-list">
+            <li>대소문자를 구분합니다.</li>
+            <li>
+              중괄호
+              <code style="font-family: var(--font-mono); color: var(--accent)"
+                >{}</code
+              >
+              를 사용하여 코드 블록을 묶어줍니다.
+            </li>
+            <li>
+              문장의 끝에 세미콜론
+              <code style="font-family: var(--font-mono); color: var(--accent)"
+                >;</code
+              >
+              을 붙입니다.
+            </li>
+            <li>
+              주석
+              <ul
+                class="tech-list"
+                style="margin-top: 0.5rem; padding-left: 1.2rem"
+              >
+                <li>
+                  한줄 주석 :
+                  <code
+                    style="font-family: var(--font-mono); color: var(--accent)"
+                    >//</code
+                  >
+                </li>
+                <li>
+                  여러줄 주석 :
+                  <code
+                    style="font-family: var(--font-mono); color: var(--accent)"
+                    >/* */</code
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── SECTION 실습 ── -->
+        <section class="section" id="section-4">
+          <p class="sec-eyebrow">04</p>
+          <h2 class="sec-heading">실습</h2>
+
+          <div class="code-block">
+            <div class="code-header">
+              <span class="code-lang">html</span>
+              <span class="code-lang" style="font-size: 0.8rem; color: #555"
+                >첫 JavaScript</span
+              >
+            </div>
+            <div class="code-body">
+              <pre><span class="t">&lt;!</span><span class="tn">doctype</span> <span class="at">html</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">html</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">head</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">meta</span> <span class="at">charset</span><span class="t">=</span><span class="av">"UTF-8"</span> <span class="t">/&gt;</span>
+  <span class="t">&lt;</span><span class="tn">title</span><span class="t">&gt;</span><span class="tx">첫 JavaScript</span><span class="t">&lt;/</span><span class="tn">title</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">head</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">body</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">h1</span><span class="t">&gt;</span><span class="tx">개발자 도구(F12)의 Console을 확인하세요!</span><span class="t">&lt;/</span><span class="tn">h1</span><span class="t">&gt;</span>
+  <span class="t">&lt;</span><span class="tn">script</span><span class="t">&gt;</span>
+    <span class="tx">console.log(</span><span class="av">"=== JavaScript 시작 ==="</span><span class="tx">);</span>
+    <span class="tx">console.log(</span><span class="av">"Hello, JavaScript!"</span><span class="tx">);</span>
+    <span class="tx">console.log(</span><span class="av">123</span><span class="tx">);</span>
+    <span class="tx">console.log(</span><span class="av">10 + 20</span><span class="tx">);</span>
+    <span class="tx">console.log(</span><span class="av">"10 + 20 ="</span><span class="tx">, </span><span class="av">10 + 20</span><span class="tx">);</span>
+  <span class="t">&lt;/</span><span class="tn">script</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">body</span><span class="t">&gt;</span>
+<span class="t">&lt;/</span><span class="tn">html</span><span class="t">&gt;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+
+        <!-- POST FOOTER -->
+        <footer class="post-footer">
+          <a href="../blog/index.html" class="footer-back">← 목록으로</a>
+          <span class="footer-copy">© 2026 dev.log</span>
+        </footer>
+      </article>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>
