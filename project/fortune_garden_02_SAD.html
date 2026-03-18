@@ -175,29 +175,31 @@
             <p class="sub-heading">3.2 컴포넌트 다이어그램</p>
             <p>아래는 Fortune Garden v1.2의 주요 컴포넌트 간 관계를 나타냅니다. Shelf Server 계층이 제거되고 CSV Parser가 Application 계층 내로 통합되었습니다.</p>
             <div class="component-box">
+  <pre>
 <span class="c-title">┌─────────────────────────── Flutter App Process ────────────────────────────┐</span>
-│                                                                              │
+│                                                                           │
 │  <span class="c-layer">┌─────────────────────┐</span>          <span class="c-layer">┌──────────────────────────────────┐</span>    │
 │  <span class="c-layer">│  Presentation (L1)  │</span>          <span class="c-layer">│      Application (L2)            │</span>    │
 │  <span class="c-layer">│  Dashboard Screen   │</span>          <span class="c-layer">│  CsvImportUseCase (Dart Isolate) │</span>    │
 │  <span class="c-layer">│  Transaction Screen │</span> Riverpod <span class="c-layer">│  CategoryClassifyUseCase         │</span>    │
-│  <span class="c-layer">│  Report Screen      │─────────▶│  ProfileUseCase                  │</span>    │
+│  <span class="c-layer">│  Report Screen      │─────────▶│  ProfileUseCase                 │</span>    │
 │  <span class="c-layer">│  CSV Import Screen  │</span>          <span class="c-layer">│  TransactionUseCase              │</span>    │
 │  <span class="c-layer">│  Profile Screen     │</span>          <span class="c-layer">│  ReportUseCase                   │</span>    │
 │  <span class="c-layer">└─────────────────────┘</span>          <span class="c-layer">└──────────────┬───────────────────┘</span>    │
-│                                                   │ Repository Interface     │
+│                                                   │ Repository Interface  │
 │                                   <span class="c-layer">┌──────────────▼───────────────────┐</span>    │
 │                                   <span class="c-layer">│        Data (L3)                 │</span>    │
 │                                   <span class="c-layer">│    SQLite (drift ORM)            │</span>    │
 │                                   <span class="c-layer">│    fortune_garden.db             │</span>    │
 │                                   <span class="c-layer">└──────────────────────────────────┘</span>    │
-└──────────────────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────────────────┘
                     │ 파일 시스템 접근
     <span class="c-ext">┌───────────────▼──────────────┐</span>
     <span class="c-ext">│       External (L4)          │</span>
     <span class="c-ext">│   로컬 CSV / XLSX 파일        │</span>
     <span class="c-ext">└──────────────────────────────┘</span>
-            </div>
+  </pre>
+</div>
           </section>
 
           <!-- 4 -->

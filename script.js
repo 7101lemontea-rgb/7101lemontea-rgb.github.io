@@ -55,6 +55,23 @@
       sections.forEach((section) => tocObserver.observe(section));
     }
 
+    // 헤더가 끝나면 목차 표시
+    const tocSidebar = document.querySelector(".toc-sidebar");
+    const postHeader = document.querySelector(".post-header");
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          tocSidebar.classList.add("toc-visible");
+        } else {
+          tocSidebar.classList.remove("toc-visible");
+        }
+      },
+      { threshold: 0, rootMargin: "-20% 0px 0px 0px" },
+    );
+
+    observer.observe(postHeader);
+
     /* -------------------------------------
      3. GitHub Timestamp (created / updated)
   ------------------------------------- */

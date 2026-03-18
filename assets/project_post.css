@@ -84,7 +84,7 @@ nav .inner {
 
 /* ── LAYOUT ── */
 .page-wrap {
-  max-width: 960px;
+  max-width: 720px;
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -183,19 +183,26 @@ nav .inner {
 
 /* ── CONTENT GRID ── */
 .content-grid {
-  display: grid;
-  grid-template-columns: 210px 1fr;
-  gap: 0 3.5rem;
+  display: block;
   padding: 3rem 0 5rem;
-  align-items: start;
 }
 
 /* ── STICKY TOC ── */
 .toc-sidebar {
-  position: sticky;
-  top: 80px;
-  padding-top: 0.5rem;
+  position: fixed;
+  top: 120px;
+  left: max(1rem, calc(50vw - 480px - 180px));
+  width: 200px;
+  visibility: hidden; /* 기본은 숨김 */
+  opacity: 0;
+  transition: opacity 0.3s;
 }
+
+.toc-sidebar.toc-visible {
+  visibility: visible;
+  opacity: 1;
+}
+
 .toc-title {
   font-family: var(--font-mono);
   font-size: 0.65rem;
@@ -726,12 +733,21 @@ code {
   padding: 1.4rem 1.6rem;
   margin: 1rem 0;
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: 0.72rem;
   color: var(--ink-muted);
   line-height: 1.9;
   overflow-x: auto;
   white-space: pre;
 }
+
+.component-box pre {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 0;
+}
+
 .component-box .c-title {
   color: var(--ink);
   font-weight: 500;
