@@ -285,42 +285,45 @@
               <span class="t-str">MyHomePage 렌더링</span>
             </div>
 
-            <table class="seq-table" style="margin-top: 1rem">
+            <table
+              class="normal-table"
+              style="width: 100%; table-layout: fixed; margin-top: 1rem"
+            >
               <thead>
                 <tr>
-                  <th>단계</th>
-                  <th>주체</th>
+                  <th style="width: 10%">단계</th>
+                  <th style="width: 30%">주체</th>
                   <th>설명</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td class="seq-num">1</td>
-                  <td class="seq-subject">main()</td>
+                  <td>1</td>
+                  <td class="col-name">main()</td>
                   <td>
                     <code>ensureInitialized()</code> — Flutter 엔진 바인딩
                     초기화. DB 파일 I/O 등 비동기 작업 전에 반드시 필요
                   </td>
                 </tr>
                 <tr>
-                  <td class="seq-num">2</td>
-                  <td class="seq-subject">main()</td>
+                  <td>2</td>
+                  <td class="col-name">main()</td>
                   <td>
                     <code>ProviderScope</code> — Riverpod의 필수 최상위 래퍼.
                     모든 Provider가 이 범위 안에서 동작
                   </td>
                 </tr>
                 <tr>
-                  <td class="seq-num">3</td>
-                  <td class="seq-subject">MyApp</td>
+                  <td>3</td>
+                  <td class="col-name">MyApp</td>
                   <td>
                     <code>initState() → _init()</code> — ConsumerStatefulWidget
                     생명주기. 위젯 트리 생성 직후 1회 실행
                   </td>
                 </tr>
                 <tr>
-                  <td class="seq-num">4</td>
-                  <td class="seq-subject">app_initializer</td>
+                  <td>4</td>
+                  <td class="col-name">app_initializer</td>
                   <td>
                     <code>initializeApp(ref)</code> — WidgetRef로
                     <code>appDatabaseProvider</code>에서 DB 인스턴스 획득 후
@@ -328,16 +331,16 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="seq-num">5</td>
-                  <td class="seq-subject">seed_institutions</td>
+                  <td>5</td>
+                  <td class="col-name">seed_institutions</td>
                   <td>
                     <code>insertAllOnConflictUpdate()</code> — 중복 실행 안전.
                     앱 재시작 시에도 기존 데이터 유지하며 upsert
                   </td>
                 </tr>
                 <tr>
-                  <td class="seq-num">6</td>
-                  <td class="seq-subject">MyApp</td>
+                  <td>6</td>
+                  <td class="col-name">MyApp</td>
                   <td>
                     <code>_initialized = true</code> → <code>setState()</code> —
                     로딩 화면에서 <code>MyHomePage</code>로 전환

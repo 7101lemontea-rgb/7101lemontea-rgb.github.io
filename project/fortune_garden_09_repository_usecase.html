@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Repository &amp; UseCase 구현 작업 일지 — Fortune Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- ── NAV ── -->
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">your.dev</a>
+        <a href="../project/index.html" class="nav-back">← 문서 목록</a>
+      </div>
+    </nav>
+
+    <!-- ── POST HEADER ── -->
+    <div class="page-wrap">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">작업 일지</span>
+          <span class="badge badge-ver">v1.1</span>
+          <span class="badge badge-status">Application &amp; Data Layer</span>
+        </div>
+        <h1 class="post-title">Repository &amp; UseCase 구현 작업 일지</h1>
+        <p class="post-sub">
+          Fortune Garden — Application &amp; Data Layer v1.1
+        </p>
+        <p class="post-desc">
+          Repository Layer · UseCase Layer<br />
+          SAD v1.1 §4.3 Repository 패턴 명세와 §4.2 UseCase 정의를 기반으로
+          Application Layer와 Data Layer의 전체 구현 코드를 작성하였습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 3월 18일</div>
+          </div>
+          <div>
+            <div class="stat-label">작업자</div>
+            <div class="stat-val">정서영</div>
+          </div>
+          <div>
+            <div class="stat-label">작업 범위</div>
+            <div class="stat-val">
+              Repository 7개 + UseCase 7개 + 보조 파일 4개
+            </div>
+          </div>
+          <div>
+            <div class="stat-label">생성 파일</div>
+            <div class="stat-val">
+              25개 (인터페이스 8, 구현체 8, Provider 1, 엔티티 3, UseCase 7,
+              의존 패키지 2)
+            </div>
+          </div>
+          <div>
+            <div class="stat-label">참조</div>
+            <div class="stat-val">SAD v1.1 §4.2·§4.3, DB ERD v1.1 §6</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ── CONTENT GRID ── -->
+
+      <div class="content-grid">
+        <!-- ── TOC SIDEBAR ── -->
+        <aside class="toc-sidebar">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li><a href="#sec-overview">1. 작업 개요</a></li>
+            <li><a href="#sec-files">2. 전체 파일 구조</a></li>
+            <li><a href="#sec-repository">3. Repository 레이어</a></li>
+            <li><a href="#sec-usecase">4. UseCase 레이어</a></li>
+            <li><a href="#sec-4-1">· 4.1 ProfileUseCase</a></li>
+            <li><a href="#sec-4-2">· 4.2 ViewModeUseCase</a></li>
+            <li><a href="#sec-4-3">· 4.3 CategoryClassifyUseCase</a></li>
+            <li><a href="#sec-4-4">· 4.4 CsvParserUseCase</a></li>
+            <li><a href="#sec-4-5">· 4.5 CsvImportUseCase</a></li>
+            <li><a href="#sec-4-6">· 4.6 TransactionUseCase</a></li>
+            <li><a href="#sec-4-7">· 4.7 ReportUseCase</a></li>
+            <li><a href="#sec-dependency">5. 레이어 간 의존 관계</a></li>
+            <li><a href="#sec-packages">6. 추가 패키지</a></li>
+            <li><a href="#sec-todo">7. 미완성 및 후속 작업</a></li>
+            <li><a href="#sec-changelog">8. 문서 변경 이력</a></li>
+          </ul>
+        </aside>
+
+        <!-- ── MAIN CONTENT ── -->
+        <article class="article">
+          <!-- ── 1. 작업 개요 ── -->
+          <section class="section" id="sec-overview">
+            <p class="sec-eyebrow">01</p>
+            <h2 class="sec-heading">작업 개요</h2>
+            <p>
+              SAD v1.1 §4.3의 Repository 패턴 명세와 §4.2의 UseCase 정의를
+              기반으로 Application Layer와 Data Layer의 전체 구현 코드를
+              작성하였다. 오늘 작업으로 Data Layer(DB) 위에 비즈니스 로직
+              레이어가 완성되어 Presentation Layer(화면) 구현이 가능한 상태가
+              되었다.
+            </p>
+
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>항목</th>
+                  <th>내용</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>작업 순서</td>
+                  <td>
+                    1단계 Repository → 2단계 UseCase (SAD §4.2 우선순위 순)
+                  </td>
+                </tr>
+                <tr>
+                  <td>Repository</td>
+                  <td>
+                    인터페이스 7개 <code>domain/</code> + 구현체 7개
+                    <code>data/</code> + Provider 1개
+                  </td>
+                </tr>
+                <tr>
+                  <td>UseCase</td>
+                  <td>
+                    7개 — <code>ProfileUseCase</code>,
+                    <code>ViewModeUseCase</code>,
+                    <code>CategoryClassifyUseCase</code>,
+                    <code>CsvParserUseCase</code>,
+                    <code>CsvImportUseCase</code>,
+                    <code>TransactionUseCase</code>,
+                    <code>ReportUseCase</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>추가 엔티티</td>
+                  <td>
+                    <code>ViewMode</code> enum, <code>TransactionFilter</code>,
+                    <code>ParsedTransaction</code>, <code>ImportResult</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>신규 패키지</td>
+                  <td>
+                    <code>crypto</code> (SHA-256),
+                    <code>intl</code> (DateFormat)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ── 2. 전체 파일 구조 ── -->
+          <section class="section" id="sec-files">
+            <p class="sec-eyebrow">02</p>
+            <h2 class="sec-heading">전체 파일 구조</h2>
+
+            <div class="tree-block">
+              <pre><span class="t-ink">lib/</span>
+<span class="t-line">├── </span><span class="t-ink">domain/</span>
+<span class="t-line">│   ├── </span><span class="t-ink">entities/</span>
+<span class="t-line">│   │   ├── </span><span class="t-key">view_mode.dart</span>              <span class="t-str"># ViewMode enum (personal/combined)</span>
+<span class="t-line">│   │   └── </span><span class="t-key">parsed_transaction.dart</span>     <span class="t-str"># ParsedTransaction + ImportResult</span>
+<span class="t-line">│   └── </span><span class="t-ink">repositories/</span>
+<span class="t-line">│       ├── </span><span class="t-key">transaction_filter.dart</span>     <span class="t-str"># 거래 필터 파라미터 모델</span>
+<span class="t-line">│       ├── </span><span class="t-key">i_profile_repository.dart</span>
+<span class="t-line">│       ├── </span><span class="t-key">i_account_repository.dart</span>
+<span class="t-line">│       ├── </span><span class="t-key">i_transaction_repository.dart</span>
+<span class="t-line">│       ├── </span><span class="t-key">i_category_repository.dart</span>
+<span class="t-line">│       ├── </span><span class="t-key">i_csv_parser_profile_repository.dart</span>
+<span class="t-line">│       ├── </span><span class="t-key">i_import_history_repository.dart</span>
+<span class="t-line">│       └── </span><span class="t-key">i_settings_repository.dart</span>
+<span class="t-line">├── </span><span class="t-ink">data/</span>
+<span class="t-line">│   └── </span><span class="t-ink">repositories/</span>
+<span class="t-line">│       ├── </span><span class="t-key">profile_repository.dart</span>
+<span class="t-line">│       ├── </span><span class="t-key">account_repository.dart</span>
+<span class="t-line">│       ├── </span><span class="t-key">transaction_repository.dart</span>
+<span class="t-line">│       ├── </span><span class="t-key">category_repository.dart</span>
+<span class="t-line">│       ├── </span><span class="t-key">csv_parser_profile_repository.dart</span>
+<span class="t-line">│       ├── </span><span class="t-key">import_history_repository.dart</span>
+<span class="t-line">│       ├── </span><span class="t-key">settings_repository.dart</span>
+<span class="t-line">│       └── </span><span class="t-key">repository_providers.dart</span>      <span class="t-str"># Riverpod Provider 연결</span>
+<span class="t-line">└── </span><span class="t-ink">application/</span>
+<span class="t-line">    ├── </span><span class="t-ink">profile/</span>
+<span class="t-line">    │   ├── </span><span class="t-key">profile_use_case.dart</span>
+<span class="t-line">    │   └── </span><span class="t-key">view_mode_use_case.dart</span>
+<span class="t-line">    ├── </span><span class="t-ink">category/</span>
+<span class="t-line">    │   └── </span><span class="t-key">category_classify_use_case.dart</span>
+<span class="t-line">    ├── </span><span class="t-ink">csv_import/</span>
+<span class="t-line">    │   ├── </span><span class="t-key">csv_parser_use_case.dart</span>
+<span class="t-line">    │   └── </span><span class="t-key">csv_import_use_case.dart</span>
+<span class="t-line">    ├── </span><span class="t-ink">transaction/</span>
+<span class="t-line">    │   └── </span><span class="t-key">transaction_use_case.dart</span>
+<span class="t-line">    └── </span><span class="t-ink">report/</span>
+<span class="t-line">        └── </span><span class="t-key">report_use_case.dart</span></pre>
+            </div>
+          </section>
+
+          <!-- ── 3. Repository 레이어 ── -->
+          <section class="section" id="sec-repository">
+            <p class="sec-eyebrow">03</p>
+            <h2 class="sec-heading">Repository 레이어</h2>
+            <p>
+              UseCase가 DB에 직접 의존하지 않도록 추상 인터페이스로 감싸는
+              레이어. 테스트 시 Mock으로 교체 가능.
+            </p>
+
+            <h3 class="sub-heading">3.1 인터페이스 (domain/repositories/)</h3>
+
+            <table class="normal-table">
+              <thead>
+                <tr>
+                  <th>인터페이스</th>
+                  <th>주요 메서드</th>
+                  <th>비고</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>IProfileRepository</td>
+                  <td>
+                    <code>getAll</code>, <code>getById</code>,
+                    <code>upsert</code>, <code>delete</code>
+                  </td>
+                  <td>최대 2개 프로필</td>
+                </tr>
+                <tr>
+                  <td>IAccountRepository</td>
+                  <td>
+                    <code>getByProfile</code>, <code>getById</code>,
+                    <code>upsert</code>, <code>updateBalance</code>,
+                    <code>delete</code>
+                  </td>
+                  <td>계좌번호 AES-256 암호화</td>
+                </tr>
+                <tr>
+                  <td>ITransactionRepository</td>
+                  <td>
+                    <code>getList(filter)</code>, <code>getById</code>,
+                    <code>upsert</code>, <code>delete</code>,
+                    <code>existsByHash</code>
+                  </td>
+                  <td><code>TransactionFilter</code> 파라미터</td>
+                </tr>
+                <tr>
+                  <td>ICategoryRepository</td>
+                  <td>
+                    <code>getAll</code>, <code>getById</code>,
+                    <code>upsert</code>, <code>delete</code>,
+                    <code>getRules</code>, <code>upsertRule</code>,
+                    <code>deleteRule</code>
+                  </td>
+                  <td>자기참조 FK 수동 처리</td>
+                </tr>
+                <tr>
+                  <td>ICsvParserProfileRepository</td>
+                  <td>
+                    <code>getByInstitution</code>, <code>getAll</code>,
+                    <code>upsert</code>, <code>deactivate</code>
+                  </td>
+                  <td>삭제 대신 비활성화</td>
+                </tr>
+                <tr>
+                  <td>IImportHistoryRepository</td>
+                  <td><code>insert</code>, <code>getByAccount</code></td>
+                  <td>limit 파라미터 지원</td>
+                </tr>
+                <tr>
+                  <td>ISettingsRepository</td>
+                  <td>
+                    <code>get(defaultValue)</code>, <code>set</code>,
+                    <code>delete</code>
+                  </td>
+                  <td>Key-Value 저장소</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3 class="sub-heading">3.2 추가 모델 — TransactionFilter</h3>
+            <p>
+              <code>ITransactionRepository.getList()</code>의 조건 파라미터.
+              모든 필드 optional — null이면 해당 조건 미적용.
+            </p>
+
+            <div class="code-block">
+              <pre><span class="c-key">class</span> <span class="c-line"> TransactionFilter {</span>
+  <span class="c-key">final</span><span class="c-line"> int?  profileId;   </span><span class="c-comment">// null = 전체 프로필 (통합 뷰)</span>
+  <span class="c-key">final</span><span class="c-line"> int?  accountId;   </span><span class="c-comment">// 특정 계좌만</span>
+  <span class="c-key">final</span><span class="c-line"> int?  categoryId;  </span><span class="c-comment">// 특정 카테고리만</span>
+  <span class="c-key">final</span><span class="c-line"> int?  fromDate;    </span><span class="c-comment">// 시작일 Unix ms (이상)</span>
+  <span class="c-key">final</span><span class="c-line"> int?  toDate;      </span><span class="c-comment">// 종료일 Unix ms (미만)</span>
+  <span class="c-key">final</span><span class="c-line"> bool? isManualOnly; </span><span class="c-comment">// true=수동입력만, false=CSV만, null=전체</span>
+  <span class="c-key">final</span><span class="c-line"> int   offset;     </span><span class="c-comment">// 페이지네이션 (기본 0)</span>
+  <span class="c-key">final</span><span class="c-line"> int   limit;      </span><span class="c-comment">// 페이지네이션 (기본 50)</span>
+<span class="c-line">}</span></pre>
+            </div>
+
+            <h3 class="sub-heading">
+              3.3 구현체 (data/repositories/) 주요 특이사항
+            </h3>
+
+            <div class="white-column-table">
+              <div
+                class="white-column-row-wide"
+                style="
+                  display: grid;
+                  grid-template-columns: 220px 1fr;
+                  border-bottom: 1px solid var(--rule);
+                "
+              >
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >category_repository.dart</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>delete()</code>를 DB 트랜잭션으로 처리. 먼저 하위
+                    카테고리의 <code>parentId</code>를 NULL로 초기화 후 삭제.
+                    (Drift 자기참조 FK 미지원)
+                  </p>
+                </div>
+              </div>
+              <div
+                class="white-column-row-wide"
+                style="
+                  display: grid;
+                  grid-template-columns: 220px 1fr;
+                  border-bottom: 1px solid var(--rule);
+                "
+              >
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >transaction_repository.dart</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>upsert()</code>는
+                    <code>app_database.insertTransactionIfNotExists()</code>를
+                    재사용. <code>txnHash</code> 충돌 시 자동 무시.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="white-column-row-wide"
+                style="
+                  display: grid;
+                  grid-template-columns: 220px 1fr;
+                  border-bottom: 1px solid var(--rule);
+                "
+              >
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >csv_parser_profile_repository.dart</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>getByInstitution()</code>은
+                    <code>app_database.getParserProfile()</code> 쿼리 메서드를
+                    위임 호출.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="white-column-row-wide"
+                style="
+                  display: grid;
+                  grid-template-columns: 220px 1fr;
+                  border-bottom: 1px solid var(--rule);
+                "
+              >
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >import_history_repository.dart</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>getByAccount()</code>는
+                    <code>app_database.getImportHistory()</code> 쿼리 메서드를
+                    위임 호출.
+                  </p>
+                </div>
+              </div>
+              <div
+                class="white-column-row-wide"
+                style="display: grid; grid-template-columns: 220px 1fr"
+              >
+                <div class="white-column-label">
+                  <span class="white-column-layer-name"
+                    >repository_providers.dart</span
+                  >
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    7개 Repository를 Riverpod Provider로 노출. UseCase는 이
+                    Provider를 통해 인스턴스 획득.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ── 4. UseCase 레이어 ── -->
+          <section class="section" id="sec-usecase">
+            <p class="sec-eyebrow">04</p>
+            <h2 class="sec-heading">UseCase 레이어</h2>
+            <p>
+              순수 Dart 코드. Flutter, SQLite, HTTP에 의존하지 않아 단위 테스트
+              용이. SAD v1.1 §4.2 기준.
+            </p>
+          </section>
+
+          <!-- 4.1 ProfileUseCase -->
+          <section class="section" id="sec-4-1">
+            <h3 class="sub-heading">4.1 ProfileUseCase</h3>
+            <p>
+              활성 프로필 전환 및 프로필 CRUD. <code>app_settings</code>의
+              <code>active_profile_id</code> 키로 영속 저장.
+            </p>
+
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>메서드</th>
+                  <th>설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>getAll()</td>
+                  <td>모든 프로필 목록 반환</td>
+                </tr>
+                <tr>
+                  <td>getActiveProfile()</td>
+                  <td>
+                    <code>app_settings</code>
+                    <code>active_profile_id</code> 기준 현재 활성 프로필 반환
+                  </td>
+                </tr>
+                <tr>
+                  <td>switchProfile(id)</td>
+                  <td><code>active_profile_id</code> 설정값 업데이트</td>
+                </tr>
+                <tr>
+                  <td>upsert(...)</td>
+                  <td>
+                    프로필 생성 또는 수정. <code>createdAt</code> 자동 설정
+                  </td>
+                </tr>
+                <tr>
+                  <td>delete(id)</td>
+                  <td>프로필 삭제. CASCADE로 accounts·transactions 삭제</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 4.2 ViewModeUseCase -->
+          <section class="section" id="sec-4-2">
+            <h3 class="sub-heading">4.2 ViewModeUseCase</h3>
+            <p>
+              개인 뷰 / 통합 뷰 전환. <code>app_settings</code>의
+              <code>default_view_mode</code> 키로 영속 저장.
+            </p>
+
+            <div class="code-block">
+              <pre><span class="c-comment">// ViewMode enum (domain/entities/view_mode.dart)</span>
+<span class="c-key">enum</span><span class="c-line"> ViewMode {</span>
+  <span class="c-line">personal,  </span><span class="c-comment">// WHERE profile_id = :activeProfileId</span>
+  <span class="c-line">combined;  </span><span class="c-comment">// profile_id 조건 없음 (두 프로필 합산)</span>
+
+  <span class="c-key">static</span><span class="c-line"> ViewMode fromString(String value) => ...</span>
+  <span class="c-line">String </span><span class="c-key">get</span><span class="c-line"> value => name; </span><span class="c-comment">// DB 저장용 문자열</span>
+<span class="c-line">}</span></pre>
+            </div>
+          </section>
+
+          <!-- 4.3 CategoryClassifyUseCase -->
+          <section class="section" id="sec-4-3">
+            <h3 class="sub-heading">4.3 CategoryClassifyUseCase</h3>
+            <p>
+              거래처명 LIKE 검색으로 카테고리 자동 분류. DB ERD v1.1 §6.3 쿼리
+              패턴 기준.
+            </p>
+
+            <div class="highlight-box">
+              <p>
+                정렬 우선순위: ① 개인 규칙(<code>profileId != null</code>) 우선
+                &nbsp;② <code>priority</code> 내림차순
+              </p>
+            </div>
+
+            <div class="code-block">
+              <pre><span class="c-key">Future</span><span class="c-line">&lt;int?&gt; classify({</span>
+  <span class="c-key">required</span><span class="c-line"> String merchant,</span>
+  <span class="c-key">required</span><span class="c-line"> int    profileId,</span>
+<span class="c-line">}) async {</span>
+  <span class="c-key">final</span><span class="c-line"> rules = await _categoryRepo.getRules(profileId: profileId);</span>
+  <span class="c-comment">// 개인 규칙 우선 + priority 내림차순 정렬</span>
+  <span class="c-key">for</span><span class="c-line"> (final rule in sorted) {</span>
+    <span class="c-key">if</span><span class="c-line"> (merchant.contains(rule.keyword)) return rule.categoryId;</span>
+  <span class="c-line">}</span>
+  <span class="c-key">return null</span><span class="c-line">; </span><span class="c-comment">// 미분류</span>
+<span class="c-line">}</span></pre>
+            </div>
+          </section>
+
+          <!-- 4.4 CsvParserUseCase -->
+          <section class="section" id="sec-4-4">
+            <h3 class="sub-heading">4.4 CsvParserUseCase</h3>
+            <p>
+              파서 프로필에 따라 CSV 파일을 읽어
+              <code>ParsedTransaction</code> 목록으로 변환. Isolate에서 실행되는
+              순수 Dart 코드.
+            </p>
+
+            <div class="layer-diagram">
+              <div class="layer-row">
+                <div class="layer-num">①</div>
+                <div class="layer-label">
+                  <span class="layer-name">파일 읽기</span>
+                </div>
+                <div class="layer-desc">
+                  <p><code>file.readAsBytes()</code>로 바이트 읽기</p>
+                </div>
+              </div>
+              <div class="layer-row">
+                <div class="layer-num">②</div>
+                <div class="layer-label">
+                  <span class="layer-name">인코딩 변환</span>
+                </div>
+                <div class="layer-desc">
+                  <p>
+                    UTF-8: <code>dart:convert</code> / EUC-KR:
+                    <code>charset_converter</code> (TODO)
+                  </p>
+                </div>
+              </div>
+              <div class="layer-row">
+                <div class="layer-num">③</div>
+                <div class="layer-label">
+                  <span class="layer-name">CSV 파싱</span>
+                </div>
+                <div class="layer-desc">
+                  <p><code>csv</code> 패키지 <code>CsvToListConverter</code></p>
+                </div>
+              </div>
+              <div class="layer-row">
+                <div class="layer-num">④</div>
+                <div class="layer-label">
+                  <span class="layer-name">헤더 매핑</span>
+                </div>
+                <div class="layer-desc">
+                  <p>
+                    <code>parserProfile.dateCol</code
+                    >·<code>amountCol</code>·<code>merchantCol</code>로 컬럼
+                    인덱스 탐색
+                  </p>
+                </div>
+              </div>
+              <div class="layer-row">
+                <div class="layer-num">⑤</div>
+                <div class="layer-label">
+                  <span class="layer-name">행 변환</span>
+                </div>
+                <div class="layer-desc">
+                  <p>
+                    <code>intl DateFormat</code>으로 날짜 파싱, 금액 쉼표·공백
+                    제거 후 <code>int</code> 변환
+                  </p>
+                </div>
+              </div>
+              <div class="layer-row">
+                <div class="layer-num">⑥</div>
+                <div class="layer-label">
+                  <span class="layer-name">오류 처리</span>
+                </div>
+                <div class="layer-desc">
+                  <p>
+                    파싱 실패 행은 <code>continue</code> (errorRows 집계는
+                    CsvImportUseCase)
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="highlight-box">
+              <p>
+                EUC-KR 디코딩: <code>charset_converter</code> 패키지 도입 후
+                <code>_decode()</code> 메서드 내 TODO 주석 구간을 완성. 현재는
+                UTF-8 fallback으로 동작.
+              </p>
+            </div>
+          </section>
+
+          <!-- 4.5 CsvImportUseCase -->
+          <section class="section" id="sec-4-5">
+            <h3 class="sub-heading">4.5 CsvImportUseCase</h3>
+            <p>
+              CSV 가져오기 전체 오케스트레이션. SAD v1.1 §5.2 흐름 전체 구현.
+            </p>
+
+            <div class="code-block">
+              <pre><span class="c-key">Future</span><span class="c-line">&lt;ImportResult&gt; execute({</span>
+  <span class="c-key">required</span><span class="c-line"> File   file,</span>
+  <span class="c-key">required</span><span class="c-line"> int    profileId,</span>
+  <span class="c-key">required</span><span class="c-line"> int    accountId,</span>
+  <span class="c-key">required</span><span class="c-line"> String institutionCode,</span>
+<span class="c-line">}) async {</span>
+  <span class="c-comment">// 1. 파서 프로필 자동 매칭 (institution_code 기준)</span>
+  <span class="c-comment">// 2. Dart Isolate에서 CsvParserUseCase.parse() 실행</span>
+  <span class="c-comment">// 3. 각 거래: SHA-256 해시 계산 → 중복 체크 → 카테고리 분류 → INSERT</span>
+  <span class="c-comment">// 4. import_history 기록 (신규/중복/오류 건수)</span>
+  <span class="c-key">return</span><span class="c-line"> ImportResult(...);</span>
+<span class="c-line">}</span></pre>
+            </div>
+
+            <div class="white-column-table" style="margin-top: 1.2rem">
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-tech">단계</span>
+                  <span class="white-column-layer-name">파서 프로필 매칭</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>institutionCode</code> →
+                    <code>ICsvParserProfileRepository.getByInstitution()</code>
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-tech">단계</span>
+                  <span class="white-column-layer-name">Isolate 실행</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>Isolate.run()</code>으로
+                    <code>CsvParserUseCase.parse()</code> 호출. UI 스레드 블로킹
+                    방지
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-tech">단계</span>
+                  <span class="white-column-layer-name">txn_hash 계산</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    SHA-256(<code>accountId|txnDate|amount|merchant</code>).
+                    <code>crypto</code> 패키지 사용
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-tech">단계</span>
+                  <span class="white-column-layer-name">중복 체크</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>ITransactionRepository.existsByHash()</code> — true면
+                    <code>duplicateRows++</code>, skip
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-tech">단계</span>
+                  <span class="white-column-layer-name">카테고리 분류</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>CategoryClassifyUseCase.classify()</code> — null이면
+                    미분류
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-tech">단계</span>
+                  <span class="white-column-layer-name">import_history</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    신규/중복/오류 건수 집계 후
+                    <code>IImportHistoryRepository.insert()</code>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4.6 TransactionUseCase -->
+          <section class="section" id="sec-4-6">
+            <h3 class="sub-heading">4.6 TransactionUseCase</h3>
+            <p>
+              거래 내역 CRUD. 수동 입력(<code>is_manual=1</code>)과 메타
+              수정(카테고리·메모) 지원.
+            </p>
+
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>메서드</th>
+                  <th>설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>getList(filter)</td>
+                  <td>
+                    <code>TransactionFilter</code> 조건으로 거래 목록 반환
+                    (페이지네이션 포함)
+                  </td>
+                </tr>
+                <tr>
+                  <td>getById(id)</td>
+                  <td>단일 거래 조회</td>
+                </tr>
+                <tr>
+                  <td>upsert(...)</td>
+                  <td>
+                    수동 거래 생성 또는 수정. hash를
+                    <code>manual_</code> 접두사로 생성
+                  </td>
+                </tr>
+                <tr>
+                  <td>delete(id)</td>
+                  <td>거래 삭제</td>
+                </tr>
+                <tr>
+                  <td>updateMeta(...)</td>
+                  <td>
+                    카테고리 또는 메모만 수정. 거래 상세 화면(SCR-004)에서 사용
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 4.7 ReportUseCase -->
+          <section class="section" id="sec-4-7">
+            <h3 class="sub-heading">4.7 ReportUseCase</h3>
+            <p>
+              월별 수입/지출 요약. ViewMode에 따라 개인 뷰(단일 프로필) 또는
+              통합 뷰(합산) 결과 반환.
+            </p>
+
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>반환 모델 MonthlySummary</th>
+                  <th>필드 설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>profileId</td>
+                  <td>프로필 고유 ID</td>
+                </tr>
+                <tr>
+                  <td>profileName</td>
+                  <td>프로필 표시 이름</td>
+                </tr>
+                <tr>
+                  <td>colorHex</td>
+                  <td>프로필 색상 HEX (통합 뷰 태그 표시용)</td>
+                </tr>
+                <tr>
+                  <td>income</td>
+                  <td>수입 합계 (양수)</td>
+                </tr>
+                <tr>
+                  <td>expense</td>
+                  <td>지출 합계 (음수 raw값)</td>
+                </tr>
+                <tr>
+                  <td>net</td>
+                  <td>income + expense (순수지)</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="highlight-box">
+              <p>
+                <code>ReportUseCase</code>는
+                <code>app_database.getMonthlySummary()</code>·<code
+                  >getCombinedDashboard()</code
+                >
+                쿼리를 직접 재사용. 별도 SQL 없음.
+              </p>
+            </div>
+          </section>
+
+          <!-- ── 5. 레이어 간 의존 관계 ── -->
+          <section class="section" id="sec-dependency">
+            <p class="sec-eyebrow">05</p>
+            <h2 class="sec-heading">레이어 간 의존 관계</h2>
+
+            <div class="component-box">
+              <pre><span class="c-title">Fortune Garden — Layer Dependency</span>
+<span class="c-layer">Presentation</span><span class="c-line"> (화면)  ← 다음 단계</span>
+<span class="c-line">└── UseCase Provider </span><span class="c-ext">(ref.read)</span>
+<span class="c-line">    ├── </span><span class="c-layer">ProfileUseCase</span>
+<span class="c-line">    │   ├── </span><span class="c-ext">IProfileRepository  ← ProfileRepository</span>
+<span class="c-line">    │   └── </span><span class="c-ext">ISettingsRepository ← SettingsRepository</span>
+<span class="c-line">    ├── </span><span class="c-layer">ViewModeUseCase</span>
+<span class="c-line">    │   └── </span><span class="c-ext">ISettingsRepository</span>
+<span class="c-line">    ├── </span><span class="c-layer">CategoryClassifyUseCase</span>
+<span class="c-line">    │   └── </span><span class="c-ext">ICategoryRepository ← CategoryRepository</span>
+<span class="c-line">    ├── </span><span class="c-layer">CsvImportUseCase</span>
+<span class="c-line">    │   ├── </span><span class="c-ext">ITransactionRepository</span>
+<span class="c-line">    │   ├── </span><span class="c-ext">IImportHistoryRepository</span>
+<span class="c-line">    │   ├── </span><span class="c-ext">ICsvParserProfileRepository</span>
+<span class="c-line">    │   └── </span><span class="c-layer">CategoryClassifyUseCase</span>
+<span class="c-line">    ├── </span><span class="c-layer">CsvParserUseCase</span><span class="c-ext"> (Isolate 내 독립 실행)</span>
+<span class="c-line">    ├── </span><span class="c-layer">TransactionUseCase</span>
+<span class="c-line">    │   └── </span><span class="c-ext">ITransactionRepository</span>
+<span class="c-line">    └── </span><span class="c-layer">ReportUseCase</span>
+<span class="c-line">        └── </span><span class="c-ext">AppDatabase</span><span class="c-line"> (getMonthlySummary, getCombinedDashboard)</span>
+
+<span class="c-ext">Repository</span><span class="c-arrow"> → </span><span class="c-ext">AppDatabase (Drift ORM)</span><span class="c-arrow"> → </span><span class="c-ext">SQLite</span></pre>
+            </div>
+          </section>
+
+          <!-- ── 6. 추가 패키지 ── -->
+          <section class="section" id="sec-packages">
+            <p class="sec-eyebrow">06</p>
+            <h2 class="sec-heading">추가 패키지</h2>
+
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>패키지</th>
+                  <th>버전</th>
+                  <th>사용 위치</th>
+                  <th>용도</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>crypto</td>
+                  <td><span class="txt-muted">최신</span></td>
+                  <td><code>csv_import_use_case.dart</code></td>
+                  <td>SHA-256 txn_hash 계산</td>
+                </tr>
+                <tr>
+                  <td>intl</td>
+                  <td><span class="txt-muted">최신</span></td>
+                  <td><code>csv_parser_use_case.dart</code></td>
+                  <td>DateFormat 날짜 파싱</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="code-block">
+              <pre><span class="c-line">flutter pub add crypto intl</span></pre>
+            </div>
+          </section>
+
+          <!-- ── 7. 미완성 및 후속 작업 ── -->
+          <section class="section" id="sec-todo">
+            <p class="sec-eyebrow">07</p>
+            <h2 class="sec-heading">미완성 항목 및 후속 작업</h2>
+
+            <h3 class="sub-heading">7.1 즉시 처리</h3>
+            <ul class="bullet-list">
+              <li><code>flutter pub add crypto intl</code> 실행</li>
+              <li>
+                <code>csv_parser_use_case.dart</code>의 EUC-KR TODO 구간 완성 —
+                <code>charset_converter</code> 도입 후 처리
+              </li>
+            </ul>
+
+            <h3 class="sub-heading">7.2 다음 단계 — Presentation Layer</h3>
+            <p>
+              Repository + UseCase가 완성되었으므로 화면 구현이 가능한 상태.
+            </p>
+
+            <div class="table-second-grid">
+              <div class="table-second-row header">
+                <div>우선순위</div>
+                <div>화면 ID</div>
+                <div style="grid-column: span 2">내용</div>
+              </div>
+              <div class="table-second-row">
+                <div><span class="color-badge p1">1순위</span></div>
+                <div><span class="txt-accent">SCR-001, SCR-010</span></div>
+                <div style="grid-column: span 2">
+                  초기설정, 프로필 관리 (앱 진입 흐름)
+                </div>
+              </div>
+              <div class="table-second-row">
+                <div><span class="color-badge p2">2순위</span></div>
+                <div><span class="txt-accent">SCR-008</span></div>
+                <div style="grid-column: span 2">
+                  CSV 가져오기 (CsvImportUseCase 연결 · 핵심 기능)
+                </div>
+              </div>
+              <div class="table-second-row">
+                <div><span class="color-badge p3">3순위</span></div>
+                <div><span class="txt-accent">SCR-003, SCR-002</span></div>
+                <div style="grid-column: span 2">거래내역, 대시보드</div>
+              </div>
+              <div class="table-second-row">
+                <div><span class="color-badge p4">4순위</span></div>
+                <div>
+                  <span class="txt-accent">SCR-006, SCR-004, SCR-005</span>
+                </div>
+                <div style="grid-column: span 2">
+                  리포트, 거래상세, 수동입력 등
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ── 8. 문서 변경 이력 ── -->
+          <section class="section" id="sec-changelog">
+            <p class="sec-eyebrow">08</p>
+            <h2 class="sec-heading">문서 변경 이력</h2>
+
+            <div class="changelog">
+              <div class="changelog-row header">
+                <div>버전</div>
+                <div>날짜</div>
+                <div>작성자</div>
+                <div>변경 내용</div>
+              </div>
+              <div class="changelog-row">
+                <div><span class="txt-accent">v1.0</span></div>
+                <div>2026-03-16</div>
+                <div>정서영</div>
+                <div>
+                  최초 작성. Repository + UseCase 레이어 전체 구현 기록.
+                </div>
+              </div>
+            </div>
+          </section>
+        </article>
+      </div>
+      <!-- ── POST FOOTER ── -->
+      <footer class="post-footer">
+        <a href="/docs" class="footer-back">← 문서 목록</a>
+        <span class="footer-copy">© 2026 정서영</span>
+      </footer>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>

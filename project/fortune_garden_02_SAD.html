@@ -374,14 +374,14 @@
             <h2 class="sec-heading">주요 데이터 흐름</h2>
 
             <p class="sub-heading">5.1 앱 시작 시퀀스</p>
-            <table class="seq-table">
-              <thead><tr><th>단계</th><th>주체</th><th>동작</th></tr></thead>
+            <table class="normal-table" style="width: 100%; table-layout: fixed;">
+              <thead><tr><th style="width: 40px; white-space: nowrap;"> 단계 </th><th style="width: 120px;"> 주체 </th><th> 동작 </th></tr></thead>
               <tbody>
-                <tr><td class="seq-num">1</td><td class="seq-subject">Flutter App</td><td>앱 프로세스 시작. <code>main()</code> 진입.</td></tr>
-                <tr><td class="seq-num">2</td><td class="seq-subject">Data Layer</td><td>SQLite DB 열기. 미적용 마이그레이션 자동 실행.</td></tr>
-                <tr><td class="seq-num">3</td><td class="seq-subject">Application</td><td>profiles 테이블 조회. 프로필 0개 → 초기 설정 화면. 1개 이상 → 대시보드.</td></tr>
-                <tr><td class="seq-num">4</td><td class="seq-subject">Application</td><td>FR-CFG-05에 따라 기본 뷰 모드(개인/통합) 로드 후 <code>viewModeProvider</code> 초기화.</td></tr>
-                <tr><td class="seq-num">5</td><td class="seq-subject">Presentation</td><td>대시보드 렌더링. 로컬 캐시 데이터 즉시 표시.</td></tr>
+                <tr><td> 1 </td><td class="col-name">Flutter App</td><td>앱 프로세스 시작. <code>main()</code> 진입.</td></tr>
+                <tr><td>2</td><td class="col-name">Data Layer</td><td>SQLite DB 열기. 미적용 마이그레이션 자동 실행.</td></tr>
+                <tr><td>3</td><td class="col-name">Application</td><td>profiles 테이블 조회. 프로필 0개 → 초기 설정 화면. 1개 이상 → 대시보드.</td></tr>
+                <tr><td>4</td><td class="col-name">Application</td><td>FR-CFG-05에 따라 기본 뷰 모드(개인/통합) 로드 후 <code>viewModeProvider</code> 초기화.</td></tr>
+                <tr><td>5</td><td class="col-name">Presentation</td><td>대시보드 렌더링. 로컬 캐시 데이터 즉시 표시.</td></tr>
               </tbody>
             </table>
 
@@ -537,47 +537,47 @@
             <p class="sec-eyebrow">10</p>
             <h2 class="sec-heading">아키텍처 결정 기록 (ADR)</h2>
             <p>주요 기술 결정의 배경과 대안을 기록합니다.</p>
-            <div class="adr-list">
-              <div class="adr-card">
-                <div class="adr-header"><span class="adr-num">ADR-01</span><span class="adr-title">CSV 파일 가져오기 방식 채택</span></div>
-                <div class="adr-body">
-                  <div><p class="adr-label">고려한 대안</p><p class="adr-value">CODEF API 자동 동기화, 핀테크 오픈API</p></div>
-                  <div><p class="adr-label">채택 이유</p><p class="adr-value">개인 개발자 환경의 이용 기간 제한·비용·사업자 요건 없이 지속 가능. 국내 대부분의 금융기관이 CSV 내보내기를 공식 지원.</p></div>
+            <div class="white-card-list">
+              <div class="white-card">
+                <div class="white-header"><span class="white-num">ADR-01</span><span class="white-title">CSV 파일 가져오기 방식 채택</span></div>
+                <div class="white-body">
+                  <div><p class="white-label">고려한 대안</p><p class="white-value">CODEF API 자동 동기화, 핀테크 오픈API</p></div>
+                  <div><p class="white-label">채택 이유</p><p class="white-value">개인 개발자 환경의 이용 기간 제한·비용·사업자 요건 없이 지속 가능. 국내 대부분의 금융기관이 CSV 내보내기를 공식 지원.</p></div>
                 </div>
               </div>
-              <div class="adr-card">
-                <div class="adr-header"><span class="adr-num">ADR-02</span><span class="adr-title">drift ORM 채택</span></div>
-                <div class="adr-body">
-                  <div><p class="adr-label">고려한 대안</p><p class="adr-value">sqflite 직접 사용, Hive</p></div>
-                  <div><p class="adr-label">채택 이유</p><p class="adr-value">타입 안전 쿼리, 자동 마이그레이션, Isolate 지원이 가계부처럼 쿼리가 많은 앱에 적합.</p></div>
+              <div class="white-card">
+                <div class="white-header"><span class="white-num">ADR-02</span><span class="white-title">drift ORM 채택</span></div>
+                <div class="white-body">
+                  <div><p class="white-label">고려한 대안</p><p class="white-value">sqflite 직접 사용, Hive</p></div>
+                  <div><p class="white-label">채택 이유</p><p class="white-value">타입 안전 쿼리, 자동 마이그레이션, Isolate 지원이 가계부처럼 쿼리가 많은 앱에 적합.</p></div>
                 </div>
               </div>
-              <div class="adr-card">
-                <div class="adr-header"><span class="adr-num">ADR-03</span><span class="adr-title">CSV 파싱을 Dart Isolate에서 실행</span></div>
-                <div class="adr-body">
-                  <div><p class="adr-label">고려한 대안</p><p class="adr-value">메인 스레드 동기 처리</p></div>
-                  <div><p class="adr-label">채택 이유</p><p class="adr-value">UI 블로킹 방지. 대용량 파일(수천 건) 처리 시 60fps 유지 목표 달성.</p></div>
+              <div class="white-card">
+                <div class="white-header"><span class="white-num">ADR-03</span><span class="white-title">CSV 파싱을 Dart Isolate에서 실행</span></div>
+                <div class="white-body">
+                  <div><p class="white-label">고려한 대안</p><p class="white-value">메인 스레드 동기 처리</p></div>
+                  <div><p class="white-label">채택 이유</p><p class="white-value">UI 블로킹 방지. 대용량 파일(수천 건) 처리 시 60fps 유지 목표 달성.</p></div>
                 </div>
               </div>
-              <div class="adr-card">
-                <div class="adr-header"><span class="adr-num">ADR-04</span><span class="adr-title">Riverpod 상태 관리 채택</span></div>
-                <div class="adr-body">
-                  <div><p class="adr-label">고려한 대안</p><p class="adr-value">BLoC, Provider, GetX</p></div>
-                  <div><p class="adr-label">채택 이유</p><p class="adr-value">UseCase 계층과의 결합도가 낮고, 테스트 시 Provider override가 용이.</p></div>
+              <div class="white-card">
+                <div class="white-header"><span class="white-num">ADR-04</span><span class="white-title">Riverpod 상태 관리 채택</span></div>
+                <div class="white-body">
+                  <div><p class="white-label">고려한 대안</p><p class="white-value">BLoC, Provider, GetX</p></div>
+                  <div><p class="white-label">채택 이유</p><p class="white-value">UseCase 계층과의 결합도가 낮고, 테스트 시 Provider override가 용이.</p></div>
                 </div>
               </div>
-              <div class="adr-card">
-                <div class="adr-header"><span class="adr-num">ADR-05</span><span class="adr-title">금액 저장 단위: 정수(원)</span></div>
-                <div class="adr-body">
-                  <div><p class="adr-label">고려한 대안</p><p class="adr-value">실수(double)</p></div>
-                  <div><p class="adr-label">채택 이유</p><p class="adr-value">부동소수점 오차 방지. 금융 데이터는 반드시 정수로 저장.</p></div>
+              <div class="white-card">
+                <div class="white-header"><span class="white-num">ADR-05</span><span class="white-title">금액 저장 단위: 정수(원)</span></div>
+                <div class="white-body">
+                  <div><p class="white-label">고려한 대안</p><p class="white-value">실수(double)</p></div>
+                  <div><p class="white-label">채택 이유</p><p class="white-value">부동소수점 오차 방지. 금융 데이터는 반드시 정수로 저장.</p></div>
                 </div>
               </div>
-              <div class="adr-card">
-                <div class="adr-header"><span class="adr-num">ADR-06</span><span class="adr-title">파서 프로필을 DB 테이블로 관리</span></div>
-                <div class="adr-body">
-                  <div><p class="adr-label">고려한 대안</p><p class="adr-value">코드에 하드코딩</p></div>
-                  <div><p class="adr-label">채택 이유</p><p class="adr-value">앱 업데이트 없이 신규 기관 CSV 형식 대응 가능. category_rules와 동일한 패턴으로 일관성 유지.</p></div>
+              <div class="white-card">
+                <div class="white-header"><span class="white-num">ADR-06</span><span class="white-title">파서 프로필을 DB 테이블로 관리</span></div>
+                <div class="white-body">
+                  <div><p class="white-label">고려한 대안</p><p class="white-value">코드에 하드코딩</p></div>
+                  <div><p class="white-label">채택 이유</p><p class="white-value">앱 업데이트 없이 신규 기관 CSV 형식 대응 가능. category_rules와 동일한 패턴으로 일관성 유지.</p></div>
                 </div>
               </div>
             </div>

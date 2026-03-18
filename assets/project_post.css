@@ -491,48 +491,6 @@ code {
   color: var(--ink-muted);
 }
 
-/* ── SEQUENCE TABLE (seq-table) — 02 파일 ── */
-.seq-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
-  font-size: 0.83rem;
-}
-.seq-table th {
-  padding: 0.6rem 0.9rem;
-  text-align: left;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent2);
-  border-bottom: 2px solid rgba(116, 155, 65, 0.25);
-  background: rgba(116, 155, 65, 0.06);
-  font-weight: 500;
-}
-.seq-table td {
-  padding: 0.65rem 0.9rem;
-  color: var(--ink-muted);
-  border-bottom: 1px solid var(--rule);
-  vertical-align: top;
-  line-height: 1.6;
-}
-.seq-table tr:last-child td {
-  border-bottom: none;
-}
-.seq-num {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--accent2);
-  font-weight: 500;
-}
-.seq-subject {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--ink);
-  font-weight: 500;
-}
-
 /* ── STAKEHOLDER CARDS ── */
 .stakeholder-grid {
   display: grid;
@@ -767,8 +725,8 @@ code {
   border-radius: 4px;
   padding: 1.4rem 1.6rem;
   margin: 1rem 0;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
   color: var(--ink-muted);
   line-height: 1.9;
   overflow-x: auto;
@@ -952,43 +910,43 @@ code {
   line-height: 1.55;
 }
 
-/* ── ADR CARDS ── */
-.adr-list {
+/* ── WHITE CARDS ── */
+.white-card-list {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
   margin: 1rem 0;
 }
-.adr-card {
+.white-card {
   background: var(--card-bg);
   border: 1px solid var(--rule);
   border-radius: 4px;
   padding: 1.2rem 1.5rem;
 }
-.adr-header {
+.white-header {
   display: flex;
   align-items: center;
   gap: 0.8rem;
   margin-bottom: 0.6rem;
 }
-.adr-num {
+.white-num {
   font-family: var(--font-mono);
   font-size: 0.68rem;
   color: var(--accent);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.adr-title {
+.white-title {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--ink);
 }
-.adr-body {
+.white-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.8rem 1.5rem;
 }
-.adr-label {
+.white-label {
   font-family: var(--font-mono);
   font-size: 0.62rem;
   letter-spacing: 0.1em;
@@ -996,7 +954,7 @@ code {
   color: var(--ink-muted);
   margin-bottom: 0.25rem;
 }
-.adr-value {
+.white-value {
   font-size: 0.82rem;
   color: var(--ink-muted);
   line-height: 1.6;
@@ -1149,7 +1107,7 @@ figure.doc-figure figcaption {
   .layer-desc {
     grid-column: 1 / -1;
   }
-  .adr-body {
+  .white-body {
     grid-template-columns: 1fr;
   }
   .page-wrap,
