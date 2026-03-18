@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 2 — React Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <!-- ── NAV ── -->
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← React 목록</a>
+      </div>
+    </nav>
+
+    <!-- ── POST HEADER ── -->
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">JavaScript</span>
+          <span class="post-date">
+            작성일 <span id="date-created">—</span> &nbsp;·&nbsp; 수정일
+            <span id="date-updated">—</span>
+          </span>
+        </div>
+        <h1 class="post-title">JavaScript 2</h1>
+        <p class="post-subtitle">
+          JavaScript에서 데이터를 다루는 기본 단위인 변수의 종류, 스코프, 그리고
+          올바른 네이밍 규칙을 정리했습니다.
+        </p>
+      </header>
+    </div>
+
+    <!-- ── MAIN WRAPPER ── -->
+    <div class="main-wrapper">
+      <!-- ── TOC SIDEBAR ── -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-var"
+                ><span class="toc-num">§</span>Javascript 변수</a
+              >
+            </li>
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>변수의 종류</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-1-let"
+                    ><span class="toc-num">a.</span>let</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-const"
+                    ><span class="toc-num">b.</span>const</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-note"
+                    ><span class="toc-num">※</span>주의사항</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-scope"
+                    ><span class="toc-num">4.2</span>변수의 스코프</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>변수명 규칙</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-2-required"
+                    ><span class="toc-num">a.</span>필수 규칙</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-naming"
+                    ><span class="toc-num">b.</span>네이밍 컨벤션</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-meaning"
+                    ><span class="toc-num">c.</span>의미 있는 이름</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-ex1"
+                ><span class="toc-num">※</span>연습 문제 1</a
+              >
+            </li>
+            <li>
+              <a href="#section-ex2"
+                ><span class="toc-num">※</span>연습 문제 2</a
+              >
+            </li>
+            <li>
+              <a href="#section-ex3"
+                ><span class="toc-num">※</span>연습 문제 3</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- ── POST BODY ── -->
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <!-- ── INTRO ── -->
+        <section class="section" id="section-var">
+          <p class="sec-eyebrow">Javascript 변수</p>
+          <h2 class="sec-heading">변수란?</h2>
+          <p>
+            변수는 데이터를 저장하는 이름 붙은 공간입니다. JavaScript에서는
+            <strong>let</strong>과 <strong>const</strong> 키워드로 변수를
+            선언합니다.
+          </p>
+
+          <div class="layer-cards">
+            <div class="layer-card">
+              <div class="layer-badge js">let</div>
+              <div class="layer-content">
+                <div class="layer-title">변하는 값</div>
+                <p class="layer-desc">
+                  재할당이 필요한 경우 사용합니다. 블록 스코프를 따릅니다.
+                </p>
+              </div>
+            </div>
+            <div class="layer-card">
+              <div class="layer-badge js">const</div>
+              <div class="layer-content">
+                <div class="layer-title">변하지 않는 값 (상수)</div>
+                <p class="layer-desc">
+                  선언과 동시에 값을 할당해야 하며, 재할당이 불가합니다. 블록
+                  스코프를 따릅니다.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 1 ── -->
+        <section class="section" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">변수의 종류</h2>
+
+          <!-- 1-a. let -->
+          <div class="section" id="section-1-let">
+            <h3 class="sub-heading">a. let</h3>
+            <p>
+              <code style="font-family: var(--font-mono); color: var(--accent)"
+                >let</code
+              >은 변하는 값을 할당할 때 사용합니다.
+            </p>
+
+            <div class="highlight-box">
+              <p>
+                변수를 선언하면 변수가 생성되며, 변수를 선언만 하고 값을
+                할당하지 않으면 <strong>undefined</strong>로 값이 초기화됩니다.
+              </p>
+            </div>
+
+            <!-- 선언만 -->
+            <p style="margin-top: 1.2rem">변수 선언만 하는 경우</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">let</span> <span class="tx">l1;</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(l1); </span><span class="cm">// undefined</span></pre>
+              </div>
+            </div>
+
+            <!-- 선언과 할당 분리 -->
+            <p>변수의 선언과 할당을 분리하여 작성할 수 있습니다.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">let</span> <span class="tx">l1;</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(l1); </span><span class="cm">// undefined</span>
+
+<span class="tx">l1 = 1;</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(l1); </span><span class="cm">// 1</span></pre>
+              </div>
+            </div>
+
+            <!-- 재할당 가능 -->
+            <p>값을 재할당 할 수 있습니다.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">let</span> <span class="tx">l1;</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(l1); </span><span class="cm">// undefined</span>
+
+<span class="tx">l1 = 1;</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(l1); </span><span class="cm">// 1</span>
+
+<span class="tx">l1 = 2;</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(l1); </span><span class="cm">// 2</span></pre>
+              </div>
+            </div>
+
+            <!-- 재선언 불가 -->
+            <p>값을 재선언 할 수 없습니다.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">let</span> <span class="tx">l1;</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(l1); </span><span class="cm">// undefined</span>
+
+<span class="tx">l1 = 1;</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(l1); </span><span class="cm">// 1</span>
+
+<span class="tx">l1 = 2;</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(l1); </span><span class="cm">// 2</span>
+
+<span class="tn">let</span> <span class="tx">l1; </span><span class="cm">// error</span></pre>
+              </div>
+            </div>
+
+            <!-- let 요약 표 -->
+            <table>
+              <thead>
+                <tr>
+                  <th>항목</th>
+                  <th>let</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-style2">선언만</td>
+                  <td>✅ 가능 (undefined로 초기화)</td>
+                </tr>
+                <tr>
+                  <td class="td-style2">재할당</td>
+                  <td>✅ 가능</td>
+                </tr>
+                <tr>
+                  <td class="td-style2">재선언</td>
+                  <td>❌ 불가능 (SyntaxError)</td>
+                </tr>
+                <tr>
+                  <td class="td-style2">스코프</td>
+                  <td>블록 스코프</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 1-b. const -->
+          <div class="section" id="section-1-const">
+            <h3 class="sub-heading">b. const</h3>
+            <p>
+              <code style="font-family: var(--font-mono); color: var(--accent)"
+                >const</code
+              >는 상수로, 변하지 않는 값을 할당할 때 사용합니다.
+            </p>
+
+            <p>변수 선언과 동시에 값을 할당해야 합니다.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">c1; </span><span class="cm">// error</span>
+<span class="tn">const</span> <span class="tx">c1 = 1; </span><span class="cm">// ok</span></pre>
+              </div>
+            </div>
+
+            <p>변수를 재선언 할 수 없습니다.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">c1 = 1;</span>
+<span class="tn">const</span> <span class="tx">c1 = 2; </span><span class="cm">// error</span></pre>
+              </div>
+            </div>
+
+            <p>값을 재할당 할 수 없습니다.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">c1 = 1;</span>
+<span class="tx">c1 = 2; </span><span class="cm">// error</span></pre>
+              </div>
+            </div>
+
+            <!-- const 요약 표 -->
+            <table>
+              <thead>
+                <tr>
+                  <th>항목</th>
+                  <th>const</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-style2">선언만</td>
+                  <td>❌ 불가능 (반드시 초기화)</td>
+                </tr>
+                <tr>
+                  <td class="td-style2">재할당</td>
+                  <td>❌ 불가능 (TypeError)</td>
+                </tr>
+                <tr>
+                  <td class="td-style2">재선언</td>
+                  <td>❌ 불가능 (SyntaxError)</td>
+                </tr>
+                <tr>
+                  <td class="td-style2">스코프</td>
+                  <td>블록 스코프</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 주의사항 -->
+          <div class="section" id="section-1-note">
+            <h3 class="sub-heading">※ 주의사항</h3>
+            <ul class="tech-list">
+              <li>
+                변수를 키워드 없이 선언하면 암묵적으로
+                <strong>전역 변수</strong>가 되어 예기치 않은 오류를 유발할 수
+                있으므로 반드시 키워드를 사용해야 합니다.
+              </li>
+              <li>
+                <code
+                  style="font-family: var(--font-mono); color: var(--accent)"
+                  >var</code
+                >는 구버전 문법으로 사용하지 않아야 합니다.
+              </li>
+            </ul>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="cm">// 기본적으로 const 사용</span>
+<span class="tn">const</span> <span class="tx">API_URL = </span><span class="av">"https://api.example.com"</span><span class="tx">;</span>
+<span class="tn">const</span> <span class="tx">MAX_ITEMS = 100;</span>
+
+<span class="cm">// 값이 변해야 할 때만 let 사용</span>
+<span class="tn">let</span> <span class="tx">count = 0;</span>
+<span class="tx">count = count + 1;</span>
+
+<span class="cm">// var는 구버전 문법</span>
+<span class="tn">var</span> <span class="tx">oldWay = </span><span class="av">"쓰지 마세요"</span><span class="tx">; </span><span class="cm">//</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4.2 스코프 -->
+          <div class="section" id="section-1-scope">
+            <h3 class="sub-heading">4.2. 변수의 스코프</h3>
+            <p>
+              <code style="font-family: var(--font-mono); color: var(--accent)"
+                >let</code
+              >과
+              <code style="font-family: var(--font-mono); color: var(--accent)"
+                >const</code
+              >는 <strong>블록 스코프</strong>를 따릅니다.
+            </p>
+
+            <div class="compare-grid">
+              <div class="compare-card">
+                <div class="compare-head block">let — 블록 스코프</div>
+                <div class="compare-body">
+                  <div class="code-block" style="margin: 0">
+                    <div class="code-body">
+                      <pre><span class="tn">function</span> <span class="tx">f() {</span>
+  <span class="tx">{</span>
+    <span class="tn">let</span> <span class="tx">num = 1;</span>
+    <span class="tx">console.</span><span class="tn">log</span><span class="tx">(num); </span><span class="cm">// 1</span>
+  <span class="tx">}</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(num); </span><span class="cm">// error</span>
+<span class="tx">}</span>
+<span class="tx">f();</span></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="compare-card">
+                <div class="compare-head block">const — 블록 스코프</div>
+                <div class="compare-body">
+                  <div class="code-block" style="margin: 0">
+                    <div class="code-body">
+                      <pre><span class="tn">function</span> <span class="tx">f() {</span>
+  <span class="tx">{</span>
+    <span class="tn">const</span> <span class="tx">num = 1;</span>
+    <span class="tx">console.</span><span class="tn">log</span><span class="tx">(num); </span><span class="cm">// 1</span>
+  <span class="tx">}</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(num); </span><span class="cm">// error</span>
+<span class="tx">}</span>
+<span class="tx">f();</span></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 1.2rem">
+              <p>
+                블록
+                <code
+                  style="font-family: var(--font-mono); color: var(--accent)"
+                  >{ }</code
+                >
+                안에서 선언된 변수는 블록 바깥에서 접근할 수 없습니다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 2 ── -->
+        <section class="section" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">변수명 규칙</h2>
+
+          <!-- 2-a. 필수 규칙 -->
+          <div class="section" id="section-2-required">
+            <h3 class="sub-heading">a. 필수 규칙</h3>
+            <div class="highlight-box">
+              <p>필수 규칙 — 어기면 <strong>에러</strong>가 발생합니다.</p>
+            </div>
+
+            <ul class="tech-list" style="margin-top: 1rem">
+              <li>
+                <strong>영문자</strong>, 언더스코어(<code
+                  style="font-family: var(--font-mono); color: var(--accent)"
+                  >_</code
+                >), 달러기호(<code
+                  style="font-family: var(--font-mono); color: var(--accent)"
+                  >$</code
+                >), <strong>숫자</strong>로 변수명을 작성해야 합니다.
+              </li>
+              <li>첫 글자는 숫자로 시작할 수 없습니다.</li>
+              <li>예약어는 식별자로 사용할 수 없습니다.</li>
+            </ul>
+
+            <div class="code-block" style="margin-top: 1.2rem">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="cm">// ✅ 알파벳, 언더스코어(_), 달러($), 숫자로 구성</span>
+<span class="tn">let</span> <span class="tx">userName = </span><span class="av">"홍길동"</span><span class="tx">;</span>
+<span class="tn">let</span> <span class="tx">user_name = </span><span class="av">"홍길동"</span><span class="tx">;</span>
+<span class="tn">let</span> <span class="tx">_private = </span><span class="av">"비공개"</span><span class="tx">;</span>
+<span class="tn">let</span> <span class="tx">$money = 1000;</span>
+<span class="tn">let</span> <span class="tx">userName2 = </span><span class="av">"김철수"</span><span class="tx">;</span>
+
+<span class="cm">// ❌ 불가능</span>
+<span class="tn">let</span> <span class="tx">2ndPlace = </span><span class="av">"은메달"</span><span class="tx">; </span><span class="cm">// 숫자로 시작 불가</span>
+<span class="tn">let</span> <span class="tx">user-name = </span><span class="av">"홍길동"</span><span class="tx">; </span><span class="cm">// 하이픈 불가</span>
+<span class="tn">let</span> <span class="tn">let</span> <span class="tx">= </span><span class="av">"값"</span><span class="tx">; </span><span class="cm">// 예약어 사용 불가</span>
+<span class="tn">let</span> <span class="tx">my name = </span><span class="av">"홍길동"</span><span class="tx">; </span><span class="cm">// 공백 불가</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-b. 네이밍 컨벤션 -->
+          <div class="section" id="section-2-naming">
+            <h3 class="sub-heading">b. 네이밍 컨벤션</h3>
+            <p>
+              두 개 이상의 영단어로 구성된 경우
+              <strong>camelCase</strong> 사용을 권장합니다.
+            </p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="cm">// 카멜케이스(camelCase) - JavaScript 표준</span>
+<span class="tn">let</span> <span class="tx">firstName = </span><span class="av">"길동"</span><span class="tx">;</span>
+<span class="tn">let</span> <span class="tx">lastName = </span><span class="av">"홍"</span><span class="tx">;</span>
+<span class="tn">let</span> <span class="tx">totalPrice = 15000;</span>
+<span class="tn">let</span> <span class="tx">isLoggedIn = </span><span class="av">true</span><span class="tx">;</span>
+<span class="tn">let</span> <span class="tx">maxItemCount = 100;</span>
+
+<span class="cm">// 상수는 대문자 + 언더스코어</span>
+<span class="tn">const</span> <span class="tx">MAX_SIZE = 100;</span>
+<span class="tn">const</span> <span class="tx">API_KEY = </span><span class="av">"abc123"</span><span class="tx">;</span>
+<span class="tn">const</span> <span class="tx">BASE_URL = </span><span class="av">"https://api.example.com"</span><span class="tx">;</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-c. 의미 있는 이름 -->
+          <div class="section" id="section-2-meaning">
+            <h3 class="sub-heading">c. 의미 있는 이름 사용</h3>
+
+            <div class="compare-grid">
+              <div class="compare-card">
+                <div class="compare-head block">✅ 적절한 이름</div>
+                <div class="compare-body">
+                  <div class="code-block" style="margin: 0">
+                    <div class="code-body">
+                      <pre><span class="tn">let</span> <span class="tx">userName = </span><span class="av">"홍길동"</span><span class="tx">;</span>
+<span class="tn">let</span> <span class="tx">userAge = 25;</span>
+<span class="tn">let</span> <span class="tx">isAdult = </span><span class="av">true</span><span class="tx">;</span>
+<span class="tn">let</span> <span class="tx">productPrice = 10000;</span></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="compare-card">
+                <div class="compare-head inline">❌ 적절하지 않은 이름</div>
+                <div class="compare-body">
+                  <div class="code-block" style="margin: 0">
+                    <div class="code-body">
+                      <pre><span class="tn">let</span> <span class="tx">x = </span><span class="av">"홍길동"</span><span class="tx">;</span>
+<span class="tn">let</span> <span class="tx">data = 25;</span>
+<span class="tn">let</span> <span class="tx">temp = </span><span class="av">true</span><span class="tx">;</span>
+<span class="tn">let</span> <span class="tx">a1 = 10000;</span></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 연습 문제 1 ── -->
+        <section class="section" id="section-ex1">
+          <p class="sec-eyebrow">연습 문제 1</p>
+          <h2 class="sec-heading">변수 선언 에러 찾기</h2>
+          <p>
+            다음 코드 중 에러가 발생하는 것을 모두 고르고, 그 이유를 설명하세요.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="cm">// (1)</span>
+<span class="tn">let</span> <span class="tx">score;</span>
+<span class="tx">score = 100;</span>
+
+<span class="cm">// (2)</span>
+<span class="tn">const</span> <span class="tx">MAX;</span>
+<span class="tx">MAX = 500;</span>
+
+<span class="cm">// (3)</span>
+<span class="tn">let</span> <span class="tx">count = 1;</span>
+<span class="tn">let</span> <span class="tx">count = 2;</span>
+
+<span class="cm">// (4)</span>
+<span class="tn">const</span> <span class="tx">LIMIT = 10;</span>
+<span class="tx">LIMIT = 20;</span>
+
+<span class="cm">// (5)</span>
+<span class="tn">let</span> <span class="tx">total = 0;</span>
+<span class="tx">total = 50;</span></pre>
+            </div>
+          </div>
+
+          <table style="width: 100%; table-layout: fixed">
+            <thead>
+              <tr>
+                <th style="width: 7%">번호</th>
+                <th style="width: 18%">내용</th>
+                <th style="width: 10%">에러 여부</th>
+                <th style="width: 15%">에러 종류</th>
+                <th style="width: 50%">이유</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>(1)</td>
+                <td class="td-style2">
+                  let score;<br />
+                  score = 100;
+                </td>
+                <td>✅ 정상</td>
+                <td>—</td>
+                <td>let은 선언 후 나중에 값 할당 가능</td>
+              </tr>
+              <tr>
+                <td>(2)</td>
+                <td class="td-style2">
+                  const MAX;<br />
+                  MAX = 500;
+                </td>
+                <td>❌ 에러</td>
+                <td class="td-ko2">SyntaxError</td>
+                <td>
+                  const는 선언과 동시에 초기화(값 할당)를 반드시 해야 합니다.
+                  <code style="font-family: var(--font-mono)">const MAX;</code
+                  >처럼 선언만 하고 나중에 값을 넣을 수 없습니다.
+                </td>
+              </tr>
+              <tr>
+                <td>(3)</td>
+                <td class="td-style2">
+                  let count = 1;<br />
+                  let count = 2;
+                </td>
+                <td>❌ 에러</td>
+                <td class="td-ko2">SyntaxError</td>
+                <td>
+                  let은 같은 스코프 내에서 중복 선언이 불가능합니다. 이미
+                  <code style="font-family: var(--font-mono)">count</code>라는
+                  이름이 존재하므로 다시 let을 붙여 선언할 수 없습니다.
+                </td>
+              </tr>
+              <tr>
+                <td>(4)</td>
+                <td class="td-style2">
+                  const LIMIT = 10;<br />
+                  LIMIT = 20;
+                </td>
+                <td>❌ 에러</td>
+                <td class="td-ko2">TypeError</td>
+                <td>
+                  const로 선언한 변수는 재할당이 불가능한 '상수'입니다. 한 번
+                  10이 들어갔다면, 20으로 값을 바꿀 수 없습니다.
+                </td>
+              </tr>
+              <tr>
+                <td>(5)</td>
+                <td class="td-style2">
+                  let total = 0;<br />
+                  total = 50;
+                </td>
+                <td>✅ 정상</td>
+                <td>—</td>
+                <td>let은 재할당 가능</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 연습 문제 2 ── -->
+        <section class="section" id="section-ex2">
+          <p class="sec-eyebrow">연습 문제 2</p>
+          <h2 class="sec-heading">변수명 올바른지 판단하기</h2>
+          <p>
+            다음 변수명 중 올바른 것과 잘못된 것을 구분하고, 잘못된 이유를
+            설명하세요.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tn">let</span> <span class="tx">1stPlace</span>
+<span class="tn">let</span> <span class="tx">first_place</span>
+<span class="tn">let</span> <span class="tx">first-place</span>
+<span class="tn">let</span> <span class="tx">$price</span>
+<span class="tn">let</span> <span class="tn">const</span>
+<span class="tn">let</span> <span class="tx">_count</span>
+<span class="tn">let</span> <span class="tx">user name</span>
+<span class="tn">let</span> <span class="tx">totalAmount</span></pre>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>변수명</th>
+                <th>판정</th>
+                <th>이유</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">first_place</td>
+                <td>✅ 가능</td>
+                <td>
+                  언더스코어(_)는 변수명에 사용할 수 있다. (Snake Case 방식)
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">$price</td>
+                <td>✅ 가능</td>
+                <td>
+                  달러 기호($)는 변수명 첫 글자나 중간 어디든 사용할 수 있다.
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">_count</td>
+                <td>✅ 가능</td>
+                <td>언더스코어(_)로 변수명을 시작하는 것도 가능하다.</td>
+              </tr>
+              <tr>
+                <td class="td-tag">totalAmount</td>
+                <td>✅ 가능</td>
+                <td>
+                  영문자로 시작하며 중간에 대문자를 섞는 방식(Camel Case)은
+                  자바스크립트 관습이자 표준이다.
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">1stPlace</td>
+                <td>❌ 불가</td>
+                <td>
+                  숫자로 시작할 수 없다. 변수명은 반드시 문자, $, _로 시작해야
+                  한다.
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">first-place</td>
+                <td>❌ 불가</td>
+                <td>
+                  하이픈(-)을 사용할 수 없다. 자바스크립트에서 -는 뺄셈 연산자로
+                  인식된다.
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">const</td>
+                <td>❌ 불가</td>
+                <td>
+                  const, let, if, for 등 언어 자체에서 이미 기능이 정해진 단어는
+                  예약어(Reserved Word)로, 변수명으로 쓸 수 없다.
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">user name</td>
+                <td>❌ 불가</td>
+                <td>
+                  공백(띄어쓰기)을 포함할 수 없다. 두 단어를 잇고 싶다면
+                  userName이나 user_name을 써야 한다.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 연습 문제 3 ── -->
+        <section class="section" id="section-ex3">
+          <p class="sec-eyebrow">연습 문제 3</p>
+          <h2 class="sec-heading">출력 결과 예측하기</h2>
+          <p>다음 코드의 출력 결과를 예측하세요.</p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tn">function</span> <span class="tx">test() {</span>
+  <span class="tn">const</span> <span class="tx">a = 10;</span>
+  <span class="tx">{</span>
+    <span class="tn">const</span> <span class="tx">b = 20;</span>
+    <span class="tx">console.</span><span class="tn">log</span><span class="tx">(a + b); </span><span class="cm">// (1) ?</span>
+  <span class="tx">}</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(a);     </span><span class="cm">// (2) ?</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(b);     </span><span class="cm">// (3) ?</span>
+<span class="tx">}</span>
+<span class="tx">test();</span></pre>
+            </div>
+          </div>
+
+          <div class="tier-diagram">
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer-wide">출력 (1)</span>
+                <span class="tier-name">30</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  중괄호
+                  <code style="font-family: var(--font-mono)">{ }</code> 블록
+                  안에서 상위 스코프의
+                  <code style="font-family: var(--font-mono)">a(10)</code>와
+                  현재 블록의
+                  <code style="font-family: var(--font-mono)">b(20)</code>를
+                  더할 수 있습니다.
+                </p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer-wide">출력 (2)</span>
+                <span class="tier-name">10</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  변수 <code style="font-family: var(--font-mono)">a</code>는
+                  <code style="font-family: var(--font-mono)">test</code> 함수
+                  전체에서 유효하므로 정상적으로 출력됩니다.
+                </p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer-wide">출력 (3)</span>
+                <span class="tier-name" style="color: #c0392b"
+                  >ReferenceError</span
+                >
+              </div>
+              <div class="tier-content">
+                <p>
+                  변수 <code style="font-family: var(--font-mono)">b</code>는
+                  중괄호
+                  <code style="font-family: var(--font-mono)">{ }</code> 블록
+                  내부에서 const로 선언되었기 때문에, 해당 블록을 벗어나는 순간
+                  메모리에서 사라집니다.
+                </p>
+                <div class="tier-tags">
+                  <span class="tier-tag">ReferenceError: b is not defined</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+        <!-- ── POST FOOTER ── -->
+
+        <footer class="post-footer">
+          <a href="../blog/index.html" class="footer-back">← 홈으로</a>
+          <span class="footer-copy">© 2026 정서영</span>
+        </footer>
+      </article>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>

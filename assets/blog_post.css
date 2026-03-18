@@ -435,6 +435,10 @@ strong {
   border-bottom: 1px solid var(--rule);
 }
 
+.tier-row.wide {
+  grid-template-columns: 200px 1fr;
+}
+
 .tier-row:last-child {
   border-bottom: none;
 }
