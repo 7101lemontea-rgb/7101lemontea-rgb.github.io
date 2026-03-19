@@ -44,7 +44,7 @@
       }
 
       .container {
-        max-width: 760px;
+        max-width: 800px;
         margin: 0 auto;
         padding: 0 2rem;
       }
@@ -61,7 +61,7 @@
         border-bottom: 1px solid var(--rule);
       }
       nav .inner {
-        max-width: 760px;
+        max-width: 1024px;
         margin: 0 auto;
         padding: 0 2rem;
         height: 56px;
@@ -172,13 +172,16 @@
       .post-list {
         display: flex;
         flex-direction: column;
+        gap: 1rem;
       }
       .post-item {
         display: flex;
         justify-content: space-between;
-        align-items: baseline;
-        padding: 1.6rem 0;
-        border-bottom: 1px solid var(--rule);
+        align-items: flex-start;
+        padding: 1.4rem 1.6rem;
+        background: rgb(249, 248, 245);
+        border: 1px solid var(--rule);
+        border-radius: 4px;
         text-decoration: none;
         color: inherit;
         gap: 1.5rem;
@@ -187,17 +190,16 @@
         transition:
           opacity 0.45s ease,
           transform 0.45s ease,
-          color 0.2s;
+          border-color 0.2s,
+          box-shadow 0.2s;
       }
       .post-item.visible {
         opacity: 1;
         transform: translateY(0);
       }
-      .post-item:last-child {
-        border-bottom: none;
-      }
       .post-item:hover {
-        opacity: 0.75;
+        border-color: var(--accent);
+        box-shadow: 0 4px 20px rgba(116, 155, 65, 0.1);
       }
       .post-item:hover .post-title {
         color: var(--accent);
@@ -207,20 +209,26 @@
         flex: 1;
       }
       .post-tag {
+        display: inline-block;
         font-family: var(--font-mono);
-        font-size: 0.67rem;
+        font-size: 0.65rem;
         letter-spacing: 0.09em;
         text-transform: uppercase;
-        color: var(--accent);
-        margin-bottom: 0.4rem;
+        color: #3d6b1c;
+        background: rgba(116, 155, 65, 0.1);
+        padding: 0.18rem 0.6rem;
+        border-radius: 2px;
+        margin-bottom: 0.6rem;
       }
       .post-title {
-        font-size: 1rem;
+        font-family: var(--font-serif);
+        font-size: 1.15rem;
         font-weight: 400;
         color: var(--ink);
-        line-height: 1.5;
+        line-height: 1.4;
+        letter-spacing: 0.02em;
         transition: color 0.2s;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.45rem;
       }
       .post-excerpt {
         font-size: 0.82rem;
@@ -476,7 +484,7 @@
       ];
 
       // ── 설정 ───────────────────────────────────────────────────
-      const PER_PAGE = 6;
+      const PER_PAGE = 5;
 
       // ── 상태 ───────────────────────────────────────────────────
       let currentFilter = "all";
