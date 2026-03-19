@@ -211,8 +211,7 @@
         gap: 1rem;
         align-items: start;
       }
-      .project-card-left {
-      }
+
       .project-card-meta {
         display: flex;
         align-items: center;
@@ -373,6 +372,47 @@
         color: var(--ink-muted);
       }
 
+      /* PAGINATION */
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 2.5rem 0 0;
+      }
+      .page-btn {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--rule);
+        border-radius: 2px;
+        background: transparent;
+        color: var(--ink-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .page-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .page-btn.active {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--bg);
+      }
+      .page-btn:disabled {
+        opacity: 0.3;
+        cursor: default;
+        pointer-events: none;
+      }
+      .page-arrow {
+        font-size: 0.85rem;
+      }
       @keyframes fadeUp {
         from {
           opacity: 0;
@@ -435,323 +475,11 @@
     <main class="project-section">
       <div class="container">
         <p class="project-count" id="project-count">1 project</p>
-        <div class="project-list" id="project-list">
-          <!-- Fortune Garden -->
-
-          <!--01. 요구사항 정의서-->
-          <a
-            class="project-card"
-            href="fortune_garden_01_req_specification.html"
-            data-tag="Flutter"
-          >
-            <div class="project-card-inner">
-              <div class="project-card-left">
-                <div class="project-card-meta">
-                  <span class="project-tag tag-flutter">Flutter</span>
-                  <span class="project-tag tag-wip">진행 중</span>
-                </div>
-                <p class="project-card-title">Fortune Garden 요구사항 정의서</p>
-                <p class="project-card-sub">포춘 가든 — 자동 동기화 가계부</p>
-                <p class="project-card-desc">
-                  여러 금융기관 계좌를 간편인증 한 번으로 연결하고, 거래 내역을
-                  자동 수집·분류하는 2인 가구용 가계부의 기능 요구사항을
-                  정의합니다. 인증, 동기화, 리포트, 보안 등 9개 핵심 영역에 걸쳐
-                  총 50여 개의 세부 기능 요구사항을 담았습니다.
-                </p>
-              </div>
-              <div class="project-card-right">
-                <div class="project-stack">
-                  <span class="stack-tag">Flutter</span>
-                  <span class="stack-tag">Dart</span>
-                  <span class="stack-tag">SQLite</span>
-                  <span class="stack-tag">CODEF API</span>
-                </div>
-                <span class="project-arrow">→</span>
-              </div>
-            </div>
-            <div class="project-card-footer">
-              <div class="project-links">
-                <span class="project-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-                    />
-                    <polyline points="14 2 14 8 20 8" />
-                  </svg>
-                  요구사항 정의서 v1.1
-                </span>
-              </div>
-              <span class="project-date">2026.03.07</span>
-            </div>
-          </a>
-
-          <!--02. 시스템 아키텍처 설계서-->
-          <a
-            class="project-card"
-            href="fortune_garden_02_SAD.html"
-            data-tag="Flutter"
-          >
-            <div class="project-card-inner">
-              <div class="project-card-left">
-                <div class="project-card-meta">
-                  <span class="project-tag tag-flutter">Flutter</span>
-                  <span class="project-tag tag-wip">진행 중</span>
-                </div>
-                <p class="project-card-title">
-                  Fortune Garden 시스템 아키텍처 설계서
-                </p>
-                <p class="project-card-sub">포춘 가든 — 자동 동기화 가계부</p>
-                <p class="project-card-desc">
-                  Flutter UI, UseCase, Shelf 로컬 서버, SQLite, CODEF API로
-                  이어지는 5계층 구조를 정의한 설계서입니다. 계층별 컴포넌트
-                  역할, 데이터 흐름, 보안 모델, DB 스키마, 주요 기술 결정(ADR)을
-                  명세합니다.
-                </p>
-              </div>
-              <div class="project-card-right">
-                <div class="project-stack">
-                  <span class="stack-tag">Flutter</span>
-                  <span class="stack-tag">Dart</span>
-                  <span class="stack-tag">SQLite</span>
-                  <span class="stack-tag">CODEF API</span>
-                </div>
-                <span class="project-arrow">→</span>
-              </div>
-            </div>
-            <div class="project-card-footer">
-              <div class="project-links">
-                <span class="project-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-                    />
-                    <polyline points="14 2 14 8 20 8" />
-                  </svg>
-                  시스템 아키텍처 설계서 v1.0
-                </span>
-              </div>
-              <span class="project-date">2026.03.08</span>
-            </div>
-          </a>
-
-          <!--03. DB 설계 ERD-->
-          <a
-            class="project-card"
-            href="fortune_garden_03_DB_ERD.html"
-            data-tag="Flutter"
-          >
-            <div class="project-card-inner">
-              <div class="project-card-left">
-                <div class="project-card-meta">
-                  <span class="project-tag tag-flutter">Flutter</span>
-                  <span class="project-tag tag-wip">진행 중</span>
-                </div>
-                <p class="project-card-title">Fortune Garden DB 설계 ERD</p>
-                <p class="project-card-sub">포춘 가든 — 자동 동기화 가계부</p>
-                <p class="project-card-desc">
-                  Fortune Garden 애플리케이션의 SQLite 데이터베이스 전체
-                  스키마를 Entity-Relationship 관점에서 정의합니다. 8개 테이블의
-                  컬럼 명세, 테이블 간 관계(Cardinality), 인덱스 전략을
-                  포함하며, drift ORM 코드 생성의 입력 명세로 활용할 예정입니다.
-                </p>
-              </div>
-              <div class="project-card-right">
-                <div class="project-stack">
-                  <span class="stack-tag">Flutter</span>
-                  <span class="stack-tag">Dart</span>
-                  <span class="stack-tag">SQLite</span>
-                  <span class="stack-tag">CODEF API</span>
-                </div>
-                <span class="project-arrow">→</span>
-              </div>
-            </div>
-            <div class="project-card-footer">
-              <div class="project-links">
-                <span class="project-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-                    />
-                    <polyline points="14 2 14 8 20 8" />
-                  </svg>
-                  DB 설계 ERD v1.0
-                </span>
-              </div>
-              <span class="project-date">2026.03.08</span>
-            </div>
-          </a>
-
-          <!--04. 개발 환경 설정-->
-          <a
-            class="project-card"
-            href="fortune_garden_01_req_specification.html"
-            data-tag="Flutter"
-          >
-            <div class="project-card-inner">
-              <div class="project-card-left">
-                <div class="project-card-meta">
-                  <span class="project-tag tag-flutter">Flutter</span>
-                  <span class="project-tag tag-wip">진행 중</span>
-                </div>
-                <p class="project-card-title">Fortune Garden 개발 환경 설정</p>
-                <p class="project-card-sub">포춘 가든 — 자동 동기화 가계부</p>
-                <p class="project-card-desc">
-                  Windows 기준 Flutter SDK 설치부터 GitHub 브랜치 전략, 빌드
-                  확인까지 — Fortune Garden 프로젝트를 시작하기 위한 전체 환경
-                  설정 가이드입니다.
-                </p>
-              </div>
-              <div class="project-card-right">
-                <div class="project-stack">
-                  <span class="stack-tag">Flutter</span>
-                  <span class="stack-tag">Dart</span>
-                </div>
-                <span class="project-arrow">→</span>
-              </div>
-            </div>
-            <div class="project-card-footer">
-              <div class="project-links">
-                <span class="project-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-                    />
-                    <polyline points="14 2 14 8 20 8" />
-                  </svg>
-                  Flutter 개발 환경 설정
-                </span>
-              </div>
-              <span class="project-date">2026.03.12</span>
-            </div>
-          </a>
-
-          <!--05. Drift orm spec-->
-          <a
-            class="project-card"
-            href="fortune_garden_05_drift_orm_spec.html"
-            data-tag="Flutter"
-          >
-            <div class="project-card-inner">
-              <div class="project-card-left">
-                <div class="project-card-meta">
-                  <span class="project-tag tag-flutter">Flutter</span>
-                  <span class="project-tag tag-wip">진행 중</span>
-                </div>
-                <p class="project-card-title">Fortune Garden Drift ORM Spec</p>
-                <p class="project-card-sub">포춘 가든 — 자동 동기화 가계부</p>
-                <p class="project-card-desc">
-                  Fortune Garden 애플리케이션의 데이터 영속성 계층(L4)을
-                  구현하기 위해 작성한 Drift ORM 기반 SQLite 스키마
-                  명세서입니다. ERD v1.0에서 정의된 8개 테이블을 Dart 클래스로
-                  변환한 결과물과 구현 과정에서 적용된 기술적 결정 사항을
-                  기록했습니다.
-                </p>
-              </div>
-              <div class="project-card-right">
-                <div class="project-stack">
-                  <span class="stack-tag">Flutter</span>
-                  <span class="stack-tag">Dart</span>
-                </div>
-                <span class="project-arrow">→</span>
-              </div>
-            </div>
-            <div class="project-card-footer">
-              <div class="project-links">
-                <span class="project-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-                    />
-                    <polyline points="14 2 14 8 20 8" />
-                  </svg>
-                  Fortune Garden Drift ORM Spec
-                </span>
-              </div>
-              <span class="project-date">2026.03.12</span>
-            </div>
-          </a>
-
-          <!--05. Drift orm spec 트러블슈팅-->
-          <a
-            class="project-card"
-            href="fortune_garden_06_drift_orm_troubleshooting.html"
-            data-tag="Flutter"
-          >
-            <div class="project-card-inner">
-              <div class="project-card-left">
-                <div class="project-card-meta">
-                  <span class="project-tag tag-flutter">Flutter</span>
-                  <span class="project-tag tag-wip">진행 중</span>
-                </div>
-                <p class="project-card-title">
-                  Fortune Garden Drift ORM Spec 트러블슈팅
-                </p>
-                <p class="project-card-sub">포춘 가든 — 자동 동기화 가계부</p>
-                <p class="project-card-desc">
-                  Fortune Garden Drift ORM DB 스키마 구현(DOIS v1.0) 중 발생한
-                  오류와 해결 과정을 기록했습니다. 동일 오류 재발 방지 및 유사
-                  프로젝트 참조를 목적으로 오류 원인, 수정 내용, 재발 방지
-                  원칙을 명세했습니다.
-                </p>
-              </div>
-              <div class="project-card-right">
-                <div class="project-stack">
-                  <span class="stack-tag">Flutter</span>
-                  <span class="stack-tag">Dart</span>
-                </div>
-                <span class="project-arrow">→</span>
-              </div>
-            </div>
-            <div class="project-card-footer">
-              <div class="project-links">
-                <span class="project-link">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-                    />
-                    <polyline points="14 2 14 8 20 8" />
-                  </svg>
-                  Fortune Garden Drift ORM Spec 트러블슈팅
-                </span>
-              </div>
-              <span class="project-date">2026.03.15</span>
-            </div>
-          </a>
-
-          <!-- Placeholder B -->
-          <a
-            class="project-card"
-            href="#"
-            data-tag="Python"
-            style="pointer-events: none; opacity: 0.45"
-          >
-            <div class="project-card-inner">
-              <div class="project-card-left">
-                <div class="project-card-meta">
-                  <span class="project-tag tag-python">Python</span>
-                </div>
-                <p class="project-card-title">다음 프로젝트</p>
-                <p class="project-card-sub">Coming Soon</p>
-                <p class="project-card-desc">
-                  새로운 프로젝트를 준비 중입니다.
-                </p>
-              </div>
-              <div class="project-card-right">
-                <div class="project-stack">
-                  <span class="stack-tag">Python</span>
-                </div>
-                <span class="project-arrow">→</span>
-              </div>
-            </div>
-            <div class="project-card-footer">
-              <div class="project-links"></div>
-              <span class="project-date">—</span>
-            </div>
-          </a>
-        </div>
+        <div class="project-list" id="project-list"></div>
         <p class="empty-state" id="empty-state">
           해당 카테고리의 프로젝트가 없습니다.
         </p>
+        <div class="pagination" id="pagination"></div>
       </div>
     </main>
 
@@ -763,38 +491,206 @@
     </footer>
 
     <script>
-      // Reveal
-      const cards = document.querySelectorAll(".project-card");
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) e.target.classList.add("visible");
-          });
+      // ── 프로젝트 데이터 ────────────────────────────────────────
+      // 새 항목 추가 시 이 배열에만 추가하면 됩니다.
+      // date: "YYYY.MM.DD" 형식 (최신순 자동 정렬)
+      // links: [{ label, href }] — 없으면 빈 배열
+      // stacks: ["Flutter", "Dart", ...]
+      // tagClass: "tag-flutter" | "tag-python" | "tag-web"
+      // statusClass: "tag-wip" | "tag-done" (없으면 null)
+      // disabled: true → Coming Soon 카드
+      const PROJECTS = [
+        {
+          href: "fortune_garden/index.html",
+          tag: "Flutter",
+          tagClass: "tag-flutter",
+          statusLabel: "진행 중",
+          statusClass: "tag-wip",
+          title: "Fortune Garden",
+          sub: "포춘 가든 — 자동 동기화 가계부",
+          desc: "본 프로젝트는 2인 가구용 가계부 애플리케이션 개발을 목표로 합니다. 여러 금융기관(시중 은행, 카드사 등)의 거래 내역을 사용자의 로컬 환경에서 외부 서버 전송 없이 안전하게 자산을 관리할 수 있으며, 2인 각자의 계좌를 개별 또는 합산하여 조회할 수 있습니다.",
+          stacks: [],
+          links: [
+            {
+              label: "Flutter 기반 애플리케이션 개발 프로젝트",
+              href: "fortune_garden/index.html",
+            },
+          ],
+          date: "2026.03.07 ~ ",
         },
-        { threshold: 0.08 },
-      );
-      cards.forEach((c) => obs.observe(c));
 
-      // Filter
-      const btns = document.querySelectorAll(".filter-btn");
-      const countEl = document.getElementById("project-count");
-      const emptyEl = document.getElementById("empty-state");
+        {
+          href: "#",
+          tag: "Python",
+          tagClass: "tag-python",
+          statusLabel: null,
+          statusClass: null,
+          title: "다음 프로젝트",
+          sub: "Coming Soon",
+          desc: "새로운 프로젝트를 준비 중입니다.",
+          stacks: ["Python"],
+          links: [],
+          date: "—",
+          disabled: true,
+        },
+      ];
 
-      btns.forEach((btn) => {
+      // ── 설정 ──────────────────────────────────────────────────
+      const PER_PAGE = 5;
+
+      // ── 상태 ──────────────────────────────────────────────────
+      let currentFilter = "all";
+      let currentPage = 1;
+
+      // ── 날짜 파싱 ─────────────────────────────────────────────
+      function parseDate(str) {
+        if (str === "—") return new Date(0);
+        const [y, m, d] = str.split(".").map(Number);
+        return new Date(y, m - 1, d);
+      }
+
+      // ── 필터링 + 최신순 정렬 ──────────────────────────────────
+      function getFiltered() {
+        return PROJECTS.filter(
+          (p) => currentFilter === "all" || p.tag === currentFilter,
+        ).sort((a, b) => parseDate(b.date) - parseDate(a.date));
+      }
+
+      // ── 카드 DOM 생성 ─────────────────────────────────────────
+      const SVG_DOC = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`;
+
+      function createCard(p) {
+        const a = document.createElement("a");
+        a.className = "project-card";
+        a.href = p.href;
+        a.dataset.tag = p.tag;
+        if (p.disabled) {
+          a.style.pointerEvents = "none";
+          a.style.opacity = "0.45";
+        }
+
+        const statusBadge = p.statusLabel
+          ? `<span class="project-tag ${p.statusClass}">${p.statusLabel}</span>`
+          : "";
+
+        const stacksHtml = p.stacks
+          .map((s) => `<span class="stack-tag">${s}</span>`)
+          .join("\n                  ");
+
+        const linksHtml = p.links
+          .map(
+            (l) =>
+              `<a class="project-link" href="${l.href}">${SVG_DOC} ${l.label}</a>`,
+          )
+          .join("\n                ");
+
+        a.innerHTML = `
+          <div class="project-card-inner">
+            <div class="project-card-left">
+              <div class="project-card-meta">
+                <span class="project-tag ${p.tagClass}">${p.tag}</span>
+                ${statusBadge}
+              </div>
+              <p class="project-card-title">${p.title}</p>
+              <p class="project-card-sub">${p.sub}</p>
+              <p class="project-card-desc">${p.desc}</p>
+            </div>
+            <div class="project-card-right">
+              <div class="project-stack">${stacksHtml}</div>
+              
+            </div>
+          </div>
+          <div class="project-card-footer">
+            <div class="project-links">${linksHtml}</div>
+            <span class="project-date">${p.date}</span>
+          </div>`;
+        return a;
+      }
+
+      // ── 페이지네이션 렌더 ─────────────────────────────────────
+      function renderPagination(total) {
+        const pag = document.getElementById("pagination");
+        pag.innerHTML = "";
+        const totalPages = Math.ceil(total / PER_PAGE);
+        if (totalPages <= 1) return;
+
+        const prev = document.createElement("button");
+        prev.className = "page-btn page-arrow";
+        prev.textContent = "←";
+        prev.disabled = currentPage === 1;
+        prev.addEventListener("click", () => goTo(currentPage - 1));
+        pag.appendChild(prev);
+
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.className = "page-btn" + (i === currentPage ? " active" : "");
+          btn.textContent = i;
+          btn.addEventListener("click", () => goTo(i));
+          pag.appendChild(btn);
+        }
+
+        const next = document.createElement("button");
+        next.className = "page-btn page-arrow";
+        next.textContent = "→";
+        next.disabled = currentPage === totalPages;
+        next.addEventListener("click", () => goTo(currentPage + 1));
+        pag.appendChild(next);
+      }
+
+      // ── 렌더링 ────────────────────────────────────────────────
+      function render() {
+        const filtered = getFiltered();
+        const total = filtered.length;
+        const start = (currentPage - 1) * PER_PAGE;
+        const pageItems = filtered.slice(start, start + PER_PAGE);
+
+        const list = document.getElementById("project-list");
+        const countEl = document.getElementById("project-count");
+        const emptyEl = document.getElementById("empty-state");
+
+        list.innerHTML = "";
+        emptyEl.style.display = total === 0 ? "block" : "none";
+        countEl.textContent = `${total} project${total !== 1 ? "s" : ""}`;
+
+        const obs = new IntersectionObserver(
+          (entries) =>
+            entries.forEach((e) => {
+              if (e.isIntersecting) e.target.classList.add("visible");
+            }),
+          { threshold: 0.08 },
+        );
+
+        pageItems.forEach((p) => {
+          const el = createCard(p);
+          list.appendChild(el);
+          obs.observe(el);
+        });
+
+        renderPagination(total);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // ── 페이지 이동 ───────────────────────────────────────────
+      function goTo(page) {
+        currentPage = page;
+        render();
+      }
+
+      // ── 필터 이벤트 ───────────────────────────────────────────
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
-          btns.forEach((b) => b.classList.remove("active"));
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
           btn.classList.add("active");
-          const filter = btn.dataset.filter;
-          let visible = 0;
-          cards.forEach((card) => {
-            const match = filter === "all" || card.dataset.tag === filter;
-            card.style.display = match ? "block" : "none";
-            if (match) visible++;
-          });
-          countEl.textContent = `${visible} project${visible !== 1 ? "s" : ""}`;
-          emptyEl.style.display = visible === 0 ? "block" : "none";
+          currentFilter = btn.dataset.filter;
+          currentPage = 1;
+          render();
         });
       });
+
+      // ── 초기 렌더링 ───────────────────────────────────────────
+      render();
     </script>
   </body>
 </html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blog — your.name</title>
+    <title>Fortune Garden — your.name</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Pretendard:wght@300;400;500&display=swap"
@@ -49,7 +49,7 @@
         padding: 0 2rem;
       }
 
-      /* NAV */
+      /* ── NAV ── */
       nav {
         position: fixed;
         top: 0;
@@ -77,26 +77,22 @@
         text-decoration: none;
         letter-spacing: -0.02em;
       }
-      .nav-links {
-        display: flex;
-        gap: 2rem;
-        list-style: none;
-      }
-      .nav-links a {
+      .nav-back {
         font-family: var(--font-mono);
         font-size: 0.78rem;
         color: var(--ink-muted);
         text-decoration: none;
         letter-spacing: 0.04em;
-        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
         transition: color 0.2s;
       }
-      .nav-links a:hover,
-      .nav-links a.active {
+      .nav-back:hover {
         color: var(--accent);
       }
 
-      /* HEADER */
+      /* ── PAGE HEADER ── */
       .page-header {
         padding: 120px 0 56px;
         border-bottom: 1px solid var(--rule);
@@ -109,23 +105,67 @@
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--accent);
-        margin-bottom: 1rem;
+        margin-bottom: 0.6rem;
       }
       .page-title {
         font-family: var(--font-serif);
         font-size: clamp(2.2rem, 5vw, 3.2rem);
         letter-spacing: -0.02em;
         line-height: 1.1;
+        margin-bottom: 0.5rem;
+      }
+      .page-sub {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 1rem;
+        color: var(--accent);
         margin-bottom: 1rem;
       }
       .page-desc {
         font-size: 0.97rem;
         color: var(--ink-muted);
-        max-width: 420px;
+        max-width: 480px;
         line-height: 1.75;
       }
+      .page-meta {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--rule);
+      }
+      .meta-item {
+      }
+      .meta-label {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        margin-bottom: 0.25rem;
+      }
+      .meta-val {
+        font-size: 0.88rem;
+        color: var(--ink);
+      }
+      .stack-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin-top: 0.25rem;
+      }
+      .stack-chip {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        padding: 0.15rem 0.5rem;
+        border: 1px solid var(--rule);
+        border-radius: 2px;
+        color: var(--ink-muted);
+        background: var(--bg);
+      }
 
-      /* FILTER TABS */
+      /* ── FILTER TABS ── */
       .filter-bar {
         display: flex;
         gap: 0.5rem;
@@ -157,7 +197,7 @@
         color: var(--bg);
       }
 
-      /* POST LIST */
+      /* ── POST LIST ── */
       .post-section {
         padding: 3rem 0 5rem;
       }
@@ -186,8 +226,7 @@
         transform: translateY(16px);
         transition:
           opacity 0.45s ease,
-          transform 0.45s ease,
-          color 0.2s;
+          transform 0.45s ease;
       }
       .post-item.visible {
         opacity: 1;
@@ -195,9 +234,6 @@
       }
       .post-item:last-child {
         border-bottom: none;
-      }
-      .post-item:hover {
-        opacity: 0.75;
       }
       .post-item:hover .post-title {
         color: var(--accent);
@@ -241,41 +277,17 @@
         white-space: nowrap;
         letter-spacing: 0.03em;
       }
-      .post-read {
-        font-family: var(--font-mono);
-        font-size: 0.65rem;
-        color: var(--rule);
-        letter-spacing: 0.04em;
-      }
 
-      /* EMPTY STATE */
+      /* ── EMPTY ── */
       .empty-state {
         padding: 3rem 0;
         font-family: var(--font-mono);
         font-size: 0.8rem;
         color: var(--ink-muted);
-        letter-spacing: 0.04em;
         display: none;
       }
 
-      /* FOOTER */
-      footer {
-        border-top: 1px solid var(--rule);
-        padding: 2rem;
-      }
-      footer .container {
-        display: flex;
-        justify-content: space-between;
-      }
-      .footer-copy,
-      .footer-made {
-        font-family: var(--font-mono);
-        font-size: 0.72rem;
-        color: var(--ink-muted);
-        letter-spacing: 0.03em;
-      }
-
-      /* PAGINATION */
+      /* ── PAGINATION ── */
       .pagination {
         display: flex;
         align-items: center;
@@ -316,6 +328,24 @@
       .page-arrow {
         font-size: 0.85rem;
       }
+
+      /* ── FOOTER ── */
+      footer {
+        border-top: 1px solid var(--rule);
+        padding: 2rem;
+      }
+      footer .container {
+        display: flex;
+        justify-content: space-between;
+      }
+      .footer-copy,
+      .footer-made {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--ink-muted);
+        letter-spacing: 0.03em;
+      }
+
       @keyframes fadeUp {
         from {
           opacity: 0;
@@ -328,9 +358,7 @@
       }
 
       @media (max-width: 600px) {
-        .container {
-          padding: 0 1.2rem;
-        }
+        .container,
         nav .inner {
           padding: 0 1.2rem;
         }
@@ -342,40 +370,66 @@
           flex-direction: row;
           align-items: center;
         }
+        .page-meta {
+          gap: 1rem;
+        }
       }
     </style>
   </head>
   <body>
     <nav>
       <div class="inner">
-        <a class="nav-logo" href="../index.html">your.name</a>
-        <ul class="nav-links">
-          <li><a href="../index.html#about">About</a></li>
-          <li><a href="../index.html#projects">Projects</a></li>
-          <li><a href="index.html" class="active">Blog</a></li>
-          <li><a href="../index.html#contact">Contact</a></li>
-        </ul>
+        <a class="nav-logo" href="../../index.html">your.name</a>
+        <a class="nav-back" href="../fortune_garden/index.html"
+          >← 프로젝트 목록</a
+        >
       </div>
     </nav>
 
     <header class="page-header">
       <div class="container">
-        <p class="page-label">Writing</p>
-        <h1 class="page-title">Blog</h1>
-        <p class="page-desc">배운 것, 만든 것, 겪은 것을 기록합니다.</p>
+        <p class="page-label">Project</p>
+        <h1 class="page-title">Fortune Garden</h1>
+        <p class="page-sub">포춘 가든 — Flutter 기반 2인 가구용 가계부</p>
+        <p class="page-desc">
+          CSV 파일 가져오기 + 수동 입력 방식으로 여러 금융기관 데이터를
+          로컬에서만 처리하는 프라이버시 중심 가계부 앱의 설계·구현 기록입니다.
+        </p>
+        <div class="page-meta">
+          <div class="meta-item">
+            <p class="meta-label">플랫폼</p>
+            <p class="meta-val">Windows 10/11 · Android 8.0+</p>
+          </div>
+          <div class="meta-item">
+            <p class="meta-label">스택</p>
+            <div class="stack-chips">
+              <span class="stack-chip">Flutter</span>
+              <span class="stack-chip">Dart</span>
+              <span class="stack-chip">SQLite</span>
+              <span class="stack-chip">Drift ORM</span>
+              <span class="stack-chip">Riverpod</span>
+            </div>
+          </div>
+          <div class="meta-item">
+            <p class="meta-label">상태</p>
+            <p class="meta-val">진행 중</p>
+          </div>
+        </div>
         <div class="filter-bar">
           <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="React">React</button>
-          <button class="filter-btn" data-filter="Python">Python</button>
-          <button class="filter-btn" data-filter="DevOps">DevOps</button>
-          <button class="filter-btn" data-filter="회고">회고</button>
+          <button class="filter-btn" data-filter="기획">기획</button>
+          <button class="filter-btn" data-filter="설계">설계</button>
+          <button class="filter-btn" data-filter="구현">구현</button>
+          <button class="filter-btn" data-filter="트러블슈팅">
+            트러블슈팅
+          </button>
         </div>
       </div>
     </header>
 
     <main class="post-section">
       <div class="container">
-        <p class="post-count" id="post-count">4 posts</p>
+        <p class="post-count" id="post-count"></p>
         <div class="post-list" id="post-list"></div>
         <p class="empty-state" id="empty-state">
           해당 카테고리의 글이 없습니다.
@@ -394,95 +448,98 @@
     <script>
       // ── 포스트 데이터 ──────────────────────────────────────────
       // 새 포스트 추가 시 이 배열에만 항목을 추가하면 됩니다.
-      // date: "YYYY.MM.DD" 형식 (최신순 자동 정렬)
+      // tag: "기획" | "설계" | "구현" | "트러블슈팅"
       const POSTS = [
         {
-          href: "react_01_web_fundamentals.html",
-          tag: "React",
-          title: "React 01. 웹의 동작 원리",
+          href: "fortune_garden_01_req_specification.html",
+          tag: "기획",
+          title: "01. 요구사항 정의서",
           excerpt:
-            "클라이언트-서버 구조부터 HTML·CSS·JS의 역할, 3계층 아키텍처까지 웹이 어떻게 동작하는지 정리합니다.",
+            "여러 금융기관 계좌를 간편인증으로 연결하는 2인 가구용 가계부의 기능 요구사항 50여 개를 인증·동기화·리포트·보안 등 9개 영역에 걸쳐 정의합니다.",
+          date: "2026.03.07",
+        },
+        {
+          href: "fortune_garden_02_SAD.html",
+          tag: "설계",
+          title: "02. 시스템 아키텍처 설계서 (SAD)",
+          excerpt:
+            "Flutter UI → UseCase → Repository → SQLite로 이어지는 계층 구조, 데이터 흐름, 보안 모델, 주요 기술 결정(ADR)을 명세합니다.",
           date: "2026.03.08",
         },
         {
-          href: "react_02_html_01.html",
-          tag: "React",
-          title: "React 02. HTML 기초 01",
+          href: "fortune_garden_03_DB_ERD.html",
+          tag: "설계",
+          title: "03. DB 설계 ERD",
           excerpt:
-            "HTML 기초에 대한 내용입니다. HTML의 정의와 HTML의 기본 구조 및 HTML의 주요 태그, 인라인 요소 / 블록레벨 요소에 대해서 살펴봅니다.",
-          date: "2026.03.09",
+            "SQLite 데이터베이스 전체 스키마를 Entity-Relationship 관점에서 정의합니다. 9개 테이블의 컬럼 명세, 관계(Cardinality), 인덱스 전략을 포함합니다.",
+          date: "2026.03.08",
         },
         {
-          href: "react_03_html_02.html",
-          tag: "React",
-          title: "React 03. HTML 기초 02",
-          excerpt: "Form 요소에 대한 기초적인 내용을 정리했습니다.",
-          date: "2026.03.10",
-        },
-        {
-          href: "react_04_css_01.html",
-          tag: "React",
-          title: "React 04. CSS 기초 01",
-          excerpt: "CSS 요소에 대한 기초적인 내용을 정리했습니다.",
+          href: "fortune_garden_04_dev_setup.html",
+          tag: "구현",
+          title: "04. 개발 환경 설정",
+          excerpt:
+            "Windows 기준 Flutter SDK 설치부터 Android Studio, VS Code 확장, GitHub 브랜치 전략, 첫 빌드 확인까지 전체 환경 설정 가이드입니다.",
           date: "2026.03.12",
         },
         {
-          href: "react_05_css_02.html",
-          tag: "React",
-          title: "React 05. CSS 기초 02",
+          href: "fortune_garden_05_drift_orm_spec.html",
+          tag: "구현",
+          title: "05. Drift ORM DB 스키마 구현 명세서",
           excerpt:
-            "박스 모델의 4가지 레이어를 이해하고, Flexbox로 레이아웃을 자유롭게 제어하는 방법을 정리합니다.",
-          date: "2026.03.13",
+            "ERD v1.0의 8개 테이블을 Dart 클래스로 변환한 결과물과 인덱스 구현, 핵심 쿼리, Seed 데이터, 기술 결정 사항을 기록합니다.",
+          date: "2026.03.12",
         },
         {
-          href: "react_06_css_03.html",
-          tag: "React",
-          title: "React 06. CSS 기초 03",
+          href: "fortune_garden_06_drift_orm_troubleshooting.html",
+          tag: "트러블슈팅",
+          title: "06. Drift ORM 구현 트러블슈팅",
           excerpt:
-            "반응형 웹은 하나의 HTML로 모바일·태블릿·데스크탑을 모두 커버하는 방법입니다. 뷰포트 메타 태그, 유동적 단위, 미디어 쿼리 — 반응형 웹의 3가지 핵심을 정리합니다.",
+            "Drift ORM 스키마 구현 중 발생한 오류와 해결 과정을 기록합니다. 동일 오류 재발 방지 및 유사 프로젝트 참조를 목적으로 원인·수정·방지 원칙을 명세합니다.",
           date: "2026.03.15",
         },
         {
-          href: "react_07_css_04.html",
-          tag: "React",
-          title: "React 07. CSS 기초 04",
+          href: "fortune_garden_07_drift_orm_2.html",
+          tag: "구현",
+          title: "07. Drift ORM 구현 작업일지 — Data Layer v1.1",
           excerpt:
-            "Tailwind는 별도의 .css 파일 없이 HTML class 속성에 단어만 적으면 디자인이 완성되는 유틸리티 퍼스트 CSS 프레임워크입니다.",
+            "CSV 가져오기 방식 전환에 따른 스키마 변경, 신규 테이블 추가, 쿼리 확장, 발생 오류 및 해결 내역을 포함한 Data Layer 재구성 작업 기록입니다.",
           date: "2026.03.16",
         },
         {
-          href: "react_08_javascript_01.html",
-          tag: "React",
-          title: "React 08. JavaScript 기초 01",
-          excerpt: "JavaScript의 기본적인 사용 방법에 대해 정리했습니다.",
+          href: "fortune_garden_08_app_initializer.html",
+          tag: "구현",
+          title: "08. 앱 초기화 구조 설계 작업일지",
+          excerpt:
+            "main.dart를 단순하게 유지하면서 앱 시작 시 Seed Data를 안전하게 삽입하는 구조를 설계한 작업 기록입니다. main · app · app_initializer 역할 분리를 담았습니다.",
           date: "2026.03.17",
         },
         {
-          href: "react_09_javascript_02.html",
-          tag: "React",
-          title: "React 09. JavaScript 기초 02",
+          href: "fortune_garden_09_repository_usecase.html",
+          tag: "구현",
+          title: "09. Repository & UseCase 구현 작업일지",
           excerpt:
-            "JavaScript에서 데이터를 다루는 기본 단위인 변수의 종류, 스코프, 그리고 올바른 네이밍 규칙을 정리했습니다.",
+            "SAD v1.1 기반으로 Application Layer와 Data Layer 전체 구현 코드를 작성한 기록입니다. 7개 UseCase와 Repository 패턴 구현을 포함합니다.",
           date: "2026.03.18",
         },
         {
-          href: "react_10_javascript_03.html",
-          tag: "React",
-          title: "React 10. JavaScript 기초 03",
+          href: "fortune_garden_10_presentation_layer_csv_import.html",
+          tag: "구현",
+          title: "10. Presentation Layer / CSV Import 플로우 작업일지",
           excerpt:
-            "JavaScript의 자료형(Data Type)인 원시형(Primitive Type)과 참조형(Reference Type)의 특성과 차이를 살펴보았습니다.",
+            "Presentation Layer 전체 구현 및 CSV Import 핵심 플로우 완성 기록입니다. EUC-KR 인코딩, 임시 계좌 Seed, import_screen 개선을 포함합니다.",
           date: "2026.03.19",
         },
       ];
 
       // ── 설정 ───────────────────────────────────────────────────
-      const PER_PAGE = 6;
+      const PER_PAGE = 10;
 
       // ── 상태 ───────────────────────────────────────────────────
       let currentFilter = "all";
       let currentPage = 1;
 
-      // ── 날짜 파싱 (YYYY.MM.DD → Date) ─────────────────────────
+      // ── 날짜 파싱 ──────────────────────────────────────────────
       function parseDate(str) {
         const [y, m, d] = str.split(".").map(Number);
         return new Date(y, m - 1, d);
@@ -513,14 +570,13 @@
         return a;
       }
 
-      // ── 페이지네이션 버튼 생성 ─────────────────────────────────
+      // ── 페이지네이션 렌더 ──────────────────────────────────────
       function renderPagination(total) {
         const pag = document.getElementById("pagination");
         pag.innerHTML = "";
         const totalPages = Math.ceil(total / PER_PAGE);
         if (totalPages <= 1) return;
 
-        // 이전 버튼
         const prev = document.createElement("button");
         prev.className = "page-btn page-arrow";
         prev.textContent = "←";
@@ -528,7 +584,6 @@
         prev.addEventListener("click", () => goTo(currentPage - 1));
         pag.appendChild(prev);
 
-        // 페이지 번호 버튼
         for (let i = 1; i <= totalPages; i++) {
           const btn = document.createElement("button");
           btn.className = "page-btn" + (i === currentPage ? " active" : "");
@@ -537,7 +592,6 @@
           pag.appendChild(btn);
         }
 
-        // 다음 버튼
         const next = document.createElement("button");
         next.className = "page-btn page-arrow";
         next.textContent = "→";
@@ -561,7 +615,6 @@
         emptyEl.style.display = total === 0 ? "block" : "none";
         countEl.textContent = `${total} post${total !== 1 ? "s" : ""}`;
 
-        // Intersection Observer (스크롤 reveal)
         const obs = new IntersectionObserver(
           (entries) =>
             entries.forEach((e) => {
@@ -586,7 +639,7 @@
         render();
       }
 
-      // ── 필터 버튼 이벤트 ───────────────────────────────────────
+      // ── 필터 이벤트 ───────────────────────────────────────────
       document.querySelectorAll(".filter-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
           document
