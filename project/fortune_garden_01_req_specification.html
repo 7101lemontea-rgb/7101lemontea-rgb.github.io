@@ -19,7 +19,7 @@
       </div>
     </nav>
 
-    <div class="page-wrap">
+    <div class="container">
       <!-- HEADER -->
       <header class="post-header">
         <div class="header-meta">
@@ -55,24 +55,27 @@
         </div>
       </header>
 
-      <div class="content-grid">
+      </div><!-- /container -->
+    <div class="main-wrapper">
         <!-- TOC -->
         <aside class="toc-sidebar">
-          <p class="toc-title">목차</p>
-          <ul class="toc-list">
-            <li><a href="#s1">1. 프로젝트 개요</a></li>
-            <li><a href="#s2">2. 이해관계자 및 사용자</a></li>
-            <li><a href="#s3">3. 기능 요구사항</a></li>
-            <li><a href="#s4">4. 비기능 요구사항</a></li>
-            <li><a href="#s5">5. 시스템 아키텍처</a></li>
-            <li><a href="#s6">6. 화면 정의</a></li>
-            <li><a href="#s7">7. 제약사항 및 가정</a></li>
-            <li><a href="#s8">8. 변경 이력</a></li>
-          </ul>
+          <div class="toc-sticky">
+            <p class="toc-title">목차</p>
+            <ul class="toc-list">
+              <li><a href="#s1"><span class="toc-num">01</span>프로젝트 개요</a></li>
+              <li><a href="#s2"><span class="toc-num">02</span>이해관계자 및 사용자</a></li>
+              <li><a href="#s3"><span class="toc-num">03</span>기능 요구사항</a></li>
+              <li><a href="#s4"><span class="toc-num">04</span>비기능 요구사항</a></li>
+              <li><a href="#s5"><span class="toc-num">05</span>시스템 아키텍처</a></li>
+              <li><a href="#s6"><span class="toc-num">06</span>화면 정의</a></li>
+              <li><a href="#s7"><span class="toc-num">07</span>제약사항 및 가정</a></li>
+              <li><a href="#s8"><span class="toc-num">08</span>변경 이력</a></li>
+            </ul>
+          </div>
         </aside>
 
         <!-- ARTICLE -->
-        <article class="article">
+        <article class="post-body">
 
           <!-- 1 -->
           <section class="section" id="s1">
@@ -857,8 +860,7 @@
             <span class="footer-copy">© 2026 정서영</span>
           </div>
         </article>
-      </div>
-    </div>
+    </div><!-- /main-wrapper -->
 
     <script src="../script.js"></script>
   </body>

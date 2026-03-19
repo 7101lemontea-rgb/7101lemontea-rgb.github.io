@@ -19,7 +19,7 @@
       </div>
     </nav>
 
-    <div class="page-wrap">
+    <div class="container">
       <!-- HEADER -->
       <header class="post-header">
         <div class="header-meta">
@@ -54,28 +54,30 @@
           </div>
         </div>
       </header>
-
-      <div class="content-grid">
+      </div><!-- /container -->
+      <div class="main-wrapper">
         <!-- TOC -->
-        <aside class="toc-sidebar">
-          <p class="toc-title">목차</p>
-          <ul class="toc-list">
-            <li><a href="#s1">1. 문서 개요</a></li>
-            <li><a href="#s2">2. 아키텍처 원칙 및 목표</a></li>
-            <li><a href="#s3">3. 전체 시스템 구조</a></li>
-            <li><a href="#s4">4. 계층별 상세 설계</a></li>
-            <li><a href="#s5">5. 주요 데이터 흐름</a></li>
-            <li><a href="#s6">6. 보안 아키텍처</a></li>
-            <li><a href="#s7">7. 기술 스택 및 패키지</a></li>
-            <li><a href="#s8">8. 배포 및 빌드 구조</a></li>
-            <li><a href="#s9">9. 비기능 요구사항 대응</a></li>
-            <li><a href="#s10">10. 아키텍처 결정 기록</a></li>
-            <li><a href="#s11">11. 문서 변경 이력</a></li>
-          </ul>
+                <aside class="toc-sidebar">
+          <div class="toc-sticky">
+            <p class="toc-title">목차</p>
+            <ul class="toc-list">
+              <li><a href="#s1"><span class="toc-num">01</span>문서 개요</a></li>
+              <li><a href="#s2"><span class="toc-num">02</span>아키텍처 원칙 및 목표</a></li>
+              <li><a href="#s3"><span class="toc-num">03</span>전체 시스템 구조</a></li>
+              <li><a href="#s4"><span class="toc-num">04</span>계층별 상세 설계</a></li>
+              <li><a href="#s5"><span class="toc-num">05</span>주요 데이터 흐름</a></li>
+              <li><a href="#s6"><span class="toc-num">06</span>보안 아키텍처</a></li>
+              <li><a href="#s7"><span class="toc-num">07</span>기술 스택 및 패키지</a></li>
+              <li><a href="#s8"><span class="toc-num">08</span>배포 및 빌드 구조</a></li>
+              <li><a href="#s9"><span class="toc-num">09</span>비기능 요구사항 대응</a></li>
+              <li><a href="#s10"><span class="toc-num">10</span>아키텍처 결정 기록</a></li>
+              <li><a href="#s11"><span class="toc-num">11</span>문서 변경 이력</a></li>
+            </ul>
+          </div>
         </aside>
 
         <!-- ARTICLE -->
-        <article>
+        <article class="post-body">
 
           <!-- 1 -->
           <section class="section" id="s1">
@@ -629,8 +631,7 @@
             <span class="footer-copy">© 2026 정서영</span>
           </div>
         </article>
-      </div>
-    </div>
+    </div><!-- /main-wrapper -->
 
     <script src="../script.js"></script>
   </body>

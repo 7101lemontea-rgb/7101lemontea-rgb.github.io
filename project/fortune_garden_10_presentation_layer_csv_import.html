@@ -31,7 +31,7 @@
     </nav>
 
     <!-- ── POST HEADER ── -->
-    <div class="page-wrap">
+    <div class="container">
       <header class="post-header">
         <div class="header-meta">
           <span class="badge badge-type">작업 일지</span>
@@ -74,33 +74,32 @@
     </div>
 
     <!-- ── CONTENT GRID ── -->
-    <div class="page-wrap">
-      <div class="content-grid">
+    </div><!-- /container -->
+    <div class="main-wrapper">
         <!-- ── TOC SIDEBAR ── -->
-        <aside class="toc-sidebar">
-          <p class="toc-title">목차</p>
-          <ul class="toc-list">
-            <li><a href="#sec-overview">1. 작업 개요</a></li>
-            <li><a href="#sec-files">2. 전체 파일 구조</a></li>
-            <li><a href="#sec-presentation">3. Presentation Layer</a></li>
-            <li><a href="#sec-3-1">· 3.1 app_providers.dart</a></li>
-            <li><a href="#sec-3-2">· 3.2 app_router.dart</a></li>
-            <li><a href="#sec-3-3">· 3.3 app_shell.dart</a></li>
-            <li><a href="#sec-3-4">· 3.4 app.dart 교체</a></li>
-            <li><a href="#sec-csv">4. CSV 가져오기 핵심 플로우</a></li>
-            <li><a href="#sec-4-1">· 4.1 seed_dev_data.dart</a></li>
-            <li><a href="#sec-4-2">· 4.2 app_initializer.dart</a></li>
-            <li><a href="#sec-4-3">· 4.3 csv_parser_use_case.dart</a></li>
-            <li><a href="#sec-4-4">· 4.4 import_screen.dart</a></li>
-            <li><a href="#sec-errors">5. 발생한 오류 및 해결 내역</a></li>
-            <li><a href="#sec-packages">6. 패키지 변경 이력</a></li>
-            <li><a href="#sec-progress">7. 전체 프로젝트 진행 현황</a></li>
-            <li><a href="#sec-changelog">8. 문서 변경 이력</a></li>
-          </ul>
+                <aside class="toc-sidebar">
+          <div class="toc-sticky">
+            <p class="toc-title">목차</p>
+            <ul class="toc-list">
+              <li><a href="#sec-overview"><span class="toc-num">01</span>작업 개요</a></li>
+              <li><a href="#sec-files"><span class="toc-num">02</span>전체 파일 구조</a></li>
+              <li><a href="#sec-presentation"><span class="toc-num">03</span>Presentation Layer</a></li>
+              <li><a href="#sec-3-1"><span class="toc-num">3.1</span>app_providers.dart</a></li>
+              <li><a href="#sec-3-2"><span class="toc-num">3.2</span>app_router.dart</a></li>
+              <li><a href="#sec-3-3"><span class="toc-num">3.3</span>app_shell.dart</a></li>
+              <li><a href="#sec-3-4"><span class="toc-num">3.4</span>app.dart 교체</a></li>
+              <li><a href="#sec-csv"><span class="toc-num">04</span>CSV 가져오기 핵심 플로우</a></li>
+              <li><a href="#sec-4-1"><span class="toc-num">4.1</span>seed_dev_data.dart</a></li>
+              <li><a href="#sec-4-2"><span class="toc-num">4.2</span>app_initializer.dart</a></li>
+              <li><a href="#sec-4-3"><span class="toc-num">4.3</span>csv_import_screen.dart</a></li>
+              <li><a href="#sec-4-4"><span class="toc-num">4.4</span>import_history_screen.dart</a></li>
+              <li><a href="#sec-5"><span class="toc-num">05</span>문서 변경 이력</a></li>
+            </ul>
+          </div>
         </aside>
 
         <!-- ── MAIN CONTENT ── -->
-        <article>
+        <article class="post-body">
           <!-- ── 1. 작업 개요 ── -->
           <section class="section" id="sec-overview">
             <p class="sec-eyebrow">01</p>

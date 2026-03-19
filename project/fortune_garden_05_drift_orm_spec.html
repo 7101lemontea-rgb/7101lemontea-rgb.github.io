@@ -26,7 +26,7 @@
     </nav>
 
     <!-- POST HEADER -->
-    <div class="page-wrap">
+    <div class="container">
       <header class="post-header">
         <div class="header-meta">
           <span class="badge badge-type">DOIS</span>
@@ -64,28 +64,30 @@
     </div>
 
     <!-- CONTENT GRID -->
-    <div class="page-wrap">
-      <div class="content-grid">
+    </div><!-- /container -->
+    <div class="main-wrapper">
         <!-- TOC SIDEBAR -->
-        <aside class="toc-sidebar">
-          <div class="toc-title">목차</div>
-          <ul class="toc-list">
-            <li><a href="#section-1">1. 문서 개요</a></li>
-            <li><a href="#section-2">2. 구현 파일 구조</a></li>
-            <li><a href="#section-3">3. 테이블 구현 명세</a></li>
-            <li><a href="#section-31">3.1 테이블 목록</a></li>
-            <li><a href="#section-32">3.2 컬럼 명세</a></li>
-            <li><a href="#section-4">4. 인덱스 구현 전략</a></li>
-            <li><a href="#section-5">5. 핵심 쿼리 구현</a></li>
-            <li><a href="#section-6">6. 기본 데이터 (Seed)</a></li>
-            <li><a href="#section-7">7. 설치 및 실행 가이드</a></li>
-            <li><a href="#section-8">8. 기술 결정 사항</a></li>
-            <li><a href="#section-9">9. 문서 변경 이력</a></li>
-          </ul>
+                <aside class="toc-sidebar">
+          <div class="toc-sticky">
+            <p class="toc-title">목차</p>
+            <ul class="toc-list">
+              <li><a href="#section-1"><span class="toc-num">01</span>문서 개요</a></li>
+              <li><a href="#section-2"><span class="toc-num">02</span>구현 파일 구조</a></li>
+              <li><a href="#section-3"><span class="toc-num">03</span>테이블 구현 명세</a></li>
+              <li><a href="#section-31"><span class="toc-num">3.1</span>테이블 목록</a></li>
+              <li><a href="#section-32"><span class="toc-num">3.2</span>컬럼 명세</a></li>
+              <li><a href="#section-4"><span class="toc-num">04</span>인덱스 구현 전략</a></li>
+              <li><a href="#section-5"><span class="toc-num">05</span>핵심 쿼리 구현</a></li>
+              <li><a href="#section-6"><span class="toc-num">06</span>기본 데이터 (Seed)</a></li>
+              <li><a href="#section-7"><span class="toc-num">07</span>설치 및 실행 가이드</a></li>
+              <li><a href="#section-8"><span class="toc-num">08</span>기술 결정 사항</a></li>
+              <li><a href="#section-9"><span class="toc-num">09</span>문서 변경 이력</a></li>
+            </ul>
+          </div>
         </aside>
 
         <!-- MAIN ARTICLE -->
-        <article>
+        <article class="post-body">
           <!-- ══ 1. 문서 개요 ══ -->
           <section class="section" id="section-1">
             <div class="sec-eyebrow">Section 01</div>
@@ -1579,10 +1581,8 @@ dart run build_runner watch --delete-conflicting-outputs</pre>
             <span class="footer-copy">© 2026 Fortune Garden</span>
           </footer>
         </article>
-      </div>
-      <!-- /.content-grid -->
-    </div>
-    <!-- /.page-wrap -->
+    </div><!-- /main-wrapper -->
+    
 
     <script src="../script.js"></script>
   </body>

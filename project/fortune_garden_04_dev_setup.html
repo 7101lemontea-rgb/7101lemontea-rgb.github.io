@@ -43,7 +43,7 @@
     </nav>
 
     <!-- POST HEADER -->
-    <div class="page-wrap">
+    <div class="container">
       <header class="post-header">
         <div class="header-meta">
           <span class="badge badge-type">Dev Setup</span>
@@ -68,16 +68,8 @@
             <p class="stat-val" id="date-updated">불러오는 중...</p>
           </div>
           <div>
-            <div class="stat-label">Platform</div>
-            <div class="stat-val">Windows 10 / 11</div>
-          </div>
-          <div>
             <div class="stat-label">Framework</div>
             <div class="stat-val">Flutter (Dart)</div>
-          </div>
-          <div>
-            <div class="stat-label">Architecture</div>
-            <div class="stat-val">Clean Architecture + Riverpod</div>
           </div>
           <div>
             <div class="stat-label">Target</div>
@@ -88,34 +80,31 @@
     </div>
 
     <!-- CONTENT GRID -->
-    <div class="page-wrap">
-      <div class="content-grid">
+    </div><!-- /container -->
+    <div class="main-wrapper">
         <!-- TOC SIDEBAR -->
-        <aside class="toc-sidebar">
-          <div class="toc-title">목차</div>
-          <ul class="toc-list">
-            <li><a href="#step1">1단계. 기본 환경 설정</a></li>
-            <li><a href="#flutter-sdk">① Flutter SDK 설치</a></li>
-            <li><a href="#env-path">※ 환경 변수 순서</a></li>
-            <li><a href="#visual-studio">② Visual Studio</a></li>
-            <li><a href="#android-studio">③ Android Studio</a></li>
-            <li><a href="#vscode-ext">④ VS Code 확장</a></li>
-            <li><a href="#step2">2단계. 프로젝트 생성</a></li>
-            <li><a href="#create-project">① 프로젝트 생성</a></li>
-            <li><a href="#pubspec">② pubspec.yaml</a></li>
-            <li><a href="#folder-structure">③ 폴더 구조</a></li>
-            <li><a href="#step3">3단계. GitHub 설정</a></li>
-            <li><a href="#gitignore">① .gitignore</a></li>
-            <li><a href="#remote">② 원격 저장소</a></li>
-            <li><a href="#branch">③ 브랜치 전략</a></li>
-            <li><a href="#feature-branch">다음 단계</a></li>
-            <li><a href="#step4">4단계. 빌드 확인</a></li>
-            <li><a href="#checklist">완료 체크리스트</a></li>
-          </ul>
+                <aside class="toc-sidebar">
+          <div class="toc-sticky">
+            <p class="toc-title">목차</p>
+            <ul class="toc-list">
+              <li><a href="#step1"><span class="toc-num">1단계</span>기본 환경 설정</a></li>
+              <li><a href="#flutter-sdk"><span class="toc-num">①</span>Flutter SDK 설치</a></li>
+              <li><a href="#env-path"><span class="toc-num">※</span>환경 변수 순서</a></li>
+              <li><a href="#visual-studio"><span class="toc-num">②</span>Visual Studio</a></li>
+              <li><a href="#android-studio"><span class="toc-num">③</span>Android Studio</a></li>
+              <li><a href="#vscode-ext"><span class="toc-num">④</span>VS Code 확장</a></li>
+              <li><a href="#step2"><span class="toc-num">2단계</span>프로젝트 생성</a></li>
+              <li><a href="#create-project"><span class="toc-num">①</span>프로젝트 생성</a></li>
+              <li><a href="#pubspec"><span class="toc-num">②</span>pubspec.yaml</a></li>
+              <li><a href="#folder-structure"><span class="toc-num">③</span>폴더 구조</a></li>
+              <li><a href="#step3"><span class="toc-num">3단계</span>GitHub 설정</a></li>
+              <li><a href="#gitignore"><span class="toc-num">①</span>.gitignore</a></li>
+            </ul>
+          </div>
         </aside>
 
         <!-- MAIN ARTICLE -->
-        <article>
+        <article class="post-body">
           <!-- ══════════════════ 1단계 ══════════════════ -->
           <section class="section" id="step1">
             <div class="sec-eyebrow">Step 01</div>
@@ -691,10 +680,8 @@ dart run build_runner build --delete-conflicting-outputs</pre>
             <span class="footer-copy">© 2026 Fortune Garden</span>
           </footer>
         </article>
-      </div>
-      <!-- /.content-grid -->
-    </div>
-    <!-- /.page-wrap -->
+    </div><!-- /main-wrapper -->
+    
 
     <script src="/script.js"></script>
   </body>

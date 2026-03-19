@@ -26,7 +26,7 @@
     </nav>
 
     <!-- POST HEADER -->
-    <div class="page-wrap">
+    <div class="container">
       <header class="post-header">
         <div class="header-meta">
           <span class="badge badge-type">TSL</span>
@@ -58,43 +58,40 @@
             <div class="stat-label">참조 문서</div>
             <div class="stat-val">DOIS v1.0</div>
           </div>
-          <div>
-            <div class="stat-label">작성자</div>
-            <div class="stat-val">정서영 (Claude 보조)</div>
-          </div>
         </div>
       </header>
     </div>
 
     <!-- CONTENT GRID -->
-    <div class="page-wrap">
-      <div class="content-grid">
+    </div><!-- /container -->
+    <div class="main-wrapper">
         <!-- TOC SIDEBAR -->
-        <aside class="toc-sidebar">
-          <div class="toc-title">목차</div>
-          <ul class="toc-list">
-            <li><a href="#section-1">1. 문서 개요</a></li>
-            <li><a href="#section-2">2. TS-01</a></li>
-            <li><a href="#section-21">2.1 오류 정보</a></li>
-            <li><a href="#section-22">2.2 오류 메시지</a></li>
-            <li><a href="#section-23">2.3 원인 분석</a></li>
-            <li><a href="#section-24">2.4 해결 방법</a></li>
-            <li><a href="#section-25">2.5 변경 범위</a></li>
-            <li><a href="#section-26">2.6 idx_txn_hash 처리</a></li>
-            <li><a href="#section-27">2.7 테이블 선언 순서</a></li>
-            <li><a href="#section-3">3. TS-02</a></li>
-            <li><a href="#section-31">3.1 오류 정보</a></li>
-            <li><a href="#section-32">3.2 오류 메시지</a></li>
-            <li><a href="#section-33">3.3 원인 분석</a></li>
-            <li><a href="#section-34">3.4 해결 방법</a></li>
-            <li><a href="#section-35">3.5 import 구조</a></li>
-            <li><a href="#section-4">4. 재발 방지 원칙</a></li>
-            <li><a href="#section-5">5. 변경 이력</a></li>
-          </ul>
+                <aside class="toc-sidebar">
+          <div class="toc-sticky">
+            <p class="toc-title">목차</p>
+            <ul class="toc-list">
+              <li><a href="#section-1"><span class="toc-num">01</span>문서 개요</a></li>
+              <li><a href="#section-2"><span class="toc-num">02</span>TS-01</a></li>
+              <li><a href="#section-21"><span class="toc-num">2.1</span>오류 정보</a></li>
+              <li><a href="#section-22"><span class="toc-num">2.2</span>오류 메시지</a></li>
+              <li><a href="#section-23"><span class="toc-num">2.3</span>원인 분석</a></li>
+              <li><a href="#section-24"><span class="toc-num">2.4</span>해결 방법</a></li>
+              <li><a href="#section-25"><span class="toc-num">2.5</span>변경 범위</a></li>
+              <li><a href="#section-26"><span class="toc-num">2.6</span>idx_txn_hash 처리</a></li>
+              <li><a href="#section-27"><span class="toc-num">2.7</span>테이블 선언 순서</a></li>
+              <li><a href="#section-3"><span class="toc-num">03</span>TS-02</a></li>
+              <li><a href="#section-31"><span class="toc-num">3.1</span>오류 정보</a></li>
+              <li><a href="#section-32"><span class="toc-num">3.2</span>오류 메시지</a></li>
+              <li><a href="#section-33"><span class="toc-num">3.3</span>원인 분석</a></li>
+              <li><a href="#section-34"><span class="toc-num">3.4</span>해결 방법</a></li>
+              <li><a href="#section-35"><span class="toc-num">3.5</span>변경 범위</a></li>
+              <li><a href="#section-4"><span class="toc-num">04</span>문서 변경 이력</a></li>
+            </ul>
+          </div>
         </aside>
 
         <!-- MAIN ARTICLE -->
-        <article>
+        <article class="post-body">
           <!-- ══ 1. 문서 개요 ══ -->
           <section class="section" id="section-1">
             <div class="sec-eyebrow">Section 01</div>
@@ -717,10 +714,8 @@ TextColumn <span class="c-key">get</span> txnHash =&gt; text().unique()(); <span
             <span class="footer-copy">© 2026 Fortune Garden</span>
           </footer>
         </article>
-      </div>
-      <!-- /.content-grid -->
-    </div>
-    <!-- /.page-wrap -->
+    </div><!-- /main-wrapper -->
+    
 
     <script src="../script.js"></script>
   </body>

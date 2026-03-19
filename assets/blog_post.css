@@ -25,6 +25,8 @@
   --font-serif: "DM Serif Display", Georgia, serif;
   --font-mono: "DM Mono", "Courier New", monospace;
   --font-sans: "Pretendard", -apple-system, sans-serif;
+  /* project_post.css .page-wrap 기준: 컨텐츠 최대 너비 */
+  --content-width: 720px;
 }
 
 /* ── BASE ── */
@@ -54,13 +56,14 @@ nav {
 }
 
 nav .inner {
-  max-width: 760px;
+  max-width: 1080px;
   margin: 0 auto;
   padding: 0 2rem;
   height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  white-space: nowrap; /* 로고·백링크 줄바꿈 방지 */
 }
 
 .nav-logo {
@@ -89,25 +92,30 @@ nav .inner {
 
 /* ── LAYOUT ── */
 .container {
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: 860px; /* 본문 단독 사용 시 여유 있는 너비 */
+  margin: 0 auto 0 30%;
   padding: 0 2rem;
-  padding-left: 20rem;
 }
 
 .main-wrapper {
   display: flex;
   align-items: flex-start;
-  gap: 3rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 2rem;
+  gap: 2.5rem;
+  max-width: 1200px; /* TOC 250px + gap + 본문 ~ */
+  margin: 0 auto 0 10%;
+  padding: 0 5rem 0 2rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* 목차는 고정, 본문 영역만 오른쪽으로 */
+.main-wrapper > *:not(.toc-sidebar) {
+  margin-left: 3rem;
 }
 
 /* ── POST HEADER ── */
 .post-header {
   padding: 120px 0 56px;
-  border-bottom: 1px solid var(--rule);
+  /* border-bottom: 1px solid var(--rule); */
 }
 
 .post-meta {
@@ -152,7 +160,7 @@ nav .inner {
 .post-subtitle {
   font-size: 1rem;
   color: var(--ink-muted);
-  max-width: 720px;
+  max-width: var(--content-width); /* project_post.css 기준 통일 */
   line-height: 1.7;
   opacity: 0;
   animation: fadeUp 0.6s 0.2s ease forwards;
@@ -961,6 +969,12 @@ figure.post-figure figcaption {
 @media (max-width: 600px) {
   .figure-row {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1200px) {
+  .main-wrapper {
+    margin: 0 auto; /* 좁은 화면에서는 가운데 정렬로 복귀 */
   }
 }
 
