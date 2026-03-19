@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Presentation Layer · CSV 가져오기 플로우 작업 일지 — Fortune Garden
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/project_post.css" />
+    <style>
+      
+    </style>
+  </head>
+  <body>
+    <!-- ── NAV ── -->
+    <nav>
+      <div class="inner">
+        <a href="/" class="nav-logo">fortune-garden.dev</a>
+        <a href="/docs" class="nav-back">← 문서 목록</a>
+      </div>
+    </nav>
+
+    <!-- ── POST HEADER ── -->
+    <div class="page-wrap">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">작업 일지</span>
+          <span class="badge badge-ver">v1.0</span>
+          <span class="badge badge-status">Presentation Layer</span>
+          <span class="badge badge-status">CSV Import Flow</span>
+        </div>
+        <h1 class="post-title">
+          Presentation Layer <br/> / CSV Import 플로우 <br/> 작업 일지
+        </h1>
+        <p class="post-sub">
+          Fortune Garden — Presentation &amp; CSV Import Flow
+        </p>
+        <p class="post-desc">
+          SAD v1.1 §4.1 기준 Presentation Layer 전체 구현 및 CSV Import 핵심
+          플로우 미완성 부분(EUC-KR 인코딩, 임시 계좌 Seed, import_screen 개선,
+          csv 패키지 오류 수정)을 완성하였습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <p class="stat-label">작업 일자</p>
+            <p class="stat-val">2026-03-19</p>
+          </div>
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val" id="date-created">불러오는 중...</p>
+          </div>
+          <div>
+            <p class="stat-label">최종 수정일</p>
+            <p class="stat-val" id="date-updated">불러오는 중...</p>
+          </div>
+          <div>
+            <p class="stat-label">참조</p>
+            <p class="stat-val">SAD v1.1 §4.2·§4.3, DB ERD v1.1 §6</p>
+          </div>
+            
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- ── CONTENT GRID ── -->
+    <div class="page-wrap">
+      <div class="content-grid">
+        <!-- ── TOC SIDEBAR ── -->
+        <aside class="toc-sidebar">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li><a href="#sec-overview">1. 작업 개요</a></li>
+            <li><a href="#sec-files">2. 전체 파일 구조</a></li>
+            <li><a href="#sec-presentation">3. Presentation Layer</a></li>
+            <li><a href="#sec-3-1">· 3.1 app_providers.dart</a></li>
+            <li><a href="#sec-3-2">· 3.2 app_router.dart</a></li>
+            <li><a href="#sec-3-3">· 3.3 app_shell.dart</a></li>
+            <li><a href="#sec-3-4">· 3.4 app.dart 교체</a></li>
+            <li><a href="#sec-csv">4. CSV 가져오기 핵심 플로우</a></li>
+            <li><a href="#sec-4-1">· 4.1 seed_dev_data.dart</a></li>
+            <li><a href="#sec-4-2">· 4.2 app_initializer.dart</a></li>
+            <li><a href="#sec-4-3">· 4.3 csv_parser_use_case.dart</a></li>
+            <li><a href="#sec-4-4">· 4.4 import_screen.dart</a></li>
+            <li><a href="#sec-errors">5. 발생한 오류 및 해결 내역</a></li>
+            <li><a href="#sec-packages">6. 패키지 변경 이력</a></li>
+            <li><a href="#sec-progress">7. 전체 프로젝트 진행 현황</a></li>
+            <li><a href="#sec-changelog">8. 문서 변경 이력</a></li>
+          </ul>
+        </aside>
+
+        <!-- ── MAIN CONTENT ── -->
+        <article>
+          <!-- ── 1. 작업 개요 ── -->
+          <section class="section" id="sec-overview">
+            <p class="sec-eyebrow">01</p>
+            <h2 class="sec-heading">작업 개요</h2>
+            <p>
+              오늘 작업은 두 파트로 진행되었습니다. 첫째로 SAD v1.1 §4.1 기준
+              Presentation Layer 전체를 구현하였고, 둘째로 CSV 가져오기 핵심
+              플로우의 미완성 부분(EUC-KR 인코딩, 임시 계좌 Seed, import_screen
+              개선, csv 패키지 오류 수정)을 완성하였습니다.
+            </p>
+
+            <table class="gen-table" style="table-layout: fixed; width: 100%">
+              <colgroup>
+                <col style="width: 28%" />
+                <col style="width: 72%" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>항목</th>
+                  <th>내용</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Presentation Layer</td>
+                  <td>
+                    <code>app_providers</code>, <code>app_router</code>,
+                    <code>app_shell</code> + SCR-001~SCR-011 11개 화면
+                  </td>
+                </tr>
+                <tr>
+                  <td>app.dart 교체</td>
+                  <td>
+                    <code>MaterialApp</code> →
+                    <code>MaterialApp.router</code> (go_router 연결)
+                  </td>
+                </tr>
+                <tr>
+                  <td>CSV 플로우</td>
+                  <td>
+                    <code>charset_converter</code> EUC-KR, 임시 계좌 Seed,
+                    import_screen 개선
+                  </td>
+                </tr>
+                <tr>
+                  <td>오류 수정</td>
+                  <td>
+                    <code>CsvToListConverter</code> 없는 클래스 오류 → 순수 Dart
+                    RFC4180 파서로 교체
+                  </td>
+                </tr>
+                <tr>
+                  <td>빌드 오류</td>
+                  <td>Windows 보안 정책 차단 → 해결 방법 안내</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ── 2. 전체 파일 구조 ── -->
+          <section class="section" id="sec-files">
+            <p class="sec-eyebrow">02</p>
+            <h2 class="sec-heading">전체 파일 구조</h2>
+
+            <div class="tree-block">
+              <pre><span class="t-ink">lib/</span>
+<span class="t-line">├── </span><span class="t-key">app.dart</span>                              <span class="t-str">← MaterialApp.router 교체</span>
+<span class="t-line">├── </span><span class="t-key">app_initializer.dart</span>                  <span class="t-str">← kDebugMode seedDevData 추가</span>
+<span class="t-line">├── </span><span class="t-ink">presentation/</span>
+<span class="t-line">│   ├── </span><span class="t-ink">providers/</span>
+<span class="t-line">│   │   └── </span><span class="t-key">app_providers.dart</span>            <span class="t-str">← 전역 Provider 5개 + ImportState</span>
+<span class="t-line">│   ├── </span><span class="t-ink">router/</span>
+<span class="t-line">│   │   └── </span><span class="t-key">app_router.dart</span>               <span class="t-str">← go_router + 프로필 분기</span>
+<span class="t-line">│   ├── </span><span class="t-ink">shell/</span>
+<span class="t-line">│   │   └── </span><span class="t-key">app_shell.dart</span>                <span class="t-str">← Desktop/Mobile 네비게이션 분기</span>
+<span class="t-line">│   └── </span><span class="t-ink">screens/</span>
+<span class="t-line">│       ├── </span><span class="t-ink">setup/</span><span class="t-key">setup_screen.dart</span>        <span class="t-str">← SCR-001</span>
+<span class="t-line">│       ├── </span><span class="t-ink">dashboard/</span><span class="t-key">dashboard_screen.dart</span> <span class="t-str">← SCR-002</span>
+<span class="t-line">│       ├── </span><span class="t-ink">transactions/</span>
+<span class="t-line">│       │   ├── </span><span class="t-key">transactions_screen.dart</span>      <span class="t-str">← SCR-003</span>
+<span class="t-line">│       │   ├── </span><span class="t-key">transaction_detail_screen.dart</span> <span class="t-str">← SCR-004</span>
+<span class="t-line">│       │   └── </span><span class="t-key">transaction_new_screen.dart</span>   <span class="t-str">← SCR-005</span>
+<span class="t-line">│       ├── </span><span class="t-ink">report/</span><span class="t-key">report_screen.dart</span>      <span class="t-str">← SCR-006</span>
+<span class="t-line">│       ├── </span><span class="t-ink">accounts/</span><span class="t-key">accounts_screen.dart</span>  <span class="t-str">← SCR-007</span>
+<span class="t-line">│       ├── </span><span class="t-ink">import/</span><span class="t-key">import_screen.dart</span>      <span class="t-str">← SCR-008</span>
+<span class="t-line">│       ├── </span><span class="t-ink">categories/</span><span class="t-key">categories_screen.dart</span> <span class="t-str">← SCR-009</span>
+<span class="t-line">│       ├── </span><span class="t-ink">settings/</span><span class="t-key">settings_screen.dart</span>  <span class="t-str">← SCR-010</span>
+<span class="t-line">│       └── </span><span class="t-ink">profiles/</span><span class="t-key">profiles_screen.dart</span>  <span class="t-str">← SCR-011</span>
+<span class="t-line">└── </span><span class="t-ink">data/database/</span>
+<span class="t-line">    └── </span><span class="t-key">seed_dev_data.dart</span>                <span class="t-str">← 개발용 임시 계좌 Seed</span></pre>
+            </div>
+          </section>
+
+          <!-- ── 3. Presentation Layer ── -->
+          <section class="section" id="sec-presentation">
+            <p class="sec-eyebrow">03</p>
+            <h2 class="sec-heading">Presentation Layer</h2>
+          </section>
+
+          <!-- 3.1 app_providers -->
+          <section class="section" id="sec-3-1">
+            <h3 class="sub-heading">
+              3.1 app_providers.dart — 전역 Riverpod Provider
+            </h3>
+            <p>
+              SAD v1.1 §4.1.1의 5개 Provider + <code>ImportState</code> 모델을
+              구현하였습니다.
+            </p>
+
+            <table class="gen-table" >
+              <colgroup>
+                <col />
+                <col  />
+                <col  />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Provider 이름</th>
+                  <th>상태 타입</th>
+                  <th>역할</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>activeProfile<br/>Provider</td>
+                  <td><code>FutureProvider<br/>&lt;Profile?&gt;</code></td>
+                  <td>현재 활성 프로필. 라우터 분기 기준</td>
+                </tr>
+                <tr>
+                  <td>viewMode<br/>Provider</td>
+                  <td><code>AsyncNotifierProvider<br/>&lt;ViewMode&gt;</code></td>
+                  <td>
+                    개인/통합 뷰 전환. <code>setMode()</code>로 DB 영속 저장
+                  </td>
+                </tr>
+                <tr>
+                  <td>transactionFilter<br/>Provider</td>
+                  <td><code>StateProvider<br/>&lt;TransactionFilter&gt;</code></td>
+                  <td>현재 적용된 거래 필터 상태</td>
+                </tr>
+                <tr>
+                  <td>transactionList<br/>Provider</td>
+                  <td>
+                    <code>FutureProvider<br/>&lt;List&lt;Transaction&gt;&gt;</code>
+                  </td>
+                  <td>거래 목록. filter 변경 시 자동 재조회</td>
+                </tr>
+                <tr>
+                  <td>dashboardSummary<br/>Provider</td>
+                  <td>
+                    <code
+                      >FutureProvider<br/>&lt;List&lt;MonthlySummary&gt;&gt;</code
+                    >
+                  </td>
+                  <td>이번 달 수입/지출 요약. viewMode 연동</td>
+                </tr>
+                <tr>
+                  <td>csvImportState<br/>Provider</td>
+                  <td><code>NotifierProvider<br/>&lt;ImportState&gt;</code></td>
+                  <td>CSV 가져오기 상태 (idle/importing/done/error)</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 3.2 app_router -->
+          <section class="section" id="sec-3-2">
+            <h3 class="sub-heading">3.2 app_router.dart — go_router 라우팅</h3>
+            <p>
+              SAD v1.1 §5.1 앱 시작 시퀀스 기준으로 작성했습니다. <br/>프로필 0개 →
+              <code>/setup</code>, 1개 이상 → <code>/dashboard</code> 자동 분기.
+            </p>
+
+            <div class="code-block">
+              <pre><span class="c-line">redirect: (context, state) </span><span class="c-key">async</span><span class="c-line"> {</span>
+  <span class="c-key">final</span><span class="c-line"> activeProfile = </span><span class="c-key">await</span><span class="c-line"> ref.read(activeProfileProvider.future);</span>
+  <span class="c-key">final</span><span class="c-line"> isSetup = state.matchedLocation == </span><span class="c-str">'/setup'</span><span class="c-line">;</span>
+
+  <span class="c-key">if</span><span class="c-line"> (activeProfile == </span><span class="c-key">null</span><span class="c-line"> &amp;&amp; !isSetup) </span><span class="c-key">return</span><span class="c-line"> </span><span class="c-str">'/setup'</span><span class="c-line">;</span>
+  <span class="c-key">if</span><span class="c-line"> (activeProfile != </span><span class="c-key">null</span><span class="c-line"> &amp;&amp; isSetup) </span><span class="c-key">return</span><span class="c-line"> </span><span class="c-str">'/dashboard'</span><span class="c-line">;</span>
+  <span class="c-key">return null</span><span class="c-line">;</span>
+<span class="c-line">}</span></pre>
+            </div>
+
+            <table class="gen-table" style="table-layout: fixed; width: 100%">
+              <colgroup>
+                <col style="width: 13%" />
+                <col style="width: 26%" />
+                <col style="width: 61%" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>화면 ID</th>
+                  <th>라우트</th>
+                  <th>구성</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>SCR-001</td>
+                  <td><code>/setup</code></td>
+                  <td>
+                    ShellRoute 밖 단독 표시. 프로필 설정 완료 후
+                    <code>/dashboard</code>로 이동
+                  </td>
+                </tr>
+                <tr>
+                  <td>SCR-002</td>
+                  <td><code>/dashboard</code></td>
+                  <td>SummaryCard + ViewModeToggle + RecentTxnList</td>
+                </tr>
+                <tr>
+                  <td>SCR-003</td>
+                  <td><code>/transactions</code></td>
+                  <td>TransactionListView. ShellRoute 하위</td>
+                </tr>
+                <tr>
+                  <td>SCR-004</td>
+                  <td><code>/transactions/:id</code></td>
+                  <td>TxnDetailCard + CategorySelector + MemoField</td>
+                </tr>
+                <tr>
+                  <td>SCR-005</td>
+                  <td><code>/transactions/new</code></td>
+                  <td>ManualTxnForm</td>
+                </tr>
+                <tr>
+                  <td>SCR-006</td>
+                  <td><code>/report</code></td>
+                  <td>MonthlySummary + 프로필별 분석. 월 선택 가능</td>
+                </tr>
+                <tr>
+                  <td>SCR-007</td>
+                  <td><code>/accounts</code></td>
+                  <td>AccountListTile + 잔액 표시</td>
+                </tr>
+                <tr>
+                  <td>SCR-008</td>
+                  <td><code>/import</code></td>
+                  <td>FilePicker + 파서 상태 아이콘 + ImportResultCard</td>
+                </tr>
+                <tr>
+                  <td>SCR-009</td>
+                  <td><code>/categories</code></td>
+                  <td>CategoryGrid + 색상 아이콘 표시</td>
+                </tr>
+                <tr>
+                  <td>SCR-010</td>
+                  <td><code>/settings</code></td>
+                  <td>ThemeToggle + 주요 화면 링크</td>
+                </tr>
+                <tr>
+                  <td>SCR-011</td>
+                  <td><code>/profiles</code></td>
+                  <td>ProfileCard×2 + 이름/색상 수정</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 3.3 app_shell -->
+          <section class="section" id="sec-3-3">
+            <h3 class="sub-heading">
+              3.3 app_shell.dart — 플랫폼별 네비게이션
+            </h3>
+            <p>
+              화면 너비 720px 기준으로 Desktop(<code>NavigationRail</code>)과
+              Mobile(<code>BottomNavigationBar</code>)을 자동 전환합니다.
+            </p>
+
+            <div class="white-column-table">
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-tech">≥ 720px</span>
+                  <span class="white-column-layer-name">Windows Desktop</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>NavigationRail</code> 사이드바.
+                    <code>labelType: all</code>. <code>VerticalDivider</code>로
+                    구분
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-tech">&lt; 720px</span>
+                  <span class="white-column-layer-name">Android Mobile</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>NavigationBar</code> (Material 3).
+                    <code>BottomNavigationBar</code> 대체
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-tech">공통</span>
+                  <span class="white-column-layer-name">네비게이션 항목</span>
+                </div>
+                <div class="white-column-content">
+                  <p>대시보드, 거래내역, 리포트, 계좌, 설정 — 5개</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3.4 app.dart -->
+          <section class="section" id="sec-3-4">
+            <h3 class="sub-heading">3.4 app.dart 교체</h3>
+            <p>
+              기존 <code>MaterialApp</code> → <code>MaterialApp.router</code>로
+              교체하여 go_router를 연결하였습니다.
+            </p>
+
+            <div class="code-block">
+              <pre><span class="c-comment">// 변경 전</span>
+<span class="c-key">return</span><span class="c-line"> MaterialApp(home: </span><span class="c-key">const</span><span class="c-line"> MyHomePage(), ...);</span>
+
+<span class="c-comment">// 변경 후</span>
+<span class="c-key">final</span><span class="c-line"> router = ref.watch(appRouterProvider);</span>
+<span class="c-key">return</span><span class="c-line"> MaterialApp.router(routerConfig: router, ...);</span></pre>
+            </div>
+          </section>
+
+          <!-- ── 4. CSV 가져오기 핵심 플로우 ── -->
+          <section class="section" id="sec-csv">
+            <p class="sec-eyebrow">04</p>
+            <h2 class="sec-heading">CSV 가져오기 핵심 플로우</h2>
+          </section>
+
+          <!-- 4.1 seed_dev_data -->
+          <section class="section" id="sec-4-1">
+            <h3 class="sub-heading">
+              4.1 seed_dev_data.dart — 개발용 임시 계좌
+            </h3>
+            <p>
+              CSV 가져오기 테스트를 위해 <code>kDebugMode</code> 전용 임시
+              데이터를 생성했습니다. 이미 데이터가 있으면 자동으로 건너뜁니다
+              (idempotent).
+            </p>
+
+            <table class="gen-table" style="table-layout: fixed; width: 100%">
+              <colgroup>
+                <col style="width: 20%" />
+                <col style="width: 22%" />
+                <col style="width: 24%" />
+                <col style="width: 34%" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>프로필</th>
+                  <th>계좌 별명</th>
+                  <th>기관 코드</th>
+                  <th>비고</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>프로필 1 (나)</td>
+                  <td>KB 주거래</td>
+                  <td><code>KB</code></td>
+                  <td>잔액 1,500,000원</td>
+                </tr>
+                <tr>
+                  <td>프로필 1 (나)</td>
+                  <td>신한카드</td>
+                  <td><code>SHINHAN_CARD</code></td>
+                  <td>잔액 0원</td>
+                </tr>
+                <tr>
+                  <td>프로필 2 (파트너)</td>
+                  <td>NH 급여</td>
+                  <td><code>NH</code></td>
+                  <td>잔액 2,300,000원</td>
+                </tr>
+                <tr>
+                  <td>프로필 2 (파트너)</td>
+                  <td>KB카드</td>
+                  <td><code>KB_CARD</code></td>
+                  <td>잔액 0원</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="highlight-box">
+              <p>
+                계좌번호 암호화: 개발용이므로
+                <code>utf8.encode('DEV:계좌번호')</code> placeholder 사용. 실제
+                운영 시 <code>flutter_secure_storage</code> +
+                <code>encrypt</code> 패키지로 AES-256-GCM 암호화 필요.
+              </p>
+            </div>
+          </section>
+
+          <!-- 4.2 app_initializer -->
+          <section class="section" id="sec-4-2">
+            <h3 class="sub-heading">4.2 app_initializer.dart 업데이트</h3>
+            <p>
+              <code>kDebugMode</code> 플래그로 <code>seedDevData()</code> 호출을
+              분기하였습니다.
+            </p>
+
+            <div class="code-block">
+              <pre><span class="c-key">import</span><span class="c-line"> </span><span class="c-str">'package:flutter/foundation.dart'</span><span class="c-line">;</span>
+
+<span class="c-key">Future</span><span class="c-line">&lt;void&gt; initializeApp(WidgetRef ref) </span><span class="c-key">async</span><span class="c-line"> {</span>
+  <span class="c-key">final</span><span class="c-line"> db = ref.read(appDatabaseProvider);</span>
+  <span class="c-key">await</span><span class="c-line"> seedInstitutions(db);</span>
+  <span class="c-key">await</span><span class="c-line"> seedCsvParserProfiles(db);</span>
+
+  <span class="c-key">if</span><span class="c-line"> (kDebugMode) {</span>
+    <span class="c-key">await</span><span class="c-line"> seedDevData(db); </span><span class="c-comment">// 개발 모드 전용 임시 계좌</span>
+  <span class="c-line">}</span>
+<span class="c-line">}</span></pre>
+            </div>
+          </section>
+
+          <!-- 4.3 csv_parser_use_case -->
+          <section class="section" id="sec-4-3">
+            <h3 class="sub-heading">
+              4.3 csv_parser_use_case.dart — EUC-KR 완성 + 파서 교체
+            </h3>
+            <p>
+              두 차례 오류를 거쳐 최종적으로 <code>csv</code> 패키지 의존성을
+              제거하고 순수 Dart RFC 4180 파서로 교체하였습니다.
+            </p>
+
+            <div class="white-column-table">
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">EUC-KR 디코딩</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>charset_converter.decode(encoding, bytes)</code>로
+                    완성. UTF-8은 <code>dart:convert</code> 직접 처리
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">delimiter 적용</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    콤마: csv 패키지(RFC 4180) → 순수 Dart 교체 후 내장 파서에서
+                    처리
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">금액 부호 처리</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    △·▲(출금 표기), 괄호 <code>(12,345)</code>, 음수
+                    <code>-12,345</code> 모두 대응
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">csv 패키지 제거</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>CsvToListConverter</code> 클래스명 오류로 의존성 제거.
+                    <code>_parseCsv()</code> 내장 구현
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="code-block">
+              <pre><span class="c-comment">// 내장 RFC 4180 파서 핵심 로직</span>
+<span class="c-key">List</span><span class="c-line">&lt;</span><span class="c-key">List</span><span class="c-line">&lt;String&gt;&gt; _parseCsv(String content, String delimiter) {</span>
+  <span class="c-comment">// 따옴표 이스케이프 ("") 처리</span>
+  <span class="c-comment">// 멀티라인 필드 처리</span>
+  <span class="c-comment">// 빈 행 건너뜀</span>
+<span class="c-line">}</span></pre>
+            </div>
+          </section>
+
+          <!-- 4.4 import_screen -->
+          <section class="section" id="sec-4-4">
+            <h3 class="sub-heading">4.4 import_screen.dart — SCR-008 개선</h3>
+            <p>
+              모든 프로필의 계좌를 한 화면에서 선택할 수 있도록 개선하고, 파서
+              프로필 등록 여부를 아이콘으로 표시하였습니다.
+            </p>
+
+            <div class="white-column-table">
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">계좌 목록 통합</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    단일 프로필 → 모든 프로필의 계좌 표시.
+                    <code>_importAccountsProvider</code> 신규
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">파서 상태 아이콘</span>
+                </div>
+                <div class="white-column-content">
+                  <p>파서 프로필 있음: 초록 체크. 없음: 주황 경고 아이콘</p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">파서 없음 경고</span>
+                </div>
+                <div class="white-column-content">
+                  <p>파서 미등록 계좌 선택 시 경고 배너 표시</p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">계좌 없음 안내</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    등록 계좌 없을 때 안내 화면 표시 (개발 모드 재시작 안내
+                    포함)
+                  </p>
+                </div>
+              </div>
+              <div class="white-column-row">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">결과 카드</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    신규/중복/오류 건수 표시. 완료 후 "다른 파일 가져오기" 버튼
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ── 5. 오류 및 해결 ── -->
+          <section class="section" id="sec-errors">
+            <p class="sec-eyebrow">05</p>
+            <h2 class="sec-heading">발생한 오류 및 해결 내역</h2>
+
+            <div>
+              <div class="highlight-box-red">
+                <p>⚠ CsvToListConverter isn't defined for the type
+                'CsvParserUseCase'</p>
+              </div>
+              <div class="white-column-table">
+              <div class="white-column-row-small">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">원인</span>
+                </div>
+                <div class="white-column-content">
+                  <p>
+                    <code>CsvToListConverter()</code>를 non-const 생성자로
+                  호출하면서 <code>fieldDelimiter</code>에 String을 직접 전달.
+                  csv 패키지 버전에 따라 파라미터 타입 불일치.
+                  </p>
+                </div>
+              </div> 
+              <div class="white-column-row-small">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">해결</span>
+                </div>
+                <div class="white-column-content">
+                  <p><code>csv</code> 패키지 의존성 완전 제거. 순수 Dart RFC 4180
+                  기반 <code>_parseCsv()</code> 메서드 내장 구현으로 교체.
+                  <code>flutter pub remove csv</code> 실행.
+                  </p>
+                </div>
+              </div> 
+            </div>
+            <br/>
+
+            <div>
+              <div class="highlight-box-red">
+                <p>⚠ CsvToListConverter isn't a class (2차)</p>
+              </div>
+              <div class="white-column-table">
+              <div class="white-column-row-small">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">원인</span>
+                </div>
+                <div class="white-column-content">
+                  <p>1차 수정 후에도 동일 오류 지속. csv 패키지가 해당 버전에서
+                  <code>CsvToListConverter</code>를 export하지 않는 것으로 확인.
+                  </p>
+                </div>
+              </div> 
+              <div class="white-column-row-small">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">해결</span>
+                </div>
+                <div class="white-column-content">
+                  <p> csv import 완전 제거. <code>_parseCsv()</code> 내장 파서 확정.
+                  <code>charset_converter</code>, <code>intl</code>만 유지.
+                  </p>
+                </div>
+              </div> 
+            </div>
+            <br/>
+
+            <div>
+              <div class="highlight-box-red">
+                <p>⚠ Unable to start executable — 애플리케이션 제어 정책에서 이
+                파일을 차단</p>
+              </div>
+              <div class="white-column-table">
+              <div class="white-column-row-small">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">원인</span>
+                </div>
+                <div class="white-column-content">
+                  <p>Flutter 코드 문제 아님. Windows Defender 스마트 스크린 또는
+                  WDAC/AppLocker가 서명되지 않은 로컬 빌드 exe 실행 차단.
+                  </p>
+                </div>
+              </div> 
+              <div class="white-column-row-small">
+                <div class="white-column-label">
+                  <span class="white-column-layer-name">해결</span>
+                </div>
+                <div class="white-column-content">
+                  <p> Windows 보안 → 제외 항목에
+                  <code>C:\workspace\fortune_garden\build</code> 추가.
+                  </p>
+                </div>
+              </div> 
+            </div>  
+          </section>
+
+          <!-- ── 6. 패키지 변경 이력 ── -->
+          <section class="section" id="sec-packages">
+            <p class="sec-eyebrow">06</p>
+            <h2 class="sec-heading">패키지 변경 이력</h2>
+
+            <table class="gen-table" style="table-layout: fixed; width: 100%">
+              <colgroup>
+                <col style="width: 26%" />
+                <col style="width: 14%" />
+                <col style="width: 12%" />
+                <col style="width: 48%" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>패키지</th>
+                  <th>구분</th>
+                  <th>버전</th>
+                  <th>비고</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>go_router</td>
+                  <td><span class="color-badge p1">추가</span></td>
+                  <td><span class="txt-muted">최신</span></td>
+                  <td>
+                    <code>MaterialApp.router</code> + <code>ShellRoute</code> +
+                    <code>GoRoute</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>charset_converter</td>
+                  <td><span class="color-badge p1">추가</span></td>
+                  <td><span class="txt-muted">최신</span></td>
+                  <td>EUC-KR·CP949 디코딩 네이티브 지원</td>
+                </tr>
+                <tr>
+                  <td>csv</td>
+                  <td><span class="color-badge p5">제거</span></td>
+                  <td><span class="txt-muted">—</span></td>
+                  <td>
+                    <code>CsvToListConverter</code> 오류로 의존성 제거. 내장
+                    파서로 대체
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="code-block">
+              <pre><span class="c-line">flutter pub add go_router</span>
+<span class="c-line">flutter pub add charset_converter</span>
+<span class="c-line">flutter pub remove csv</span></pre>
+            </div>
+          </section>
+
+          <!-- ── 7. 전체 프로젝트 진행 현황 ── -->
+          <section class="section" id="sec-progress">
+            <p class="sec-eyebrow">07</p>
+            <h2 class="sec-heading">전체 프로젝트 진행 현황</h2>
+
+            <div class="table-second-grid" style="width: 100%;">
+              <div class="table-second-row header" style="grid-template-columns: 150px 80px 1fr 200px;">
+                <div >작업 단계</div>
+                <div>상태</div>
+                <div style="grid-column: span 2">비고</div>
+              </div>
+              <div class="table-second-row" style="grid-template-columns: 150px 80px 1fr 200px;">
+                <div class="table-second-column">Data Layer <br/>(Drift ORM)</div>
+                <div><span class="color-badge p1">완료</span></div>
+                <div style="grid-column: span 2">
+                  9개 테이블, 6개 쿼리, Seed Data
+                </div>
+              </div>
+              <div class="table-second-row" style="grid-template-columns: 150px 80px 1fr 200px;">
+                <div class="table-second-column">앱 초기화 구조</div>
+                <div><span class="color-badge p1">완료</span></div>
+                <div style="grid-column: span 2">
+                  <code>main.dart</code> · <code>app.dart</code> ·
+                  <code>app_initializer.dart</code>
+                </div>
+              </div>
+              <div class="table-second-row" style="grid-template-columns: 150px 80px 1fr 200px;">
+                <div class="table-second-column">Repository 레이어</div>
+                <div><span class="color-badge p1">완료</span></div>
+                <div style="grid-column: span 2">
+                  인터페이스 7개 + 구현체 7개
+                </div>
+              </div>
+              <div class="table-second-row" style="grid-template-columns: 150px 80px 1fr 200px;">
+                <div class="table-second-column">UseCase 레이어</div>
+                <div><span class="color-badge p1">완료</span></div>
+                <div style="grid-column: span 2">7개 UseCase + 엔티티 3개</div>
+              </div>
+              <div class="table-second-row" style="grid-template-columns: 150px 80px 1fr 200px;">
+                <div class="table-second-column">Presentation Layer</div>
+                <div><span class="color-badge p1">완료</span></div>
+                <div style="grid-column: span 2">
+                  11개 화면 + Provider + Router + Shell
+                </div>
+              </div>
+              <div class="table-second-row" style="grid-template-columns: 150px 80px 1fr 200px;">
+                <div class="table-second-column">CSV 가져오기 플로우</div>
+                <div><span class="color-badge p1">완료</span></div>
+                <div style="grid-column: span 2">
+                  EUC-KR, RFC4180 파서, 임시 계좌 Seed
+                </div>
+              </div>
+              <div class="table-second-row" style="grid-template-columns: 150px 80px 1fr 200px;">
+                <div class="table-second-column">계좌 등록 기능 <br/>(SCR-007)</div>
+                <div><span class="color-badge p5">미완성</span></div>
+                <div style="grid-column: span 2">
+                  현재 목록 조회만 구현. 신규 추가 폼 없음
+                </div>
+              </div>
+              <div class="table-second-row" style="grid-template-columns: 150px 80px 1fr 200px;">
+                <div class="table-second-column">테마 동적 적용</div>
+                <div><span class="color-badge p5">미완성</span></div>
+                <div style="grid-column: span 2">
+                  DB 저장은 되나 앱에 실시간 반영 로직 없음
+                </div>
+              </div>
+              <div class="table-second-row" style="grid-template-columns: 150px 80px 1fr 200px;">
+                <div class="table-second-column">EUC-KR 실제 검증</div>
+                <div><span class="color-badge p5">미완성</span></div>
+                <div style="grid-column: span 2">
+                  <code>charset_converter</code> 실제 파일로 동작 검증 필요
+                </div>
+              </div>
+              <div class="table-second-row" style="grid-template-columns: 150px 80px 1fr 200px;">
+                <div class="table-second-column">onUpgrade <br/>마이그레이션 검증</div>
+                <div><span class="color-badge p5">미완성</span></div>
+                <div style="grid-column: span 2">
+                  v1→v2 기존 기기 업그레이드 테스트 필요
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ── 8. 문서 변경 이력 ── -->
+          <section class="section" id="sec-changelog">
+            <p class="sec-eyebrow">08</p>
+            <h2 class="sec-heading">문서 변경 이력</h2>
+
+            <div class="changelog">
+              <div class="changelog-row header">
+                <div>버전</div>
+                <div>날짜</div>
+                <div>작성자</div>
+                <div>변경 내용</div>
+              </div>
+              <div class="changelog-row">
+                <div><span class="txt-accent">v1.0</span></div>
+                <div>2026-03-19</div>
+                <div>정서영</div>
+                <div>
+                  Presentation Layer 전체 + CSV 가져오기 플로우 완성 기록. 오류
+                  3건 포함.
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="comments-section">
+            <div class="comments-wrap">
+              <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+                Comments
+              </div>
+              <script
+                src="https://giscus.app/client.js"
+                data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+                data-repo-id="R_kgDORgqLUQ"
+                data-category="Announcements"
+                data-category-id="DIC_kwDORgqLUc4C4NNi"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="0"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="light"
+                data-lang="ko"
+                crossorigin="anonymous"
+                async
+              ></script>
+            </div>
+          </section>
+        </article>
+      </div>
+      <!-- ── FOOTER ── -->
+      <footer class="post-footer">
+        <a href="/docs" class="footer-back">← 문서 목록</a>
+        <span class="footer-copy">© 2026 fortune-garden.dev</span>
+      </footer>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>
