@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>계좌 관리 · CSV 플로우 완성 — Fortune Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../../project/index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Log</span>
+          <span class="badge badge-ver">SCR-007</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">계좌 관리 · CSV 플로우 완성</h1>
+        <p class="post-sub">SCR-007 &amp; CSV Import Flow</p>
+        <p class="post-desc">
+          계좌 등록·수정·삭제·이력 조회 기능 구현과 EUC-KR CSV Isolate 오류 수정
+          과정을 기록했습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 3월 20일</div>
+          </div>
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val" id="date-created">불러오는 중...</p>
+          </div>
+          <div>
+            <p class="stat-label">최종 수정일</p>
+            <p class="stat-val" id="date-updated">불러오는 중...</p>
+          </div>
+            <div class="stat-label">참조</div>
+            <div class="stat-val" id="date-created">
+              SAD v1.1 §4.1.2 SCR-007, §5.2
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#overview"> <span class="toc-num">01</span>작업 개요 </a>
+            </li>
+            <li>
+              <a href="#scr007">
+                <span class="toc-num">02</span>SCR-007 계좌 관리
+              </a>
+              <ul class="toc-sub-list">
+                <li><a href="#components">화면 구성 요소</a></li>
+                <li><a href="#form">계좌 등록/수정 폼</a></li>
+                <li><a href="#delete">계좌 삭제</a></li>
+                <li><a href="#history">가져오기 이력</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#csv-fix">
+                <span class="toc-num">03</span>CSV 가져오기 수정
+              </a>
+              <ul class="toc-sub-list">
+                <li><a href="#cause">수정 배경</a></li>
+                <li><a href="#change">수정 내용</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#testscript">
+                <span class="toc-num">04</span>테스트 CSV 스크립트
+              </a>
+            </li>
+            <li>
+              <a href="#changelog">
+                <span class="toc-num">05</span>문서 변경 이력
+              </a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- 1. 작업 개요 -->
+        <section class="section" id="overview">
+          <div class="sec-eyebrow">01 — Overview</div>
+          <h2 class="sec-heading">작업 개요</h2>
+          <p>
+            오늘 작업은 세 파트로 진행되었습니다. 첫째로 미완성이었던 SCR-007 계좌
+            관리 화면에 등록·수정·삭제·이력 조회 기능을 완성하였고, 둘째로
+            EUC-KR CSV 가져오기 시 발생한 Isolate 오류를 수정하였으며, 셋째로
+            EUC-KR 검증용 테스트 CSV 생성 스크립트를 작성하였습니다.
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">SCR-007 계좌 관리</div>
+              <div class="info-val">
+                계좌 등록/수정/삭제 + BalanceSummary + ImportHistoryList 구현
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">CSV Isolate 오류 수정</div>
+              <div class="info-val">
+                <code>charset_converter</code>를 Isolate 밖(메인 스레드)으로
+                이동
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">csv_parser_use_case</div>
+              <div class="info-val">
+                <code>parseFromString()</code> 추가 — Isolate 안전 메서드 분리
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">테스트 스크립트</div>
+              <div class="info-val">
+                <code>make_test_csv.py</code> — KB·NH·신한·하나·우리 5개 은행
+                EUC-KR 테스트 CSV 생성
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. SCR-007 계좌 관리 -->
+        <section class="section" id="scr007">
+          <div class="sec-eyebrow">02 — SCR-007</div>
+          <h2 class="sec-heading">SCR-007 계좌 관리 (accounts_screen.dart)</h2>
+          <p>
+            기존 목록 조회만 있던 화면을 SAD v1.1 §4.1.2
+            명세(<code>AccountListTile</code>, <code>BalanceSummary</code>,
+            <code>ImportHistoryList</code>) 기준으로 전면 재구현하였습니다.
+          </p>
+
+          <!-- 2.1 화면 구성 요소 -->
+          <h3 class="sub-heading" id="components">화면 구성 요소</h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Component 01</span>
+                <span class="white-title">_BalanceSummary</span>
+              </div>
+              <p style="">
+                전체 계좌 잔액 합산 카드. 아이콘 + 총액 + 계좌 수 표시
+              </p>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Component 02</span>
+                <span class="white-title">_ProfileSection</span>
+              </div>
+              <p>프로필별 섹션 헤더(색상 원 + 이름) + 해당 프로필 계좌 목록</p>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Component 03</span>
+                <span class="white-title">_AccountTile</span>
+              </div>
+              <p>
+                계좌 타일. 별명·기관코드·잔액·최근 가져오기 일시 표시. 탭 시
+                옵션 시트
+              </p>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Component 04</span>
+                <span class="white-title">_AccountFormSheet</span>
+              </div>
+              <p>계좌 등록/수정 BottomSheet. 프로필·기관·별명 입력</p>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Component 05</span>
+                <span class="white-title">_ImportHistorySheet</span>
+              </div>
+              <p>
+                DraggableScrollableSheet. 파일명·일시·신규/중복/오류 건수 표시
+              </p>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Component 06</span>
+                <span class="white-title">_EmptyGuide</span>
+              </div>
+              <p>계좌 없을 때 안내 화면 + 계좌 등록 버튼</p>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Component 07</span>
+                <span class="white-title">FAB</span>
+              </div>
+              <p>
+                우측 하단 "계좌 등록" <code>FloatingActionButton.extended</code>
+              </p>
+            </div>
+          </div>
+
+          <!-- 2.2 계좌 등록/수정 폼 -->
+          <h3 class="sub-heading" id="form">
+            계좌 등록/수정 폼 (_AccountFormSheet)
+          </h3>
+          <p>
+            신규 등록과 수정을 하나의 BottomSheet로 처리합니다.
+            <code>existing</code> 파라미터가 <code>null</code>이면 신규, 값이
+            있으면 수정 모드입니다.
+          </p>
+
+          <table class="normal-table">
+            <thead>
+              <tr>
+                <th>입력 항목</th>
+                <th>세부 내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">프로필 선택</td>
+                <td>
+                  <code>DropdownButtonFormField</code>. 수정 모드에서는
+                  비활성(disabled)
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">금융기관 선택</td>
+                <td>
+                  <code>institutions</code> 테이블에서 로드. 은행/카드/증권
+                  유형별 그룹 헤더 표시
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">계좌 별명</td>
+                <td>
+                  <code>TextField</code> (선택 입력). 미입력 시 기관명으로 대체
+                  표시
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">계좌번호 암호화</td>
+                <td>
+                  개발용 placeholder(<code>utf8.encode</code>). 실제 운영 시
+                  AES-256-GCM 필요
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 2.3 계좌 삭제 -->
+          <h3 class="sub-heading" id="delete">계좌 삭제</h3>
+          <p>
+            <code>AlertDialog</code>로 확인 절차를 거칩니다. 삭제 시 CASCADE로
+            <code>transactions</code>·<code>import_history</code>도 함께
+            삭제됨을 경고 문구로 안내합니다.
+          </p>
+          <div class="highlight-box-red">
+            <p>
+              // 삭제 확인 다이얼로그 경고 문구<br />
+              '${account.alias ?? account.institutionCode}' 계좌를 삭제하면<br />
+              관련 거래 내역과 가져오기 이력도 함께 삭제됩니다.
+            </p>
+          </div>
+
+          <!-- 2.4 가져오기 이력 -->
+          <h3 class="sub-heading" id="history">
+            가져오기 이력 (_ImportHistorySheet)
+          </h3>
+          <p>
+            <code>DraggableScrollableSheet</code>로 구현. 초기 높이 60%, 최소
+            30%, 최대 90%.
+            <code>IImportHistoryRepository.getByAccount()</code>로 데이터 로드.
+          </p>
+
+          <table class="normal-table">
+            <thead>
+              <tr>
+                <th>표시 항목</th>
+                <th>내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">파일명</td>
+                <td><code>fileName</code> 컬럼. 말줄임 처리</td>
+              </tr>
+              <tr>
+                <td class="col-name">가져오기 일시</td>
+                <td>
+                  <code>importedAt</code> Unix ms →
+                  <code>yyyy.MM.dd HH:mm</code> 포맷
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">신규 건수</td>
+                <td><code>newRows</code> — 초록 Chip</td>
+              </tr>
+              <tr>
+                <td class="col-name">중복 건수</td>
+                <td><code>duplicateRows</code> — 회색 Chip (0이면 미표시)</td>
+              </tr>
+              <tr>
+                <td class="col-name">오류 건수</td>
+                <td><code>errorRows</code> — 빨간 Chip (0이면 미표시)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 3. CSV 가져오기 플로우 수정 -->
+        <section class="section" id="csv-fix">
+          <div class="sec-eyebrow">03 — CSV Import Fix</div>
+          <h2 class="sec-heading">CSV 가져오기 플로우 수정</h2>
+
+          <!-- 3.1 수정 배경 -->
+          <h3 class="sub-heading" id="cause">수정 배경</h3>
+          <p>KB국민은행 EUC-KR CSV 가져오기 시 아래 오류가 발생하였습니다.</p>
+
+          <div class="highlight-box-red">
+            <p>
+              Bad state: The BackgroundIsolateBinaryMessenger.instance value is
+              invalid until BackgroundIsolateBinaryMessenger.ensureInitialized
+              is executed.
+            </p>
+          </div>
+
+          <p>
+            <strong>원인:</strong> <code>charset_converter</code>는 Flutter
+            네이티브 플러그인이라 플러그인 채널(BinaryMessenger)을 사용합니다.
+            Dart Isolate는 기본적으로 Flutter 엔진과 분리되어 있어
+            BinaryMessenger 초기화 전에는 네이티브 플러그인 호출이 불가합니다.
+          </p>
+
+          <!-- 3.2 수정 내용 -->
+          <h3 class="sub-heading" id="change">수정 내용</h3>
+
+          <p class="sec-eyebrow" style="margin-top: 1.4rem">
+            3.2.1 csv_import_use_case.dart — 인코딩 변환을 Isolate 밖으로 이동
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">변경 전</div>
+              <div class="info-val">
+                <code>Isolate.run()</code> 내에서
+                <code>CsvParserUseCase().parse(file, profile)</code> 호출 →
+                <code>parse()</code> 내부에서
+                <code>CharsetConverter.decode()</code> 호출 → 오류 발생
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">변경 후</div>
+              <div class="info-val">
+                ① 메인 스레드: <code>file.readAsBytes()</code> +
+                <code>CharsetConverter.decode()</code> 완료<br />② Isolate:
+                <code>parseFromString(content, profile)</code> 호출 — 네이티브
+                플러그인 미사용
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// 변경 전</span>
+<span class="c-line">final parsed = await Isolate.run(() async {</span>
+<span class="c-line">  return CsvParserUseCase().parse(file: file, parserProfile: profile);</span>
+<span class="c-comment">  // ↑ 내부에서 CharsetConverter.decode() 호출 → Isolate 오류</span>
+<span class="c-line">});</span>
+
+<span class="c-comment">// 변경 후</span>
+<span class="c-comment">// ① 메인 스레드에서 인코딩 변환</span>
+<span class="c-key">final</span> <span class="c-line">bytes = await file.readAsBytes();</span>
+<span class="c-key">final</span> <span class="c-line">content = await _decodeBytes(bytes, parserProfile.encoding);</span>
+
+<span class="c-comment">// ② Isolate에는 문자열만 전달</span>
+<span class="c-key">final</span> <span class="c-line">parsed = await Isolate.run(() {</span>
+<span class="c-line">  return CsvParserUseCase().parseFromString(</span>
+<span class="c-line">    content: content, parserProfile: parserProfile,</span>
+<span class="c-line">  );</span>
+<span class="c-line">});</span></pre>
+          </div>
+
+          <p class="sec-eyebrow" style="margin-top: 1.8rem">
+            3.2.2 csv_parser_use_case.dart — parseFromString() 메서드 추가
+          </p>
+          <p>Isolate 안전 메서드와 파일 직접 파싱 메서드를 분리하였습니다.</p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">parse()</span>
+                <span class="white-column-layer-tech">메인 스레드 전용</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  파일 읽기 + 디코딩 + <code>parseFromString()</code> 위임.
+                  <code>async</code>. <code>charset_converter</code> 사용.
+                </p>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">parse<br/>FromString()</span>
+                <span class="white-column-layer-tech">Isolate 안전</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  이미 디코딩된 문자열로 파싱. 동기 반환(<code>List</code>, not
+                  <code>Future</code>). 네이티브 플러그인 미사용.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <code>parseFromString()</code>은 <code>Future</code>가 아닌 동기
+              <code>List&lt;ParsedTransaction&gt;</code> 반환.
+              <code>Isolate.run()</code>의 콜백은 <code>async</code>가 필요
+              없으며 동기 코드가 더 안전합니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- 4. 테스트 CSV 스크립트 -->
+        <section class="section" id="testscript">
+          <div class="sec-eyebrow">04 — Test Script</div>
+          <h2 class="sec-heading">
+            EUC-KR 검증용 테스트 CSV 스크립트 (make_test_csv.py)
+          </h2>
+          <p>
+            실제 은행 CSV 파일 없이 EUC-KR 파싱 동작을 검증할 수 있는 Python
+            스크립트입니다. 프로젝트 루트에서 실행합니다.
+          </p>
+
+          <div class="code-block">
+            <pre><span class="c-comment"># 프로젝트 루트에서 실행</span>
+<span class="c-line">python make_test_csv.py</span>
+
+<span class="c-comment"># 생성 결과: test_csv/ 폴더</span>
+<span class="c-comment"># test_kb.csv      --- KB국민은행 (EUC-KR, yyyy.MM.dd HH:mm:ss)</span>
+<span class="c-comment"># test_nh.csv      --- NH농협은행 (EUC-KR, yyyyMMdd)</span>
+<span class="c-comment"># test_shinhan.csv --- 신한은행 (UTF-8, yyyy-MM-dd)</span>
+<span class="c-comment"># test_hana.csv    --- 하나은행 (EUC-KR, yyyy-MM-dd HH:mm:ss)</span>
+<span class="c-comment"># test_woori.csv   --- 우리은행 (EUC-KR, yyyyMMdd)</span></pre>
+          </div>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파일</th>
+                <th>기관</th>
+                <th>인코딩</th>
+                <th>날짜 형식</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>test_kb.csv</td>
+                <td class="txt-ink">KB</td>
+                <td><span class="color-badge p5">EUC-KR</span></td>
+                <td class="txt-muted">yyyy.MM.dd HH:mm:ss</td>
+                <td class="txt-muted">7건</td>
+              </tr>
+              <tr>
+                <td>test_nh.csv</td>
+                <td class="txt-ink">NH</td>
+                <td><span class="color-badge p5">EUC-KR</span></td>
+                <td class="txt-muted">yyyyMMdd</td>
+                <td class="txt-muted">7건</td>
+              </tr>
+              <tr>
+                <td>test_shinhan.csv</td>
+                <td class="txt-ink">SHINHAN</td>
+                <td><span class="color-badge p1">UTF-8</span></td>
+                <td class="txt-muted">yyyy-MM-dd</td>
+                <td class="txt-muted">7건</td>
+              </tr>
+              <tr>
+                <td>test_hana.csv</td>
+                <td class="txt-ink">HANA</td>
+                <td><span class="color-badge p5">EUC-KR</span></td>
+                <td class="txt-muted">yyyy-MM-dd HH:mm:ss</td>
+                <td class="txt-muted">7건</td>
+              </tr>
+              <tr>
+                <td>test_woori.csv</td>
+                <td class="txt-ink">WOORI</td>
+                <td><span class="color-badge p5">EUC-KR</span></td>
+                <td class="txt-muted">yyyyMMdd</td>
+                <td class="txt-muted">7건 — 우리은행 추가</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">검증 체크리스트</h3>
+          <ul class="bullet-list">
+            <li>한글 거래처명(스타벅스, 이마트 등)이 깨지지 않고 표시되는가</li>
+            <li>
+              신규 가져오기 시 <code>newRows = 7</code>,
+              <code>duplicateRows = 0</code> 표시되는가
+            </li>
+            <li>
+              같은 파일 재가져오기 시 <code>newRows = 0</code>,
+              <code>duplicateRows = 7</code> 표시되는가
+            </li>
+            <li>날짜가 올바르게 파싱되는가 (거래 상세 화면에서 확인)</li>
+            <li>금액 부호가 맞는가 (지출 음수, 입금 양수)</li>
+          </ul>
+
+          <div class="highlight-box-yellow">
+            <p>
+              하나·우리은행의 <code>amountCol</code>(출금액/출금금액)은 CSV에
+              양수로 저장된 지출 금액입니다. 실제 은행 파일에서 부호가 반대로 나오면
+              파서 프로필에 별도 처리 필요합니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- 5. 문서 변경 이력 -->
+        <section class="section" id="changelog">
+          <div class="sec-eyebrow">05 — Changelog</div>
+          <h2 class="sec-heading">문서 변경 이력</h2>
+
+          <div class="changelog">
+            <div class="changelog-row header">
+              <div>버전</div>
+              <div>날짜</div>
+              <div>작성자</div>
+              <div>변경 내용</div>
+            </div>
+            <div class="changelog-row">
+              <div>v1.0</div>
+              <div>2026-03-20</div>
+              <div>정서영</div>
+              <div>계좌 관리 SCR-007 완성 + CSV Isolate 오류 수정 기록.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+            <div class="comments-wrap">
+              <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+                Comments
+              </div>
+              <script
+                src="https://giscus.app/client.js"
+                data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+                data-repo-id="R_kgDORgqLUQ"
+                data-category="Announcements"
+                data-category-id="DIC_kwDORgqLUc4C4NNi"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="0"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="light"
+                data-lang="ko"
+                crossorigin="anonymous"
+                async
+              ></script>
+            </div>
+          </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>

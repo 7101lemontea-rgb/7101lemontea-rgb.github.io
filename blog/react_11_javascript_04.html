@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 4 — React Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <!-- ── NAV ── -->
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← React 목록</a>
+      </div>
+    </nav>
+
+    <!-- ── POST HEADER ── -->
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">JavaScript</span>
+          <span class="post-date">
+            작성일 <span id="date-created">—</span> &nbsp;·&nbsp; 수정일
+            <span id="date-updated">—</span>
+          </span>
+        </div>
+        <h1 class="post-title">JavaScript 4</h1>
+        <p class="post-subtitle">
+          자바스크립트의 <strong>자료형 변환(Type Conversion)</strong>은
+          개발자가 직접 바꾸는 <strong>명시적 변환</strong>과, 엔진이 자동으로
+          바꾸는 <strong>암묵적 변환(강제 형 변환)</strong>으로 나뉩니다.
+        </p>
+      </header>
+    </div>
+
+    <!-- ── MAIN WRAPPER ── -->
+    <div class="main-wrapper">
+      <!-- ── TOC SIDEBAR ── -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-intro"
+                ><span class="toc-num">§</span>자료형 변환 개요</a
+              >
+            </li>
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>명시적 변환</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-1-string"
+                    ><span class="toc-num">a.</span>문자열 변환</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-number"
+                    ><span class="toc-num">b.</span>숫자 변환</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-boolean"
+                    ><span class="toc-num">c.</span>불리언 변환</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>암묵적 변환</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-2-plus"
+                    ><span class="toc-num">a.</span>+ 연산자</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-arith"
+                    ><span class="toc-num">b.</span>산술 연산자</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-ex1"
+                ><span class="toc-num">※</span>연습 문제 1</a
+              >
+            </li>
+            <li>
+              <a href="#section-ex2"
+                ><span class="toc-num">※</span>연습 문제 2</a
+              >
+            </li>
+            <li>
+              <a href="#section-ex3"
+                ><span class="toc-num">※</span>연습 문제 3</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- ── POST BODY ── -->
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <!-- ── INTRO ── -->
+        <section class="section visible" id="section-intro">
+          <p class="sec-eyebrow">자료형 변환 (Type Conversion)</p>
+          <h2 class="sec-heading">자료형 변환 개요</h2>
+          <p>
+            자바스크립트의 자료형 변환(Type Conversion)은 크게 두 가지로
+            나뉩니다. 개발자가 의도를 가지고 직접 바꾸는
+            <strong>명시적 변환</strong>과, 자바스크립트 엔진이 필요에 따라
+            자동으로 바꾸는 <strong>암묵적 변환(강제 형 변환)</strong>입니다.
+          </p>
+
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-icon">🔧</div>
+              <div class="card-title">명시적 변환</div>
+              <p class="card-desc">
+                개발자가 <code>Number()</code>, <code>String()</code>,
+                <code>Boolean()</code> 등 내장 함수를 사용해 타입을 직접
+                지정하는 방식입니다.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-icon">⚡</div>
+              <div class="card-title">암묵적 변환</div>
+              <p class="card-desc">
+                자바스크립트 엔진이 연산 과정에서 자동으로 타입을 변환합니다.
+                의도치 않은 버그가 자주 발생하므로 주의가 필요합니다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 1 ── -->
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">명시적 변환</h2>
+          <p>
+            개발자가 내장 함수(<code>Number()</code>, <code>String()</code>,
+            <code>Boolean()</code>)를 사용하여 타입을 직접 지정하는 방식입니다.
+          </p>
+
+          <!-- 1-a. 문자열 변환 -->
+          <div class="section visible" id="section-1-string">
+            <h3 class="sub-heading">a. 문자열(String) 타입으로 변환</h3>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>변환 함수/메서드</th>
+                  <th>설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-tag">String(value)</td>
+                  <td>
+                    가장 표준적. <code>null</code>, <code>undefined</code>를
+                    포함한 모든 값을 안전하게 변환
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td-tag">value.toString()</td>
+                  <td>
+                    객체의 메서드를 사용. <code>null</code>,
+                    <code>undefined</code>에서는 에러 발생. 진법 변환 가능
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">String</span><span class="tx">(123);          </span><span class="cm">// "123"</span>
+<span class="tn">String</span><span class="tx">(true);         </span><span class="cm">// "true"</span>
+<span class="tn">String</span><span class="tx">(null);         </span><span class="cm">// "null"</span>
+
+<span class="tx">(123).</span><span class="tn">toString</span><span class="tx">();    </span><span class="cm">// "123"</span>
+<span class="tx">[1, 2, 3].</span><span class="tn">toString</span><span class="tx">();</span><span class="cm">// "1,2,3"</span>
+<span class="tx">(255).</span><span class="tn">toString</span><span class="tx">(16);  </span><span class="cm">// "ff"</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1-b. 숫자 변환 -->
+          <div class="section visible" id="section-1-number">
+            <h3 class="sub-heading">b. 숫자(Number) 타입으로 변환</h3>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>변환 함수/메서드</th>
+                  <th>설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-tag">Number(value)</td>
+                  <td>
+                    단순 숫자로 변환. 숫자가 아닌 문자가 섞이면
+                    <code>NaN</code> 반환
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td-tag">parseInt(value)</td>
+                  <td>정수 파싱. 앞부분에서 정수만 추출</td>
+                </tr>
+                <tr>
+                  <td class="td-tag">parseFloat(value)</td>
+                  <td>실수 파싱. 앞부분에서 소수점 포함 추출</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">Number</span><span class="tx">(</span><span class="av">"123"</span><span class="tx">);        </span><span class="cm">// 123</span>
+<span class="tn">Number</span><span class="tx">(</span><span class="av">"123.45"</span><span class="tx">);     </span><span class="cm">// 123.45</span>
+<span class="tn">Number</span><span class="tx">(</span><span class="av">"123.45abc"</span><span class="tx">);  </span><span class="cm">// NaN</span>
+
+<span class="tn">parseInt</span><span class="tx">(</span><span class="av">"123.45"</span><span class="tx">);    </span><span class="cm">// 123</span>
+<span class="tn">parseInt</span><span class="tx">(</span><span class="av">"123abc.45"</span><span class="tx">); </span><span class="cm">// 123</span>
+<span class="tn">parseInt</span><span class="tx">(</span><span class="av">"123.45abc"</span><span class="tx">); </span><span class="cm">// 123</span>
+<span class="tn">parseInt</span><span class="tx">(</span><span class="av">"abc123"</span><span class="tx">);    </span><span class="cm">// NaN</span>
+
+<span class="tn">parseFloat</span><span class="tx">(</span><span class="av">"123.45"</span><span class="tx">);    </span><span class="cm">// 123.45</span>
+<span class="tn">parseFloat</span><span class="tx">(</span><span class="av">"123abc.45"</span><span class="tx">); </span><span class="cm">// 123</span>
+<span class="tn">parseFloat</span><span class="tx">(</span><span class="av">"123.45abc"</span><span class="tx">); </span><span class="cm">// 123.45</span>
+<span class="tn">parseFloat</span><span class="tx">(</span><span class="av">"abc123.45"</span><span class="tx">); </span><span class="cm">// NaN</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1-c. 불리언 변환 -->
+          <div class="section visible" id="section-1-boolean">
+            <h3 class="sub-heading">c. 불리언(Boolean) 타입으로 변환</h3>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>변환 함수/메서드</th>
+                  <th>설명</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-tag">Boolean(value)</td>
+                  <td>불리언 타입으로 변환</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="cm">// Falsy 값: false, 0, -0, 0n, "", null, undefined, NaN</span>
+<span class="tn">Boolean</span><span class="tx">(0);       </span><span class="cm">// false</span>
+<span class="tn">Boolean</span><span class="tx">(</span><span class="av">""</span><span class="tx">);      </span><span class="cm">// false</span>
+<span class="tn">Boolean</span><span class="tx">(null);   </span><span class="cm">// false</span>
+
+<span class="cm">// Truthy 값: 위를 제외한 나머지 (빈 배열 [], 빈 객체 {} 포함)</span>
+<span class="tn">Boolean</span><span class="tx">([]);      </span><span class="cm">// true</span>
+<span class="tn">Boolean</span><span class="tx">({});      </span><span class="cm">// true</span>
+<span class="tn">Boolean</span><span class="tx">(</span><span class="av">"false"</span><span class="tx">); </span><span class="cm">// true</span>
+<span class="tn">Boolean</span><span class="tx">(</span><span class="av">"true"</span><span class="tx">);  </span><span class="cm">// true</span></pre>
+              </div>
+            </div>
+
+            <div class="highlight-box">
+              <p>
+                <strong>Falsy 값</strong>이란 <code>Boolean()</code>으로
+                변환했을 때 <code>false</code>가 되는 값입니다.
+                <code>false</code>, <code>0</code>, <code>-0</code>,
+                <code>0n</code>, <code>""</code>, <code>null</code>,
+                <code>undefined</code>, <code>NaN</code>이 해당됩니다. 그 외의
+                모든 값은 <strong>Truthy</strong>로 <code>true</code>가 됩니다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 2 ── -->
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">암묵적 변환</h2>
+          <p>
+            자바스크립트 엔진에 의해 자동으로 타입이 변환되는 것으로, 이
+            부분에서 의도치 않은 버그가 자주 발생하므로 주의해야 합니다.
+          </p>
+
+          <!-- 2-a. + 연산자 -->
+          <div class="section visible" id="section-2-plus">
+            <h3 class="sub-heading">
+              a. 예시 1 : + 연산자 → 문자열 타입으로 변환
+            </h3>
+            <p>
+              <strong>+ 연산자</strong>를 문자열과 함께 사용할 때,
+              <strong>문자열 타입</strong>으로 변환됩니다.
+            </p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"10"</span><span class="tx"> + 5);         </span><span class="cm">// "105"</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"10"</span><span class="tx"> + undefined);  </span><span class="cm">// "10undefined"</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"10"</span><span class="tx"> + null);      </span><span class="cm">// "10null"</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"10"</span><span class="tx"> + true);      </span><span class="cm">// "10true"</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-b. 산술 연산자 -->
+          <div class="section visible" id="section-2-arith">
+            <h3 class="sub-heading">
+              b. 예시 2 : + 이외의 산술연산자 → 숫자 타입으로 변환
+            </h3>
+            <p>
+              <strong>+ 이외의 산술연산자</strong>를 문자열과 함께 사용할 때,
+              <strong>숫자 타입</strong>으로 변환됩니다.
+            </p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"10"</span><span class="tx"> * 5);         </span><span class="cm">// 50</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"10"</span><span class="tx"> * undefined);  </span><span class="cm">// NaN</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"10"</span><span class="tx"> * null);      </span><span class="cm">// 0</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"10"</span><span class="tx"> * true);      </span><span class="cm">// 10</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 연습 문제 1 ── -->
+        <section class="section visible" id="section-ex1">
+          <p class="sec-eyebrow">연습 문제 1</p>
+          <h2 class="sec-heading">출력 결과 예측하기</h2>
+          <p>다음 코드의 출력 결과를 예측하세요.</p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="tn">Number</span><span class="tx">(</span><span class="av">"42abc"</span><span class="tx">)); </span><span class="cm">// ?</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="tn">parseInt</span><span class="tx">(</span><span class="av">"42abc"</span><span class="tx">));</span><span class="cm">// ?</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"5"</span><span class="tx"> + 3);          </span><span class="cm">// ?</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"5"</span><span class="tx"> - 3);          </span><span class="cm">// ?</span></pre>
+            </div>
+          </div>
+
+          <div class="tier-diagram">
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">출력 (1)</span>
+                <span class="tier-name">NaN</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  <code>Number()</code> 함수는 숫자가 아닌 문자가 섞여 있으면
+                  엄격하게 <strong>NaN</strong>(Not a Number)을 반환한다.
+                </p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">출력 (2)</span>
+                <span class="tier-name">42</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  <code>parseInt()</code>는 앞에서부터 읽다가 숫자가 아닌 문자를
+                  만나는 지점까지만 숫자로 바꾼다. 따라서
+                  <strong>'42'</strong>까지만 인식하여 출력한다.
+                </p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">출력 (3)</span>
+                <span class="tier-name">"53"</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  <code>+</code> 연산자는 피연산자 중 하나가 문자열이면 문자열
+                  연결을 우선시하므로, 숫자 <code>3</code>이 문자열
+                  <code>'3'</code>으로 바뀌어 붙는다.
+                </p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">출력 (4)</span>
+                <span class="tier-name">2</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  <code>-</code> 연산자는 오직 '산술 계산'만 수행한다. 문자열
+                  <code>"5"</code>를 숫자 <code>5</code>로 자동 변환(암시적 형
+                  변환)하여 계산을 완료한다.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 연습 문제 2 ── -->
+        <section class="section visible" id="section-ex2">
+          <p class="sec-eyebrow">연습 문제 2</p>
+          <h2 class="sec-heading">Boolean 변환 결과 작성하기</h2>
+          <p>다음 값들의 Boolean 변환 결과를 작성하세요.</p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tn">Boolean</span><span class="tx">(</span><span class="av">"0"</span><span class="tx">);   </span><span class="cm">// ?</span>
+<span class="tn">Boolean</span><span class="tx">(0);    </span><span class="cm">// ?</span>
+<span class="tn">Boolean</span><span class="tx">([]);   </span><span class="cm">// ?</span>
+<span class="tn">Boolean</span><span class="tx">(</span><span class="av">""</span><span class="tx">);   </span><span class="cm">// ?</span>
+<span class="tn">Boolean</span><span class="tx">({});   </span><span class="cm">// ?</span>
+<span class="tn">Boolean</span><span class="tx">(null); </span><span class="cm">// ?</span></pre>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>표현식</th>
+                <th>결과</th>
+                <th>이유</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">Boolean("0")</td>
+                <td class="td-ko2">true</td>
+                <td>
+                  비어 있지 않은 문자열은 무조건 <strong>true</strong>이다.
+                  (내용이 "0"이어도 상관없음)
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">Boolean(0)</td>
+                <td class="td-ko2">false</td>
+                <td>
+                  숫자 <code>0</code>은 자바스크립트의 대표적인
+                  <strong>Falsy</strong> 값이다.
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">Boolean([])</td>
+                <td class="td-ko2">true</td>
+                <td>
+                  빈 배열은 객체이며, 자바스크립트에서 모든 객체는
+                  <strong>true</strong>로 취급된다.
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">Boolean("")</td>
+                <td class="td-ko2">false</td>
+                <td>
+                  빈 문자열(길이가 0인 문자열)은 <strong>Falsy</strong> 값이다.
+                </td>
+              </tr>
+              <tr>
+                <td class="td-tag">Boolean({})</td>
+                <td class="td-ko2">true</td>
+                <td>빈 객체 역시 객체이므로 <strong>true</strong>이다.</td>
+              </tr>
+              <tr>
+                <td class="td-tag">Boolean(null)</td>
+                <td class="td-ko2">false</td>
+                <td>
+                  <code>null</code>은 값이 없음을 의미하는 대표적인
+                  <strong>Falsy</strong> 값이다.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 연습 문제 3 ── -->
+        <section class="section visible" id="section-ex3">
+          <p class="sec-eyebrow">연습 문제 3</p>
+          <h2 class="sec-heading">실행 결과 예측하고 이유 설명하기</h2>
+          <p>다음 코드의 실행 결과를 예측하고 그 이유를 설명하세요.</p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"100"</span><span class="tx"> / </span><span class="av">"20"</span><span class="tx">);    </span><span class="cm">// ?</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"10"</span><span class="tx"> + 5 + 5);    </span><span class="cm">// ?</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(5 + 5 + </span><span class="av">"10"</span><span class="tx">);    </span><span class="cm">// ?</span></pre>
+            </div>
+          </div>
+
+          <div class="tier-diagram">
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">출력 (1)</span>
+                <span class="tier-name">5</span>
+              </div>
+              <div class="tier-content">
+                <p>
+                  나누기(<code>/</code>) 연산자는 문자열 연결 기능이 없다. 오직
+                  산술 계산만 수행하므로, 두 문자열을 숫자로 변환하여 계산한다.
+                </p>
+                <div class="tier-tags">
+                  <span class="tier-tag">"100" → 100</span>
+                  <span class="tier-tag">"20" → 20</span>
+                  <span class="tier-tag">100 / 20 = 5</span>
+                </div>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">출력 (2)</span>
+                <span class="tier-name">"1055"</span>
+              </div>
+              <div class="tier-content">
+                <p>왼쪽부터 순서대로 계산한다.</p>
+                <div class="tier-tags">
+                  <span class="tier-tag">"10" + 5 → "105" (문자열 연결)</span>
+                  <span class="tier-tag">"105" + 5 → "1055" (문자열 연결)</span>
+                </div>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">출력 (3)</span>
+                <span class="tier-name">"1010"</span>
+              </div>
+              <div class="tier-content">
+                <p>왼쪽부터 순서대로 계산한다.</p>
+                <div class="tier-tags">
+                  <span class="tier-tag">5 + 5 → 10 (숫자 합계)</span>
+                  <span class="tier-tag">10 + "10" → "1010" (문자열 연결)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── COMMENTS ── -->
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+
+        <!-- ── POST FOOTER ── -->
+        <footer class="post-footer">
+          <a href="../blog/index.html" class="footer-back">← React 목록</a>
+          <span class="footer-copy">lemontea.dev</span>
+        </footer>
+      </article>
+    </div>
+
+    <script src="../assets/script.js"></script>
+  </body>
+</html>
