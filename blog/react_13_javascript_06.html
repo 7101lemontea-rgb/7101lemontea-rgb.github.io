@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 6 — React Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <!-- ── NAV ── -->
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <!-- ── POST HEADER ── -->
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">JavaScript</span>
+          <span class="post-date">
+            작성일 <span id="date-created">—</span> &nbsp;·&nbsp; 수정일
+            <span id="date-updated">—</span>
+          </span>
+        </div>
+        <h1 class="post-title">JavaScript 6</h1>
+        <p class="post-subtitle">
+          <strong>제어문(Control Flow Statements)</strong>은 코드가 위에서
+          아래로 순차적으로 실행되는 흐름을 바꾸는 도구입니다. 크게
+          <strong>조건문</strong>과 <strong>반복문</strong>으로 나뉩니다.
+        </p>
+      </header>
+    </div>
+
+    <!-- ── MAIN WRAPPER ── -->
+    <div class="main-wrapper">
+      <!-- ── TOC SIDEBAR ── -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-intro"
+                ><span class="toc-num">§</span>제어문 개요</a
+              >
+            </li>
+            <li>
+              <a href="#section-1"><span class="toc-num">1.</span>조건문</a>
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-1-if"
+                    ><span class="toc-num">a.</span>if 문</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-ifelse"
+                    ><span class="toc-num">b.</span>if-else 문</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-elseif"
+                    ><span class="toc-num">c.</span>if-else if-else 문</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-2"><span class="toc-num">2.</span>반복문</a>
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-2-for"
+                    ><span class="toc-num">a.</span>for 문</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-array"
+                    ><span class="toc-num">b.</span>배열 순회</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-while"
+                    ><span class="toc-num">c.</span>while 문</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-practice"
+                ><span class="toc-num">※</span>실습 예제</a
+              >
+            </li>
+            <li>
+              <a href="#section-ex"><span class="toc-num">※</span>연습 문제</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- ── POST BODY ── -->
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <!-- ── INTRO ── -->
+        <section class="section visible" id="section-intro">
+          <p class="sec-eyebrow">제어문 (Control Flow Statements)</p>
+          <h2 class="sec-heading">제어문 개요</h2>
+          <p>
+            JavaScript의 제어문(Control Flow Statements)은 코드가 위에서 아래로
+            순차적으로 실행되는 흐름을 바꾸는 도구입니다. 크게
+            <strong>조건문</strong>과 <strong>반복문</strong>으로 나뉩니다.
+          </p>
+
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-icon">🔀</div>
+              <div class="card-title">조건문</div>
+              <p class="card-desc">
+                특정 조건에 따라 다른 코드를 실행하고 싶을 때 사용합니다.
+                <code>if</code>, <code>if-else</code>,
+                <code>if-else if-else</code>
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-icon">🔁</div>
+              <div class="card-title">반복문</div>
+              <p class="card-desc">
+                동일한 작업을 여러 번 반복해야 할 때 사용합니다.
+                <code>for</code>, <code>for...of</code>, <code>while</code>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 1 : 조건문 ── -->
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">조건문</h2>
+          <p>특정 조건에 따라 다른 코드를 실행하고 싶을 때 사용합니다.</p>
+
+          <!-- 1-a. if 문 -->
+          <div class="section visible" id="section-1-if">
+            <h3 class="sub-heading">a. if 문</h3>
+            <p>조건이 참(<code>true</code>)일 때 실행합니다.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">let</span> <span class="tx">age = 20;</span>
+
+<span class="tn">if</span> <span class="tx">(age &gt;= 18) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"성인입니다."</span><span class="tx">);</span>
+<span class="tx">}</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1-b. if-else 문 -->
+          <div class="section visible" id="section-1-ifelse">
+            <h3 class="sub-heading">b. if-else 문</h3>
+            <p>
+              앞의 조건이 거짓(<code>false</code>)이고, 새로운 조건이
+              참(<code>true</code>)일 때 실행합니다.
+            </p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">let</span> <span class="tx">score = 75;</span>
+
+<span class="tn">if</span> <span class="tx">(score &gt;= 60) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"합격입니다!"</span><span class="tx">);</span>
+<span class="tx">} </span><span class="tn">else</span> <span class="tx">{</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"불합격입니다."</span><span class="tx">);</span>
+<span class="tx">}</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1-c. if-else if-else 문 -->
+          <div class="section visible" id="section-1-elseif">
+            <h3 class="sub-heading">c. if-else if-else 문</h3>
+            <p>
+              프로그램에서 여러 개의 조건 중 하나를 선택하여 실행해야 할 때
+              사용합니다. 논리의 흐름은 위에서 아래로 순차적으로 진행됩니다.
+              하나의 조건이라도 충족(<code>true</code>)되면 해당 블록의 코드를
+              실행하고 전체 문장을 빠져나옵니다.
+            </p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">let</span> <span class="tx">score = 85;</span>
+
+<span class="tn">if</span> <span class="tx">(score &gt;= 90) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"A 등급"</span><span class="tx">);</span>
+<span class="tx">} </span><span class="tn">else if</span> <span class="tx">(score &gt;= 80) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"B 등급"</span><span class="tx">);</span>
+<span class="tx">} </span><span class="tn">else if</span> <span class="tx">(score &gt;= 70) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"C 등급"</span><span class="tx">);</span>
+<span class="tx">} </span><span class="tn">else</span> <span class="tx">{</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"재시험"</span><span class="tx">);</span>
+<span class="tx">}</span></pre>
+              </div>
+            </div>
+
+            <div class="highlight-box">
+              <p>
+                <code>score</code>가 85이므로 첫 번째 조건(<code
+                  >score &gt;= 90</code
+                >)은 건너뛰고, 두 번째 조건(<code>score &gt;= 80</code>)이
+                <code>true</code>가 되어 <strong>"B 등급"</strong>을 출력하고
+                전체 문장을 빠져나옵니다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 2 : 반복문 ── -->
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">반복문</h2>
+          <p>동일한 작업을 여러 번 반복해야 할 때 사용합니다.</p>
+
+          <!-- 2-a. for 문 -->
+          <div class="section visible" id="section-2-for">
+            <h3 class="sub-heading">a. for 문</h3>
+            <p>반복 횟수가 정해져 있을 때 가장 많이 사용합니다.</p>
+
+            <div class="tier-diagram">
+              <div class="tier-row wide">
+                <div class="tier-label">
+                  <span class="tier-layer">초기식</span>
+                  <span class="tier-name">let i = 1</span>
+                </div>
+                <div class="tier-content">
+                  <p>
+                    반복 시작 시 <strong>한 번만</strong> 실행. 보통 카운터
+                    변수를 초기화합니다.
+                  </p>
+                </div>
+              </div>
+              <div class="tier-row wide">
+                <div class="tier-label">
+                  <span class="tier-layer">조건식</span>
+                  <span class="tier-name">i &lt;= 5</span>
+                </div>
+                <div class="tier-content">
+                  <p>
+                    매 반복마다 확인. <code>true</code>이면 반복을 계속하고,
+                    <code>false</code>이면 종료합니다.
+                  </p>
+                </div>
+              </div>
+              <div class="tier-row wide">
+                <div class="tier-label">
+                  <span class="tier-layer">증감식</span>
+                  <span class="tier-name">i++</span>
+                </div>
+                <div class="tier-content">
+                  <p>
+                    매 반복이 끝난 후 실행. 보통 카운터 변수를
+                    증가·감소시킵니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="cm">// 기본 구조</span>
+<span class="tn">for</span> <span class="tx">(초기식; 조건식; 증감식) {</span>
+  <span class="cm">// 반복할 코드</span>
+<span class="tx">}</span>
+
+<span class="cm">// 1부터 5까지 출력</span>
+<span class="tn">for</span> <span class="tx">(</span><span class="tn">let</span> <span class="tx">i = 1; i &lt;= 5; i++) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(i);</span>
+<span class="tx">}</span>
+<span class="cm">// 출력: 1 2 3 4 5</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-b. 배열 순회 -->
+          <div class="section visible" id="section-2-array">
+            <h3 class="sub-heading">b. 배열 순회</h3>
+
+            <div class="compare-grid">
+              <div class="compare-card">
+                <div class="compare-head inline">전통적인 방법</div>
+                <div class="compare-body">
+                  <div class="code-block">
+                    <div class="code-body">
+                      <pre><span class="tn">for</span> <span class="tx">(</span><span class="tn">let</span> <span class="tx">i = 0; i &lt; fruits.length; i++) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(fruits[i]);</span>
+<span class="tx">}</span></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="compare-card">
+                <div class="compare-head block">for...of (더 간단!)</div>
+                <div class="compare-body">
+                  <div class="code-block">
+                    <div class="code-body">
+                      <pre><span class="tn">for</span> <span class="tx">(</span><span class="tn">const</span> <span class="tx">fruit </span><span class="tn">of</span> <span class="tx">fruits) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(fruit);</span>
+<span class="tx">}</span></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">fruits = [</span><span class="av">"사과"</span><span class="tx">, </span><span class="av">"바나나"</span><span class="tx">, </span><span class="av">"오렌지"</span><span class="tx">];</span>
+
+<span class="cm">// 전통적인 방법</span>
+<span class="tn">for</span> <span class="tx">(</span><span class="tn">let</span> <span class="tx">i = 0; i &lt; fruits.length; i++) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(fruits[i]);</span>
+<span class="tx">}</span>
+
+<span class="cm">// for...of (더 간단!)</span>
+<span class="tn">for</span> <span class="tx">(</span><span class="tn">const</span> <span class="tx">fruit </span><span class="tn">of</span> <span class="tx">fruits) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(fruit);</span>
+<span class="tx">}</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-c. while 문 -->
+          <div class="section visible" id="section-2-while">
+            <h3 class="sub-heading">c. while 문</h3>
+            <p>
+              조건이 <code>true</code>인 동안 계속 반복합니다. 횟수보다는 특정
+              상황이 유지될 때 유리합니다.
+            </p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">let</span> <span class="tx">count = 0;</span>
+
+<span class="tn">while</span> <span class="tx">(count &lt; 3) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">`카운트: ${count}`</span><span class="tx">);</span>
+  <span class="tx">count++;</span>
+<span class="tx">}</span>
+<span class="cm">// 출력: 카운트: 0  카운트: 1  카운트: 2</span></pre>
+              </div>
+            </div>
+
+            <div class="highlight-box">
+              <p>
+                <strong>주의:</strong> <code>while</code>문에서 조건을
+                <code>false</code>로 만드는 코드(<code>count++</code>)를
+                빠뜨리면 <strong>무한 루프</strong>가 발생합니다. 반드시 탈출
+                조건을 확인하세요.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 실습 예제 ── -->
+        <section class="section visible" id="section-practice">
+          <p class="sec-eyebrow">실습 예제</p>
+          <h2 class="sec-heading">실습 예제</h2>
+
+          <h3 class="sub-heading">(1) 1부터 10까지의 합</h3>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tn">let</span> <span class="tx">sum = 0;</span>
+
+<span class="tn">for</span> <span class="tx">(</span><span class="tn">let</span> <span class="tx">i = 1; i &lt;= 10; i++) {</span>
+  <span class="tx">sum += i;</span>
+<span class="tx">}</span>
+
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(sum); </span><span class="cm">// 55</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">(2) 구구단</h3>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tn">for</span> <span class="tx">(</span><span class="tn">let</span> <span class="tx">i = 1; i &lt;= 9; i++) {</span>
+  <span class="tn">for</span> <span class="tx">(</span><span class="tn">let</span> <span class="tx">j = 1; j &lt;= 9; j++) {</span>
+    <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">`${i} x ${j} = ${i * j}`</span><span class="tx">);</span>
+  <span class="tx">}</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">(3) n1부터 n2까지 더하기</h3>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tn">let</span> <span class="tx">n1 = 1;</span>
+<span class="tn">let</span> <span class="tx">n2 = 100;</span>
+<span class="tn">let</span> <span class="tx">total = 0;</span>
+
+<span class="tn">for</span> <span class="tx">(</span><span class="tn">let</span> <span class="tx">i = n1; i &lt;= n2; i++) {</span>
+  <span class="tx">total = total + i;</span>
+<span class="tx">}</span>
+
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">`${n1}부터 ${n2}까지 더한 결과는 ${total}`</span><span class="tx">);</span>
+<span class="cm">// 1부터 100까지 더한 결과는 5050</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 연습 문제 ── -->
+        <section class="section visible" id="section-ex">
+          <p class="sec-eyebrow">연습 문제</p>
+          <h2 class="sec-heading">연습 문제</h2>
+
+          <!-- 문제 1 -->
+          <h3 class="sub-heading">1. 점수에 따른 등급 출력</h3>
+          <p>
+            변수 <code>score</code>에 점수가 주어졌을 때, 다음 기준에 따라
+            등급을 출력하는 코드를 작성하세요.
+          </p>
+
+          <div class="tier-diagram">
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">90점 이상</span>
+                <span class="tier-name">A</span>
+              </div>
+              <div class="tier-content">
+                <p><code>score &gt;= 90</code></p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">80점 이상</span>
+                <span class="tier-name">B</span>
+              </div>
+              <div class="tier-content">
+                <p><code>score &gt;= 80</code></p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">70점 이상</span>
+                <span class="tier-name">C</span>
+              </div>
+              <div class="tier-content">
+                <p><code>score &gt;= 70</code></p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">60점 이상</span>
+                <span class="tier-name">D</span>
+              </div>
+              <div class="tier-content">
+                <p><code>score &gt;= 60</code></p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-layer">60점 미만</span>
+                <span class="tier-name">F</span>
+              </div>
+              <div class="tier-content">
+                <p><code>else</code></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tn">let</span> <span class="tx">score = 84;</span>
+
+<span class="tn">if</span> <span class="tx">(score &gt;= 90) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"A"</span><span class="tx">);</span>
+<span class="tx">} </span><span class="tn">else if</span> <span class="tx">(score &gt;= 80) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"B"</span><span class="tx">);</span>  <span class="cm">// score가 84이므로 "B" 출력</span>
+<span class="tx">} </span><span class="tn">else if</span> <span class="tx">(score &gt;= 70) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"C"</span><span class="tx">);</span>
+<span class="tx">} </span><span class="tn">else if</span> <span class="tx">(score &gt;= 60) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"D"</span><span class="tx">);</span>
+<span class="tx">} </span><span class="tn">else</span> <span class="tx">{</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"F"</span><span class="tx">);</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+
+          <!-- 문제 2 -->
+          <h3 class="sub-heading">2. 1부터 20까지 짝수만 출력</h3>
+          <p>
+            <code>for</code>문을 사용하여 1부터 20까지의 숫자 중 짝수만 출력하는
+            코드를 작성하세요.
+          </p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tn">for</span> <span class="tx">(</span><span class="tn">let</span> <span class="tx">i = 1; i &lt;= 20; i++) {</span>
+  <span class="tn">if</span> <span class="tx">(i % 2 == 0) {</span>
+    <span class="tx">console.</span><span class="tn">log</span><span class="tx">(i);</span>
+  <span class="tx">}</span>
+<span class="tx">}</span>
+<span class="cm">// 출력: 2 4 6 8 10 12 14 16 18 20</span></pre>
+            </div>
+          </div>
+
+          <!-- 문제 3 -->
+          <h3 class="sub-heading">3. 배열의 숫자 합계 구하기</h3>
+          <p>
+            아래 배열 <code>numbers</code>의 모든 요소를 더한 합계를 출력하는
+            코드를 작성하세요.
+          </p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tn">const</span> <span class="tx">numbers = [10, 25, 30, 15, 20];</span>
+<span class="tn">let</span> <span class="tx">num = 0;</span>
+
+<span class="tn">for</span> <span class="tx">(</span><span class="tn">let</span> <span class="tx">i = 0; i &lt; numbers.length; i++) {</span>
+  <span class="tx">num = num + numbers[i];</span>
+<span class="tx">}</span>
+
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(num); </span><span class="cm">// 100</span></pre>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <code>numbers</code> 배열의 합계:
+              <strong>10 + 25 + 30 + 15 + 20 = 100</strong>.
+              <code>for</code>문으로 인덱스(<code>i</code>)를 0부터 배열 길이
+              미만까지 순회하며 각 요소를 <code>num</code>에 누적합니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── COMMENTS ── -->
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+    <!-- ── POST FOOTER ── -->
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 블로그 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+    <script src="../script.js"></script>
+  </body>
+</html>
