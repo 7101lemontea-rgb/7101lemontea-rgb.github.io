@@ -1,0 +1,1619 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SRD v1.2 — What The Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">SRD</span>
+          <span class="badge badge-ver">v1.2</span>
+          <span class="badge badge-status draft">Draft</span>
+        </div>
+        <h1 class="post-title">소프트웨어 요구사항 정의서</h1>
+        <p class="post-sub">그게 뭔데 · What The Menu</p>
+        <p class="post-desc">
+          식당·카페 메뉴판 실시간 해독 서비스. Vision AI와 LLM 기반의
+          다국어·다업종 메뉴 해독으로 정보 소외계층의 접근 불평등을 해소합니다.
+          UN SDG Goal 10 기여.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">문서 버전</div>
+            <div class="stat-val">v1.2</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">2026년 03월</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+          <div>
+            <div class="stat-label">상태</div>
+            <div class="stat-val">초안 (Draft)</div>
+          </div>
+          <div>
+            <div class="stat-label">SDG 목표</div>
+            <div class="stat-val">UN SDG Goal 10 — 불평등 감소</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s1"><span class="toc-num">01</span>프로젝트 개요</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s1-1">배경 및 목적</a></li>
+                <li><a href="#s1-2">이해관계자</a></li>
+                <li><a href="#s1-3">프로젝트 범위</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s2"
+                ><span class="toc-num">02</span>경쟁·유사 서비스 분석</a
+              >
+            </li>
+            <li>
+              <a href="#s3"><span class="toc-num">03</span>시스템 개요</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s3-1">아키텍처 개요</a></li>
+                <li><a href="#s3-2">업종별 해독 예시</a></li>
+                <li><a href="#s3-3">주요 사용 시나리오</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s4"><span class="toc-num">04</span>기능 요구사항</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s4-1">핵심 기능 (FR-001~003)</a></li>
+                <li><a href="#s4-2">보조 기능 (FR-004~005)</a></li>
+                <li><a href="#s4-3">다국어 지원 (FR-006)</a></li>
+                <li><a href="#s4-4">인증 및 계정 (FR-007~008)</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s5"
+                ><span class="toc-num">05</span>피드백 기능 요구사항</a
+              >
+            </li>
+            <li>
+              <a href="#s6"
+                ><span class="toc-num">06</span>API 비용·사용량 제한 정책</a
+              >
+            </li>
+            <li>
+              <a href="#s7"><span class="toc-num">07</span>개인정보 처리방침</a>
+            </li>
+            <li>
+              <a href="#s8"><span class="toc-num">08</span>비기능 요구사항</a>
+            </li>
+            <li>
+              <a href="#s9"><span class="toc-num">09</span>제약 조건 및 가정</a>
+            </li>
+            <li>
+              <a href="#s10"><span class="toc-num">10</span>릴리즈 계획</a>
+            </li>
+            <li>
+              <a href="#s11"><span class="toc-num">11</span>인수 기준</a>
+            </li>
+            <li>
+              <a href="#s12"><span class="toc-num">12</span>용어 정의</a>
+            </li>
+            <li>
+              <a href="#s13"><span class="toc-num">13</span>문서 변경 이력</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── 1. 프로젝트 개요 ── -->
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">01 — Overview</div>
+          <h2 class="sec-heading">프로젝트 개요</h2>
+
+          <h3 class="sub-heading" id="s1-1">배경 및 목적</h3>
+          <p>
+            국내 식음료 업장(카페, 한식·중식·이탈리안·일식 레스토랑 등)은
+            감성적·외국어 표현으로 이루어진 메뉴명을 폭넓게 사용하고 있어,
+            시니어·발달장애인·외국인 등 정보 소외계층이 메뉴를 이해하는 데
+            어려움을 겪고 있습니다.
+          </p>
+          <p>
+            <strong>'그게 뭔데(What The Menu)'</strong>는 스마트폰 카메라로
+            메뉴판을 비추면 Vision AI와 LLM이 텍스트를 인식하여 직관적인
+            우리말(또는 선택 언어)로 실시간 해독·안내하는 서비스입니다. 카페뿐
+            아니라 중식당의 한자 메뉴, 이탈리안 레스토랑의 이탈리아어 메뉴,
+            일식당의 히라가나·가타카나 메뉴 등 다양한 업종·언어를 포괄하며, 정보
+            접근 불평등을 해소하여
+            <strong>UN SDG Goal 10(불평등 감소)</strong> 달성에 기여합니다.
+          </p>
+
+          <h3 class="sub-heading" id="s1-2">핵심 이해관계자</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>이해관계자</th>
+                <th>역할</th>
+                <th>관심사항</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>시니어 사용자</td>
+                <td class="txt-accent">주요 타겟 사용자</td>
+                <td>쉬운 메뉴 이해, 큰 글씨, 간결한 UI</td>
+              </tr>
+              <tr>
+                <td>발달장애인</td>
+                <td class="txt-accent">주요 타겟 사용자</td>
+                <td>직관적 설명, 사진 제공, 단순 조작</td>
+              </tr>
+              <tr>
+                <td>외국인 방문객</td>
+                <td class="txt-accent">타겟 사용자</td>
+                <td>한국어·한자·일본어 등 다국어 메뉴의 모국어 설명</td>
+              </tr>
+              <tr>
+                <td>국내 식음료 업장 점주</td>
+                <td class="txt-ink">간접 수혜자</td>
+                <td>고객 만족도 향상, 주문 오류 감소 (카페·식당 포함)</td>
+              </tr>
+              <tr>
+                <td>개발팀</td>
+                <td class="txt-ink">서비스 구축 담당</td>
+                <td>기술 구현 가능성, 일정, 비용</td>
+              </tr>
+              <tr>
+                <td>NGO/공공기관</td>
+                <td class="txt-ink">파트너/지원기관</td>
+                <td>SDG 달성 기여도, 접근성 준수</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s1-3">프로젝트 범위</h3>
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">포함 범위</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>
+                    스마트폰 카메라를 활용한 메뉴판 텍스트 인식 (OCR/Vision AI)
+                  </li>
+                  <li>인식된 텍스트의 직관적 해독 (LLM 기반, 6개 언어 출력)</li>
+                  <li>해독 결과의 AR 오버레이 표시 및 메뉴 예시 이미지 제공</li>
+                  <li>알레르기 유발 성분 안내</li>
+                  <li>
+                    대상 업종: 카페, 한식·중식·일식·이탈리안·프렌치 레스토랑 등
+                    전 식음료 업장
+                  </li>
+                  <li>
+                    지원 입력 언어: 한국어, 영어, 중국어(간체·번체), 일본어,
+                    프랑스어, 이탈리아어
+                  </li>
+                  <li>
+                    지원 출력 언어: 한국어, 영어, 중국어(간체), 일본어,
+                    프랑스어, 이탈리아어
+                  </li>
+                  <li>
+                    비회원 하루 3회 무료 해독 / 회원 무제한 해독 및
+                    이력·알레르기 설정 저장
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">제외 범위</span>
+                <span class="white-column-layer-tech">Phase 1</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>메뉴 주문 및 결제 기능</li>
+                  <li>업장 점주용 메뉴 등록·관리 기능</li>
+                  <li>오프라인 완전 동작 (네트워크 필요)</li>
+                  <li>편의점·마트 등 비식음료 업종 (Phase 3 이후 검토)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 2. 경쟁·유사 서비스 분석 ── -->
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">02 — Competitive Analysis</div>
+          <h2 class="sec-heading">경쟁·유사 서비스 분석</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>서비스명</th>
+                <th>핵심 기능</th>
+                <th>대상 사용자</th>
+                <th>한계점</th>
+                <th>WTM 차별점</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Google Lens</td>
+                <td>이미지 기반 텍스트 번역·검색</td>
+                <td class="txt-muted">일반 사용자 전체</td>
+                <td>단순 번역 수준, 업종별 메뉴 맥락 해독 없음</td>
+                <td>업종·언어 특화 LLM 해독 + 알레르기 안내</td>
+              </tr>
+              <tr>
+                <td>Naver 렌즈</td>
+                <td>한국어 OCR + 번역</td>
+                <td class="txt-muted">국내 일반 사용자</td>
+                <td>정보 소외계층 UI 미고려, 식당 업종 미특화</td>
+                <td>시니어/장애인 특화 UI, TTS, 업종 자동 감지</td>
+              </tr>
+              <tr>
+                <td>Papago 카메라</td>
+                <td>실시간 카메라 번역</td>
+                <td class="txt-muted">외국인·여행객</td>
+                <td>감성 메뉴명·한자 메뉴 의미 해독 불가</td>
+                <td>중식·일식 한자/가나 메뉴 직관적 해독</td>
+              </tr>
+              <tr>
+                <td>식당 전문 앱 (일부 스타트업)</td>
+                <td>특정 체인 메뉴 DB 안내</td>
+                <td class="txt-muted">특정 브랜드 방문객</td>
+                <td>사전 DB 등록 필요, 신규·소규모 식당 대응 불가</td>
+                <td>DB 없이 어떤 식당도 실시간 즉시 해독</td>
+              </tr>
+              <tr>
+                <td>네이버 지도 메뉴판 사진</td>
+                <td>메뉴판 사진 열람</td>
+                <td class="txt-muted">국내 식당 탐색 사용자</td>
+                <td>사전 등록 사진만 제공, 실시간 AR 없음</td>
+                <td>실시간 AR 오버레이로 현장 즉시 해독</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">차별화 전략 요약</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>업종 무관 실시간 해독:</strong>
+              카페·한식·중식·일식·이탈리안·프렌치 등 사전 등록 없이 어떤 식음료
+              업장 메뉴판도 즉시 해독
+            </li>
+            <li>
+              <strong>다국어 입력 특화:</strong> 한자(간체·번체),
+              히라가나·가타카나, 프랑스어·이탈리아어 식음료 전문 용어를 맥락에
+              맞게 해독
+            </li>
+            <li>
+              <strong>정보 소외계층 특화:</strong> WCAG 2.1 AA 접근성, TTS, 큰
+              글씨 등 복지 관점 설계
+            </li>
+            <li>
+              <strong>알레르기 안내:</strong> 경쟁 서비스에 없는 22종 알레르기
+              정보 제공
+            </li>
+            <li>
+              <strong>업종 자동 인식:</strong> LLM이 메뉴판 문맥으로
+              업종(카페·일식·중식 등)을 자동 감지하여 해독 톤·용어 최적화
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── 3. 시스템 개요 ── -->
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">03 — System Overview</div>
+          <h2 class="sec-heading">시스템 개요</h2>
+
+          <h3 class="sub-heading" id="s3-1">시스템 아키텍처 개요</h3>
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">Frontend</span>
+                <span class="white-column-layer-tech">iOS / Android 앱</span>
+              </div>
+              <div class="white-column-content">
+                <p>카메라 제어, AR 렌더링, 업종 감지 UI, 다국어 전환</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">Backend API</span>
+                <span class="white-column-layer-tech">Node.js / Python</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  요청 라우팅, 결과 캐싱, Rate Limiting, 업종 컨텍스트 관리,
+                  로깅
+                </p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">AI Layer</span>
+                <span class="white-column-layer-tech">Vision AI + LLM</span>
+              </div>
+              <div class="white-column-content">
+                <p>6개 언어 텍스트 인식 및 업종별 자연어 해독</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">External API</span>
+                <span class="white-column-layer-tech">이미지 검색 API</span>
+              </div>
+              <div class="white-column-content">
+                <p>메뉴 예시 이미지 제공 (업종별 이미지 필터 포함)</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">Database</span>
+                <span class="white-column-layer-tech">PostgreSQL</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  사용자 계정·설정, 해독 이력, 알레르기 DB, 업종별 메뉴 캐시
+                </p>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">Auth</span>
+                <span class="white-column-layer-tech">OAuth 2.0</span>
+              </div>
+              <div class="white-column-content">
+                <p>회원 인증 (Google, Kakao, Apple)</p>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="s3-2">업종별 해독 예시</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>업종</th>
+                <th>원문 메뉴 예시</th>
+                <th>해독 결과 (한국어 출력 시)</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>카페</td>
+                <td class="txt-accent">M.S.G.R Latte</td>
+                <td>그냥 미숫가루 라떼</td>
+                <td class="txt-muted">감성 약어 해독</td>
+              </tr>
+              <tr>
+                <td>중식당</td>
+                <td class="txt-accent">夫妻肺片</td>
+                <td>소고기·내장 매콤 무침 (중국 사천 요리)</td>
+                <td class="txt-muted">한자 + 요리 맥락 설명</td>
+              </tr>
+              <tr>
+                <td>일식당</td>
+                <td class="txt-accent">とろサーモン丼</td>
+                <td>살살 녹는 연어 덮밥</td>
+                <td class="txt-muted">히라가나 + 식감 묘사</td>
+              </tr>
+              <tr>
+                <td>이탈리안</td>
+                <td class="txt-accent">Pappardelle al Cinghiale</td>
+                <td>넓적 파스타면에 멧돼지 고기 소스</td>
+                <td class="txt-muted">이탈리아어 식재료 설명</td>
+              </tr>
+              <tr>
+                <td>프렌치</td>
+                <td class="txt-accent">Bouillabaisse</td>
+                <td>프로방스식 해산물 스튜</td>
+                <td class="txt-muted">프랑스 지역 요리 맥락</td>
+              </tr>
+              <tr>
+                <td>한식당 (외국인 사용)</td>
+                <td class="txt-accent">된장찌개</td>
+                <td>Fermented soybean paste stew with tofu &amp; vegetables</td>
+                <td class="txt-muted">한국어 → 영어 출력</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s3-3">주요 사용 시나리오</h3>
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Scenario 01</span>
+                <span class="white-title">비회원 시나리오</span>
+              </div>
+              <ul class="bullet-list">
+                <li>사용자가 앱을 실행하고 카메라를 메뉴판에 향한다.</li>
+                <li>
+                  Vision AI가 메뉴 텍스트(한국어, 한자, 가나, 로마자 등)를
+                  실시간으로 인식한다.
+                </li>
+                <li>
+                  LLM이 업종을 자동 감지하고 인식된 텍스트를 직관적인 설명으로
+                  변환한다.
+                </li>
+                <li>해독된 텍스트가 AR 오버레이로 화면에 표시된다.</li>
+                <li>
+                  하루 3회 해독 후 추가 사용 시 회원가입 안내 팝업이 표시된다.
+                </li>
+              </ul>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Scenario 02</span>
+                <span class="white-title">회원 시나리오</span>
+              </div>
+              <ul class="bullet-list">
+                <li>로그인 후 제한 없이 해독 가능.</li>
+                <li>
+                  특정 메뉴를 탭하면 예시 사진과 알레르기 정보가 표시된다.
+                </li>
+                <li>
+                  해독 이력이 자동 저장되어 My 이력에서 확인 가능 (업장명·날짜
+                  포함).
+                </li>
+                <li>
+                  My 알레르기에 사전 설정된 항목이 메뉴 해독 시 강조 표시된다.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 4. 기능 요구사항 ── -->
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">04 — Functional Requirements</div>
+          <h2 class="sec-heading">기능 요구사항</h2>
+
+          <h3 class="sub-heading" id="s4-1">
+            4.1 핵심 기능: 실시간 AR 메뉴 해독
+          </h3>
+
+          <p class="sec-eyebrow" style="margin-top: 1.5rem">
+            FR-001 카메라 기반 텍스트 인식
+          </p>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">요구사항 ID</div>
+              <div class="info-val">FR-001</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">기능명</div>
+              <div class="info-val">
+                카메라 기반 메뉴 텍스트 인식 (Vision AI / OCR)
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">설명</div>
+              <div class="info-val">
+                스마트폰 카메라로 메뉴판을 비추면 Vision AI가 텍스트를
+                실시간으로 인식한다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">입력</div>
+              <div class="info-val">카메라 스트리밍 이미지</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">출력</div>
+              <div class="info-val">
+                인식된 텍스트 목록 및 화면 내 위치 좌표
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">지원 문자</div>
+              <div class="info-val">
+                한글, 영문 로마자, 중국어 간체·번체, 일본어
+                히라가나·가타카나·한자, 프랑스어·이탈리아어 특수 발음부호 포함
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">처리 조건</div>
+              <div class="info-val">
+                조도 300lux 이상 환경에서 인식 가능. 손글씨 제외, 인쇄체·디지털
+                표시판 대상.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">성능 기준</div>
+              <div class="info-val">
+                텍스트 인식 정확도 90% 이상, 처리 지연 1초 이내
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">우선순위</div>
+              <div class="info-val">
+                <span class="color-badge p1">HIGH</span> Must Have
+              </div>
+            </div>
+          </div>
+
+          <p class="sec-eyebrow" style="margin-top: 1.5rem">
+            FR-002 LLM 기반 메뉴 해독 (업종·다국어 특화)
+          </p>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">요구사항 ID</div>
+              <div class="info-val">FR-002</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">기능명</div>
+              <div class="info-val">
+                업종별 직관적 메뉴 해독 (LLM, 6개 출력 언어)
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">설명</div>
+              <div class="info-val">
+                인식된 메뉴 텍스트를 LLM이 업종 맥락을 고려하여 직관적인
+                설명으로 변환한다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">업종 자동 감지</div>
+              <div class="info-val">
+                LLM이 메뉴판 전체 텍스트 패턴으로
+                카페·한식·중식·일식·이탈리안·프렌치 등 업종을 자동 분류하여 해독
+                톤과 용어를 최적화
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">지원 입력 언어</div>
+              <div class="info-val">
+                한국어, 영어, 중국어(간체·번체), 일본어, 프랑스어, 이탈리아어
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">지원 출력 언어</div>
+              <div class="info-val">
+                한국어, 영어, 중국어(간체), 일본어, 프랑스어, 이탈리아어 (사용자
+                설정 기준)
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해독 형식</div>
+              <div class="info-val">
+                메뉴명(원문) + 직관적 설명 1줄 + 주요 재료/조리법 요약
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">성능 기준</div>
+              <div class="info-val">해독 응답 시간 2초 이내</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">우선순위</div>
+              <div class="info-val">
+                <span class="color-badge p1">HIGH</span> Must Have
+              </div>
+            </div>
+          </div>
+
+          <p class="sec-eyebrow" style="margin-top: 1.5rem">
+            FR-003 AR 오버레이 표시
+          </p>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">요구사항 ID</div>
+              <div class="info-val">FR-003</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">기능명</div>
+              <div class="info-val">실시간 AR 해독 결과 표시</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">설명</div>
+              <div class="info-val">
+                해독된 텍스트를 원본 메뉴 텍스트 위치에 AR 오버레이로 실시간
+                표시한다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">처리 조건</div>
+              <div class="info-val">
+                원본 텍스트와 해독 텍스트를 구분 가능한 색상/스타일로 표시. 글자
+                크기 접근성 기준 준수 (WCAG AA 레벨 이상).
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">업종 표시</div>
+              <div class="info-val">
+                화면 상단에 감지된 업종 뱃지(예: '🍜 중식당') 표시로 사용자 확인
+                가능
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">우선순위</div>
+              <div class="info-val">
+                <span class="color-badge p1">HIGH</span> Must Have
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="s4-2">4.2 보조 기능: 메뉴 상세 안내</h3>
+
+          <p class="sec-eyebrow" style="margin-top: 1.5rem">
+            FR-004 메뉴 예시 이미지 제공
+          </p>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">요구사항 ID</div>
+              <div class="info-val">FR-004</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">설명</div>
+              <div class="info-val">
+                AR 화면에서 특정 메뉴를 탭하면 해당 메뉴의 예시 사진을 팝업으로
+                보여준다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">출력</div>
+              <div class="info-val">
+                예시 이미지 1~3장 + 메뉴 간단 설명 + 업종 카테고리 태그
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">처리 조건</div>
+              <div class="info-val">
+                이미지 미제공 시 '이미지 준비 중' 기본 이미지 표시. 이미지 검색
+                시 업종 필터 적용(예: 중식 요리 이미지 우선).
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">우선순위</div>
+              <div class="info-val">
+                <span class="color-badge p2">MEDIUM</span> Should Have
+              </div>
+            </div>
+          </div>
+
+          <p class="sec-eyebrow" style="margin-top: 1.5rem">
+            FR-005 알레르기 유발 성분 안내
+          </p>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">요구사항 ID</div>
+              <div class="info-val">FR-005</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">설명</div>
+              <div class="info-val">
+                해독된 메뉴에 포함될 가능성이 있는 주요 알레르기 유발 성분을
+                아이콘으로 표시한다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">알레르기 항목</div>
+              <div class="info-val">
+                우유, 밀(글루텐), 대두, 견과류, 달걀, 갑각류, 복숭아, 돼지고기,
+                쇠고기 등 식품 알레르기 22종 기준
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">업종별 특이사항</div>
+              <div class="info-val">
+                중식: 굴소스·두반장 등 발효 소스 알레르기 항목 추가 안내 / 일식:
+                생선·갑각류·와사비 항목 강조 / 이탈리안: 글루텐·유제품 항목 강조
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">주의사항</div>
+              <div class="info-val">
+                실제 성분은 업장마다 다를 수 있으므로 '가능성 안내' 수준으로
+                제공하며, 면책 문구 표시 의무화
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">우선순위</div>
+              <div class="info-val">
+                <span class="color-badge p2">MEDIUM</span> Should Have
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="s4-3">4.3 다국어 지원 기능</h3>
+
+          <p class="sec-eyebrow" style="margin-top: 1.5rem">
+            FR-006 메뉴판 다국어 해독
+          </p>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">요구사항 ID</div>
+              <div class="info-val">FR-006</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">기능명</div>
+              <div class="info-val">
+                메뉴판 6개 입력 언어 × 6개 출력 언어 해독
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">지원 입력 언어</div>
+              <div class="info-val">
+                한국어, 영어, 중국어(간체·번체), 일본어(히라가나·가타카나·한자),
+                프랑스어, 이탈리아어
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">지원 출력 언어</div>
+              <div class="info-val">
+                한국어, 영어, 중국어(간체), 일본어, 프랑스어, 이탈리아어
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">혼합 언어 처리</div>
+              <div class="info-val">
+                한 메뉴판에 한국어·영어·한자가 혼재하는 경우 각 항목의 원문
+                언어를 개별 감지하여 출력 언어로 통합 변환
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">언어 전환</div>
+              <div class="info-val">
+                앱 설정 또는 화면 내 빠른 전환 버튼 지원
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">우선순위</div>
+              <div class="info-val">
+                <span class="color-badge p2">MEDIUM</span> Should Have
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="s4-4">4.4 사용자 인증 및 계정 기능</h3>
+
+          <p class="sec-eyebrow" style="margin-top: 1.5rem">
+            FR-007 비회원/회원 차등 서비스
+          </p>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">요구사항 ID</div>
+              <div class="info-val">FR-007</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">비회원</div>
+              <div class="info-val">
+                앱 설치 즉시 사용 가능. 하루 3회 무료 해독 제공. 이력·알레르기
+                설정 저장 불가.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">회원 (무료)</div>
+              <div class="info-val">
+                소셜 로그인 후 무제한 해독 가능. 해독 이력 저장 (최근 30건,
+                업장명·날짜 포함). My 알레르기 설정 저장 및 강조 표시.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">로그인 방식</div>
+              <div class="info-val">Google, Kakao, Apple ID (OAuth 2.0)</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">비회원 한도 초과 시</div>
+              <div class="info-val">
+                3회 사용 후 '더 많이 사용하시려면 무료 회원가입' 안내 팝업 표시
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">우선순위</div>
+              <div class="info-val">
+                <span class="color-badge p1">HIGH</span> Must Have
+              </div>
+            </div>
+          </div>
+
+          <p class="sec-eyebrow" style="margin-top: 1.5rem">
+            FR-008 설정 및 접근성
+          </p>
+          <ul class="bullet-list">
+            <li>글자 크기 조절 (소/중/대/매우큰)</li>
+            <li>고대비 모드 지원 (시각 약자 배려)</li>
+            <li>음성 안내(TTS) 기능 — 해독 결과를 음성으로 읽어줌</li>
+            <li>
+              해독 이력 저장 (회원 전용, 최근 30건, 업종·업장명 태그 포함)
+            </li>
+            <li>알레르기 항목 사전 설정 My 알레르기 (회원 전용)</li>
+            <li>
+              업종 필터 설정 — 자주 방문하는 업종을 즐겨찾기로 등록 (회원 전용)
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── 5. 피드백 기능 요구사항 ── -->
+        <section class="section visible" id="s5">
+          <div class="sec-eyebrow">05 — Feedback</div>
+          <h2 class="sec-heading">피드백 기능 요구사항</h2>
+
+          <p class="sec-eyebrow" style="margin-top: 1.5rem">
+            FR-009 사용자 피드백 제출
+          </p>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">요구사항 ID</div>
+              <div class="info-val">FR-009</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">기능명</div>
+              <div class="info-val">해독 오류 신고 및 개선 피드백</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">설명</div>
+              <div class="info-val">
+                AR 화면에서 특정 해독 결과 옆 '신고' 버튼을 탭하면 오류 유형을
+                선택하고 의견을 남길 수 있다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">오류 유형</div>
+              <div class="info-val">
+                ① 해독이 이상해요 ② 업종 감지가 틀렸어요 ③ 알레르기 정보가
+                틀려요 ④ 이미지가 잘못됐어요 ⑤ 기타
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">입력</div>
+              <div class="info-val">
+                오류 유형 선택 + 자유 텍스트 (선택 입력, 최대 200자)
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">출력</div>
+              <div class="info-val">
+                신고 접수 확인 메시지. 백엔드 피드백 DB 저장.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">활용</div>
+              <div class="info-val">
+                누적 피드백 기반 LLM 프롬프트 및 업종 감지 모델 개선, 알레르기
+                DB 업데이트에 반영
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">우선순위</div>
+              <div class="info-val">
+                <span class="color-badge p2">MEDIUM</span> Should Have
+              </div>
+            </div>
+          </div>
+
+          <p class="sec-eyebrow" style="margin-top: 1.5rem">
+            FR-010 해독 결과 만족도 평가
+          </p>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">요구사항 ID</div>
+              <div class="info-val">FR-010</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">기능명</div>
+              <div class="info-val">해독 결과 만족도 별점 평가</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">설명</div>
+              <div class="info-val">
+                해독 세션 종료 후 선택적으로 '이 해독 결과가 도움이 됐나요?'
+                1~5점 별점 평가를 노출한다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">노출 빈도</div>
+              <div class="info-val">
+                세션당 최대 1회. 7일 내 이미 평가한 사용자에게는 미노출.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">활용</div>
+              <div class="info-val">
+                서비스 KPI(업종별 만족도 점수) 측정 및 품질 개선 지표로 사용
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">우선순위</div>
+              <div class="info-val">
+                <span class="color-badge p3">LOW</span> Nice to Have
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 6. API 비용·사용량 제한 정책 ── -->
+        <section class="section visible" id="s6">
+          <div class="sec-eyebrow">06 — Rate Limiting &amp; Cost Policy</div>
+          <h2 class="sec-heading">API 비용·사용량 제한 정책</h2>
+
+          <h3 class="sub-heading">6.1 사용량 제한 (Rate Limiting) 정책</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>일일 해독 횟수</th>
+                <th>프롬프트 토큰 상한 (1회)</th>
+                <th>이미지 검색 API</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>비회원</td>
+                <td class="txt-accent">3회</td>
+                <td class="txt-muted">500 tokens</td>
+                <td class="txt-muted">3회 (해독과 동일 쿼터)</td>
+                <td class="txt-muted">기기 ID 기반 카운트</td>
+              </tr>
+              <tr>
+                <td>회원 (무료)</td>
+                <td class="txt-accent">무제한*</td>
+                <td class="txt-muted">1,000 tokens</td>
+                <td class="txt-muted">무제한*</td>
+                <td class="txt-muted">계정 기반 카운트</td>
+              </tr>
+              <tr>
+                <td>* 어뷰징 방지</td>
+                <td class="txt-muted">분당 10회 초과 시 1분 차단</td>
+                <td class="txt-muted">—</td>
+                <td class="txt-muted">—</td>
+                <td class="txt-muted">비정상 패턴 감지 시 계정 검토</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">6.2 비용 관리 정책</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>Vision AI 호출:</strong> 이전 프레임과 유사도 80% 이상이면
+              캐시 결과 재사용 (서버 사이드 캐싱)
+            </li>
+            <li>
+              <strong>LLM 호출:</strong> 동일 업종 + 동일 메뉴명 조합의 해독
+              결과는 24시간 캐시하여 중복 호출 비용 절감
+            </li>
+            <li>
+              <strong>이미지 API:</strong> CDN 캐시 적용, 동일 메뉴명 이미지는
+              7일간 재사용
+            </li>
+            <li>
+              <strong>업종별 캐시 분리:</strong> 같은 메뉴명이라도 업종이 다르면
+              별도 캐시 (예: 카페의 'Americano' vs 이탈리안의 'Americano')
+            </li>
+            <li>
+              월별 API 비용 대시보드를 내부 운영하며, 예산 초과 시 비회원 쿼터를
+              일시적으로 축소 가능
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">6.3 어뷰징 방지</h3>
+          <ul class="bullet-list">
+            <li>
+              비회원: 기기 ID(Device Fingerprint) + IP 주소 조합으로 하루 3회
+              쿼터 관리
+            </li>
+            <li>VPN/프록시 우회 감지 시 쿼터를 기기 ID 단독 기준으로 전환</li>
+            <li>
+              자동화 봇 탐지: 요청 간격이 0.5초 미만인 경우 CAPTCHA 인증 요구
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── 7. 개인정보 처리방침 ── -->
+        <section class="section visible" id="s7">
+          <div class="sec-eyebrow">07 — Privacy Policy</div>
+          <h2 class="sec-heading">개인정보 처리방침 및 법적 근거</h2>
+
+          <h3 class="sub-heading">7.1 개인정보 처리 원칙</h3>
+          <p>
+            본 서비스는 대한민국 개인정보 보호법(PIPA), EU
+            일반개인정보보호규정(GDPR), 정보통신망 이용촉진 및 정보보호 등에
+            관한 법률(정보통신망법)을 준수합니다.
+          </p>
+
+          <h3 class="sub-heading">7.2 수집 항목 및 처리 목적</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>수집 항목</th>
+                <th>처리 목적</th>
+                <th>보존 기간</th>
+                <th>법적 근거</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>비회원</td>
+                <td class="txt-muted">기기 ID, IP 주소</td>
+                <td>쿼터 관리, 어뷰징 방지</td>
+                <td class="txt-muted">당일 자정 초기화</td>
+                <td class="txt-muted">서비스 계약 이행 (PIPA 제15조)</td>
+              </tr>
+              <tr>
+                <td>회원</td>
+                <td class="txt-muted">이메일, 소셜 ID, 닉네임</td>
+                <td>계정 인증 및 식별</td>
+                <td class="txt-muted">탈퇴 후 30일 내 삭제</td>
+                <td class="txt-muted">정보주체 동의 (PIPA 제15조)</td>
+              </tr>
+              <tr>
+                <td>회원</td>
+                <td class="txt-muted">해독 이력 (텍스트·업종)</td>
+                <td>이력 조회 서비스 제공</td>
+                <td class="txt-muted">저장 후 1년 또는 탈퇴 시</td>
+                <td class="txt-muted">서비스 계약 이행</td>
+              </tr>
+              <tr>
+                <td>회원</td>
+                <td class="txt-muted">My 알레르기 설정</td>
+                <td>맞춤 알레르기 표시</td>
+                <td class="txt-muted">탈퇴 시 즉시 삭제</td>
+                <td class="txt-muted">정보주체 동의</td>
+              </tr>
+              <tr>
+                <td>전체</td>
+                <td class="txt-muted">카메라 이미지 (처리 중)</td>
+                <td>메뉴 해독 AI 처리</td>
+                <td class="txt-muted">처리 즉시 삭제 (서버 미저장)</td>
+                <td class="txt-muted">서비스 계약 이행</td>
+              </tr>
+              <tr>
+                <td>전체</td>
+                <td class="txt-muted">앱 사용 로그 (익명)</td>
+                <td>서비스 품질 개선</td>
+                <td class="txt-muted">6개월 후 자동 삭제</td>
+                <td class="txt-muted">정당한 이익 (PIPA 제15조)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">7.4 정보주체의 권리</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>열람 요청:</strong> 앱 내 '내 정보' 메뉴에서 저장된
+              개인정보 직접 확인 가능
+            </li>
+            <li>
+              <strong>삭제 요청:</strong> 앱 내 '계정 탈퇴' 시 30일 이내 모든
+              개인정보 삭제
+            </li>
+            <li>
+              <strong>이의 제기:</strong> privacy@whatthemenu.kr로 이메일 접수,
+              7영업일 이내 회신
+            </li>
+            <li>
+              <strong>EU 거주 사용자:</strong> GDPR 제17조(잊혀질 권리),
+              제20조(데이터 이동권) 행사 가능
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">7.5 보안 조치</h3>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">전송 구간</div>
+              <div class="info-val">TLS 1.3 이상 암호화</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">저장 데이터</div>
+              <div class="info-val">AES-256 암호화</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">접근 제어</div>
+              <div class="info-val">
+                개발팀 내 최소 권한 원칙(Least Privilege) 적용
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">정기 보안 점검</div>
+              <div class="info-val">연 2회 외부 보안 감사 시행</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 8. 비기능 요구사항 ── -->
+        <section class="section visible" id="s8">
+          <div class="sec-eyebrow">08 — Non-Functional Requirements</div>
+          <h2 class="sec-heading">비기능 요구사항</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>분류</th>
+                <th>요구사항 ID</th>
+                <th>내용</th>
+                <th>기준값</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>성능</td>
+                <td class="txt-accent">NFR-001</td>
+                <td>OCR 인식 처리 시간</td>
+                <td class="txt-muted">1초 이내 (4G 환경 기준)</td>
+              </tr>
+              <tr>
+                <td>성능</td>
+                <td class="txt-accent">NFR-002</td>
+                <td>LLM 해독 응답 시간 (업종 감지 포함)</td>
+                <td class="txt-muted">2초 이내</td>
+              </tr>
+              <tr>
+                <td>가용성</td>
+                <td class="txt-accent">NFR-003</td>
+                <td>서비스 가동률</td>
+                <td class="txt-muted">99.5% 이상 (월 기준)</td>
+              </tr>
+              <tr>
+                <td>보안</td>
+                <td class="txt-accent">NFR-004</td>
+                <td>카메라 이미지 전송 보안</td>
+                <td class="txt-muted">TLS 1.3 이상 암호화</td>
+              </tr>
+              <tr>
+                <td>보안</td>
+                <td class="txt-accent">NFR-005</td>
+                <td>개인정보 처리</td>
+                <td class="txt-muted">
+                  이미지 서버 미저장 (처리 후 즉시 삭제)
+                </td>
+              </tr>
+              <tr>
+                <td>접근성</td>
+                <td class="txt-accent">NFR-006</td>
+                <td>UI 접근성 기준</td>
+                <td class="txt-muted">WCAG 2.1 AA 레벨 준수</td>
+              </tr>
+              <tr>
+                <td>호환성</td>
+                <td class="txt-accent">NFR-007</td>
+                <td>지원 OS</td>
+                <td class="txt-muted">iOS 15.0+, Android 10.0+</td>
+              </tr>
+              <tr>
+                <td>유지보수</td>
+                <td class="txt-accent">NFR-008</td>
+                <td>LLM 프롬프트 및 업종 감지 모델 업데이트</td>
+                <td class="txt-muted">코드 배포 없이 수정 가능</td>
+              </tr>
+              <tr>
+                <td>국제화</td>
+                <td class="txt-accent">NFR-009</td>
+                <td>지원 입·출력 언어</td>
+                <td class="txt-muted">입력 6종, 출력 6종</td>
+              </tr>
+              <tr>
+                <td>비용</td>
+                <td class="txt-accent">NFR-010</td>
+                <td>API 비용 효율 (업종별 캐시 포함)</td>
+                <td class="txt-muted">캐시 적중률 40% 이상 유지</td>
+              </tr>
+              <tr>
+                <td>확장성</td>
+                <td class="txt-accent">NFR-011</td>
+                <td>신규 업종 추가 용이성</td>
+                <td class="txt-muted">
+                  LLM 프롬프트 수정만으로 신규 업종 지원 가능
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 9. 제약 조건 및 가정 ── -->
+        <section class="section visible" id="s9">
+          <div class="sec-eyebrow">09 — Constraints &amp; Assumptions</div>
+          <h2 class="sec-heading">제약 조건 및 가정</h2>
+
+          <h3 class="sub-heading">9.1 기술 제약</h3>
+          <ul class="bullet-list">
+            <li>
+              Vision AI 및 LLM 호출은 네트워크 연결 필요 (완전 오프라인 미지원)
+            </li>
+            <li>
+              OCR 인식률은 메뉴판 폰트·조명·언어 환경에 따라 변동 가능
+              (한자·가나는 영문 대비 5~10% 낮을 수 있음)
+            </li>
+            <li>LLM 해독 결과는 참고 정보이며 100% 정확성 보장 불가</li>
+            <li>
+              AR 오버레이는 ARKit(iOS) / ARCore(Android) 지원 기기에서만 동작
+            </li>
+            <li>
+              업종 자동 감지는 메뉴판 텍스트가 충분하지 않을 경우 (항목 3개
+              미만) 정확도가 낮아질 수 있음
+            </li>
+            <li>
+              중국어 번체 입력은 간체 전환 후 LLM에 전달 (번체 직접 처리는 Phase
+              2)
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">9.2 비즈니스 제약</h3>
+          <ul class="bullet-list">
+            <li>
+              알레르기 정보는 '가능성 안내' 수준으로만 제공하며 의료적 근거로
+              사용 불가
+            </li>
+            <li>이미지 검색 API의 저작권 정책 준수 필요</li>
+            <li>
+              Phase 1: 카페 + 주요 레스토랑 업종
+              (한식·중식·일식·이탈리안·프렌치) 대상
+            </li>
+            <li>
+              편의점·마트·패스트푸드 체인 등 비레스토랑 업종은 Phase 3 이후 검토
+            </li>
+            <li>비회원 쿼터(하루 3회)는 API 비용 구조 변경 시 조정 가능</li>
+          </ul>
+
+          <h3 class="sub-heading">9.3 가정 사항</h3>
+          <ul class="bullet-list">
+            <li>사용자는 스마트폰과 카메라 앱의 기본 조작 능력을 보유함</li>
+            <li>앱 사용 중 최소 3G 이상의 네트워크 환경 제공됨</li>
+            <li>
+              메뉴판은 본 서비스가 지원하는 6개 언어 중 하나 이상으로 작성됨
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── 10. 릴리즈 계획 ── -->
+        <section class="section visible" id="s10">
+          <div class="sec-eyebrow">10 — Release Plan</div>
+          <h2 class="sec-heading">요구사항 우선순위 및 릴리즈 계획</h2>
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Phase 1 · M1~M4</span>
+                <span class="white-title">MVP</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">포함 기능</div>
+                  <div class="white-value">
+                    FR-001, FR-002 (한국어·영어 출력), FR-003, FR-007
+                    (비회원/회원 인증)
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">목표 업종</div>
+                  <div class="white-value">카페, 한식당</div>
+                </div>
+                <div>
+                  <div class="white-label">목표</div>
+                  <div class="white-value">
+                    핵심 가치 검증, 베타 사용자 테스트
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Phase 2 · M5~M7</span>
+                <span class="white-title">서비스 완성도 향상</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">포함 기능</div>
+                  <div class="white-value">
+                    FR-004, FR-005, FR-006 (6개 언어 완성), FR-009, FR-010
+                    (피드백), 업종 자동 감지
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">목표 업종</div>
+                  <div class="white-value">중식·일식·이탈리안·프렌치 추가</div>
+                </div>
+                <div>
+                  <div class="white-label">목표</div>
+                  <div class="white-value">다국어·다업종 지원</div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Phase 3 · M8~M10</span>
+                <span class="white-title">정식 출시</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">포함 기능</div>
+                  <div class="white-value">
+                    FR-008 (접근성 고도화), 번체 직접 지원, 업종 확대, 비용
+                    최적화
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">목표 업종</div>
+                  <div class="white-value">편의점·패스트푸드 등 확대</div>
+                </div>
+                <div>
+                  <div class="white-label">목표</div>
+                  <div class="white-value">
+                    정식 출시, 파트너십, 비용 최적화
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 11. 인수 기준 ── -->
+        <section class="section visible" id="s11">
+          <div class="sec-eyebrow">11 — Acceptance Criteria</div>
+          <h2 class="sec-heading">인수 기준</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>요구사항 ID</th>
+                <th>인수 기준</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FR-001</td>
+                <td>
+                  카페·레스토랑 메뉴판(인쇄체, 한글·영문·한자·가나·로마자) 대상
+                  OCR 인식률 90% 이상
+                </td>
+              </tr>
+              <tr>
+                <td>FR-002</td>
+                <td>
+                  업종별 테스트 메뉴 각 20건(총 100건) 해독 시 '이해 가능한
+                  설명' 판정률 85% 이상 (사용자 평가)
+                </td>
+              </tr>
+              <tr>
+                <td>FR-002</td>
+                <td>
+                  업종 자동 감지 정확도: 카페·한식·중식·일식·이탈리안·프렌치 6개
+                  업종 각 80% 이상
+                </td>
+              </tr>
+              <tr>
+                <td>FR-003</td>
+                <td>AR 오버레이가 원본 텍스트 위치와 ±10px 이내로 정렬됨</td>
+              </tr>
+              <tr>
+                <td>FR-004</td>
+                <td>메뉴 탭 후 2초 이내 예시 이미지 로드 (업종 필터 적용)</td>
+              </tr>
+              <tr>
+                <td>FR-005</td>
+                <td>
+                  주요 알레르기 10종 및 업종별 특이 항목에 대한 정보 제공 정확도
+                  80% 이상 (DB 기준)
+                </td>
+              </tr>
+              <tr>
+                <td>FR-006</td>
+                <td>
+                  6개 입력 언어 × 6개 출력 언어 조합에서 외국인 평가단 10인
+                  이해도 4점/5점 이상
+                </td>
+              </tr>
+              <tr>
+                <td>FR-007</td>
+                <td>
+                  비회원 3회 초과 시 정확히 회원가입 안내 팝업 노출. 회원 로그인
+                  후 이력 30건 정상 저장 확인.
+                </td>
+              </tr>
+              <tr>
+                <td>FR-009</td>
+                <td>신고 버튼 탭 후 3초 이내 신고 접수 완료 메시지 표시</td>
+              </tr>
+              <tr>
+                <td>NFR-006</td>
+                <td>WCAG 2.1 AA 레벨 자동화 검사 통과율 95% 이상</td>
+              </tr>
+              <tr>
+                <td>NFR-011</td>
+                <td>
+                  신규 업종(예: 멕시칸) 추가 시 LLM 프롬프트 수정만으로 동작
+                  검증 완료
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 12. 용어 정의 ── -->
+        <section class="section visible" id="s12">
+          <div class="sec-eyebrow">12 — Glossary</div>
+          <h2 class="sec-heading">용어 정의</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>용어</th>
+                <th>정의</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>AR (Augmented Reality)</td>
+                <td>실제 카메라 화면 위에 디지털 정보를 겹쳐 표시하는 기술</td>
+              </tr>
+              <tr>
+                <td>OCR</td>
+                <td>이미지에서 텍스트를 인식하는 광학 문자 인식 기술</td>
+              </tr>
+              <tr>
+                <td>LLM (Large Language Model)</td>
+                <td>대규모 언어 모델. 자연어 이해·생성에 활용</td>
+              </tr>
+              <tr>
+                <td>Vision AI</td>
+                <td>이미지·영상을 분석하는 인공지능 기술 (OCR 포함)</td>
+              </tr>
+              <tr>
+                <td>업종 자동 감지</td>
+                <td>
+                  LLM이 메뉴판 전체 텍스트 패턴으로
+                  카페·한식·중식·일식·이탈리안·프렌치 등 업종을 자동 분류하는
+                  기능
+                </td>
+              </tr>
+              <tr>
+                <td>SDG Goal 10</td>
+                <td>UN 지속가능발전목표 10번 — 불평등 감소</td>
+              </tr>
+              <tr>
+                <td>WCAG 2.1 AA</td>
+                <td>
+                  웹 콘텐츠 접근성 지침 2.1 레벨 AA. 디지털 서비스 접근성 국제
+                  표준
+                </td>
+              </tr>
+              <tr>
+                <td>TTS (Text-to-Speech)</td>
+                <td>텍스트를 음성으로 변환하는 기술</td>
+              </tr>
+              <tr>
+                <td>PIPA</td>
+                <td>
+                  대한민국 개인정보 보호법 (Personal Information Protection Act)
+                </td>
+              </tr>
+              <tr>
+                <td>GDPR</td>
+                <td>
+                  EU 일반개인정보보호규정 (General Data Protection Regulation)
+                </td>
+              </tr>
+              <tr>
+                <td>Rate Limiting</td>
+                <td>API 과도한 호출 방지를 위한 사용량 제한 정책</td>
+              </tr>
+              <tr>
+                <td>정보 소외계층</td>
+                <td>
+                  디지털·정보 접근에 불리한 환경에 있는 집단 (시니어, 장애인,
+                  외국인 등)
+                </td>
+              </tr>
+              <tr>
+                <td>비회원</td>
+                <td>
+                  앱 설치 후 로그인 없이 사용하는 사용자 (하루 3회 쿼터 적용)
+                </td>
+              </tr>
+              <tr>
+                <td>회원</td>
+                <td>
+                  소셜 로그인을 통해 계정을 생성한 사용자 (무제한 해독,
+                  이력/설정 저장)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 13. 문서 변경 이력 ── -->
+        <section class="section visible" id="s13">
+          <div class="sec-eyebrow">13 — Changelog</div>
+          <h2 class="sec-heading">문서 변경 이력</h2>
+          <div class="changelog">
+            <div class="changelog-row header">
+              <div>버전</div>
+              <div>날짜</div>
+              <div>작성자</div>
+              <div>변경 내용</div>
+            </div>
+            <div class="changelog-row">
+              <div>v1.0</div>
+              <div>2026.03.20</div>
+              <div>프로젝트팀</div>
+              <div>최초 작성 (초안)</div>
+            </div>
+            <div class="changelog-row">
+              <div>v1.1</div>
+              <div>2026.03.22</div>
+              <div>프로젝트팀</div>
+              <div>
+                다국어 6개 언어 확장, 경쟁 서비스 분석 추가, 피드백
+                기능(FR-009/010) 추가, 개인정보처리방침·법적 근거 추가, API
+                비용·사용량 제한 정책 추가, 비회원/회원 차등 정책(FR-007) 추가
+              </div>
+            </div>
+            <div class="changelog-row">
+              <div>v1.2</div>
+              <div>2026.03.22</div>
+              <div>프로젝트팀</div>
+              <div>
+                서비스 대상 업종을 카페 전용에서 전 식음료 업장으로 확대. 업종
+                자동 감지 기능(FR-002·FR-003) 추가. 중국어 번체 입력 지원 추가.
+                업종별 해독 예시 표(섹션 3.2) 신설. NFR-011(신규 업종 확장성)
+                신설.
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>
