@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 7 — React Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <!-- ── NAV ── -->
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <!-- ── POST HEADER ── -->
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">JavaScript</span>
+          <span class="post-date">
+            작성일 <span id="date-created">—</span> &nbsp;·&nbsp; 수정일
+            <span id="date-updated">—</span>
+          </span>
+        </div>
+        <h1 class="post-title">JavaScript 7</h1>
+        <p class="post-subtitle">
+          <strong>함수(Function)</strong>는 특정 작업을 수행하는 코드
+          블록입니다. <strong>함수 선언문</strong>,
+          <strong>함수 표현식</strong>, ES6에서 도입된 간결한
+          <strong>화살표 함수</strong>까지 세 가지 방식을 살펴봅니다.
+        </p>
+      </header>
+    </div>
+
+    <!-- ── MAIN WRAPPER ── -->
+    <div class="main-wrapper">
+      <!-- ── TOC SIDEBAR ── -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-intro"
+                ><span class="toc-num">§</span>함수 개요</a
+              >
+            </li>
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>함수 선언문</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-1-a"
+                    ><span class="toc-num">a.</span>함수 선언</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-b"
+                    ><span class="toc-num">b.</span>반환값이 있는 함수</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-c"
+                    ><span class="toc-num">c.</span>기본 매개변수</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-ex"
+                    ><span class="toc-num">※</span>실습 예제</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>함수 표현식</a
+              >
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>화살표 함수</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-3-ex"
+                    ><span class="toc-num">※</span>실습 예제</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-ex1"
+                ><span class="toc-num">※</span>연습 문제 1</a
+              >
+            </li>
+            <li>
+              <a href="#section-ex2"
+                ><span class="toc-num">※</span>연습 문제 2</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- ── POST BODY ── -->
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <!-- ── INTRO ── -->
+        <section class="section visible" id="section-intro">
+          <p class="sec-eyebrow">함수 (Function)</p>
+          <h2 class="sec-heading">함수 개요</h2>
+          <p>
+            함수는 특정 작업을 수행하는 코드 블록입니다. JavaScript에서 함수를
+            작성하는 방법은 크게 세 가지로 나뉩니다.
+          </p>
+
+          <div class="layer-cards">
+            <div class="layer-card">
+              <div class="layer-badge js">선언문</div>
+              <div class="layer-content">
+                <div class="layer-title">
+                  함수 선언문 (Function Declaration)
+                </div>
+                <p class="layer-desc">
+                  <code>function</code> 키워드로 정의. 호이스팅(Hoisting)이
+                  적용되어 선언 전에 호출해도 동작합니다.
+                </p>
+              </div>
+            </div>
+            <div class="layer-card">
+              <div class="layer-badge js">표현식</div>
+              <div class="layer-content">
+                <div class="layer-title">함수 표현식 (Function Expression)</div>
+                <p class="layer-desc">
+                  함수를 변수에 값으로 할당하는 방식. 표현식은 값으로 평가될 수
+                  있는 것으로, 변수에 할당할 수 있습니다.
+                </p>
+              </div>
+            </div>
+            <div class="layer-card">
+              <div class="layer-badge js">화살표</div>
+              <div class="layer-content">
+                <div class="layer-title">화살표 함수 (Arrow Function)</div>
+                <p class="layer-desc">
+                  ES6에서 도입된 간결한 함수 문법. <code>=&gt;</code>를 사용하며
+                  단일 표현식은 <code>return</code>과 중괄호를 생략할 수
+                  있습니다.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 1 : 함수 선언문 ── -->
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">함수 선언문</h2>
+
+          <!-- 1-a. 함수 선언 -->
+          <div class="section visible" id="section-1-a">
+            <h3 class="sub-heading">a. 함수 선언</h3>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">function</span> <span class="tx">greet(name) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">`안녕하세요, ${name}님!`</span><span class="tx">);</span>
+<span class="tx">}</span>
+
+<span class="tx">greet(</span><span class="av">"홍길동"</span><span class="tx">); </span><span class="cm">// 안녕하세요, 홍길동님!</span>
+<span class="tx">greet(</span><span class="av">"김철수"</span><span class="tx">); </span><span class="cm">// 안녕하세요, 김철수님!</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1-b. 반환값이 있는 함수 -->
+          <div class="section visible" id="section-1-b">
+            <h3 class="sub-heading">b. 반환값이 있는 함수</h3>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">function</span> <span class="tx">add(a, b) {</span>
+  <span class="tn">return</span> <span class="tx">a + b;</span>
+<span class="tx">}</span>
+
+<span class="tn">let</span> <span class="tx">result = add(5, 3);</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(result); </span><span class="cm">// 8</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1-c. 기본 매개변수 -->
+          <div class="section visible" id="section-1-c">
+            <h3 class="sub-heading">c. 기본 매개변수</h3>
+            <p>
+              매개변수에 기본값을 설정하면 인수를 전달하지 않았을 때 기본값이
+              사용됩니다.
+            </p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">function</span> <span class="tx">introduce(name, age = 20) {</span>
+  <span class="tx">console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">`이름: ${name}, 나이: ${age}세`</span><span class="tx">);</span>
+<span class="tx">}</span>
+
+<span class="tx">introduce(</span><span class="av">"홍길동"</span><span class="tx">);      </span><span class="cm">// 이름: 홍길동, 나이: 20세  ← age 기본값 사용</span>
+<span class="tx">introduce(</span><span class="av">"김철수"</span><span class="tx">, 25); </span><span class="cm">// 이름: 김철수, 나이: 25세  ← 전달한 값 사용</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1-실습 예제 -->
+          <div class="section visible" id="section-1-ex">
+            <h3 class="sub-heading">실습 예제</h3>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">
+              예제 1 — 짝수 판별
+            </p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">function</span> <span class="tx">isEven(num) {</span>
+  <span class="tn">return</span> <span class="tx">num % 2 === 0;</span>
+<span class="tx">}</span>
+
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(isEven(4)); </span><span class="cm">// true</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(isEven(1)); </span><span class="cm">// false</span></pre>
+              </div>
+            </div>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">
+              예제 2 — 할인가 계산 함수
+            </p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">function</span> <span class="tx">calculateDiscount(price, discountRate) {</span>
+  <span class="tn">let</span> <span class="tx">discountAmount = price * (discountRate / 100);</span>
+  <span class="tn">let</span> <span class="tx">finalPrice = price - discountAmount;</span>
+  <span class="tn">return</span> <span class="tx">finalPrice;</span>
+<span class="tx">}</span></pre>
+              </div>
+            </div>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">
+              예제 3 — 평균 계산 함수
+            </p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">function</span> <span class="tx">calculateAverage(scores) {</span>
+  <span class="tn">let</span> <span class="tx">sum = 0;</span>
+  <span class="tn">for</span> <span class="tx">(</span><span class="tn">let</span> <span class="tx">i = 0; i &lt; scores.length; i++) {</span>
+    <span class="tx">sum += scores[i];</span>
+  <span class="tx">}</span>
+  <span class="tn">return</span> <span class="tx">sum / scores.length;</span>
+<span class="tx">}</span></pre>
+              </div>
+            </div>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">
+              예제 4 — 최댓값 찾기 함수
+            </p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">function</span> <span class="tx">findMax(numbers) {</span>
+  <span class="tn">let</span> <span class="tx">max = numbers[0];</span>
+  <span class="tn">for</span> <span class="tx">(</span><span class="tn">let</span> <span class="tx">i = 1; i &lt; numbers.length; i++) {</span>
+    <span class="tn">if</span> <span class="tx">(numbers[i] &gt; max) {</span>
+      <span class="tx">max = numbers[i];</span>
+    <span class="tx">}</span>
+  <span class="tx">}</span>
+  <span class="tn">return</span> <span class="tx">max;</span>
+<span class="tx">}</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 2 : 함수 표현식 ── -->
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">함수 표현식</h2>
+          <p>
+            표현식은 값으로 평가될 수 있는 것으로, 변수에 할당할 수 있습니다.
+            함수를 변수에 값처럼 저장하는 방식입니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tn">const</span> <span class="tx">add = </span><span class="tn">function</span><span class="tx"> (x, y) {</span>
+  <span class="tn">return</span> <span class="tx">x + y;</span>
+<span class="tx">};</span>
+
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(add(1, 2)); </span><span class="cm">// 3</span></pre>
+            </div>
+          </div>
+
+          <div class="compare-grid">
+            <div class="compare-card">
+              <div class="compare-head block">함수 선언문</div>
+              <div class="compare-body">
+                <p>호이스팅 적용 — 선언 전에 호출 가능합니다.</p>
+                <div class="code-block">
+                  <div class="code-body">
+                    <pre><span class="tx">greet(); </span><span class="cm">// ✅ 정상 동작</span>
+<span class="tn">function</span> <span class="tx">greet() { ... }</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="compare-card">
+              <div class="compare-head inline">함수 표현식</div>
+              <div class="compare-body">
+                <p>호이스팅 미적용 — 선언 후에만 호출 가능합니다.</p>
+                <div class="code-block">
+                  <div class="code-body">
+                    <pre><span class="tx">greet(); </span><span class="cm">// ❌ 오류 발생</span>
+<span class="tn">const</span> <span class="tx">greet = </span><span class="tn">function</span><span class="tx">() { ... };</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 3 : 화살표 함수 ── -->
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">화살표 함수</h2>
+          <p>
+            화살표 함수는 ES6에서 도입된 간결한 함수 문법입니다.
+            <code>=&gt;</code>를 사용하여 작성하며, 단일 표현식일 때는
+            <code>return</code>과 중괄호를 생략할 수 있습니다.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>방식</th>
+                <th>코드</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">기존 방식</td>
+                <td class="td-style2">function add(a, b) { return a + b; }</td>
+                <td>function 키워드로 선언</td>
+              </tr>
+              <tr>
+                <td class="td-tag">화살표 함수</td>
+                <td class="td-style2">
+                  const add = (a, b) =&gt; { return a + b; };
+                </td>
+                <td>=&gt; 사용, 함수 표현식 형태</td>
+              </tr>
+              <tr>
+                <td class="td-tag">중괄호 생략</td>
+                <td class="td-style2">const add = (a, b) =&gt; a + b;</td>
+                <td>한 줄이면 return과 중괄호 생략 가능</td>
+              </tr>
+              <tr>
+                <td class="td-tag">괄호 생략</td>
+                <td class="td-style2">const double = x =&gt; x * 2;</td>
+                <td>매개변수가 하나면 괄호도 생략 가능</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="cm">// 기존 방식</span>
+<span class="tn">function</span> <span class="tx">add(a, b) {</span>
+  <span class="tn">return</span> <span class="tx">a + b;</span>
+<span class="tx">}</span>
+
+<span class="cm">// 화살표 함수</span>
+<span class="tn">const</span> <span class="tx">add = (a, b) =&gt; {</span>
+  <span class="tn">return</span> <span class="tx">a + b;</span>
+<span class="tx">};</span>
+
+<span class="cm">// 더 간결하게 (한 줄이면 중괄호와 return 생략 가능)</span>
+<span class="tn">const</span> <span class="tx">add = (a, b) =&gt; a + b;</span>
+
+<span class="cm">// 매개변수가 하나면 괄호도 생략 가능</span>
+<span class="tn">const</span> <span class="tx">double = x =&gt; x * 2;</span></pre>
+            </div>
+          </div>
+
+          <!-- 3-실습 예제 -->
+          <div class="section visible" id="section-3-ex">
+            <h3 class="sub-heading">실습 예제</h3>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">
+              예제 1 — 성인 여부 확인
+            </p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">isAdult = (age) =&gt; age &gt;= 18;</span>
+
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(isAdult(20)); </span><span class="cm">// true</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(isAdult(15)); </span><span class="cm">// false</span></pre>
+              </div>
+            </div>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">
+              예제 2 — 배열에서 짝수만 찾기
+            </p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">numbers = [1, 2, 3, 4, 5, 6];</span>
+<span class="tn">const</span> <span class="tx">isEven = (num) =&gt; num % 2 === 0;</span>
+
+<span class="tn">for</span> <span class="tx">(</span><span class="tn">const</span> <span class="tx">num </span><span class="tn">of</span> <span class="tx">numbers) {</span>
+  <span class="tn">if</span> <span class="tx">(isEven(num)) {</span>
+    <span class="tx">console.</span><span class="tn">log</span><span class="tx">(num); </span><span class="cm">// 2, 4, 6</span>
+  <span class="tx">}</span>
+<span class="tx">}</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 연습 문제 1 ── -->
+        <section class="section visible" id="section-ex1">
+          <p class="sec-eyebrow">연습 문제 1</p>
+          <h2 class="sec-heading">원의 넓이 구하는 화살표 함수</h2>
+          <p>반지름을 입력받아 원의 넓이를 구하는 화살표 함수를 작성하세요.</p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="cm">// 방법 1: 3.14 사용</span>
+<span class="tn">const</span> <span class="tx">area = (r) =&gt; 3.14 * r * r;</span>
+
+<span class="cm">// 방법 2: Math.PI 사용 (더 정확)</span>
+<span class="tn">const</span> <span class="tx">area2 = (r) =&gt; Math.PI * r * r;</span>
+
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(area(5));  </span><span class="cm">// 78.5</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(area2(5)); </span><span class="cm">// 78.53981633974483</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 연습 문제 2 ── -->
+        <section class="section visible" id="section-ex2">
+          <p class="sec-eyebrow">연습 문제 2</p>
+          <h2 class="sec-heading">함수를 화살표 함수로 변환하기</h2>
+          <p>다음 함수들을 화살표 함수로 변환하세요.</p>
+
+          <!-- (1) 제곱 계산 -->
+          <h3 class="sub-heading">(1) 제곱 계산</h3>
+          <div class="compare-grid">
+            <div class="compare-card">
+              <div class="compare-head inline">변환 전 — 함수 선언문</div>
+              <div class="compare-body">
+                <div class="code-block">
+                  <div class="code-body">
+                    <pre><span class="tn">function</span> <span class="tx">square(n) {</span>
+  <span class="tn">return</span> <span class="tx">n * n;</span>
+<span class="tx">}</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(square(5)); </span><span class="cm">// 25</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="compare-card">
+              <div class="compare-head block">변환 후 — 화살표 함수</div>
+              <div class="compare-body">
+                <div class="code-block">
+                  <div class="code-body">
+                    <pre><span class="tn">const</span> <span class="tx">square = n =&gt; n * n;</span>
+
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(square(5)); </span><span class="cm">// 25</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- (2) 인사말 생성 -->
+          <h3 class="sub-heading">(2) 인사말 생성 (기본 매개변수 포함)</h3>
+          <div class="compare-grid">
+            <div class="compare-card">
+              <div class="compare-head inline">변환 전 — 함수 선언문</div>
+              <div class="compare-body">
+                <div class="code-block">
+                  <div class="code-body">
+                    <pre><span class="tn">function</span> <span class="tx">greet(name, greeting = </span><span class="av">"안녕하세요"</span><span class="tx">) {</span>
+  <span class="tn">return</span> <span class="av">`${greeting}, ${name}님!`</span><span class="tx">;</span>
+<span class="tx">}</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(greet(</span><span class="av">"홍길동"</span><span class="tx">));</span>
+<span class="cm">// 안녕하세요, 홍길동님!</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(greet(</span><span class="av">"김철수"</span><span class="tx">, </span><span class="av">"반갑습니다"</span><span class="tx">));</span>
+<span class="cm">// 반갑습니다, 김철수님!</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="compare-card">
+              <div class="compare-head block">변환 후 — 화살표 함수</div>
+              <div class="compare-body">
+                <div class="code-block">
+                  <div class="code-body">
+                    <pre><span class="tn">const</span> <span class="tx">greet = (name, greeting = </span><span class="av">"안녕하세요"</span><span class="tx">) =&gt;</span>
+  <span class="av">`${greeting}, ${name}님!`</span><span class="tx">;</span>
+
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(greet(</span><span class="av">"홍길동"</span><span class="tx">));</span>
+<span class="cm">// 안녕하세요, 홍길동님!</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(greet(</span><span class="av">"김철수"</span><span class="tx">, </span><span class="av">"반갑습니다"</span><span class="tx">));</span>
+<span class="cm">// 반갑습니다, 김철수님!</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- (3) 합격 여부 판별 -->
+          <h3 class="sub-heading">(3) 합격 여부 판별</h3>
+          <div class="compare-grid">
+            <div class="compare-card">
+              <div class="compare-head inline">변환 전 — 함수 선언문</div>
+              <div class="compare-body">
+                <div class="code-block">
+                  <div class="code-body">
+                    <pre><span class="tn">function</span> <span class="tx">isPassed(score) {</span>
+  <span class="tn">return</span> <span class="tx">score &gt;= 60;</span>
+<span class="tx">}</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(isPassed(75)); </span><span class="cm">// true</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="compare-card">
+              <div class="compare-head block">변환 후 — 화살표 함수</div>
+              <div class="compare-body">
+                <div class="code-block">
+                  <div class="code-body">
+                    <pre><span class="tn">const</span> <span class="tx">isPassed = score =&gt; score &gt;= 60;</span>
+
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(isPassed(75)); </span><span class="cm">// true</span></pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              매개변수가 <strong>하나</strong>이고 반환식도
+              <strong>한 줄</strong>이면 괄호와 <code>return</code>, 중괄호를
+              모두 생략하여
+              <code>const 함수명 = 매개변수 =&gt; 표현식;</code> 형태로 가장
+              간결하게 쓸 수 있습니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── COMMENTS ── -->
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+    <!-- ── POST FOOTER ── -->
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+  </body>
+</html>
