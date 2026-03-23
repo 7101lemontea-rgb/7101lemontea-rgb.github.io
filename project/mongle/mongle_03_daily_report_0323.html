@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>데일리 리포트 2026.03.23 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Daily Report</span>
+          <span class="badge badge-ver">Day 01</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">데일리 리포트</h1>
+        <p class="post-sub">2026년 3월 23일 — 기획·설계 Day 1</p>
+        <p class="post-desc">
+          그룹웨어 아이디어 브레인스토밍부터 솔루션 분석, 주제 선정(웨딩플래너
+          그룹웨어), 화면 기능 계획서·시스템 아키텍처 설계서 작성, Stitch 기초
+          UI 구성까지 첫날 기획·설계 전 과정을 기록합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 3월 23일</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+          <div>
+            <div class="stat-label">목표 달성률</div>
+            <div class="stat-val">약 90% (아키텍처 일부 보류)</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s1"><span class="toc-num">01</span>오늘의 목표</a>
+            </li>
+            <li>
+              <a href="#s2"><span class="toc-num">02</span>실제 수행한 작업</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s2-1">아이디어 브레인스토밍</a></li>
+                <li><a href="#s2-2">솔루션 분석 및 주제 선정</a></li>
+                <li><a href="#s2-3">화면 기능 계획서</a></li>
+                <li><a href="#s2-4">시스템 아키텍처 설계</a></li>
+                <li><a href="#s2-5">Stitch UI 구성</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s3"><span class="toc-num">03</span>이슈 및 해결 방법</a>
+            </li>
+            <li>
+              <a href="#s4"><span class="toc-num">04</span>내일의 계획</a>
+            </li>
+            <li>
+              <a href="#s5"><span class="toc-num">05</span>느낀점</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── 1. 오늘의 목표 ── -->
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">01 — Daily Goals</div>
+          <h2 class="sec-heading">오늘의 목표</h2>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Goal 01</span>
+                <span class="white-title">기획 — 아이디어 선정 및 분석</span>
+              </div>
+              <ul class="bullet-list">
+                <li>그룹웨어 주제 아이디어 브레인스토밍</li>
+                <li>
+                  솔루션 분석 및 정의 (기존 서비스 강점·한계·시장 공백 도출)
+                </li>
+                <li>최종 프로젝트 주제 선정</li>
+              </ul>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Goal 02</span>
+                <span class="white-title">설계 — 문서 작성 및 UI 초안</span>
+              </div>
+              <ul class="bullet-list">
+                <li>화면 기능 계획서 작성 (화면 목록 + 기능 정의)</li>
+                <li>프로젝트 폴더 구조 작성</li>
+                <li>시스템 아키텍처 설계서 작성 (기술 스택 결정 포함)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 2. 실제 수행한 작업 ── -->
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">02 — Work Done</div>
+          <h2 class="sec-heading">실제 수행한 작업</h2>
+
+          <!-- 2-1. 아이디어 브레인스토밍 -->
+          <h3 class="sub-heading" id="s2-1">아이디어 브레인스토밍</h3>
+          <p>
+            그룹웨어 주제 후보 3개를 도출했습니다. 각 아이디어는 B2B·소비자
+            양방향 구조가 없다는 공통 시장 공백을 가지고 있었으며, 솔루션 분석을
+            통해 신규 서비스 기회를 확인했습니다.
+          </p>
+
+          <div class="stakeholder-grid">
+            <div class="stakeholder-card">
+              <div class="stakeholder-icon">💍</div>
+              <div class="stakeholder-role">Idea 01</div>
+              <div class="stakeholder-name">웨딩플래너 그룹웨어</div>
+              <p class="stakeholder-concern">
+                플래너↔커플이 같은 화면에서 비용·일정·채팅을 함께 관리하는
+                서비스 부재
+              </p>
+            </div>
+            <div class="stakeholder-card">
+              <div class="stakeholder-icon">📚</div>
+              <div class="stakeholder-role">Idea 02</div>
+              <div class="stakeholder-name">자격증 준비 그룹웨어</div>
+              <p class="stakeholder-concern">
+                문제풀이·학습 시간·커뮤니티가 각각 다른 앱에 분산, 통합 서비스
+                부재
+              </p>
+            </div>
+            <div class="stakeholder-card">
+              <div class="stakeholder-icon">🌸</div>
+              <div class="stakeholder-role">Idea 03</div>
+              <div class="stakeholder-name">꽃 예약 그룹웨어</div>
+              <p class="stakeholder-concern">
+                소비자 주문 중계에만 집중, 꽃집 내부
+                업무관리(재고·주문·배달·정산) 도구 전무
+              </p>
+            </div>
+          </div>
+
+          <!-- 2-2. 솔루션 분석 및 주제 선정 -->
+          <h3 class="sub-heading" id="s2-2">솔루션 분석 및 주제 선정</h3>
+          <p>
+            3개 아이디어에 대해 기존 솔루션 총
+            7개(아이웨딩·다이렉트결혼준비·푸딩·웨드소프트, 맞추다·열품타,
+            꽃집청년들·플라워119)를 강점·한계 프레임워크로 분석했습니다. 분석
+            결과를 바탕으로 <strong>웨딩플래너 그룹웨어</strong>를 최종 프로젝트
+            주제로 선정했습니다.
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">선정 근거 ①</div>
+              <div class="info-val">
+                기존 4개 솔루션 모두 플래너(B2B)와 커플(소비자)이 같은 화면을
+                공유하는 기능이 <strong>전무</strong>했습니다. 시장 공백이 가장
+                명확했습니다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">선정 근거 ②</div>
+              <div class="info-val">
+                비용 투명화 + 일정 공유 + 실시간 협업 채팅이라는 세 가지 핵심
+                기능이 구체적으로 도출되어 MVP 범위를 명확히 정의할 수
+                있었습니다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">선정 근거 ③</div>
+              <div class="info-val">
+                웨드소프트(B2B)가 플래너 측 기능은 완성도 있게 구현했으나, 커플
+                측 접근을 차단하고 있어 양방향 구조로 차별화가 가능했습니다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">프로젝트명</div>
+              <div class="info-val">
+                <strong>Fleur</strong> — 웨딩플래너↔예비부부 공유 워크스페이스
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-3. 화면 기능 계획서 -->
+          <h3 class="sub-heading" id="s2-3">화면 기능 계획서 작성</h3>
+          <p>
+            앱 화면을 크게 4개 영역으로 구분하고, 각 화면에서 필요한 핵심 기능을
+            정의했습니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">메인 앱 화면</span>
+                <span class="white-column-layer-tech">커플 공통</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>D-day 배너 — 결혼일까지 남은 일수 표시</li>
+                  <li>준비 진행률 요약 카드 (체크리스트 완료율)</li>
+                  <li>최근 채팅 메시지 미리보기</li>
+                  <li>예산 현황 요약 (확정 비용 / 총 예산 비율)</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">로그인 화면</span>
+                <span class="white-column-layer-tech">인증</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>소셜 로그인 (Google · Kakao · Apple)</li>
+                  <li>역할 선택 — 커플 / 플래너</li>
+                  <li>초대 코드 입력 (커플↔플래너 연결)</li>
+                  <li>온보딩 (최초 1회) — 서비스 핵심 가치 안내</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">일정 대시보드</span>
+                <span class="white-column-layer-tech">커플 전용</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>
+                    준비 타임라인 — 단계별 체크리스트 (드레스·스튜디오·홀 등)
+                  </li>
+                  <li>
+                    비용 명세서 — 플래너 입력 비용 실시간 확인, AI 이상 감지
+                    경고
+                  </li>
+                  <li>업체 정보 뷰 — 계약 업체 연락처·계약서 첨부</li>
+                  <li>채팅 — 플래너와 실시간 문서 공유 메시지</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name"
+                  >플래너 전용 대시보드</span
+                >
+                <span class="white-column-layer-tech">플래너 전용</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>담당 커플 목록 — 커플별 준비 상태 한눈에 확인</li>
+                  <li>
+                    비용 명세서 입력·수정 — 항목별 금액, 계약외 옵션 플래그
+                  </li>
+                  <li>일정 등록 — 준비 단계별 날짜 등록, 커플과 공유</li>
+                  <li>업체 연계 관리 — 연계 업체 등록, 추천 배지 관리</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-4. 시스템 아키텍처 설계 -->
+          <h3 class="sub-heading" id="s2-4">시스템 아키텍처 설계서 작성</h3>
+          <p>
+            실제 시스템에서 필요한 기능을 도출하고, 각 레이어에 적합한 기술
+            스택을 결정했습니다. 무료 티어 우선 원칙과 서버리스 아키텍처를
+            기반으로 선택했습니다.
+          </p>
+
+          <div class="layer-diagram">
+            <div class="layer-row">
+              <div class="layer-num">01</div>
+              <div class="layer-label">
+                <span class="layer-name">Frontend</span>
+                <span class="layer-tech">React Native (Expo)</span>
+              </div>
+              <div class="layer-desc">
+                <p>
+                  iOS · Android 크로스플랫폼. Expo Router 기반 파일 시스템
+                  라우팅. 커플/플래너 역할별 레이아웃 분기.
+                </p>
+                <div class="white-column-tags">
+                  <span class="white-column-tag">React Native</span>
+                  <span class="white-column-tag">Expo</span>
+                  <span class="white-column-tag">Expo Router</span>
+                  <span class="white-column-tag">TypeScript</span>
+                </div>
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">02</div>
+              <div class="layer-label">
+                <span class="layer-name">Backend API</span>
+                <span class="layer-tech">FastAPI</span>
+              </div>
+              <div class="layer-desc">
+                <p>
+                  Python 기반 REST API 서버. AI 기능(Claude API 호출, 시세 이상
+                  감지 엔진) 처리. Pydantic 스키마 유효성 검사.
+                </p>
+                <div class="white-column-tags">
+                  <span class="white-column-tag">FastAPI</span>
+                  <span class="white-column-tag">Python</span>
+                  <span class="white-column-tag">Pydantic</span>
+                  <span class="white-column-tag">Uvicorn</span>
+                </div>
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">03</div>
+              <div class="layer-label">
+                <span class="layer-name">Database</span>
+                <span class="layer-tech">Supabase (PostgreSQL)</span>
+              </div>
+              <div class="layer-desc">
+                <p>
+                  무료 티어 제공. 인증(Auth), 실시간 구독(Realtime), Row-Level
+                  Security 내장. AWS RDS 대비 초기 비용 없음.
+                </p>
+                <div class="white-column-tags">
+                  <span class="white-column-tag">Supabase</span>
+                  <span class="white-column-tag">PostgreSQL</span>
+                  <span class="white-column-tag">Realtime</span>
+                  <span class="white-column-tag">RLS</span>
+                </div>
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">04</div>
+              <div class="layer-label">
+                <span class="layer-name">Cache / Session</span>
+                <span class="layer-tech">Upstash (Redis) — 검토 중</span>
+              </div>
+              <div class="layer-desc">
+                <p>
+                  AI 응답 캐시(동일 입력 1시간 재사용), Rate Limiting, 세션
+                  관리에 필요. Supabase가 Redis를 대체할 수 없어 서버리스
+                  Redis인 Upstash 사용을 검토 중. 이후 추가 조사 후 확정 예정.
+                </p>
+                <div class="white-column-tags">
+                  <span class="white-column-tag">Upstash</span>
+                  <span class="white-column-tag">Redis</span>
+                  <span class="white-column-tag">검토 중</span>
+                </div>
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">05</div>
+              <div class="layer-label">
+                <span class="layer-name">AI Layer</span>
+                <span class="layer-tech">Anthropic Claude API</span>
+              </div>
+              <div class="layer-desc">
+                <p>
+                  예산 견적 자연어 해설 생성(FR-052), 업체 추천 이유
+                  생성(FR-057). claude-sonnet 모델, 스트리밍 응답 적용. 월
+                  30만원 이하 비용 관리 목표.
+                </p>
+                <div class="white-column-tags">
+                  <span class="white-column-tag">Claude API</span>
+                  <span class="white-column-tag">Streaming</span>
+                  <span class="white-column-tag">RAG</span>
+                </div>
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">06</div>
+              <div class="layer-label">
+                <span class="layer-name">UI Prototype</span>
+                <span class="layer-tech">Stitch</span>
+              </div>
+              <div class="layer-desc">
+                <p>
+                  기초적인 앱 UI 프로토타입 구성. Rose · Sage 컬러 시스템 초안
+                  확인. 실제 구현 전 화면 흐름 검증 용도.
+                </p>
+                <div class="white-column-tags">
+                  <span class="white-column-tag">Stitch</span>
+                  <span class="white-column-tag">UI Prototype</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-5. Stitch UI 구성 -->
+          <h3 class="sub-heading" id="s2-5">Stitch 기초 UI 구성</h3>
+          <p>
+            시스템 아키텍처 설계 이후 Stitch 툴을 사용해 앱의 기초적인 UI
+            프로토타입을 구성했습니다. 화면 기능 계획서에서 정의한 4개 화면의
+            레이아웃 흐름을 시각화했으며, 디자인 시스템의 컬러 방향(Rose ·
+            Sage)을 초기 확인했습니다.
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">구성 화면</div>
+              <div class="info-val">
+                메인 앱 화면 · 로그인 화면 · 일정 대시보드 · 플래너 전용
+                대시보드
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">컬러 방향</div>
+              <div class="info-val">
+                Rose(웜 핑크 계열) + Sage(차분한 그린 계열) — 내일 constants
+                파일로 확정 예정
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">목적</div>
+              <div class="info-val">
+                실제 코드 구현 전 화면 흐름 검증 및 팀원 간 UI 방향 공유
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 3. 이슈 및 해결 방법 ── -->
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">03 — Issues &amp; Solutions</div>
+          <h2 class="sec-heading">이슈 상황 및 해결 방법</h2>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Issue 01</span>
+                <span class="white-title">기술 스택 선택 — 데이터베이스</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">상황</div>
+                  <div class="white-value">
+                    시스템 아키텍처 설계서 작성 시 어떤 기술 스택을 사용할지
+                    결정하기 어려웠습니다. 특히 데이터베이스 선택에서 AWS RDS vs
+                    Supabase 사이에서 고민이 있었습니다.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    초기 개발 단계에서는 비용 부담이 없는
+                    <strong>Supabase</strong> 무료 티어로 결정. PostgreSQL
+                    기반이라 추후 AWS 마이그레이션도 용이하며,
+                    인증·Realtime·RLS가 내장되어 있어 초기 개발 속도에
+                    유리합니다.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Issue 02 — 미해결</span>
+                <span class="white-title"
+                  >AI 캐시 / Rate Limiting / 세션 관리 레이어</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">상황</div>
+                  <div class="white-value">
+                    AI 응답 캐시, Rate Limiting, 세션 관리를 위해 Redis가
+                    필요한데, Supabase가 이를 대체할 수 없다는 것을 검색을 통해
+                    확인했습니다. AWS ElastiCache는 비용 문제가 있어 대안이
+                    필요했습니다.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">현재 방향</div>
+                  <div class="white-value">
+                    <strong>Upstash(서버리스 Redis)</strong>를 유력 후보로 검토
+                    중. 서버리스 방식이라 요청당 과금 구조로 초기 비용이
+                    낮습니다. 무료 티어(하루 10,000 커맨드) 확인 후 채택 여부를
+                    결정할 예정입니다.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">다음 액션</div>
+                  <div class="white-value">
+                    Upstash 공식 문서 및 FastAPI 연동 레퍼런스 추가 조사. Sprint
+                    1(1~2주차) 내 확정 목표.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 4. 내일의 계획 ── -->
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">04 — Tomorrow's Plan</div>
+          <h2 class="sec-heading">내일의 계획 (2026.03.24)</h2>
+
+          <div class="table-second-grid">
+            <div class="table-second-row header">
+              <div>시간</div>
+              <div>작업</div>
+              <div>상세 내용</div>
+              <div>우선순위</div>
+            </div>
+            <div class="table-second-row">
+              <div class="txt-muted">09:00–11:00</div>
+              <div class="txt-accent">Expo 환경설정</div>
+              <div>
+                팀원 B 세팅에 맞춰 레포 clone. Node 버전, Expo SDK, 의존성
+                패키지 통일. EAS CLI 설치 및 프로젝트 초기 실행 확인.
+              </div>
+              <div><span class="color-badge p1">P0</span></div>
+            </div>
+            <div class="table-second-row">
+              <div class="txt-muted">11:00–12:00</div>
+              <div class="txt-accent">디자인 시스템 세팅</div>
+              <div>
+                Rose · Sage 컬러 팔레트 constants 파일 작성. 폰트(pretendard)
+                설정. spacing · borderRadius 토큰 정의.
+              </div>
+              <div><span class="color-badge p1">P0</span></div>
+            </div>
+            <div class="table-second-row">
+              <div class="txt-muted">14:00–15:00</div>
+              <div class="txt-accent">app/_layout.jsx</div>
+              <div>
+                루트 레이아웃 구현. 인증 상태 확인 → 미로그인 시 로그인 화면
+                리다이렉트(인증 가드). 역할(커플/플래너) 분기 로직 초안.
+              </div>
+              <div><span class="color-badge p1">P0</span></div>
+            </div>
+            <div class="table-second-row">
+              <div class="txt-muted">15:00–16:00</div>
+              <div class="txt-accent">(couple)/_layout.jsx</div>
+              <div>
+                커플 탭 네비게이터 기본 구조 구현. 하단 탭
+                4개(홈·일정·비용·채팅) 뼈대 작성. 아이콘 placeholder 배치.
+              </div>
+              <div><span class="color-badge p2">P1</span></div>
+            </div>
+            <div class="table-second-row">
+              <div class="txt-muted">16:00–17:00</div>
+              <div class="txt-accent">index.jsx — D-day 배너</div>
+              <div>
+                커플 홈 화면 메인 배너 스케치. 결혼 날짜 → D-day 계산 로직. Rose
+                컬러 적용. 더미 데이터로 UI 확인.
+              </div>
+              <div><span class="color-badge p2">P1</span></div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <strong>내일 핵심 목표:</strong> 팀원 간 개발 환경을 완전히
+              통일하고, 앱의 기반 레이아웃 구조(인증 가드 + 탭 네비게이터)를
+              완성하는 것입니다. 환경설정이 지연될 경우 디자인 시스템 세팅부터
+              우선 진행합니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── 5. 느낀점 ── -->
+        <section class="section visible" id="s5">
+          <div class="sec-eyebrow">05 — Retrospective</div>
+          <h2 class="sec-heading">느낀점</h2>
+
+          <p>
+            이번에 개발해야 하는 것이 그룹웨어다 보니 만들어야 하는 페이지나
+            기능이 꽤 많습니다. 생각보다 개발 시간이 부족할 것 같아 내일부터
+            열심히 개발 진도를 나가야 할 것 같습니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Keep</span>
+                <span class="white-title">잘한 것</span>
+              </div>
+              <ul class="bullet-list">
+                <li>
+                  솔루션 분석을 통해 시장 공백을 명확히 도출하고, 근거 있는 주제
+                  선정을 진행한 것
+                </li>
+                <li>
+                  화면을 4개 영역으로 구분해 기능 범위를 구체적으로 정의한 것
+                </li>
+                <li>기술 스택을 선택할 때 비용·확장성 기준을 함께 고려한 것</li>
+              </ul>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Problem</span>
+                <span class="white-title">아쉬운 것</span>
+              </div>
+              <ul class="bullet-list">
+                <li>
+                  폴더 구조 작성이 오늘 완료되지 못했습니다. 내일 환경설정 전에
+                  먼저 확정이 필요합니다.
+                </li>
+                <li>
+                  Upstash(Redis) 관련 기술 검토가 미완료 상태로 아키텍처 일부가
+                  확정되지 않았습니다.
+                </li>
+              </ul>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Try</span>
+                <span class="white-title">개선할 것</span>
+              </div>
+              <ul class="bullet-list">
+                <li>
+                  그룹웨어 특성상 기능 범위가 넓으므로, 매일 스프린트 목표를
+                  명확히 설정하고 우선순위를 지켜 진행합니다.
+                </li>
+                <li>
+                  기술 결정 사항은 이유와 함께 문서화하여 팀원 간 컨텍스트를
+                  공유합니다.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>
