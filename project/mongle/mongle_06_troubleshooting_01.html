@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>트러블슈팅 가이드 v1.0 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">트러블슈팅</span>
+          <span class="badge badge-ver">v1.0</span>
+          <span class="badge badge-status">✅ 해결 완료</span>
+        </div>
+        <h1 class="post-title">트러블슈팅 가이드</h1>
+        <p class="post-sub">Mongle App — Expo Router + React Native</p>
+        <p class="post-desc">
+          npm 의존성 충돌, Expo Router 라우팅 오류, SafeAreaView deprecated,
+          Android 탭바 겹침 등 개발 Day 1~2에서 발생한 8가지 이슈의 원인
+          분석·해결 방법·재발 방지 원칙을 기록합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">발생 일자</div>
+            <div class="stat-val">2026년 3월 24일</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+          <div>
+            <div class="stat-label">이슈 건수</div>
+            <div class="stat-val">8건 (전체 해결)</div>
+          </div>
+          <div>
+            <div class="stat-label">영향 파일</div>
+            <div class="stat-val">
+              app/_layout.jsx, (auth)/_layout.jsx, (couple)/_layout.jsx
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#summary"
+                ><span class="toc-num">§</span>트러블슈팅 요약</a
+              >
+            </li>
+            <li>
+              <a href="#ts-01"
+                ><span class="toc-num">01</span>npm 의존성 충돌</a
+              >
+            </li>
+            <li>
+              <a href="#ts-02"
+                ><span class="toc-num">02</span>Route missing default export</a
+              >
+            </li>
+            <li>
+              <a href="#ts-03"
+                ><span class="toc-num">03</span>Root Layout 마운트 전
+                navigate</a
+              >
+            </li>
+            <li>
+              <a href="#ts-04"
+                ><span class="toc-num">04</span>Property 'Redirect' doesn't
+                exist</a
+              >
+            </li>
+            <li>
+              <a href="#ts-05"
+                ><span class="toc-num">05</span>Too many screens defined</a
+              >
+            </li>
+            <li>
+              <a href="#ts-06"
+                ><span class="toc-num">06</span>화면에 "layout" 글씨만 보임</a
+              >
+            </li>
+            <li>
+              <a href="#ts-07"
+                ><span class="toc-num">07</span>SafeAreaView deprecated 경고</a
+              >
+            </li>
+            <li>
+              <a href="#ts-08"
+                ><span class="toc-num">08</span>탭바·기기 네비게이션 바 겹침</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── 요약 테이블 ── -->
+        <section class="section visible" id="summary">
+          <div class="sec-eyebrow">Summary</div>
+          <h2 class="sec-heading">트러블슈팅 요약</h2>
+          <p>발생한 8가지 이슈의 원인과 해결 방법을 한눈에 확인합니다.</p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>에러 / 경고</th>
+                <th>원인</th>
+                <th>해결 방법</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>01</td>
+                <td><code>ERESOLVE</code> npm 충돌</td>
+                <td>peer dependency 버전 불일치</td>
+                <td><code>npm install --legacy-peer-deps</code></td>
+              </tr>
+              <tr>
+                <td>02</td>
+                <td>missing default export</td>
+                <td>파일에 <code>export default</code> 없음</td>
+                <td>임시 컴포넌트라도 <code>export default</code> 추가</td>
+              </tr>
+              <tr>
+                <td>03</td>
+                <td>navigate before mounting</td>
+                <td>
+                  <code>useEffect</code>에서 <code>router.replace</code> 호출
+                </td>
+                <td><code>useEffect</code> 제거, <code>Slot</code>만 렌더링</td>
+              </tr>
+              <tr>
+                <td>04</td>
+                <td>Redirect doesn't exist</td>
+                <td>expo-router v3에서 제거됨</td>
+                <td><code>initialRouteName</code> prop 사용</td>
+              </tr>
+              <tr>
+                <td>05</td>
+                <td>Too many screens</td>
+                <td>존재하지 않는 화면 등록</td>
+                <td><code>href: null</code> 또는 빈 파일 생성</td>
+              </tr>
+              <tr>
+                <td>06</td>
+                <td>"layout" 글씨만 보임</td>
+                <td><code>_layout.jsx</code>가 텍스트 렌더링</td>
+                <td>Stack/Tabs 네비게이터로 교체</td>
+              </tr>
+              <tr>
+                <td>07</td>
+                <td>SafeAreaView deprecated</td>
+                <td>react-native 기본 컴포넌트 사용</td>
+                <td><code>react-native-safe-area-context</code>로 변경</td>
+              </tr>
+              <tr>
+                <td>08</td>
+                <td>탭바 기기 네비게이션 겹침</td>
+                <td>Android 제스처 바 높이 미고려</td>
+                <td><code>Platform</code>으로 OS별 높이 설정</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── TS-01 ── -->
+        <section class="section visible" id="ts-01">
+          <div class="sec-eyebrow">Issue 01 — npm</div>
+          <h2 class="sec-heading">npm install 의존성 충돌</h2>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">이슈 ID</div>
+              <div class="info-val">TS-01</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">영향 범위</div>
+              <div class="info-val">팀원 전체 초기 환경설정 시 발생</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결 여부</div>
+              <div class="info-val">✅ 해결 완료</div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">에러 메시지</h3>
+          <div class="highlight-box-red">
+            <p>
+              npm error ERESOLVE could not resolve<br />
+              npm error Conflicting peer dependency: react@19.2.4
+            </p>
+          </div>
+
+          <h3 class="sub-heading">원인</h3>
+          <p>
+            <code>react@19.1.0</code>과 <code>react-dom@19.2.4</code>의 peer
+            dependency 버전이 맞지 않아 발생합니다. Expo 프로젝트에서 흔히
+            발생하는 문제입니다.
+          </p>
+
+          <h3 class="sub-heading">해결 방법</h3>
+          <div class="code-block">
+            <pre><span class="c-comment"># 의존성 충돌 무시하고 설치</span>
+<span class="c-line">npm install --legacy-peer-deps</span></pre>
+          </div>
+
+          <div class="highlight-box-yellow">
+            <p>
+              <strong>⚠️ 팀 프로젝트 주의사항</strong>&nbsp;
+              <code>--legacy-peer-deps</code> 옵션 사용 시
+              <code>package-lock.json</code>이 변경됩니다. 팀원 전체가 동일한
+              옵션을 사용하도록 프로젝트 루트에 <code>.npmrc</code> 파일을
+              생성하세요.
+            </p>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment"># .npmrc 파일 생성 — 프로젝트 루트에서 실행</span>
+<span class="c-line">echo "legacy-peer-deps=true" > .npmrc</span></pre>
+          </div>
+        </section>
+
+        <!-- ── TS-02 ── -->
+        <section class="section visible" id="ts-02">
+          <div class="sec-eyebrow">Issue 02 — Expo Router</div>
+          <h2 class="sec-heading">Route missing default export</h2>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">이슈 ID</div>
+              <div class="info-val">TS-02</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">영향 범위</div>
+              <div class="info-val">
+                <code>app/</code> 폴더 내 미구현 .jsx 파일 전체
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결 여부</div>
+              <div class="info-val">✅ 해결 완료</div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">에러 메시지</h3>
+          <div class="highlight-box-red">
+            <p>
+              WARN Route "./(couple)/chat.jsx" is missing the required default
+              export.<br />
+              WARN Ensure a React component is exported as default.
+            </p>
+          </div>
+
+          <h3 class="sub-heading">원인</h3>
+          <p>
+            Expo Router는 <code>app/</code> 폴더 안의 모든
+            <code>.jsx</code> 파일을 라우트로 인식합니다. 파일이 존재하지만
+            <code>export default</code>가 없거나 파일이 비어 있으면 이 경고가
+            발생합니다.
+          </p>
+
+          <h3 class="sub-heading">해결 방법</h3>
+          <p>아직 구현하지 않은 파일에는 임시 컴포넌트를 넣어주세요.</p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 임시 컴포넌트 — 나중에 교체</span>
+<span class="c-key">import</span> <span class="c-line">{ View, Text } from </span><span class="c-white">"react-native"</span><span class="c-line">;</span>
+
+<span class="c-key">export default function</span> <span class="c-line">ChatScreen() {</span>
+  <span class="c-key">return</span> <span class="c-line">(</span>
+    <span class="c-line">  &lt;View style={{ flex: 1, justifyContent: </span><span class="c-white">"center"</span><span class="c-line">, alignItems: </span><span class="c-white">"center"</span><span class="c-line"> }}&gt;</span>
+    <span class="c-line">    &lt;Text&gt;채팅&lt;/Text&gt;</span>
+    <span class="c-line">  &lt;/View&gt;</span>
+  <span class="c-line">);</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <h3 class="sub-heading">임시 컴포넌트 추가 대상 파일 목록</h3>
+          <ul class="bullet-list">
+            <li><code>app/(auth)/_layout.jsx</code></li>
+            <li><code>app/(auth)/login.jsx</code></li>
+            <li><code>app/(auth)/register.jsx</code></li>
+            <li><code>app/(couple)/budget.jsx</code></li>
+            <li><code>app/(couple)/chat.jsx</code></li>
+            <li><code>app/(couple)/docs.jsx</code></li>
+            <li><code>app/(couple)/timeline.jsx</code></li>
+            <li><code>app/(couple)/vendors.jsx</code></li>
+            <li><code>app/(planner)/_layout.jsx</code></li>
+            <li><code>app/(planner)/dashboard.jsx</code></li>
+            <li><code>app/(planner)/customer/[id].jsx</code></li>
+            <li><code>app/planners/index.jsx</code></li>
+            <li><code>app/planners/[id].jsx</code></li>
+            <li><code>app/vendors/index.jsx</code></li>
+            <li><code>app/vendors/[id].jsx</code></li>
+          </ul>
+        </section>
+
+        <!-- ── TS-03 ── -->
+        <section class="section visible" id="ts-03">
+          <div class="sec-eyebrow">Issue 03 — Expo Router</div>
+          <h2 class="sec-heading">Root Layout 마운트 전 navigate 에러</h2>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">이슈 ID</div>
+              <div class="info-val">TS-03</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">영향 파일</div>
+              <div class="info-val"><code>app/_layout.jsx</code></div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결 여부</div>
+              <div class="info-val">✅ 해결 완료</div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">에러 메시지</h3>
+          <div class="highlight-box-red">
+            <p>
+              ERROR [Error: Attempted to navigate before mounting the Root
+              Layout component.]<br />
+              Ensure the Root Layout component is rendering a Slot, or other
+              navigator on the first render.
+            </p>
+          </div>
+
+          <h3 class="sub-heading">원인</h3>
+          <p>
+            <code>app/_layout.jsx</code>의 <code>useEffect</code> 안에서
+            <code>router.replace()</code>를 호출하면, Root Layout이 완전히
+            마운트되기 전에 navigate를 시도해서 에러가 발생합니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">❌ 잘못된 방법</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-key">useEffect</span><span class="c-line">(() => {</span>
+  <span class="c-line">router.</span><span class="c-key">replace</span><span class="c-line">(</span><span class="c-white">"/(couple)"</span><span class="c-line">);</span>
+<span class="c-line">}, []); </span><span class="c-comment">// 마운트 전 호출로 에러 발생</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">✅ 올바른 방법</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  <code>useEffect</code>와 <code>router.replace</code> 없이
+                  <code>&lt;Slot /&gt;</code>만 렌더링합니다. Expo Router가
+                  자동으로 첫 화면을 잡아줍니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">해결 코드</h3>
+          <div class="code-block">
+            <pre><span class="c-comment">// app/_layout.jsx — 올바른 방법</span>
+<span class="c-key">import</span> <span class="c-line">{ Slot } from </span><span class="c-white">"expo-router"</span><span class="c-line">;</span>
+<span class="c-key">import</span> <span class="c-line">{ StatusBar } from </span><span class="c-white">"expo-status-bar"</span><span class="c-line">;</span>
+<span class="c-key">import</span> <span class="c-line">{ SafeAreaProvider } from </span><span class="c-white">"react-native-safe-area-context"</span><span class="c-line">;</span>
+
+<span class="c-key">export default function</span> <span class="c-line">RootLayout() {</span>
+  <span class="c-key">return</span> <span class="c-line">(</span>
+    <span class="c-line">  &lt;</span><span class="c-key">SafeAreaProvider</span><span class="c-line">&gt;</span>
+    <span class="c-line">    &lt;</span><span class="c-key">StatusBar</span><span class="c-line"> style=</span><span class="c-white">"dark"</span><span class="c-line"> /&gt;</span>
+    <span class="c-line">    &lt;</span><span class="c-key">Slot</span><span class="c-line"> initialRouteName=</span><span class="c-white">"(couple)"</span><span class="c-line"> /&gt;</span>
+    <span class="c-line">  &lt;/</span><span class="c-key">SafeAreaProvider</span><span class="c-line">&gt;</span>
+  <span class="c-line">);</span>
+<span class="c-line">}</span></pre>
+          </div>
+        </section>
+
+        <!-- ── TS-04 ── -->
+        <section class="section visible" id="ts-04">
+          <div class="sec-eyebrow">Issue 04 — Expo Router</div>
+          <h2 class="sec-heading">Property 'Redirect' doesn't exist</h2>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">이슈 ID</div>
+              <div class="info-val">TS-04</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">영향 버전</div>
+              <div class="info-val">expo-router v3 이상</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결 여부</div>
+              <div class="info-val">✅ 해결 완료</div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">에러 메시지</h3>
+          <div class="highlight-box-red">
+            <p>ERROR [ReferenceError: Property 'Redirect' doesn't exist]</p>
+          </div>
+
+          <h3 class="sub-heading">원인</h3>
+          <p>
+            expo-router v3 이상에서는 <code>&lt;Redirect /&gt;</code> 컴포넌트가
+            제거되었거나 다르게 동작합니다. import해도 존재하지 않아 에러가
+            발생합니다.
+          </p>
+
+          <h3 class="sub-heading">해결 방법</h3>
+          <p>
+            <code>Redirect</code> 대신 <code>initialRouteName</code> prop을
+            사용하세요.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// Redirect 대신 initialRouteName 사용</span>
+<span class="c-line">&lt;</span><span class="c-key">Slot</span><span class="c-line"> initialRouteName=</span><span class="c-white">"(couple)"</span><span class="c-line"> /&gt;</span></pre>
+          </div>
+        </section>
+
+        <!-- ── TS-05 ── -->
+        <section class="section visible" id="ts-05">
+          <div class="sec-eyebrow">Issue 05 — Expo Router</div>
+          <h2 class="sec-heading">Too many screens defined</h2>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">이슈 ID</div>
+              <div class="info-val">TS-05</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">영향 파일</div>
+              <div class="info-val"><code>app/(couple)/_layout.jsx</code></div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결 여부</div>
+              <div class="info-val">✅ 해결 완료</div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">에러 메시지</h3>
+          <div class="highlight-box-red">
+            <p>
+              WARN [Layout children]: Too many screens defined. Route "timeline"
+              is extraneous.
+            </p>
+          </div>
+
+          <h3 class="sub-heading">원인</h3>
+          <p>
+            <code>(couple)/_layout.jsx</code>의 <code>Tabs.Screen</code>에 실제
+            파일이 없는 <code>name</code>을 정의하거나, 존재하지 않는 화면(<code
+              >mypage</code
+            >
+            등)을 탭에 등록할 때 발생합니다.
+          </p>
+
+          <h3 class="sub-heading">해결 방법</h3>
+          <p>
+            탭에 표시하지 않을 화면은 <code>href: null</code>로 숨기고, 실제
+            파일이 없는 <code>name</code>은 빈 파일이라도 생성해야 합니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 탭에 표시하지 않을 화면 숨기기</span>
+<span class="c-line">&lt;</span><span class="c-key">Tabs.Screen</span><span class="c-line"> name=</span><span class="c-white">"budget"</span><span class="c-line"> options={{ href: </span><span class="c-key">null</span><span class="c-line"> }} /&gt;</span></pre>
+          </div>
+        </section>
+
+        <!-- ── TS-06 ── -->
+        <section class="section visible" id="ts-06">
+          <div class="sec-eyebrow">Issue 06 — Expo Router</div>
+          <h2 class="sec-heading">화면에 "layout" 글씨만 보임</h2>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">이슈 ID</div>
+              <div class="info-val">TS-06</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">영향 파일</div>
+              <div class="info-val">
+                <code>app/(auth)/_layout.jsx</code> 포함 모든
+                <code>_layout.jsx</code>
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결 여부</div>
+              <div class="info-val">✅ 해결 완료</div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">증상</h3>
+          <p>
+            앱을 실행하면 메인 화면 대신 <strong>"layout"</strong> 또는
+            <strong>"_layout"</strong> 텍스트만 화면에 표시됩니다.
+          </p>
+
+          <h3 class="sub-heading">원인</h3>
+          <p>
+            <code>_layout.jsx</code> 파일 중 하나가 올바른 네비게이터 대신
+            텍스트를 렌더링하고 있는 경우입니다. 특히
+            <code>(auth)/_layout.jsx</code>가 임시 컴포넌트 상태로 남아있을 때
+            발생합니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">❌ 문제가 된 코드</span>
+                <span class="white-column-layer-tech">(auth)/_layout.jsx</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-key">const</span> <span class="c-line">_layout = () => {</span>
+  <span class="c-key">return</span> <span class="c-line">(&lt;View&gt;&lt;Text&gt;_layout&lt;/Text&gt;&lt;/View&gt;);</span>
+<span class="c-line">};</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">✅ 올바른 코드</span>
+                <span class="white-column-layer-tech">(auth)/_layout.jsx</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  Stack 네비게이터를 <code>export default</code>로 반환해야
+                  합니다.
+                </p>
+                <div class="code-block">
+                  <pre><span class="c-key">import</span> <span class="c-line">{ Stack } from </span><span class="c-white">"expo-router"</span><span class="c-line">;</span>
+
+<span class="c-key">export default function</span> <span class="c-line">AuthLayout() {</span>
+  <span class="c-key">return</span> <span class="c-line">&lt;</span><span class="c-key">Stack</span><span class="c-line"> screenOptions={{ headerShown: </span><span class="c-key">false</span><span class="c-line"> }} /&gt;;</span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <strong>빠른 탐색 팁:</strong> <code>Ctrl+Shift+F</code>로 전체
+              검색에서 <code>"_layout"</code> 텍스트를 검색하면 문제 파일을
+              빠르게 찾을 수 있습니다. <code>_layout.jsx</code>는 반드시
+              <code>&lt;Stack&gt;</code>, <code>&lt;Tabs&gt;</code>,
+              <code>&lt;Drawer&gt;</code> 중 하나의 네비게이터를 반환해야
+              합니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── TS-07 ── -->
+        <section class="section visible" id="ts-07">
+          <div class="sec-eyebrow">Issue 07 — React Native</div>
+          <h2 class="sec-heading">SafeAreaView deprecated 경고</h2>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">이슈 ID</div>
+              <div class="info-val">TS-07</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">영향 범위</div>
+              <div class="info-val">
+                <code>SafeAreaView</code>를 사용하는 모든 화면 파일
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결 여부</div>
+              <div class="info-val">✅ 해결 완료</div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">에러 메시지</h3>
+          <div class="highlight-box-red">
+            <p>
+              WARN SafeAreaView has been deprecated and will be removed in a
+              future release.<br />
+              Please use "react-native-safe-area-context" instead.
+            </p>
+          </div>
+
+          <h3 class="sub-heading">원인</h3>
+          <p>
+            <code>react-native</code> 기본 <code>SafeAreaView</code>는
+            deprecated 되었습니다. <code>react-native-safe-area-context</code>의
+            <code>SafeAreaView</code>를 사용해야 합니다.
+          </p>
+
+          <h3 class="sub-heading">해결 방법</h3>
+          <p>
+            <strong>1단계:</strong> <code>app/_layout.jsx</code>에
+            <code>SafeAreaProvider</code> 추가
+          </p>
+          <div class="code-block">
+            <pre><span class="c-key">import</span> <span class="c-line">{ SafeAreaProvider } from </span><span class="c-white">"react-native-safe-area-context"</span><span class="c-line">;</span>
+
+<span class="c-comment">// &lt;SafeAreaProvider&gt;로 &lt;Slot /&gt; 감싸기</span>
+<span class="c-key">export default function</span> <span class="c-line">RootLayout() {</span>
+  <span class="c-key">return</span> <span class="c-line">(</span>
+    <span class="c-line">  &lt;</span><span class="c-key">SafeAreaProvider</span><span class="c-line">&gt;</span>
+    <span class="c-line">    &lt;</span><span class="c-key">Slot</span><span class="c-line"> /&gt;</span>
+    <span class="c-line">  &lt;/</span><span class="c-key">SafeAreaProvider</span><span class="c-line">&gt;</span>
+  <span class="c-line">);</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <p><strong>2단계:</strong> 각 화면 파일에서 import 변경</p>
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">변경 전</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-key">import</span> <span class="c-line">{ SafeAreaView } from </span><span class="c-white">"react-native"</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">변경 후</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-key">import</span> <span class="c-line">{ SafeAreaView } from </span><span class="c-white">"react-native-safe-area-context"</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              별도 설치 없이 바로 사용 가능합니다.
+              <strong>Expo 기본 포함</strong> 패키지입니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── TS-08 ── -->
+        <section class="section visible" id="ts-08">
+          <div class="sec-eyebrow">Issue 08 — Android</div>
+          <h2 class="sec-heading">하단 탭바가 기기 네비게이션 바와 겹침</h2>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">이슈 ID</div>
+              <div class="info-val">TS-08</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">영향 범위</div>
+              <div class="info-val">
+                Android 기기 전체 (제스처 네비게이션 사용 기기)
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">영향 파일</div>
+              <div class="info-val"><code>app/(couple)/_layout.jsx</code></div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결 여부</div>
+              <div class="info-val">✅ 해결 완료</div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">증상</h3>
+          <p>
+            Android 기기에서 앱의 하단 탭바가 기기의 제스처 네비게이션 바(홈,
+            뒤로가기 등)와 겹쳐 보입니다.
+          </p>
+
+          <h3 class="sub-heading">원인</h3>
+          <p>
+            Android 제스처 네비게이션 바 높이(24~48px)를 고려하지 않은
+            <code>tabBarStyle</code> 설정 때문입니다.
+          </p>
+
+          <h3 class="sub-heading">해결 방법</h3>
+          <p>
+            <code>Platform</code>을 사용해 Android/iOS별로 높이를 다르게
+            설정합니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-key">import</span> <span class="c-line">{ Platform } from </span><span class="c-white">"react-native"</span><span class="c-line">;</span>
+
+<span class="c-key">tabBarStyle</span><span class="c-line">: {</span>
+  <span class="c-key">backgroundColor</span><span class="c-line">: </span><span class="c-white">"#fff"</span><span class="c-line">,</span>
+  <span class="c-key">borderTopColor</span><span class="c-line">: </span><span class="c-white">"#f0e8e4"</span><span class="c-line">,</span>
+  <span class="c-key">borderTopWidth</span><span class="c-line">: 1,</span>
+  <span class="c-key">borderBottomColor</span><span class="c-line">: </span><span class="c-white">"#f0e8e4"</span><span class="c-line">,</span>
+  <span class="c-key">borderBottomWidth</span><span class="c-line">: 1,</span>
+  <span class="c-key">height</span><span class="c-line">: Platform.OS === </span><span class="c-white">"android"</span><span class="c-line"> ? 70 : 60,</span>
+  <span class="c-key">paddingBottom</span><span class="c-line">: Platform.OS === </span><span class="c-white">"android"</span><span class="c-line"> ? 12 : 8,</span>
+  <span class="c-key">paddingTop</span><span class="c-line">: 8,</span>
+<span class="c-line">},</span></pre>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <strong>Platform 분기 이유:</strong> Android 기기의 제스처
+              네비게이션 바(24~48px)와 탭바가 겹치는 문제를 해결하기 위해
+              <code>Platform.OS</code>로 Android/iOS 높이를 다르게 설정합니다.
+              Android는 <code>height: 70</code>,
+              <code>paddingBottom: 12</code> / iOS는 <code>height: 60</code>,
+              <code>paddingBottom: 8</code>.
+            </p>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>

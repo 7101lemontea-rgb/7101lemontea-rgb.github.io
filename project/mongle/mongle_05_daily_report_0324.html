@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>데일리 리포트 2026.03.24 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Daily Report</span>
+          <span class="badge badge-ver">Day 02</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">데일리 리포트</h1>
+        <p class="post-sub">
+          2026년 3월 24일 — 환경설정 · 디자인 시스템 · 라우팅 구조
+        </p>
+        <p class="post-desc">
+          팀 전체 Expo 환경설정 통일, Figma 기반 디자인 시스템(Rose
+          컬러·Pretendard) 구축, Expo Router 라우팅 구조 완성, timeline.jsx UI
+          초안까지 개발한 Day 2 전 과정을 기록합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 3월 24일</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+          <div>
+            <div class="stat-label">목표 달성률</div>
+            <div class="stat-val">100%</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s0"><span class="toc-num">§</span>오후 데일리 스크럼</a>
+            </li>
+            <li>
+              <a href="#s1"><span class="toc-num">01</span>오늘의 목표</a>
+            </li>
+            <li>
+              <a href="#s2"><span class="toc-num">02</span>실제 수행한 작업</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s2-1">Expo 환경설정 · Git 설정</a></li>
+                <li><a href="#s2-2">디자인 시스템 구축</a></li>
+                <li><a href="#s2-3">라우팅 구조 구현</a></li>
+                <li><a href="#s2-4">timeline.jsx UI 초안</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s3"><span class="toc-num">03</span>이슈 및 해결 방법</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s3-a">npm 의존성 충돌</a></li>
+                <li><a href="#s3-b">Route missing default export</a></li>
+                <li><a href="#s3-c">layout 글씨만 보임</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s4"><span class="toc-num">04</span>내일의 계획</a>
+            </li>
+            <li>
+              <a href="#s5"><span class="toc-num">05</span>느낀점</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── 오후 데일리 스크럼 ── -->
+        <section class="section visible" id="s0">
+          <div class="sec-eyebrow">Daily Scrum — 오후</div>
+          <h2 class="sec-heading">오후 데일리 스크럼 내용</h2>
+          <p>팀원 각자 오늘 완료한 작업과 다음 작업 계획을 공유했습니다.</p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">윤지현</span>
+                <span class="white-title"
+                  >앱 · 백엔드 프로젝트 구조 초기화</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">완료한 작업</div>
+                  <div class="white-value">
+                    Mongle 앱 폴더 구조 생성 및 Git 설정 완료. Mongle 백엔드
+                    서버 폴더 구조 생성 및 Git 설정 완료.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">다음 작업</div>
+                  <div class="white-value">
+                    데이터베이스 및 채팅 AI와 연동할 코드 작성
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">정서영</span>
+                <span class="white-title"
+                  >메인 화면 UI 레이아웃 · 네비게이션</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">완료한 작업</div>
+                  <div class="white-value">
+                    메인 화면 UI 레이아웃 작성 및 터치 시 화면 전환 기능 구성.
+                    Figma 기반으로 메인 화면 UI 수정.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">다음 작업</div>
+                  <div class="white-value">
+                    메인 화면 UI 완성 및 일정 대시보드 레이아웃 Figma 작성
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">강주영</span>
+                <span class="white-title">Supabase DB 테이블 설계</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">완료한 작업</div>
+                  <div class="white-value">
+                    Supabase 데이터베이스 테이블 작성
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">다음 작업</div>
+                  <div class="white-value">프론트엔드와 연동하여 JSON 수정</div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">이건영</span>
+                <span class="white-title">초기 환경 설정 · 로그인 화면</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">완료한 작업</div>
+                  <div class="white-value">
+                    초기 환경 설정 및 로그인 화면 작성
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">다음 작업</div>
+                  <div class="white-value">
+                    로그인 화면 일부 수정, 회원가입 화면 작성
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 1. 오늘의 목표 ── -->
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">01 — Daily Goals</div>
+          <h2 class="sec-heading">오늘의 목표</h2>
+
+          <div class="table-second-grid">
+            <div class="table-second-row header">
+              <div>순서</div>
+              <div>목표</div>
+              <div>상세 내용</div>
+              <div>결과</div>
+            </div>
+            <div class="table-second-row">
+              <div class="txt-accent">Goal 01</div>
+              <div>Expo 환경설정 통일</div>
+              <div>
+                팀원 B 세팅에 맞춰 레포 clone, <code>npx expo start</code> 실행
+                확인
+              </div>
+              <div class="txt-accent">✔ 완료</div>
+            </div>
+            <div class="table-second-row">
+              <div class="txt-accent">Goal 02</div>
+              <div>디자인 시스템 세팅</div>
+              <div>Rose 컬러 팔레트·폰트(Pretendard) constants 파일 작성</div>
+              <div class="txt-accent">✔ 완료</div>
+            </div>
+            <div class="table-second-row">
+              <div class="txt-accent">Goal 03</div>
+              <div>app/_layout.jsx 구현</div>
+              <div>루트 레이아웃, 인증 가드, 화면 전환 구조</div>
+              <div class="txt-accent">✔ 완료</div>
+            </div>
+            <div class="table-second-row">
+              <div class="txt-accent">Goal 04</div>
+              <div>탭 네비게이터 구조</div>
+              <div>(couple)/_layout.jsx, 하단 탭 4개 뼈대</div>
+              <div class="txt-accent">✔ 완료</div>
+            </div>
+            <div class="table-second-row">
+              <div class="txt-accent">Goal 05</div>
+              <div>timeline.jsx UI 스케치</div>
+              <div>D-day 배너, 달력, 타임라인 UI 초안 확정</div>
+              <div class="txt-muted">✔ 완료</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 2. 실제 수행한 작업 ── -->
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">02 — Work Done</div>
+          <h2 class="sec-heading">실제 수행한 작업</h2>
+
+          <!-- 2-1. Expo 환경설정 -->
+          <h3 class="sub-heading" id="s2-1">Expo 환경설정 · Git 설정</h3>
+          <p>
+            팀 전체 Expo 환경설정을 통일하고 실제로
+            <code>npx expo start</code>가 정상 실행되는지 확인했습니다. 이후 Git
+            브랜치 전략을 수립하고 첫 커밋을 실행해 협업 흐름을 확인했습니다.
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">확인 사항</div>
+              <div class="info-val">
+                <code>npx expo start</code> 팀원 전원 정상 실행 확인. Metro
+                Bundler 연결 및 에뮬레이터/실기기 렌더링 검증.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">Git 브랜치</div>
+              <div class="info-val">
+                팀장 기준 레포를 clone 후 개인 feature 브랜치 생성. 브랜치
+                네이밍 규칙 통일.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">첫 커밋</div>
+              <div class="info-val">
+                초기 프로젝트 구조, 폴더 스캐폴딩 커밋 실행. 팀원 간 커밋 메시지
+                컨벤션 확인.
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-2. 디자인 시스템 -->
+          <h3 class="sub-heading" id="s2-2">디자인 시스템 구축</h3>
+          <p>
+            Figma에서 Rose 컬러 색상 칩 팔레트를 제작하고 Pretendard 폰트를
+            적용했습니다. 확정된 토큰을 코드에 반영해 프로젝트 전체에서 일관된
+            스타일을 사용할 수 있도록 구성했습니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">컬러 팔레트</span>
+                <span class="white-column-layer-tech">Rose 계열</span>
+              </div>
+              <div class="white-column-content">
+                <p>Figma에서 Rose 컬러 색상 칩 팔레트 제작.</p>
+                <div class="white-column-tags">
+                  <span class="white-column-tag">Primary Rose</span>
+                  <span class="white-column-tag">Neutral</span>
+                  <span class="white-column-tag">Error Red</span>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">폰트</span>
+                <span class="white-column-layer-tech">Pretendard</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  Figma에 Pretendard 폰트 적용. Regular / Medium / SemiBold /
+                  Bold 4가지 weight 지정.
+                </p>
+                <div class="white-column-tags">
+                  <span class="white-column-tag">Regular 400</span>
+                  <span class="white-column-tag">Medium 500</span>
+                  <span class="white-column-tag">SemiBold 600</span>
+                  <span class="white-column-tag">Bold 700</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-3. 라우팅 구조 구현 -->
+          <h3 class="sub-heading" id="s2-3">라우팅 구조 구현 (Expo Router)</h3>
+          <p>
+            루트 레이아웃 <code>app/_layout.jsx</code>를 구현하고, Expo Router를
+            통해 각 화면 (<code>timeline.jsx</code>, <code>login.jsx</code> 등)
+            간 이동이 가능하도록 구성했습니다. 기존 <code>App.js</code> 방식을
+            <code>app/_layout.jsx</code>로 완전히 대체했습니다.
+          </p>
+
+          <div class="layer-diagram">
+            <div class="layer-row">
+              <div class="layer-num">L1</div>
+              <div class="layer-label">
+                <span class="layer-name">app/_layout.jsx</span>
+                <span class="layer-tech">루트 레이아웃</span>
+              </div>
+              <div class="layer-desc">
+                <p>
+                  앱 진입점. 인증 상태 확인 → 미로그인 시
+                  <code>(auth)/login</code>으로 리다이렉트(인증 가드). 로그인 시
+                  역할(커플/플래너)에 따라 레이아웃 분기. 기존
+                  <code>App.js</code>를 완전히 대체.
+                </p>
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">L2</div>
+              <div class="layer-label">
+                <span class="layer-name">(auth)/_layout.jsx</span>
+                <span class="layer-tech">인증 스택</span>
+              </div>
+              <div class="layer-desc">
+                <p>
+                  로그인·회원가입 화면 스택 네비게이터. 인증 완료 후 커플/플래너
+                  레이아웃으로 이동. <code>login.jsx</code>,
+                  <code>register.jsx</code> 포함.
+                </p>
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">L3</div>
+              <div class="layer-label">
+                <span class="layer-name">(couple)/_layout.jsx</span>
+                <span class="layer-tech">커플 탭 네비게이터</span>
+              </div>
+              <div class="layer-desc">
+                <p>
+                  커플 전용 하단 탭 네비게이터. 탭 4개 — 홈(index.jsx) ·
+                  일정(timeline.jsx) · 비용(budget.jsx) · 채팅(chat.jsx). 각
+                  파일에 임시 컴포넌트 배치 완료.
+                </p>
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">L4</div>
+              <div class="layer-label">
+                <span class="layer-name">(planner)/_layout.jsx</span>
+                <span class="layer-tech">플래너 탭 네비게이터</span>
+              </div>
+              <div class="layer-desc">
+                <p>
+                  플래너 전용 레이아웃 뼈대. 담당 커플 목록·비용 입력·일정 관리
+                  탭 구조 초안. 상세 구현은 이후 스프린트에서 진행.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-4. timeline.jsx UI 초안 -->
+          <h3 class="sub-heading" id="s2-4">timeline.jsx UI 초안 확정</h3>
+          <p>
+            <code>(couple)/timeline.jsx</code>에 포함될 D-day 배너, 달력,
+            타임라인의 UI를 Figma로 작성하고 대략적인 레이아웃을 확정했습니다.
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">D-day 배너</div>
+              <div class="info-val">
+                화면 최상단. 결혼 날짜까지 남은 일수 카운트다운. Rose 컬러
+                그라데이션 배경. 커플 이름 + "결혼식까지 D-{n}" 텍스트 구성.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">달력</div>
+              <div class="info-val">
+                월 단위 캘린더 뷰. 준비 체크리스트 완료 날짜 마킹. 결혼 날짜
+                강조 표시. 날짜 탭 시 해당 날의 일정 목록 표시.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">타임라인</div>
+              <div class="info-val">
+                준비 단계별 수직 타임라인 리스트. 스튜디오·드레스·메이크업·홀 등
+                카테고리별 체크리스트. 완료·진행중·미시작 상태 구분. 플래너가
+                등록한 항목과 커플이 추가한 항목 구분 표시.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 3. 이슈 및 해결 방법 ── -->
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">03 — Issues &amp; Solutions</div>
+          <h2 class="sec-heading">이슈 상황 및 해결 방법</h2>
+
+          <!-- Issue a -->
+          <h3 class="sub-heading" id="s3-a">a. npm install 의존성 충돌</h3>
+
+          <div class="highlight-box-red">
+            <p>
+              npm error ERESOLVE could not resolve<br />npm error Conflicting
+              peer dependency: react@19.2.4
+            </p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">원인</div>
+              <div class="info-val">
+                <code>react@19.1.0</code>과 <code>react-dom@19.2.4</code>의 peer
+                dependency 버전이 맞지 않아 발생. 패키지가 서로 다른 React
+                버전을 요구하면서 npm이 의존성 트리 해석에 실패했습니다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결 방법</div>
+              <div class="info-val">
+                <code>npm install --legacy-peer-deps</code> 옵션 사용. peer
+                dependency 충돌을 무시하고 설치를 진행합니다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">주의사항</div>
+              <div class="info-val">
+                <code>--legacy-peer-deps</code>는 임시 해결책입니다. 이후 의존성
+                버전을 명시적으로 맞추거나, Expo SDK 버전과 호환되는 패키지
+                버전으로 고정하는 것을 권장합니다.
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment"># 의존성 충돌 무시하고 설치</span>
+<span class="c-line">npm install --legacy-peer-deps</span></pre>
+          </div>
+
+          <!-- Issue b -->
+          <h3 class="sub-heading" id="s3-b">b. Route missing default export</h3>
+
+          <div class="highlight-box-red">
+            <p>
+              WARN Route "./(couple)/chat.jsx" is missing the required default
+              export.<br />WARN Ensure a React component is exported as default.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">원인</div>
+              <div class="info-val">
+                Expo Router는 <code>app/</code> 폴더 안의 모든
+                <code>.jsx</code> / <code>.tsx</code> 파일을 자동으로 라우트로
+                인식합니다. 파일이 존재하지만 <code>export default</code>가
+                없거나 파일이 비어 있으면 이 경고가 발생합니다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결 방법</div>
+              <div class="info-val">
+                아직 구현하지 않은 파일에 임시 컴포넌트를 넣어 경고를
+                제거했습니다. 빈 파일을 그대로 두지 않는 것이 핵심입니다.
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// 임시 컴포넌트 — 구현 전 placeholder</span>
+<span class="c-key">import</span> <span class="c-line">{ View, Text } from 'react-native';</span>
+
+<span class="c-key">export default function</span> <span class="c-line">ChatScreen() {</span>
+  <span class="c-key">return</span> <span class="c-line">(</span>
+    <span class="c-line">&lt;View&gt;&lt;Text&gt;준비 중&lt;/Text&gt;&lt;/View&gt;</span>
+  <span class="c-line">);</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <!-- Issue c -->
+          <h3 class="sub-heading" id="s3-c">c. 화면에 "layout" 글씨만 보임</h3>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">증상</div>
+              <div class="info-val">
+                앱을 실행하면 메인 화면 대신 <strong>"layout"</strong> 또는
+                <strong>"_layout"</strong> 텍스트만 화면에 표시되는 문제가
+                발생했습니다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">원인</div>
+              <div class="info-val">
+                <code>_layout.jsx</code> 파일 중 하나가 올바른 네비게이터(<code
+                  >&lt;Stack&gt;</code
+                >
+                또는 <code>&lt;Tabs&gt;</code>)를 반환하지 않고 텍스트를
+                렌더링하고 있었습니다. 특히 <code>(auth)/_layout.jsx</code>가
+                임시 컴포넌트 상태로 남아있을 때 발생하는 문제였습니다.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결 방법</div>
+              <div class="info-val">
+                해당 파일을 올바른 네비게이터 컴포넌트로 수정했습니다.
+                <code>_layout.jsx</code>는 반드시
+                <code>&lt;Stack&gt;</code> 또는 <code>&lt;Tabs&gt;</code> 같은
+                네비게이터를 반환해야 합니다.
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// ❌ 잘못된 _layout.jsx — 텍스트 렌더링</span>
+<span class="c-key">export default function</span> <span class="c-line">AuthLayout() {</span>
+  <span class="c-key">return</span> <span class="c-line">&lt;Text&gt;layout&lt;/Text&gt;; </span><span class="c-comment">// ← 문제 원인</span>
+<span class="c-line">}</span>
+
+<span class="c-comment">// ✅ 올바른 _layout.jsx — Stack 네비게이터 반환</span>
+<span class="c-key">import</span> <span class="c-line">{ Stack } from 'expo-router';</span>
+
+<span class="c-key">export default function</span> <span class="c-line">AuthLayout() {</span>
+  <span class="c-key">return</span> <span class="c-line">&lt;Stack screenOptions={{ headerShown: false }} /&gt;;</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <strong>핵심 규칙:</strong> Expo Router에서
+              <code>_layout.jsx</code>는 반드시 <code>&lt;Stack&gt;</code>,
+              <code>&lt;Tabs&gt;</code>, <code>&lt;Drawer&gt;</code> 중 하나의
+              네비게이터를 반환해야 합니다. 일반 컴포넌트나 텍스트를 반환하면
+              화면이 올바르게 렌더링되지 않습니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── 4. 내일의 계획 ── -->
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">04 — Tomorrow's Plan</div>
+          <h2 class="sec-heading">내일의 계획 (2026.03.25)</h2>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Task 01</span>
+                <span class="white-title">(couple)/timeline.jsx 완성</span>
+                <span class="color-badge p1">P0</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">작업 내용</div>
+                  <div class="white-value">
+                    오늘 초안으로 확정한 D-day 배너·달력·타임라인 UI를 실제
+                    코드로 완성합니다. 더미 데이터로 렌더링을 확인하고, 이후
+                    Supabase 연동을 위한 데이터 구조를 맞춥니다.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">완료 기준</div>
+                  <div class="white-value">
+                    D-day 배너·달력·타임라인 3개 컴포넌트가 더미 데이터로 정상
+                    렌더링됨
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Task 02</span>
+                <span class="white-title">회원가입 UI 완성</span>
+                <span class="color-badge p1">P0</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">작업 내용</div>
+                  <div class="white-value">
+                    로그인 화면 일부 수정 및 회원가입
+                    화면(<code>(auth)/register.jsx</code>) 구현.
+                    이름·이메일·비밀번호·역할(커플/플래너) 입력 폼 구성.
+                    Supabase Auth 연동은 이후 진행.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">완료 기준</div>
+                  <div class="white-value">
+                    회원가입 화면 UI가 로그인 화면과 일관된 디자인으로 완성됨
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 5. 느낀점 ── -->
+        <section class="section visible" id="s5">
+          <div class="sec-eyebrow">05 — Retrospective</div>
+          <h2 class="sec-heading">느낀점</h2>
+
+          <p>
+            Expo 환경설정과 Git 설정이 생각보다 복잡했습니다. 팀장님이 설정하신
+            것을 바탕으로 어떻게 Git을 활용해야 하는지 배울 수 있었습니다. Expo
+            Router를 활용하여 폴더 안의 파일들을 오갈 수 있게 설정하는 것이 초기
+            시스템 설계의 핵심이었는데, 배경지식이 부족하여 앱 초기 화면 구성
+            방법을 이해하는 데 시간이 걸렸습니다.
+          </p>
+          <p>
+            <strong>Route missing default export</strong>와 관련된 오류로 아직
+            구현하지 않은 파일에 임시 컴포넌트를 넣어 우선 해결했지만, 이후 앱을
+            실행하면 메인 화면 대신 "layout" 또는 "_layout" 텍스트만 화면에
+            표시되는 문제가 이어졌습니다. 이와 관련된 오류들을 해결하느라 꽤
+            고생했지만, 앞으로는 왜 발생하는지 알게 되었습니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Keep</span>
+                <span class="white-title">잘한 것</span>
+              </div>
+              <ul class="bullet-list">
+                <li>
+                  팀원 전원의 환경설정을 하루 안에 통일해 공동 개발 기반을
+                  마련한 것
+                </li>
+                <li>
+                  Figma에서 디자인 시스템을 먼저 구축하고 코드로 연결한 것. 이후
+                  UI 작업의 일관성이 높아질 것입니다.
+                </li>
+                <li>
+                  이슈가 발생했을 때 원인을 파악하고 문서화한 것. 같은 오류가
+                  재발했을 때 빠르게 해결할 수 있습니다.
+                </li>
+              </ul>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Problem</span>
+                <span class="white-title">아쉬운 것</span>
+              </div>
+              <ul class="bullet-list">
+                <li>
+                  Expo Router 구조를 처음 접해 초기 설정에 예상보다 많은 시간을
+                  소비했습니다. 공식 문서를 미리 읽었다면 더 효율적으로 진행할
+                  수 있었을 것입니다.
+                </li>
+              </ul>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Try</span>
+                <span class="white-title">개선할 것</span>
+              </div>
+              <ul class="bullet-list">
+                <li>
+                  새로운 기술 스택(<code>expo-router</code> 등)을 사용할 때 공식
+                  문서와 기본 예제를 먼저 확인하는 습관을 만들겠습니다.
+                </li>
+                <li>
+                  <code>_layout.jsx</code>의 역할 — 반드시 네비게이터를 반환해야
+                  한다는 규칙 — 을 팀원 전체와 공유합니다.
+                </li>
+                <li>
+                  미완성 파일을 생성할 때 임시 컴포넌트 템플릿을 미리 정해두어
+                  "Route missing" 경고가 발생하지 않도록 합니다.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>

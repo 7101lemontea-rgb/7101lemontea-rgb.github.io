@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 v1.0 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Docs</span>
+          <span class="badge badge-ver">v1.0</span>
+          <span class="badge badge-status">확정</span>
+        </div>
+        <h1 class="post-title">개발 작업 문서</h1>
+        <p class="post-sub">
+          Git 브랜치 컨벤션 · Expo Router 구조 · 메인 레이아웃 UI 완성
+        </p>
+        <p class="post-desc">
+          팀 Git 브랜치·커밋 컨벤션, Expo Router 파일 시스템 기반 라우팅 구조,
+          그리고 메인 홈·로그인·업체 목록·채팅 등 오늘 완성한 화면 목록과 공통
+          디자인 시스템을 정의합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">2026년 3월 24일</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+          <div>
+            <div class="stat-label">스택</div>
+            <div class="stat-val">React Native · Expo Router</div>
+          </div>
+          <div>
+            <div class="stat-label">문서 버전</div>
+            <div class="stat-val">v1.0</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#ch1"
+                ><span class="toc-num">1장</span>Git 브랜치 &amp; 커밋 컨벤션</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#ch1-1">브랜치명 구조</a></li>
+                <li><a href="#ch1-2">타입(Type) 정의</a></li>
+                <li><a href="#ch1-3">작성 세부 규칙</a></li>
+                <li><a href="#ch1-4">타입별 명령어</a></li>
+                <li><a href="#ch1-5">PR 템플릿</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#ch2"
+                ><span class="toc-num">2장</span>Expo Router 라우팅 구조</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#ch2-1">앱 실행 흐름</a></li>
+                <li><a href="#ch2-2">파일 구조 및 역할</a></li>
+                <li><a href="#ch2-3">그룹 폴더 개념</a></li>
+                <li><a href="#ch2-4">탭 네비게이터 구성</a></li>
+                <li><a href="#ch2-5">마이 탭 — 로그인 연동</a></li>
+                <li><a href="#ch2-6">vendors 라우트 구조</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#ch3"
+                ><span class="toc-num">3장</span>레이아웃 UI 완성</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#ch3-1">완성된 화면 목록</a></li>
+                <li><a href="#ch3-2">메인 홈 화면</a></li>
+                <li><a href="#ch3-3">하단 탭바 스타일</a></li>
+                <li><a href="#ch3-4">공통 디자인 시스템</a></li>
+                <li><a href="#ch3-5">SafeAreaView 처리</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ════════════════════════════════════
+             1장. Git 브랜치 & 커밋 컨벤션
+             ════════════════════════════════════ -->
+        <section class="section visible" id="ch1">
+          <div class="sec-eyebrow">
+            1장 — Git Branch &amp; Commit Convention
+          </div>
+          <h2 class="sec-heading">Git 브랜치 &amp; 커밋 컨벤션</h2>
+          <p>
+            이 프로젝트에서 Git 브랜치를 생성하거나 커밋을 수행할 때 반드시
+            지켜야 하는 팀 규칙입니다.
+          </p>
+
+          <!-- 1.1 브랜치명 구조 -->
+          <h3 class="sub-heading" id="ch1-1">1.1 브랜치명 구조</h3>
+          <div class="highlight-box">
+            <p>
+              <strong>📌 브랜치명 형식</strong><br />
+              <code>타입/#이슈번호-작업내용</code><br />
+              예시: <code>feat/#1-login-ui</code>
+            </p>
+          </div>
+
+          <!-- 1.2 타입 정의 -->
+          <h3 class="sub-heading" id="ch1-2">1.2 타입(Type) 정의</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>타입</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>feat/</code></td>
+                <td>새로운 핵심 기능 개발</td>
+              </tr>
+              <tr>
+                <td><code>fix/</code></td>
+                <td>버그 수정</td>
+              </tr>
+              <tr>
+                <td><code>design/</code></td>
+                <td>UI/UX 퍼블리싱 및 스타일링 작업</td>
+              </tr>
+              <tr>
+                <td><code>refactor/</code></td>
+                <td>기능 변화 없이 코드 구조·로직 개선</td>
+              </tr>
+              <tr>
+                <td><code>chore/</code></td>
+                <td>패키지 설치, 환경 설정 파일 수정</td>
+              </tr>
+              <tr>
+                <td><code>docs/</code></td>
+                <td>README.md 등 문서 수정</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 1.3 작성 세부 규칙 -->
+          <h3 class="sub-heading" id="ch1-3">1.3 작성 세부 규칙</h3>
+          <ul class="bullet-list">
+            <li>반드시 <strong>소문자</strong>만 사용할 것</li>
+            <li>
+              단어 사이는 <strong>하이픈(-)</strong>으로 연결 (띄어쓰기·언더바
+              금지)
+            </li>
+            <li><strong>영어</strong>로 명확하고 간결하게 작성할 것</li>
+          </ul>
+          <div class="highlight-box-yellow">
+            <p>
+              <strong>⚠️ 주의사항</strong>&nbsp; 브랜치 생성이나 커밋 전 항상
+              양식에 맞는지 Self-Check 하세요.
+            </p>
+          </div>
+
+          <!-- 1.4 타입별 명령어 -->
+          <h3 class="sub-heading" id="ch1-4">1.4 타입별 명령어 모음</h3>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">feat/</span>
+                <span class="white-column-layer-tech">새로운 기능 개발</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">git checkout -b feat/#1-feature-name</span>
+<span class="c-line">git commit -m "feat: 기능 설명"</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">fix/</span>
+                <span class="white-column-layer-tech">버그 수정</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">git checkout -b fix/#1-bug-name</span>
+<span class="c-line">git commit -m "fix: 버그 수정 내용"</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">design/</span>
+                <span class="white-column-layer-tech">UI/UX 퍼블리싱</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">git checkout -b design/#1-ui-name</span>
+<span class="c-line">git commit -m "design: UI 스타일링 내용"</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">refactor/</span>
+                <span class="white-column-layer-tech">코드 리팩토링</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">git checkout -b refactor/#1-refactor-name</span>
+<span class="c-line">git commit -m "refactor: 리팩토링 내용"</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">chore/</span>
+                <span class="white-column-layer-tech">환경 설정·패키지</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">git checkout -b chore/#1-chore-name</span>
+<span class="c-line">git commit -m "chore: 설정 변경 및 패키지 설치 내용"</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">docs/</span>
+                <span class="white-column-layer-tech">문서 작업</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">git checkout -b docs/#1-doc-name</span>
+<span class="c-line">git commit -m "docs: 문서 작성 및 수정 내용"</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1.5 PR 템플릿 -->
+          <h3 class="sub-heading" id="ch1-5">1.5 Pull Request 템플릿</h3>
+          <p>PR 생성 시 아래 항목을 작성하고 체크리스트를 확인하세요.</p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">💡 어떤 작업을?</div>
+              <div class="info-val">작업 내용을 체크리스트로 작성</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">📋 관련 이슈</div>
+              <div class="info-val"><code>Resolves: #이슈번호</code></div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">📸 스크린샷</div>
+              <div class="info-val">UI 변경이 있는 경우 AS-IS / TO-BE 첨부</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">✅ PR 체크리스트</div>
+              <div class="info-val">아래 항목 확인 후 머지 요청</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">🔍 리뷰어에게</div>
+              <div class="info-val">특별히 확인 요청할 내용 기재</div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">PR 머지 전 체크리스트</h3>
+          <ul class="bullet-list">
+            <li>내가 작성한 코드를 스스로 꼼꼼히 리뷰(Self-Review)했나요?</li>
+            <li>
+              로컬 환경에서 에러 없이 정상적으로 앱이 실행되는 것을 확인했나요?
+            </li>
+            <li>
+              불필요한 <code>console.log</code>나 디버깅용 주석은 모두 지웠나요?
+            </li>
+            <li>
+              <code>.env</code>에 추가할 새로운 환경 변수가 있다면 팀원들에게
+              공유했나요?
+            </li>
+            <li>
+              PR 제목 양식(브랜치·커밋 컨벤션)을 잘 지켰나요? (예:
+              <code>feat/#1-login-ui</code>)
+            </li>
+          </ul>
+        </section>
+
+        <!-- ════════════════════════════════════
+             2장. Expo Router 라우팅 구조
+             ════════════════════════════════════ -->
+        <section class="section visible" id="ch2">
+          <div class="sec-eyebrow">2장 — Expo Router Routing Structure</div>
+          <h2 class="sec-heading">Expo Router 라우팅 구조</h2>
+          <p>
+            Expo Router는 파일 시스템 기반 라우팅을 사용합니다.
+            <code>app/</code> 폴더 구조가 곧 화면 구조입니다.
+          </p>
+
+          <!-- 2.1 앱 실행 흐름 -->
+          <h3 class="sub-heading" id="ch2-1">2.1 앱 실행 흐름</h3>
+          <div class="highlight-box">
+            <p>
+              <strong>🚀 앱 진입 순서</strong><br />
+              1. <code>app/_layout.jsx</code> &nbsp;→&nbsp; RootLayout 실행
+              (SafeAreaProvider + Slot)<br />
+              2. <code>app/(couple)/_layout.jsx</code> &nbsp;→&nbsp; Tabs
+              네비게이터 실행<br />
+              3. <code>app/(couple)/index.jsx</code> &nbsp;→&nbsp; 홈 화면 표시
+            </p>
+          </div>
+
+          <!-- 2.2 파일 구조 및 역할 -->
+          <h3 class="sub-heading" id="ch2-2">2.2 파일 구조 및 역할</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파일 경로</th>
+                <th>컴포넌트명</th>
+                <th>역할</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>app/_layout.jsx</code></td>
+                <td class="txt-accent">RootLayout</td>
+                <td>SafeAreaProvider + Slot. 앱 진입점</td>
+              </tr>
+              <tr>
+                <td><code>app/(auth)/_layout.jsx</code></td>
+                <td class="txt-accent">AuthLayout</td>
+                <td>Stack 네비게이터. 로그인·회원가입 그룹</td>
+              </tr>
+              <tr>
+                <td><code>app/(auth)/login.jsx</code></td>
+                <td class="txt-muted">LoginScreen</td>
+                <td>이메일/비밀번호 + 카카오 로그인 UI</td>
+              </tr>
+              <tr>
+                <td><code>app/(auth)/register.jsx</code></td>
+                <td class="txt-muted">RegisterScreen</td>
+                <td>회원가입 화면 (임시)</td>
+              </tr>
+              <tr>
+                <td><code>app/(couple)/_layout.jsx</code></td>
+                <td class="txt-accent">CoupleLayout</td>
+                <td>Tabs 네비게이터. 홈·일정·채팅·마이 탭</td>
+              </tr>
+              <tr>
+                <td><code>app/(couple)/index.jsx</code></td>
+                <td class="txt-muted">HomeScreen</td>
+                <td>메인 홈 화면 (배너·카테고리·업체 카드)</td>
+              </tr>
+              <tr>
+                <td><code>app/(couple)/timeline.jsx</code></td>
+                <td class="txt-muted">TimelineScreen</td>
+                <td>일정 화면 (임시)</td>
+              </tr>
+              <tr>
+                <td><code>app/(couple)/chat.jsx</code></td>
+                <td class="txt-muted">ChatScreen</td>
+                <td>채팅 화면 (임시)</td>
+              </tr>
+              <tr>
+                <td><code>app/(couple)/mypage.jsx</code></td>
+                <td class="txt-muted">MypageScreen</td>
+                <td>null 반환. tabBarButton이 로그인으로 이동</td>
+              </tr>
+              <tr>
+                <td><code>app/vendors/index.jsx</code></td>
+                <td class="txt-muted">VendorListScreen</td>
+                <td>업체 목록 + 카테고리 필터</td>
+              </tr>
+              <tr>
+                <td><code>app/vendors/[id].jsx</code></td>
+                <td class="txt-muted">VendorDetailScreen</td>
+                <td>업체 상세 (소개·가격·후기 탭)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 2.3 그룹 폴더 개념 -->
+          <h3 class="sub-heading" id="ch2-3">2.3 그룹 폴더 개념</h3>
+          <p>
+            괄호 <code>()</code>로 감싼 폴더명은 URL 경로에 포함되지 않고 그룹핑
+            용도로만 사용됩니다.
+          </p>
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">(auth) 그룹</span>
+                <span class="white-column-layer-tech">Stack Navigator</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>로그인·회원가입 화면</li>
+                  <li>탭 네비게이션 없음</li>
+                  <li>Stack 네비게이터 사용</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">(couple) 그룹</span>
+                <span class="white-column-layer-tech">Tabs Navigator</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>커플 전용 탭 화면들</li>
+                  <li>하단 탭바 표시</li>
+                  <li>Tabs 네비게이터 사용</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2.4 탭 네비게이터 구성 -->
+          <h3 class="sub-heading" id="ch2-4">2.4 탭 네비게이터 구성</h3>
+          <p><code>(couple)/_layout.jsx</code>의 탭 구성입니다.</p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>탭</th>
+                <th>연결 파일</th>
+                <th>아이콘</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>홈</td>
+                <td><code>index.jsx</code></td>
+                <td class="txt-muted">home-outline</td>
+                <td class="txt-muted">기본 화면</td>
+              </tr>
+              <tr>
+                <td>일정</td>
+                <td><code>timeline.jsx</code></td>
+                <td class="txt-muted">calendar-outline</td>
+                <td class="txt-muted">—</td>
+              </tr>
+              <tr>
+                <td>채팅</td>
+                <td><code>chat.jsx</code></td>
+                <td class="txt-muted">chatbubble-outline</td>
+                <td class="txt-muted">—</td>
+              </tr>
+              <tr>
+                <td>마이</td>
+                <td><code>mypage.jsx</code></td>
+                <td class="txt-muted">person-outline</td>
+                <td>클릭 시 로그인 화면으로 이동</td>
+              </tr>
+              <tr>
+                <td>(숨김)</td>
+                <td><code>budget.jsx · docs.jsx · vendors.jsx</code></td>
+                <td class="txt-muted">—</td>
+                <td class="txt-muted"><code>href: null</code> 처리</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 2.5 마이 탭 — 로그인 연동 -->
+          <h3 class="sub-heading" id="ch2-5">2.5 마이 탭 — 로그인 연동 방식</h3>
+          <p>
+            <code>mypage.jsx</code> 파일은 존재하지만 <code>null</code>을
+            반환합니다. 실제 이동은 <code>tabBarButton</code>에서 처리합니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// (couple)/_layout.jsx</span>
+<span class="c-line">&lt;</span><span class="c-key">Tabs.Screen</span>
+<span class="c-line">  name=</span><span class="c-white">"mypage"</span>
+<span class="c-line">  options={{</span>
+<span class="c-line">    tabBarButton: (props) =&gt; (</span>
+<span class="c-line">      &lt;</span><span class="c-key">TouchableOpacity</span>
+<span class="c-line">        {...props}</span>
+<span class="c-line">        onPress={() =&gt; router.push(</span><span class="c-white">"/(auth)/login"</span><span class="c-line">)}</span>
+<span class="c-line">      /&gt;</span>
+<span class="c-line">    ),</span>
+<span class="c-line">  }}</span>
+<span class="c-line">/&gt;</span></pre>
+          </div>
+
+          <!-- 2.6 vendors 라우트 구조 -->
+          <h3 class="sub-heading" id="ch2-6">2.6 vendors 라우트 구조</h3>
+          <p>
+            업체 관련 화면은 탭 밖의 독립 라우트로 구성되어 있어 탭바 없이
+            풀스크린으로 열립니다.
+          </p>
+          <div class="component-box">
+            <pre><span class="c-title">vendors 폴더 구조</span><span class="c-layer">app/vendors/</span>
+  <span class="c-arrow">├── index.jsx</span>  <span class="c-ext">→  업체 목록 + 카테고리 필터 (더보기 클릭)</span>
+  <span class="c-arrow">└── [id].jsx</span>   <span class="c-ext">→  업체 상세 (소개 · 가격 · 후기 탭)</span></pre>
+          </div>
+        </section>
+
+        <!-- ════════════════════════════════════
+             3장. 레이아웃 UI 완성
+             ════════════════════════════════════ -->
+        <section class="section visible" id="ch3">
+          <div class="sec-eyebrow">3장 — Layout UI Complete</div>
+          <h2 class="sec-heading">레이아웃 UI 완성</h2>
+          <p>오늘 완성한 화면 목록과 주요 구현 내용입니다.</p>
+
+          <!-- 3.1 완성된 화면 목록 -->
+          <h3 class="sub-heading" id="ch3-1">3.1 완성된 화면 목록</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>화면</th>
+                <th>파일</th>
+                <th>주요 구현</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>메인 홈</td>
+                <td><code>(couple)/index.jsx</code></td>
+                <td>배너 슬라이더, 카테고리 탭, 업체 카드 그리드, 서브탭</td>
+              </tr>
+              <tr>
+                <td>로그인</td>
+                <td><code>(auth)/login.jsx</code></td>
+                <td>이메일·비밀번호 입력, 카카오 로그인 버튼, 회원가입 링크</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 3.2 메인 홈 화면 -->
+          <h3 class="sub-heading" id="ch3-2">
+            3.2 메인 홈 화면 (couple/index.jsx)
+          </h3>
+
+          <figure class="doc-figure">
+            <img src="../../assets/mongle/main_ui.png" alt="Main_UI" />
+          </figure>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">헤더</span>
+              </div>
+              <div class="white-column-content">
+                <p>Mongle 로고(가운데 정렬) + 알림 버튼(우측)</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">검색바</span>
+              </div>
+              <div class="white-column-content">
+                <p>둥근 모서리, 우측 필터 아이콘</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">배너 슬라이더</span>
+              </div>
+              <div class="white-column-content">
+                <p>가로 스크롤, 하단 인디케이터 dots</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">카테고리 탭</span>
+              </div>
+              <div class="white-column-content">
+                <p>스튜디오·웨딩홀·드레스·메이크업 + 더보기 버튼</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">업체 카드 그리드</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  2열 카드, 이름·거리·별점 표시. 카드 클릭 →
+                  <code>/vendors/[id]</code> (업체 상세)
+                </p>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">서브 탭</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  본식·패키지·웨딩플래너. 더보기 클릭 →
+                  <code>/vendors</code> (업체 목록)
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3.3 하단 탭바 스타일 -->
+          <h3 class="sub-heading" id="ch3-3">3.3 하단 탭바 스타일</h3>
+          <div class="code-block">
+            <pre><span class="c-key">tabBarStyle</span><span class="c-line">: {</span>
+  <span class="c-key">backgroundColor</span><span class="c-line">: </span><span class="c-white">"#fff"</span><span class="c-line">,</span>
+  <span class="c-key">borderTopColor</span><span class="c-line">: </span><span class="c-white">"#f0e8e4"</span><span class="c-line">,</span>
+  <span class="c-key">borderTopWidth</span><span class="c-line">: 1,</span>
+  <span class="c-key">borderBottomColor</span><span class="c-line">: </span><span class="c-white">"#f0e8e4"</span><span class="c-line">,</span>
+  <span class="c-key">borderBottomWidth</span><span class="c-line">: 1,</span>
+  <span class="c-key">height</span><span class="c-line">: Platform.OS === </span><span class="c-white">"android"</span><span class="c-line"> ? 70 : 60,</span>
+  <span class="c-key">paddingBottom</span><span class="c-line">: Platform.OS === </span><span class="c-white">"android"</span><span class="c-line"> ? 12 : 8,</span>
+  <span class="c-key">paddingTop</span><span class="c-line">: 8,</span>
+<span class="c-line">},</span></pre>
+          </div>
+          <div class="highlight-box">
+            <p>
+              <strong>💡 Platform 분기 이유</strong>&nbsp; Android 기기의 제스처
+              네비게이션 바(24~48px)와 탭바가 겹치는 문제를 해결하기 위해
+              <code>Platform.OS</code>로 Android/iOS 높이를 다르게 설정했습니다.
+            </p>
+          </div>
+
+          <!-- 3.4 공통 디자인 시스템 -->
+          <h3 class="sub-heading" id="ch3-4">3.4 공통 디자인 시스템</h3>
+          <figure class="doc-figure">
+            <img src="../../assets/mongle/color_chip.png" alt="Color-chip" />
+          </figure>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>값</th>
+                <th>용도</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Primary</td>
+                <td><code>#6b4c4c</code></td>
+                <td>로고, 주요 텍스트</td>
+              </tr>
+              <tr>
+                <td>Accent</td>
+                <td><code>#c9a98e</code></td>
+                <td>활성 탭, 버튼, 밑줄, 아이콘</td>
+              </tr>
+              <tr>
+                <td>Background</td>
+                <td><code>#f5f0ee</code></td>
+                <td>검색바, 카드 배경, 비활성 탭</td>
+              </tr>
+              <tr>
+                <td>Text</td>
+                <td><code>#3a2e2a</code></td>
+                <td>본문 텍스트</td>
+              </tr>
+              <tr>
+                <td>Subtext</td>
+                <td><code>#8a7870</code></td>
+                <td>보조 텍스트, 비활성 아이콘</td>
+              </tr>
+              <tr>
+                <td>Border</td>
+                <td><code>#f0e8e4</code></td>
+                <td>구분선, 카드 테두리</td>
+              </tr>
+              <tr>
+                <td>Border Radius</td>
+                <td><code>16~24px</code></td>
+                <td>카드, 버튼, 검색바</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 3.5 SafeAreaView 처리 -->
+          <h3 class="sub-heading" id="ch3-5">3.5 SafeAreaView 처리</h3>
+          <p>
+            <code>react-native</code> 기본 <code>SafeAreaView</code>는
+            deprecated되어 <code>react-native-safe-area-context</code>로
+            교체했습니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">변경 전</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-key">import</span><span class="c-line"> { SafeAreaView } </span><span class="c-key">from</span> <span class="c-white">"react-native"</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">변경 후</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-key">import</span><span class="c-line"> { SafeAreaView } </span><span class="c-key">from</span> <span class="c-white">"react-native-safe-area-context"</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p>
+            <code>app/_layout.jsx</code>에 <code>SafeAreaProvider</code>를
+            추가하여 전체 앱에 적용했습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// app/_layout.jsx</span>
+<span class="c-key">import</span><span class="c-line"> { SafeAreaProvider } </span><span class="c-key">from</span> <span class="c-white">"react-native-safe-area-context"</span><span class="c-line">;</span>
+
+<span class="c-key">export default function</span><span class="c-line"> RootLayout() {</span>
+  <span class="c-key">return</span><span class="c-line"> (</span>
+    <span class="c-line">  &lt;</span><span class="c-key">SafeAreaProvider</span><span class="c-line">&gt;</span>
+    <span class="c-line">    &lt;</span><span class="c-key">Slot</span><span class="c-line"> /&gt;</span>
+    <span class="c-line">  &lt;/</span><span class="c-key">SafeAreaProvider</span><span class="c-line">&gt;</span>
+  <span class="c-line">);</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <!-- 문서 변경 이력 -->
+          <h3 class="sub-heading">문서 변경 이력</h3>
+          <div class="changelog">
+            <div class="changelog-row header">
+              <div>버전</div>
+              <div>날짜</div>
+              <div>작성자</div>
+              <div>변경 내용</div>
+            </div>
+            <div class="changelog-row">
+              <div>v1.0</div>
+              <div>2026-03-24</div>
+              <div>개발팀</div>
+              <div>
+                최초 작성. Git 컨벤션, Expo Router 구조, UI 완성 목록 및 디자인
+                시스템 정의.
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>
