@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>작업 문서 2026.03.25 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">작업 문서</span>
+          <span class="badge badge-ver">2026.03.25</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">작업 문서</h1>
+        <p class="post-sub">
+          Mongle App — timeline · login · register · Lottie
+        </p>
+        <p class="post-desc">
+          타임라인 수정 기능·달력 통합·비용 관리 모달 구현(timeline.jsx), Lottie
+          배경 애니메이션·그라데이션 버튼(login.jsx), 커스텀 모달(register.jsx)
+          등 총 15개 작업 항목과 Git 이슈 3건을 기록합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 3월 25일</div>
+          </div>
+
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+          <div>
+            <div class="stat-label">브랜치</div>
+            <div class="stat-val">
+              design/#2-timeline-ui · design/#12-login-register
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#overview"
+                ><span class="toc-num">§</span>작업 목록 전체</a
+              >
+            </li>
+            <li>
+              <a href="#part1"><span class="toc-num">P1</span>timeline.jsx</a>
+              <ul class="toc-sub-list">
+                <li><a href="#t1">1. 수정 기능 추가</a></li>
+                <li><a href="#t2">2. 날짜 입력 방식 개선</a></li>
+                <li><a href="#t3">3. 달력 일정 추가 모달</a></li>
+                <li><a href="#t4">4. 색상 팔레트 확장</a></li>
+                <li><a href="#t5">5. 월별 필터링</a></li>
+                <li><a href="#t6">6. 데이터 통합</a></li>
+                <li><a href="#t7">7. 비용·잔금 관리 모달</a></li>
+                <li><a href="#t8">8. 도트 색상 규칙</a></li>
+                <li><a href="#t9">9. 버그 수정</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#part2"><span class="toc-num">P2</span>Git 이슈 해결</a>
+              <ul class="toc-sub-list">
+                <li><a href="#g1">G1. 폴더 소실</a></li>
+                <li><a href="#g2">G2. 괄호() 경로 오류</a></li>
+                <li><a href="#g3">G3. not a git repository</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#part3"
+                ><span class="toc-num">P3</span>login · register</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#t10">10. 로그인 버튼 그라데이션</a></li>
+                <li><a href="#t11">11. 로그인 버튼 그림자</a></li>
+                <li><a href="#t12">12. Lottie 색상 교체</a></li>
+                <li><a href="#t13">13. Lottie 배경 적용</a></li>
+                <li><a href="#t14">14. 가입하기 버튼 그라데이션</a></li>
+                <li><a href="#t15">15. 이메일 인증 커스텀 모달</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── 전체 작업 목록 ── -->
+        <section class="section visible" id="overview">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">작업 목록 전체</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>작업 내용</th>
+                <th>파일</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>타임라인 수정 기능 추가</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>날짜 입력 방식 개선 (분리 입력)</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>달력 일정 추가 모달 구현</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>6가지 색상 팔레트 확장</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>월별 일정 필터링</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>타임라인·달력 데이터 통합 (3→1 상태)</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>비용·잔금 관리 모달 구현</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>타임라인 도트 색상 규칙 통일</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>버그 수정 2건</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td>G1</td>
+                <td>Git: 브랜치 push 시 폴더 소실 문제</td>
+                <td class="txt-muted">—</td>
+              </tr>
+              <tr>
+                <td>G2</td>
+                <td>Git: PowerShell 괄호() 경로 인식 오류</td>
+                <td class="txt-muted">—</td>
+              </tr>
+              <tr>
+                <td>G3</td>
+                <td>Git: not a git repository 에러</td>
+                <td class="txt-muted">—</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>로그인 버튼 그라데이션 적용</td>
+                <td><code>login.jsx</code></td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td>로그인 버튼 그림자 적용</td>
+                <td><code>login.jsx</code></td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>Lottie JSON 색상 교체</td>
+                <td><code>Animated_leaves.json</code></td>
+              </tr>
+              <tr>
+                <td>13</td>
+                <td>Lottie 애니메이션 로그인 화면 적용</td>
+                <td><code>login.jsx</code></td>
+              </tr>
+              <tr>
+                <td>14</td>
+                <td>가입하기 버튼 그라데이션 적용</td>
+                <td><code>register.jsx</code></td>
+              </tr>
+              <tr>
+                <td>15</td>
+                <td>이메일 인증 커스텀 모달 구현</td>
+                <td><code>register.jsx</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ════════ PART 1 : timeline.jsx ════════ -->
+        <section class="section visible" id="part1">
+          <div class="sec-eyebrow">
+            Part 1 — timeline.jsx · Branch: design/#2-timeline-ui
+          </div>
+          <h2 class="sec-heading">timeline.jsx</h2>
+
+          <!-- 1 -->
+          <h3 class="sub-heading" id="t1">1. 타임라인 수정 기능 추가</h3>
+          <p>
+            기존 화면에는 타임라인 항목을 수정할 수 있는 기능이 없었습니다. 수정
+            모달(<code>TimelineEditModal</code>)을 추가하여 인라인 편집이
+            가능하도록 구현했습니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">추가된 기능</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>타임라인 카드 헤더에 수정 버튼 추가</li>
+                  <li>수정 버튼 클릭 시 바텀 시트 형태의 모달 표시</li>
+                  <li>
+                    모달 내에서 항목 클릭 → 인라인 편집 (이름, 날짜, 상태)
+                  </li>
+                  <li>항목 삭제 기능 및 새 일정 추가 기능</li>
+                  <li>저장 시 날짜순 자동 정렬 / 취소 시 변경사항 미반영</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name"
+                  >Timeline<br />EditModal</span
+                >
+                <span class="white-column-layer-tech">컴포넌트 명세</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>
+                    props: <code>visible</code>, <code>items</code>,
+                    <code>onClose</code>, <code>onSave</code>
+                  </li>
+                  <li>
+                    내부 state: <code>draft</code> (편집 중인 항목 배열),
+                    <code>openIdx</code> (현재 펼쳐진 항목 인덱스)
+                  </li>
+                  <li>
+                    모달이 열릴 때마다 <code>items</code>를 복사하여
+                    <code>draft</code> 초기화 (<code>useEffect</code>)
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 -->
+          <h3 class="sub-heading" id="t2">2. 날짜 입력 방식 개선</h3>
+          <p>
+            기존 텍스트 자유 입력 방식에서 연/월/일 숫자 전용 분리 입력 방식으로
+            변경했습니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">데이터 구조</span>
+                <span class="white-column-layer-tech">변경 전 → 후</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// 변경 전</span>
+<span class="c-line">{ id, label, date: </span><span class="c-white">"2026년 1월 15일"</span><span class="c-line">, status }</span>
+
+<span class="c-comment">// 변경 후</span>
+<span class="c-line">{ id, label, dateYear: </span><span class="c-white">"2026"</span><span class="c-line">, dateMonth: </span><span class="c-white">"01"</span><span class="c-line">, dateDay: </span><span class="c-white">"15"</span><span class="c-line">, status }</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name"
+                  >formatDate<br />헬퍼</span
+                >
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-key">const</span> <span class="c-line">formatDate = (item) => {</span>
+  <span class="c-key">if</span> <span class="c-line">(!item.dateYear) </span><span class="c-key">return</span> <span class="c-line">item.date ?? </span><span class="c-white">''</span><span class="c-line">;</span>
+  <span class="c-key">return</span> <span class="c-line">`${item.dateYear}년 ${parseInt(item.dateMonth)}월 ${parseInt(item.dateDay)}일`;</span>
+<span class="c-line">};</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">날짜순 자동 정렬</span>
+                <span class="white-column-layer-tech">저장 시 실행</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-key">const</span> <span class="c-line">sorted = [...draft].sort((a, b) => {</span>
+  <span class="c-key">const</span> <span class="c-line">toMs = (i) => </span><span class="c-key">new</span> <span class="c-line">Date(</span>
+    <span class="c-line">parseInt(i.dateYear) || 0,</span>
+    <span class="c-line">(parseInt(i.dateMonth) || 1) - 1,</span>
+    <span class="c-line">parseInt(i.dateDay) || 1</span>
+  <span class="c-line">).getTime();</span>
+  <span class="c-key">return</span> <span class="c-line">toMs(a) - toMs(b);</span>
+<span class="c-line">});</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 -->
+          <h3 class="sub-heading" id="t3">3. 달력 일정 추가 모달 구현</h3>
+          <p>
+            달력 카드 헤더에 "+ 일정 추가" 버튼을 추가하고, 모달을 통해 일정을
+            등록할 수 있도록 구현했습니다.
+          </p>
+          <ul class="bullet-list">
+            <li>
+              달력 헤더에 "+ 일정 추가" 버튼 추가 (기존 수정 버튼과 동일한
+              스타일)
+            </li>
+            <li>일정 이름, 날짜(년/월/일), 상태, 색상 입력 폼 구성</li>
+            <li>달력에서 날짜를 선택하면 모달에 날짜가 자동으로 채워짐</li>
+            <li>필수 항목 미입력 시 추가 버튼 비활성화</li>
+            <li>색상 선택에 따른 실시간 미리보기 제공</li>
+          </ul>
+
+          <!-- 4 -->
+          <h3 class="sub-heading" id="t4">4. 6가지 색상 팔레트 확장</h3>
+          <p>
+            기존 로즈/세이지 2가지에서 6가지 색상으로 확장했습니다. 원형 스와치
+            UI로 교체했습니다.
+          </p>
+
+          <div class="card-style-grid">
+            <div class="card-style">
+              <div class="card-id">#C9716A</div>
+              <div class="card-name">로즈</div>
+              <p class="card-desc">
+                선택 시 체크마크 + 그림자 + 약간 확대 인터랙션
+              </p>
+            </div>
+            <div class="card-style">
+              <div class="card-id">#7A9E8E</div>
+              <div class="card-name">세이지</div>
+              <p class="card-desc">
+                선택된 색상의 라벨 텍스트가 해당 색으로 강조됨
+              </p>
+            </div>
+            <div class="card-style">
+              <div class="card-id">#9B8EC4</div>
+              <div class="card-name">라벤더</div>
+              <p class="card-desc">—</p>
+            </div>
+            <div class="card-style">
+              <div class="card-id">#6A9EC9</div>
+              <div class="card-name">스카이</div>
+              <p class="card-desc">—</p>
+            </div>
+            <div class="card-style">
+              <div class="card-id">#D4956A</div>
+              <div class="card-name">피치</div>
+              <p class="card-desc">—</p>
+            </div>
+            <div class="card-style">
+              <div class="card-id">#5BAD9A</div>
+              <div class="card-name">민트</div>
+              <p class="card-desc">—</p>
+            </div>
+          </div>
+
+          <!-- 5 -->
+          <h3 class="sub-heading" id="t5">5. 월별 일정 필터링</h3>
+          <p>
+            달력의 월을 이동하면 해당 월의 일정만 아래 배지 목록에 표시되도록
+            수정했습니다.
+          </p>
+          <ul class="bullet-list">
+            <li>
+              <code>Calendar onMonthChange</code> 콜백으로
+              <code>visibleMonth</code> 상태 추적
+            </li>
+            <li>
+              이벤트 목록을 <code>visibleMonth</code> 기준으로 필터링 후 날짜순
+              정렬
+            </li>
+            <li>
+              해당 월에 일정이 없을 경우 "N월에 등록된 일정이 없습니다" 안내
+              문구 표시
+            </li>
+          </ul>
+
+          <!-- 6 -->
+          <h3 class="sub-heading" id="t6">6. 타임라인·달력 데이터 통합</h3>
+          <p>
+            기존에 별도로 관리되던 3개의 상태를 <code>timelineItems</code> 단일
+            소스로 통합했습니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">변경 전</span>
+                <span class="white-column-layer-tech">3개 상태</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li><code>timelineItems</code> (별도 상태)</li>
+                  <li><code>scheduleEvents</code> (별도 상태)</li>
+                  <li><code>markedDates</code> (별도 상태)</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">변경 후</span>
+                <span class="white-column-layer-tech">1개 상태</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>
+                    <code>timelineItems</code> — 단일 소스(Single Source of
+                    Truth)
+                  </li>
+                  <li><code>markedDates</code> → 파생(computed)</li>
+                  <li><code>visibleEvents</code> → 파생(computed)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7 -->
+          <h3 class="sub-heading" id="t7">7. 비용·잔금 관리 모달 구현</h3>
+          <p>
+            기존 하드코딩된 비용/잔금 데이터를 통합 상태로 관리하고, 수정 모달을
+            구현했습니다.
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">데이터 통합</div>
+              <div class="info-val">
+                <code>COST_ITEMS</code> + <code>BALANCE_ITEMS</code> →
+                <code>INITIAL_COST_ITEMS</code> 단일 배열로 통합.
+                <code>hasBalance</code> 필드로 잔금 여부 관리
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">비용 항목 탭</div>
+              <div class="info-val">
+                항목명, 금액, ⚠ 주의 토글, 잔금 있음 토글 편집. 항목 추가/삭제
+                가능
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">잔금 일정 탭</div>
+              <div class="info-val">
+                <code>hasBalance: true</code> 항목만 표시. 수정 링크로 비용 항목
+                탭의 해당 항목으로 바로 이동
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">잔금 세부 입력</div>
+              <div class="info-val">
+                잔금 있음 켜면 잔금액, 마감일, 🔴 긴급 입력란 노출
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">예산 설정</div>
+              <div class="info-val">
+                전체 예산 입력 → 합계 대비 프로그레스바 실시간 반영
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">동적 계산</div>
+              <div class="info-val">
+                합계, 진행률 모두 <code>costItems</code>에서 자동 계산 (하드코딩
+                제거)
+              </div>
+            </div>
+          </div>
+
+          <!-- 8 -->
+          <h3 class="sub-heading" id="t8">8. 타임라인 도트 색상 규칙 통일</h3>
+          <p>상태에 따라 도트 색상을 일관된 규칙으로 통일했습니다.</p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>상태</th>
+                <th>도트</th>
+                <th>색상 코드</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>done</code></td>
+                <td class="txt-accent">초록 채움</td>
+                <td><code>#7A9E8E</code></td>
+                <td class="txt-muted">완료된 일정</td>
+              </tr>
+              <tr>
+                <td><code>active</code></td>
+                <td class="txt-red">로즈 채움</td>
+                <td><code>#C9716A</code></td>
+                <td class="txt-muted">현재 진행 중인 일정</td>
+              </tr>
+              <tr>
+                <td><code>next</code></td>
+                <td class="txt-red">로즈 빈 원</td>
+                <td><code>#C9716A (테두리)</code></td>
+                <td class="txt-muted">곧 다가올 일정</td>
+              </tr>
+              <tr>
+                <td><code>future</code></td>
+                <td class="txt-muted">회색 빈 원</td>
+                <td><code>#D4C9C5 (테두리)</code></td>
+                <td class="txt-muted">먼 미래 일정</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 9 -->
+          <h3 class="sub-heading" id="t9">9. 버그 수정</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>버그</th>
+                <th>원인</th>
+                <th>해결</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SyntaxError: JSX 닫는 태그 중복</td>
+                <td><code>&lt;/View&gt;</code> 태그 1개 중복 작성</td>
+                <td>중복 <code>&lt;/View&gt;</code> 1개 제거</td>
+              </tr>
+              <tr>
+                <td>다른 달 일정이 현재 달에 표시</td>
+                <td>전체 이벤트 목록을 월 필터 없이 렌더링</td>
+                <td>월별 필터링(5번 작업)으로 해결</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box">
+            <p>
+              <strong>스타일 구조 참고</strong> — <code>styles</code>: 메인 화면
+              컴포넌트용 스타일. <code>modalStyles</code>: TimelineEditModal
+              전용 스타일. 날짜 입력 관련 스타일(<code>dateRow</code>,
+              <code>dateInput</code>, <code>dateInputSm</code>,
+              <code>dateSep</code>)은 반드시 <code>modalStyles</code>에 위치.
+            </p>
+          </div>
+
+          <h3 class="sub-heading">사용 라이브러리 (timeline.jsx)</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>라이브러리</th>
+                <th>사용 컴포넌트</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>react-native</code></td>
+                <td class="txt-muted">
+                  View, Text, ScrollView, StyleSheet, TouchableOpacity,
+                  TextInput, Modal, Dimensions
+                </td>
+              </tr>
+              <tr>
+                <td><code>react-native-safe-area-context</code></td>
+                <td class="txt-muted">SafeAreaView</td>
+              </tr>
+              <tr>
+                <td><code>@expo/vector-icons</code></td>
+                <td class="txt-muted">Ionicons</td>
+              </tr>
+              <tr>
+                <td><code>react-native-calendars</code></td>
+                <td class="txt-muted">Calendar</td>
+              </tr>
+              <tr>
+                <td><code>expo-router</code></td>
+                <td class="txt-muted">router</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ════════ PART 2 : Git 이슈 ════════ -->
+        <section class="section visible" id="part2">
+          <div class="sec-eyebrow">Part 2 — Git Issues</div>
+          <h2 class="sec-heading">Git 이슈 해결</h2>
+
+          <!-- G1 -->
+          <h3 class="sub-heading" id="g1">
+            G1. 브랜치 push 시 폴더가 사라지는 문제
+          </h3>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">증상</div>
+              <div class="info-val">
+                <code>design/#2-timeline-ui</code> 브랜치에 push할 때마다
+                <code>app/(couple)/chat</code> 폴더가 사라짐
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">원인</div>
+              <div class="info-val">
+                <code>chat</code> 폴더는 <code>feat/#10-chat</code> 브랜치에서
+                추가되었으나, <code>design/#2</code> 브랜치는 그 이전 커밋에서
+                분기되어 <code>chat</code> 폴더의 존재를 알지 못함
+              </div>
+            </div>
+          </div>
+          <div class="code-block">
+            <pre><span class="c-comment"># 브랜치 구조 (분기 시점 기준)</span>
+<span class="c-line">main      A -- B -- C(chat 추가) -- D</span>
+<span class="c-line">               \</span>
+<span class="c-line">design/#2       E -- F  ← 이 시점에는 chat 없음</span>
+
+<span class="c-comment"># 진단 명령어</span>
+<span class="c-line">git log --oneline -- "app/(couple)/chat"</span>
+<span class="c-line">git merge-base main design/#2-timeline-ui</span>
+
+<span class="c-comment"># 해결 — main 병합</span>
+<span class="c-line">git checkout design/#2-timeline-ui</span>
+<span class="c-line">git merge main</span>
+
+<span class="c-comment"># 충돌 해결 후 커밋 및 push</span>
+<span class="c-line">git add "app/(couple)/timeline.jsx"</span>
+<span class="c-line">git commit -m "merge: main 병합 및 timeline UI 수정"</span>
+<span class="c-line">git push origin design/#2-timeline-ui</span></pre>
+          </div>
+          <div class="highlight-box">
+            <p>
+              merge 충돌 발생 시 VS Code에서 <code>timeline.jsx</code> 충돌을
+              해결합니다. <strong>Accept Current Change</strong>: 내
+              브랜치(design/#2) 내용 유지 (권장) /
+              <strong>Accept Incoming Change</strong>: main 내용으로 덮어씀.
+            </p>
+          </div>
+
+          <!-- G2 -->
+          <h3 class="sub-heading" id="g2">
+            G2. PowerShell에서 괄호() 경로 인식 오류
+          </h3>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">증상</div>
+              <div class="info-val">
+                <code>git add app/(couple)/timeline.jsx</code> 실행 시
+                <code>'couple' 용어가 인식되지 않습니다</code> 에러 발생
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">원인</div>
+              <div class="info-val">
+                PowerShell은 괄호 <code>()</code>를 명령어 또는 표현식으로
+                해석하여 경로의 일부로 인식하지 못함
+              </div>
+            </div>
+          </div>
+          <div class="code-block">
+            <pre><span class="c-comment"># ❌ 잘못된 방법</span>
+<span class="c-line">git add app/(couple)/timeline.jsx</span>
+
+<span class="c-comment"># ✅ 올바른 방법 — 경로 전체를 큰따옴표로 감싸기</span>
+<span class="c-line">git add "app/(couple)/timeline.jsx"</span></pre>
+          </div>
+
+          <!-- G3 -->
+          <h3 class="sub-heading" id="g3">G3. not a git repository 에러</h3>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">증상</div>
+              <div class="info-val">
+                <code
+                  >fatal: not a git repository (or any of the parent
+                  directories): .git</code
+                >
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">원인</div>
+              <div class="info-val">
+                git 명령어를 저장소 루트가 아닌 상위 폴더에서 실행함. 실제
+                저장소는 하위 폴더(<code>Mongle-app</code>)에 위치.
+              </div>
+            </div>
+          </div>
+          <div class="code-block">
+            <pre><span class="c-comment"># 올바른 저장소 경로로 이동 후 실행</span>
+<span class="c-line">cd C:\workspace\mongle\mongle\Mongle-app</span>
+<span class="c-line">git status</span></pre>
+          </div>
+        </section>
+
+        <!-- ════════ PART 3 : login · register ════════ -->
+        <section class="section visible" id="part3">
+          <div class="sec-eyebrow">
+            Part 3 — login.jsx · register.jsx · Branch:
+            design/#12-login-register
+          </div>
+          <h2 class="sec-heading">login.jsx · register.jsx</h2>
+
+          <!-- 10 -->
+          <h3 class="sub-heading" id="t10">10. 로그인 버튼 그라데이션 적용</h3>
+          <p>
+            로그인 버튼에 <code>expo-linear-gradient</code>의
+            <code>LinearGradient</code>를 적용하여 핑크에서 베이지 톤으로
+            이어지는 그라데이션을 구현했습니다.
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">패키지 설치</div>
+              <div class="info-val">
+                <code>npx expo install expo-linear-gradient</code>
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">적용 구조</div>
+              <div class="info-val">
+                TouchableOpacity (loginBtnWrapper) → LinearGradient
+                (loginBtnGradient) → Text
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">그라데이션 설정</div>
+              <div class="info-val">
+                colors: <code>['#d6a6a6', '#d5d1b3']</code> (핑크 → 베이지) /
+                start: <code>{"{x:0,y:0}"}</code> end:
+                <code>{"{x:1,y:1}"}</code> (대각선)
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-line">&lt;</span><span class="c-key">TouchableOpacity</span><span class="c-line"> style={styles.loginBtnWrapper} activeOpacity={0.85}&gt;</span>
+  <span class="c-line">&lt;</span><span class="c-key">LinearGradient</span>
+    <span class="c-line">colors={[</span><span class="c-white">'#d6a6a6'</span><span class="c-line">, </span><span class="c-white">'#d5d1b3'</span><span class="c-line">]}</span>
+    <span class="c-line">start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}</span>
+    <span class="c-line">style={styles.loginBtnGradient}</span>
+  <span class="c-line">&gt;</span>
+    <span class="c-line">&lt;</span><span class="c-key">Text</span><span class="c-line"> style={styles.loginBtnText}&gt;로그인&lt;/</span><span class="c-key">Text</span><span class="c-line">&gt;</span>
+  <span class="c-line">&lt;/</span><span class="c-key">LinearGradient</span><span class="c-line">&gt;</span>
+<span class="c-line">&lt;/</span><span class="c-key">TouchableOpacity</span><span class="c-line">&gt;</span></pre>
+          </div>
+
+          <!-- 11 -->
+          <h3 class="sub-heading" id="t11">11. 로그인 버튼 그림자 적용</h3>
+          <p>
+            <code>LinearGradient</code> 위에 그림자를 적용하기 위해 바깥
+            <code>TouchableOpacity</code>(wrapper)에 그림자 스타일을
+            추가했습니다.
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">핵심 포인트</div>
+              <div class="info-val">
+                그림자는 <code>LinearGradient</code>가 아닌 바깥 wrapper에 적용.
+                <code>shadowColor</code>를 버튼 색상(#d6a6a6)에 맞춰 자연스러운
+                컬러 그림자 구현
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">크로스플랫폼</div>
+              <div class="info-val">
+                iOS: <code>shadow*</code> 속성 / Android:
+                <code>elevation</code> 속성
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-key">shadow</span><span class="c-line">: {</span>
+  <span class="c-key">shadowColor</span><span class="c-line">: </span><span class="c-white">'#d6a6a6'</span><span class="c-line">,</span>
+  <span class="c-key">shadowOffset</span><span class="c-line">: { width: 0, height: 4 },</span>
+  <span class="c-key">shadowOpacity</span><span class="c-line">: 0.4,</span>
+  <span class="c-key">shadowRadius</span><span class="c-line">: 8,</span>
+  <span class="c-key">elevation</span><span class="c-line">: 6,</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <!-- 12 -->
+          <h3 class="sub-heading" id="t12">12. Lottie JSON 색상 교체</h3>
+          <p>
+            LottieFiles 애니메이션의 색상을 Mongle 앱 디자인 톤에 맞게
+            교체했습니다. Lottie JSON은 RGB 값을 0~1 범위로 저장합니다.
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>레이어</th>
+                <th>원본 색상</th>
+                <th>교체 색상</th>
+                <th>적용 수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>화분/돌맹이</td>
+                <td><code>#b9571a</code></td>
+                <td><code>#aaa2a1</code></td>
+                <td class="txt-muted">5곳</td>
+              </tr>
+              <tr>
+                <td>줄기 (Stem)</td>
+                <td><code>#2d4245</code></td>
+                <td><code>#537663</code></td>
+                <td class="txt-muted">6곳</td>
+              </tr>
+              <tr>
+                <td>잎/기타</td>
+                <td><code>#662612</code></td>
+                <td><code>#e6bcb3</code></td>
+                <td class="txt-muted">17곳</td>
+              </tr>
+              <tr>
+                <td>배경 (Bg)</td>
+                <td><code>#ffd69b</code></td>
+                <td><code>#ede6e4</code></td>
+                <td class="txt-muted">1곳</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 13 -->
+          <h3 class="sub-heading" id="t13">
+            13. Lottie 애니메이션 로그인 화면 적용
+          </h3>
+          <p>
+            색상 교체가 완료된 <code>Animated_leaves.json</code>을 로그인 화면
+            배경에 적용했습니다. <code>StyleSheet.absoluteFill</code>을 사용하여
+            화면 전체를 덮는 배경 애니메이션으로 구현했습니다.
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">패키지 설치</div>
+              <div class="info-val">
+                <code>npx expo install lottie-react-native</code>
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">적용 방법</div>
+              <div class="info-val">
+                SafeAreaView 내부 최상단에 LottieView 배치.
+                <code>style={"{StyleSheet.absoluteFill}"}</code>로 화면 전체
+                배경 덮음
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">위치 조정</div>
+              <div class="info-val">
+                <code>style={"{[StyleSheet.absoluteFill, {left: N}]}"}</code> —
+                숫자가 클수록 오른쪽으로 이동
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-line">&lt;</span><span class="c-key">SafeAreaView</span><span class="c-line"> style={styles.safeArea}&gt;</span>
+  <span class="c-line">&lt;</span><span class="c-key">LottieView</span>
+    <span class="c-line">source={require(</span><span class="c-white">'./assets/Animated_leaves.json'</span><span class="c-line">)}</span>
+    <span class="c-line">autoPlay loop</span>
+    <span class="c-line">style={[StyleSheet.absoluteFill, { left: 30 }]}</span>
+  <span class="c-line">/&gt;</span>
+  <span class="c-comment">{/* 기존 로그인 UI */}</span>
+<span class="c-line">&lt;/</span><span class="c-key">SafeAreaView</span><span class="c-line">&gt;</span></pre>
+          </div>
+
+          <div class="highlight-box-yellow">
+            <p>
+              <code>lottie-react-native</code> 추가 후
+              <code>npm install</code> 시 react/react-dom 버전 충돌(ERESOLVE)
+              오류가 발생할 수 있습니다.
+              <code>npm install --legacy-peer-deps</code>로 해결하세요.
+            </p>
+          </div>
+
+          <!-- 14 -->
+          <h3 class="sub-heading" id="t14">
+            14. 가입하기 버튼 그라데이션 적용
+          </h3>
+          <p>
+            로그인 버튼과 동일한 <code>LinearGradient</code>를 가입하기 버튼에도
+            적용했습니다. <code>disabled</code> 상태일 때는 흐린 색상으로 자동
+            전환됩니다.
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">주요 변경사항</div>
+              <div class="info-val">
+                TouchableOpacity를 registerBtnWrapper로 교체. 내부에
+                LinearGradient 래핑. <code>isSignUpEnabled</code> 값에 따라
+                활성/비활성 그라데이션 색상 분기
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">활성 색상</div>
+              <div class="info-val">
+                <code>['#d6a6a6', '#d5d1b3']</code> (로그인 버튼과 동일)
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">비활성 색상</div>
+              <div class="info-val">
+                <code>['#e0d8d8', '#e0ded0']</code> (흐린 톤)
+              </div>
+            </div>
+          </div>
+
+          <!-- 15 -->
+          <h3 class="sub-heading" id="t15">15. 이메일 인증 커스텀 모달</h3>
+          <p>
+            기존 <code>Alert.alert</code> 3곳을 커스텀 모달로 교체하여 앱
+            디자인과 통일된 UI를 적용했습니다.
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">변경 내용</div>
+              <div class="info-val">
+                Modal 컴포넌트 import 추가. <code>modalVisible</code>,
+                <code>modalConfig</code> state 추가.
+                <code>showModal(title, message, onConfirm)</code> 헬퍼 함수 구현
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">교체 위치</div>
+              <div class="info-val">
+                이메일 형식 오류 / 인증 완료 / 회원가입 완료 총 3곳
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">모달 스타일</div>
+              <div class="info-val">
+                배경 오버레이: <code>rgba(0,0,0,0.35)</code>.
+                <code>borderRadius: 16, elevation: 8</code> (카드형 디자인).
+                확인 버튼: LinearGradient <code>#d6a6a6 → #d5d1b3</code>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>

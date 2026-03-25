@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>데일리 리포트 2026.03.25 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.03.25 Daily Report</span>
+          <span class="badge badge-ver">Day 03</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">데일리 리포트</h1>
+        <p class="post-sub">
+          2026년 3월 25일 — timeline · login · register · Lottie
+        </p>
+        <p class="post-desc">
+          로그인 Lottie 배경 애니메이션·그라데이션 버튼 구현, 타임라인 수정
+          기능·달력 통합· 비용 관리 모달 대규모 개선, 버그 수정 2건, Git 이슈
+          3건 해결까지 개발 Day 3 전 과정을 기록합니다.
+        </p>
+
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 3월 25일</div>
+          </div>
+
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s0"><span class="toc-num">§</span>오늘의 작업 요약</a>
+            </li>
+            <li>
+              <a href="#s1"
+                ><span class="toc-num">01</span>로그인 화면 UI 개선</a
+              >
+            </li>
+            <li>
+              <a href="#s2"
+                ><span class="toc-num">02</span>회원가입 화면 개선</a
+              >
+            </li>
+            <li>
+              <a href="#s3"
+                ><span class="toc-num">03</span>Lottie 에셋 색상 교체</a
+              >
+            </li>
+            <li>
+              <a href="#s4"
+                ><span class="toc-num">04</span>타임라인 대규모 개선</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s4-1">달력·타임라인 데이터 통합</a></li>
+                <li><a href="#s4-2">달력 일정 추가 모달</a></li>
+                <li><a href="#s4-3">월별 필터링</a></li>
+                <li><a href="#s4-4">비용·잔금 관리</a></li>
+                <li><a href="#s4-5">도트 색상 규칙</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s5"><span class="toc-num">05</span>버그 수정</a>
+            </li>
+            <li>
+              <a href="#s6"><span class="toc-num">06</span>Git 이슈 해결</a>
+            </li>
+            <li>
+              <a href="#s7"><span class="toc-num">07</span>내일 예정 작업</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── 오늘의 작업 요약 ── -->
+        <section class="section visible" id="s0">
+          <div class="sec-eyebrow">Today's Summary</div>
+          <h2 class="sec-heading">오늘의 작업 요약</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>내용</th>
+                <th>파일</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-accent">UI</td>
+                <td>로그인 버튼 그라데이션 + 그림자 적용</td>
+                <td><code>login.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">UI</td>
+                <td>가입하기 버튼 그라데이션 적용</td>
+                <td><code>register.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">UI</td>
+                <td>이메일 인증 커스텀 모달 구현</td>
+                <td><code>register.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-muted">에셋</td>
+                <td>Lottie JSON 색상 교체 (4개 레이어)</td>
+                <td><code>Animated_leaves.json</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">UI</td>
+                <td>Lottie 애니메이션 로그인 화면 배경 적용</td>
+                <td><code>login.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">기능</td>
+                <td>달력 일정 추가 모달 구현</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">기능</td>
+                <td>6가지 색상 팔레트 확장</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">기능</td>
+                <td>월별 일정 필터링</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">기능</td>
+                <td>타임라인·달력 데이터 통합 (3→1 상태)</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">기능</td>
+                <td>비용·잔금 관리 모달 구현</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">기능</td>
+                <td>타임라인 도트 색상 규칙 통일</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">버그</td>
+                <td>JSX 닫는 태그 중복 오류 수정</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">버그</td>
+                <td>다른 달 일정 현재 달 표시 문제 수정</td>
+                <td><code>timeline.jsx</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 1. 로그인 화면 UI 개선 ── -->
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">01 — login.jsx</div>
+          <h2 class="sec-heading">로그인 화면 UI 개선</h2>
+
+          <h3 class="sub-heading" id="">1-1. 로그인 버튼 그라데이션</h3>
+          <ul class="bullet-list">
+            <li>
+              <code>expo-linear-gradient</code> 패키지 설치 및
+              <code>LinearGradient</code> 적용
+            </li>
+            <li>
+              colors: <code>['#d6a6a6', '#d5d1b3']</code> — 핑크에서 베이지로
+              대각선 방향
+            </li>
+            <li>
+              TouchableOpacity(wrapper) → LinearGradient → Text 구조로 감싸기
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">1-2. 로그인 버튼 그림자</h3>
+          <ul class="bullet-list">
+            <li>
+              그림자는 <code>LinearGradient</code>가 아닌 바깥 wrapper에 적용
+            </li>
+            <li>
+              <code>shadowColor: '#d6a6a6'</code> — 버튼 색상에 맞춘 컬러 그림자
+            </li>
+            <li>
+              iOS <code>shadow*</code> 속성 + Android
+              <code>elevation</code> 속성으로 크로스플랫폼 대응
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">1-3. Lottie 배경 애니메이션</h3>
+          <ul class="bullet-list">
+            <li>
+              <code>lottie-react-native</code> 설치 후
+              <code>Animated_leaves.json</code> 배경 적용
+            </li>
+            <li>
+              <code>StyleSheet.absoluteFill + left: 30</code>으로 위치 조정
+            </li>
+            <li>
+              <code>npm install --legacy-peer-deps</code>로 의존성 충돌 해결
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── 2. 회원가입 화면 개선 ── -->
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">02 — register.jsx</div>
+          <h2 class="sec-heading">회원가입 화면 개선</h2>
+
+          <h3 class="sub-heading">2-1. 가입하기 버튼 그라데이션</h3>
+          <ul class="bullet-list">
+            <li>로그인 버튼과 동일한 <code>LinearGradient</code> 적용</li>
+            <li>
+              <code>isSignUpEnabled</code>에 따른 활성/비활성 색상 분기 처리
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">2-2. 이메일 인증 커스텀 모달</h3>
+          <ul class="bullet-list">
+            <li><code>Alert.alert</code> 3곳을 커스텀 Modal로 전면 교체</li>
+            <li>
+              <code>showModal(title, message, onConfirm)</code> 헬퍼 함수로 모달
+              제어
+            </li>
+            <li>확인 버튼에 그라데이션 동일 적용 — 앱 전체 UI 통일</li>
+          </ul>
+        </section>
+
+        <!-- ── 3. Lottie 에셋 색상 교체 ── -->
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">03 — Animated_leaves.json</div>
+          <h2 class="sec-heading">Lottie 에셋 색상 교체</h2>
+          <p>Mongle 앱 디자인 톤에 맞게 4개 레이어 색상 교체를 완료했습니다.</p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>레이어</th>
+                <th>원본</th>
+                <th>교체</th>
+                <th>적용 수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>화분/돌맹이</td>
+                <td><code>#b9571a</code></td>
+                <td><code>#aaa2a1</code></td>
+                <td class="txt-muted">5곳</td>
+              </tr>
+              <tr>
+                <td>줄기 (Stem)</td>
+                <td><code>#2d4245</code></td>
+                <td><code>#537663</code></td>
+                <td class="txt-muted">6곳</td>
+              </tr>
+              <tr>
+                <td>잎/기타</td>
+                <td><code>#662612</code></td>
+                <td><code>#e6bcb3</code></td>
+                <td class="txt-muted">17곳</td>
+              </tr>
+              <tr>
+                <td>배경 (Bg)</td>
+                <td><code>#ffd69b</code></td>
+                <td><code>#ede6e4</code></td>
+                <td class="txt-muted">1곳</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 4. 타임라인 대규모 개선 ── -->
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">04 — timeline.jsx</div>
+          <h2 class="sec-heading">타임라인 화면 대규모 개선</h2>
+
+          <h3 class="sub-heading" id="s4-1">
+            4-1. 달력 &amp; 타임라인 데이터 통합
+          </h3>
+          <p>
+            기존 3개의 별도 상태를 <code>timelineItems</code> 단일 소스로
+            통합하여 관리 복잡도를 대폭 줄였습니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">변경 전</span>
+                <span class="white-column-layer-tech">3개 별도 상태</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li><code>timelineItems</code> (별도)</li>
+                  <li><code>scheduleEvents</code> (별도)</li>
+                  <li><code>markedDates</code> (별도)</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">변경 후</span>
+                <span class="white-column-layer-tech">1개 단일 소스</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li><code>timelineItems</code> — 단일 소스</li>
+                  <li><code>markedDates</code> → 파생(computed)</li>
+                  <li><code>visibleEvents</code> → 파생(computed)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="s4-2">4-2. 달력 일정 추가 모달</h3>
+          <ul class="bullet-list">
+            <li>달력에서 날짜 선택 → 모달에 자동 입력</li>
+            <li>
+              6가지 색상 팔레트 적용 (로즈, 세이지, 라벤더, 스카이, 피치, 민트)
+            </li>
+            <li>필수 항목 미입력 시 추가 버튼 비활성화</li>
+          </ul>
+
+          <h3 class="sub-heading" id="s4-3">4-3. 월별 필터링</h3>
+          <ul class="bullet-list">
+            <li>
+              <code>Calendar onMonthChange</code>로
+              <code>visibleMonth</code> 상태 추적
+            </li>
+            <li>해당 월 일정만 날짜순 정렬 표시</li>
+            <li>일정 없을 경우 안내 문구 표시</li>
+          </ul>
+
+          <h3 class="sub-heading" id="s4-4">4-4. 비용·잔금 관리</h3>
+          <ul class="bullet-list">
+            <li>
+              <code>COST_ITEMS</code> + <code>BALANCE_ITEMS</code> →
+              <code>INITIAL_COST_ITEMS</code> 단일 배열 통합
+            </li>
+            <li>항목 추가/삭제, 잔금 세부 입력 (금액, 마감일, 긴급 여부)</li>
+            <li>전체 예산 입력 → 합계 대비 프로그레스바 실시간 반영</li>
+          </ul>
+
+          <h3 class="sub-heading" id="s4-5">4-5. 타임라인 도트 색상 규칙</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>상태</th>
+                <th>도트 스타일</th>
+                <th>색상</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>done</code> (완료)</td>
+                <td class="txt-accent">초록 채움</td>
+                <td><code>#7A9E8E</code></td>
+              </tr>
+              <tr>
+                <td><code>active</code> (진행 중)</td>
+                <td class="txt-red">로즈 채움</td>
+                <td><code>#C9716A</code></td>
+              </tr>
+              <tr>
+                <td><code>next</code> (다음 예정)</td>
+                <td class="txt-red">로즈 빈 원</td>
+                <td><code>#C9716A (테두리)</code></td>
+              </tr>
+              <tr>
+                <td><code>future</code> (미래)</td>
+                <td class="txt-muted">회색 빈 원</td>
+                <td><code>#D4C9C5 (테두리)</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 5. 버그 수정 ── -->
+        <section class="section visible" id="s5">
+          <div class="sec-eyebrow">05 — Bug Fix</div>
+          <h2 class="sec-heading">버그 수정</h2>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Bug 01</span>
+                <span class="white-title">SyntaxError: JSX 닫는 태그 중복</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>&lt;/View&gt;</code> 태그 1개 중복 작성
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    중복 <code>&lt;/View&gt;</code> 1개 제거
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Bug 02</span>
+                <span class="white-title">다른 달 일정이 현재 달에 표시</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    전체 이벤트 목록을 월 필터 없이 렌더링
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">월별 필터링(4-3 작업)으로 해결</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 6. Git 이슈 해결 ── -->
+        <section class="section visible" id="s6">
+          <div class="sec-eyebrow">06 — Git Issues</div>
+          <h2 class="sec-heading">Git 이슈 해결</h2>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Git 01</span>
+                <span class="white-title">브랜치 push 시 chat 폴더 소실</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>design/#2</code> 브랜치가 <code>chat</code> 폴더 추가
+                    이전 커밋에서 분기
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>git merge main</code>으로 chat 폴더 병합, timeline.jsx
+                    충돌 해결
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Git 02</span>
+                <span class="white-title">PowerShell 괄호() 경로 오류</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    PowerShell이 <code>()</code>를 표현식으로 해석
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    경로 전체를 큰따옴표로 감싸기 →
+                    <code>git add "app/(couple)/timeline.jsx"</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Git 03</span>
+                <span class="white-title">not a git repository 에러</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    git 명령어를 저장소 상위 폴더에서 실행
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>cd C:\workspace\mongle\mongle\Mongle-app</code> 이동
+                    후 실행
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 7. 내일 예정 작업 ── -->
+        <section class="section visible" id="s7">
+          <div class="sec-eyebrow">07 — Tomorrow's Plan</div>
+          <h2 class="sec-heading">내일 예정 작업 (2026.03.26)</h2>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Task 01</span>
+                <span class="white-title">웨딩플래너 전용 메인 화면 구성</span>
+                <span class="color-badge p1">P0</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">작업 내용</div>
+                  <div class="white-value">
+                    담당 커플 전체를 관리할 수 있는 업무 화면<br />
+                    상단 요약 바, 할 일 및 체크리스트, 커플 일정 현황, 협력 업체
+                    카드
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Task 02</span>
+                <span class="white-title">채팅창 라우터 수정</span>
+                <span class="color-badge p1">P0</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">작업 내용</div>
+                  <div class="white-value">
+                    채팅창에서 뒤로가기 버튼을 누르면 홈 화면으로 이동하는 구조
+                    수정
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>
