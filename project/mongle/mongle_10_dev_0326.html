@@ -1,0 +1,1164 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 2026.03.26 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.03.26 Dev Document</span>
+          <span class="badge badge-ver">v1.0</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">개발 작업 문서</h1>
+        <p class="post-sub">
+          2026년 3월 26일 — (planner) route · notifications · consultation modal
+          · Supabase DB
+        </p>
+        <p class="post-desc">
+          플래너 전용 라우트 그룹 신설, 대시보드·커플 목록·할 일·협력 업체·비용
+          현황 화면 구현, 알림 시스템 Context API 설계, 플래너 상세 화면 상담
+          신청 모달 구현, Supabase DB 테이블 설계까지 2026년 3월 26일 전체
+          작업을 기록합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 3월 26일</div>
+          </div>
+          <div>
+            <div class="stat-label">기술 스택</div>
+            <div class="stat-val">React Native · Expo Router · Supabase</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s0"><span class="toc-num">§</span>프로젝트 개요</a>
+            </li>
+            <li>
+              <a href="#s1"><span class="toc-num">01</span>파일 구조</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s1-1">신규 생성 파일</a></li>
+                <li><a href="#s1-2">수정된 파일</a></li>
+                <li><a href="#s1-3">전체 라우트 구조</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s2"><span class="toc-num">02</span>플래너 대시보드</a>
+            </li>
+            <li>
+              <a href="#s3"><span class="toc-num">03</span>화면별 상세 명세</a>
+              <!-- <ul class="toc-sub-list">
+                <li><a href="#s3-1">커플 목록</a></li>
+                <li><a href="#s3-2">할 일 목록</a></li>
+                <li><a href="#s3-3">협력 업체</a></li>
+                <li><a href="#s3-4">비용 현황</a></li>
+              </ul> -->
+            </li>
+            <li>
+              <a href="#s4"><span class="toc-num">04</span>알림 기능 개발</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s4-1">notifications.jsx</a></li>
+                <li><a href="#s4-2">NotificationContext</a></li>
+                <li><a href="#s4-3">DB 테이블 설계</a></li>
+                <li><a href="#s4-4">API 엔드포인트</a></li>
+                <li><a href="#s4-5">알림 자동 생성 정책</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s5"><span class="toc-num">05</span>상담 신청 모달</a>
+              <!-- <ul class="toc-sub-list">
+                <li><a href="#s5-1">State 구성</a></li>
+                <li><a href="#s5-2">입력 필드 상세</a></li>
+                <li><a href="#s5-3">유효성 검사 및 전송</a></li>
+                <li><a href="#s5-4">네비게이션</a></li>
+              </ul> -->
+            </li>
+            <li>
+              <a href="#s6"><span class="toc-num">06</span>Supabase DB 설계</a>
+            </li>
+            <li>
+              <a href="#s7"><span class="toc-num">07</span>향후 작업 (TODO)</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── 프로젝트 개요 ── -->
+        <section class="section visible" id="s0">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">프로젝트 개요</h2>
+          <p>
+            Mongle은 예비 부부와 웨딩 플래너를 연결하는 웨딩 앱입니다. 본 문서는
+            2026년 3월 26일 작업 내용을 기록하며, 플래너 전용 기능 신설, 알림
+            시스템 구현, 플래너 상세 화면 상담 신청 모달 구현에 관한 상세 명세를
+            담고 있습니다.
+          </p>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">프레임워크</div>
+              <div class="info-val">React Native (Expo SDK)</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">라우터</div>
+              <div class="info-val">Expo Router (파일 기반 라우팅)</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">아이콘</div>
+              <div class="info-val">@expo/vector-icons (Ionicons)</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">상태 관리</div>
+              <div class="info-val">React Context API + useState</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">예정 백엔드</div>
+              <div class="info-val">Supabase (PostgreSQL)</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">디자인 스타일</div>
+              <div class="info-val">
+                Mongle 앱 기존 톤 — 베이지·로즈·웜 브라운 컬러 시스템
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 1. 파일 구조 ── -->
+        <section class="section" id="s1">
+          <div class="sec-eyebrow">01 — File Structure</div>
+          <h2 class="sec-heading">파일 구조</h2>
+
+          <h3 class="sub-heading" id="s1-1">
+            1-1. 신규 생성 파일 — (planner) 라우트 그룹
+          </h3>
+          <p>
+            플래너 전용 기능을 위해 <code>(planner)</code> 라우트 그룹을
+            신설하고 아래 파일들을 생성했습니다.
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파일명</th>
+                <th>경로</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>_layout.jsx</code></td>
+                <td>app/(planner)/</td>
+                <td>
+                  Stack 네비게이터 설정 — headerShown: false, 전체 화면 관리
+                </td>
+              </tr>
+              <tr>
+                <td><code>dashboard.jsx</code></td>
+                <td>app/(planner)/</td>
+                <td>
+                  플래너 메인 홈 화면 — KPI·할 일·커플·업체·비용 카드 통합
+                  대시보드
+                </td>
+              </tr>
+              <tr>
+                <td><code>couple_list.jsx</code></td>
+                <td>app/(planner)/</td>
+                <td>
+                  커플 전체 목록 — 검색·단계 필터, 커플 추가·수정·삭제, 일정
+                  관리
+                </td>
+              </tr>
+              <tr>
+                <td><code>planner_todo_list.jsx</code></td>
+                <td>app/(planner)/</td>
+                <td>
+                  할 일 전체 목록 — 오늘마감/진행중/완료 섹션, CRUD, 커플 필터
+                </td>
+              </tr>
+              <tr>
+                <td><code>wedding_vendor_partners.jsx</code></td>
+                <td>app/(planner)/</td>
+                <td>
+                  협력 업체 목록 — 유형 필터, 업체 추가·수정·삭제, 계약 상태
+                  관리
+                </td>
+              </tr>
+              <tr>
+                <td><code>planner_budget.jsx</code></td>
+                <td>app/(planner)/</td>
+                <td>
+                  비용 현황 — 수금 탭(납부 아코디언), 업체 지출 탭, 통합 추가
+                  모달
+                </td>
+              </tr>
+              <tr>
+                <td><code>notifications.jsx</code></td>
+                <td>app/(planner)/</td>
+                <td>알림 전용 화면 — 알림 목록, 상세 모달, 삭제 기능</td>
+              </tr>
+              <tr>
+                <td><code>NotificationContext.jsx</code></td>
+                <td>context/</td>
+                <td>
+                  알림 전역 상태 관리 — Provider, useNotifications 훅, userId
+                  연동
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s1-2">1-2. 수정된 파일</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파일명</th>
+                <th>경로</th>
+                <th>변경 내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>index.jsx</code></td>
+                <td>app/(couple)/</td>
+                <td>
+                  헤더 좌측에 플래너 전용 화면 진입 버튼 추가
+                  (<code>/(planner)/dashboard</code>로 이동)
+                </td>
+              </tr>
+              <tr>
+                <td><code>_layout.jsx</code></td>
+                <td>app/</td>
+                <td>
+                  NotificationProvider로 전체 화면을 감싸 전역 알림 상태 적용
+                </td>
+              </tr>
+              <tr>
+                <td><code>[id].jsx</code></td>
+                <td>app/(couple)/planners/</td>
+                <td>상담 신청 모달 State 및 handleConsultSubmit 함수 추가</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s1-3">1-3. 전체 앱 라우트 구조</h3>
+
+          <div class="tree-block">
+            <pre><span class="t-ink">app/</span>
+<span class="t-line">├──</span> <span class="t-key">_layout.jsx</span>    <span class="t-str">← Stack (initialRouteName='(couple)') + NotificationProvider</span>
+<span class="t-line">├── (auth)/</span>
+<span class="t-line">│   ├──</span> <span class="t-key">_layout.jsx</span>
+<span class="t-line">│   ├──</span> <span class="t-key">login.jsx</span>
+<span class="t-line">│   └──</span> <span class="t-key">register.jsx</span>
+<span class="t-line">├── (couple)/</span>
+<span class="t-line">│   ├──</span> <span class="t-key">_layout.jsx</span>    <span class="t-str">← Tabs (홈 · 일정 · 채팅 · 마이)</span>
+<span class="t-line">│   ├── chat/</span>
+<span class="t-line">│   │   ├──</span> <span class="t-key">_layout.jsx</span>    <span class="t-str">← Stack (독립 스택)</span>
+<span class="t-line">│   │   ├──</span> <span class="t-key">index.jsx</span>
+<span class="t-line">│   │   ├──</span> <span class="t-key">[id].jsx</span>
+<span class="t-line">│   │   └──</span> <span class="t-key">ai.jsx</span>
+<span class="t-line">│   ├── planners/</span>
+<span class="t-line">│   │   └──</span> <span class="t-key">[id].jsx</span>    <span class="t-str">← 플래너 상세 화면 (상담 신청 모달 포함)</span>
+<span class="t-line">│   ├──</span> <span class="t-key">index.jsx</span>    <span class="t-str">← 커플 홈 (플래너 진입 버튼 추가)</span>
+<span class="t-line">│   ├──</span> <span class="t-key">timeline.jsx</span>
+<span class="t-line">│   ├──</span> <span class="t-key">budget.jsx</span>
+<span class="t-line">│   └──</span> <span class="t-key">mypage.jsx</span>
+<span class="t-line">├── (planner)/</span>    <span class="t-str">← 신규 라우트 그룹</span>
+<span class="t-line">│   ├──</span> <span class="t-key">_layout.jsx</span>
+<span class="t-line">│   ├──</span> <span class="t-key">dashboard.jsx</span>
+<span class="t-line">│   ├──</span> <span class="t-key">couple_list.jsx</span>
+<span class="t-line">│   ├──</span> <span class="t-key">planner_todo_list.jsx</span>
+<span class="t-line">│   ├──</span> <span class="t-key">wedding_vendor_partners.jsx</span>
+<span class="t-line">│   ├──</span> <span class="t-key">planner_budget.jsx</span>
+<span class="t-line">│   └──</span> <span class="t-key">notifications.jsx</span>
+<span class="t-line">└── context/</span>
+<span class="t-line">    └──</span> <span class="t-key">NotificationContext.jsx</span></pre>
+          </div>
+        </section>
+
+        <!-- ── 2. 플래너 대시보드 ── -->
+        <section class="section" id="s2">
+          <div class="sec-eyebrow">02 — dashboard.jsx</div>
+          <h2 class="sec-heading">플래너 전용 대시보드</h2>
+          <p>
+            플래너가 로그인 후 첫 번째로 보는 홈 화면으로, 업무 전반을 한눈에
+            파악할 수 있도록 5개 카드 섹션으로 구성했습니다.
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>카드 섹션</th>
+                <th>구성 내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>플래너 정보 카드</td>
+                <td>플래너 이름·직함 표시, 오늘의 할 일 건수 요약 배지</td>
+              </tr>
+              <tr>
+                <td>담당 커플 현황</td>
+                <td>
+                  담당 커플 수 / 이번 달 결혼식 수 KPI, 임박 커플 D-day
+                  프로그레스 바 (최대 4개)
+                </td>
+              </tr>
+              <tr>
+                <td>오늘 할 일 (Todo)</td>
+                <td>
+                  마감 임박 항목 강조, 체크박스 완료 토글, 최대 5개 표시, 전체
+                  보기 → planner_todo_list
+                </td>
+              </tr>
+              <tr>
+                <td>협력 업체 현황</td>
+                <td>
+                  카테고리별 섹션 (업체 없는 카테고리 숨김), 최대 3카테고리 ×
+                  3업체 표시, 전체 보기 → wedding_vendor_partners
+                </td>
+              </tr>
+              <tr>
+                <td>비용 현황</td>
+                <td>
+                  수금 총액·미수금·미지급 업체 KPI, 미수금 커플 프로그레스 바,
+                  미지급 업체 총액 알림, 상세 보기 → planner_budget
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">라우팅 구조</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>진입 지점</th>
+                <th>라우팅 코드</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>커플 홈 헤더 '플래너' 버튼</td>
+                <td><code>router.push('/(planner)/dashboard')</code></td>
+              </tr>
+              <tr>
+                <td>임박한 커플 '전체 보기'</td>
+                <td><code>router.push('/(planner)/couple_list')</code></td>
+              </tr>
+              <tr>
+                <td>오늘 할 일 '전체 보기'</td>
+                <td>
+                  <code>router.push('/(planner)/planner_todo_list')</code>
+                </td>
+              </tr>
+              <tr>
+                <td>협력 업체 '전체 보기'</td>
+                <td>
+                  <code>router.push('/(planner)/wedding_vendor_partners')</code>
+                </td>
+              </tr>
+              <tr>
+                <td>비용 현황 '상세 보기'</td>
+                <td><code>router.push('/(planner)/planner_budget')</code></td>
+              </tr>
+              <tr>
+                <td>알림 버튼</td>
+                <td><code>router.push('/(planner)/notifications')</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 3. 화면별 상세 명세 ── -->
+        <section class="section" id="s3">
+          <div class="sec-eyebrow">03 — Screen Specs</div>
+          <h2 class="sec-heading">화면별 상세 명세</h2>
+
+          <h3 class="sub-heading" id="s3-1">
+            3-1. 커플 목록 (couple_list.jsx)
+          </h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>기능</th>
+                <th>상세 명세</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>정렬</td>
+                <td>wedding_date 기준 D-day 임박순 자동 정렬</td>
+              </tr>
+              <tr>
+                <td>검색</td>
+                <td>신랑·신부 이름 및 웨딩홀명 검색</td>
+              </tr>
+              <tr>
+                <td>단계 필터</td>
+                <td>전체 / 최종점검 / 준비중 / 초기상담 / 계약완료</td>
+              </tr>
+              <tr>
+                <td>커플 추가 모달 (+)</td>
+                <td>
+                  신랑·신부 이름 분리 입력, 년/월/일 분리 입력, 진행 단계 선택
+                </td>
+              </tr>
+              <tr>
+                <td>카드 탭 → 상세 모달</td>
+                <td>커플 정보, 준비율 프로그레스 바, 일정 타임라인 표시</td>
+              </tr>
+              <tr>
+                <td>수정 모달</td>
+                <td>
+                  기존 값이 채워진 상태로 열림. 커플 정보 수정 + 일정
+                  추가·수정·삭제(인라인 폼)
+                </td>
+              </tr>
+              <tr>
+                <td>삭제</td>
+                <td>Alert 확인 후 목록에서 제거</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s3-2">
+            3-2. 할 일 목록 (planner_todo_list.jsx)
+          </h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>기능</th>
+                <th>상세 명세</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>섹션 분리</td>
+                <td>
+                  오늘 마감 → 진행 중 (날짜 오름차순) → 완료 순으로 자동 분류
+                </td>
+              </tr>
+              <tr>
+                <td>상태 필터 탭</td>
+                <td>전체 / 미완료 / 완료</td>
+              </tr>
+              <tr>
+                <td>커플 칩 필터</td>
+                <td>담당 커플별 칩을 탭하여 해당 커플 할 일만 표시</td>
+              </tr>
+              <tr>
+                <td>날짜 자동 변환</td>
+                <td>YYYYMMDD 숫자 입력 → 'YYYY년 M월 D일까지' 자동 포맷</td>
+              </tr>
+              <tr>
+                <td>할 일 추가 모달 (+)</td>
+                <td>할 일명 · 커플 선택 · 마감일 · 오늘 마감 토글 입력</td>
+              </tr>
+              <tr>
+                <td>수정 모달 (···)</td>
+                <td>기존 값이 채워진 상태로 수정 모달 오픈</td>
+              </tr>
+              <tr>
+                <td>삭제</td>
+                <td>Alert 확인 후 제거. 항목 없을 시 빈 상태 메시지 표시</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s3-3">
+            3-3. 협력 업체 (wedding_vendor_partners.jsx)
+          </h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>기능</th>
+                <th>상세 명세</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>검색</td>
+                <td>업체명 및 담당자 이름 검색</td>
+              </tr>
+              <tr>
+                <td>유형 필터</td>
+                <td>
+                  스튜디오 / 드레스 / 메이크업 / 웨딩홀 / 허니문 / 청첩장 /
+                  영상·스냅 / 기타
+                </td>
+              </tr>
+              <tr>
+                <td>업체 추가 모달 (+)</td>
+                <td>업체명 · 유형 · 담당자 · 연락처 · 계약 상태 · 메모 입력</td>
+              </tr>
+              <tr>
+                <td>카드 탭 → 상세 모달</td>
+                <td>담당자 · 연락처 · 메모 · 계약 상태 표시</td>
+              </tr>
+              <tr>
+                <td>수정 / 삭제</td>
+                <td>상세 모달 내 수정·삭제 버튼 제공</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s3-4">
+            3-4. 비용 현황 (planner_budget.jsx)
+          </h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>구성 요소</th>
+                <th>상세 명세</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>KPI 상단</td>
+                <td>수금 총액 / 미수금 / 미지급 업체 금액 3개 지표 표시</td>
+              </tr>
+              <tr>
+                <td>수금 현황 탭</td>
+                <td>
+                  커플별 카드, 탭 시 계약금·중도금·잔금 납부 일정 아코디언 펼침.
+                  완납 여부 배지 표시
+                </td>
+              </tr>
+              <tr>
+                <td>업체 지출 탭</td>
+                <td>업체별 그룹화, 탭 시 연결된 커플별 지출 금액 아코디언</td>
+              </tr>
+              <tr>
+                <td>통합 추가 모달 (+)</td>
+                <td>수금 항목 탭 / 업체 지출 탭 선택 후 금액·기한 입력</td>
+              </tr>
+              <tr>
+                <td>커플 추가</td>
+                <td>이름·계약금액·납부기한 입력</td>
+              </tr>
+              <tr>
+                <td>금액 단위 처리</td>
+                <td>UI 입력 만원 단위 → 내부 저장 원 단위 자동 변환</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 4. 알림 기능 ── -->
+        <section class="section" id="s4">
+          <div class="sec-eyebrow">04 — Notifications</div>
+          <h2 class="sec-heading">알림 기능 개발 명세</h2>
+          <p>
+            알림 관련 기능 전체를 독립 화면으로 분리하고, Context API를 통해
+            전역 알림 상태를 관리합니다.
+          </p>
+
+          <h3 class="sub-heading" id="s4-1">
+            4-1. notifications.jsx — 화면 구성 요소
+          </h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>UI 요소</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>헤더</td>
+                <td>
+                  뒤로 가기 버튼 + '알림' 타이틀 + '모두 읽음' 버튼 (읽지 않은
+                  알림 있을 때만 표시)
+                </td>
+              </tr>
+              <tr>
+                <td>읽지 않은 알림 섹션</td>
+                <td>섹션 레이블, 제목 굵게 표시, 빨간 점 뱃지</td>
+              </tr>
+              <tr>
+                <td>읽은 알림 섹션</td>
+                <td>섹션 레이블, 흐린 스타일로 구분</td>
+              </tr>
+              <tr>
+                <td>빈 상태</td>
+                <td>알림이 없을 때 아이콘 + 안내 문구 표시</td>
+              </tr>
+              <tr>
+                <td>상세 모달</td>
+                <td>하단 슬라이드 업, 아이콘·제목·시간·본문·삭제 버튼 포함</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s4-2">4-2. NotificationContext 설계</h3>
+          <p>
+            _layout.jsx에서 NotificationProvider로 전체 화면을 감싸면, Provider
+            안의 어느 화면에서든
+            <code>useNotifications()</code> 훅으로 알림 데이터를 바로 꺼내 쓸 수
+            있습니다. props drilling 없이 전역 접근이 가능합니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// context/NotificationContext.jsx 핵심 인터페이스</span>
+<span class="c-line">const { notifications, unreadCount, setUserId,</span>
+<span class="c-line">        markAsRead, markAllAsRead, deleteNotification</span>
+<span class="c-line">} = useNotifications();</span>
+
+<span class="c-comment">// 로그인 성공 후 userId 전달 → 해당 유저 알림 자동 fetch</span>
+<span class="c-line">setUserId(user.id);</span></pre>
+          </div>
+
+          <h3 class="sub-heading" id="s4-3">
+            4-3. DB 테이블 설계 — notifications
+          </h3>
+          <table class="normal-table">
+            <thead>
+              <tr>
+                <th>컬럼명</th>
+                <th>타입</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-type">BIGINT PK</td>
+                <td class="col-desc">알림 고유 ID (자동 증가)</td>
+              </tr>
+              <tr>
+                <td class="col-name">user_id</td>
+                <td class="col-type">BIGINT FK</td>
+                <td class="col-desc">수신자 ID — users 테이블 참조</td>
+              </tr>
+              <tr>
+                <td class="col-name">type</td>
+                <td class="col-type">VARCHAR(50)</td>
+                <td class="col-desc">알림 종류 (notification_types 참조)</td>
+              </tr>
+              <tr>
+                <td class="col-name">title</td>
+                <td class="col-type">VARCHAR(200)</td>
+                <td class="col-desc">알림 제목</td>
+              </tr>
+              <tr>
+                <td class="col-name">body</td>
+                <td class="col-type">TEXT</td>
+                <td class="col-desc">알림 본문</td>
+              </tr>
+              <tr>
+                <td class="col-name">icon</td>
+                <td class="col-type">VARCHAR(50)</td>
+                <td class="col-desc">Ionicons 아이콘 이름</td>
+              </tr>
+              <tr>
+                <td class="col-name">icon_color / icon_bg</td>
+                <td class="col-type">VARCHAR(10)</td>
+                <td class="col-desc">아이콘 색상 및 배경 HEX 코드</td>
+              </tr>
+              <tr>
+                <td class="col-name">is_read</td>
+                <td class="col-type">BOOLEAN</td>
+                <td class="col-desc">읽음 여부 (기본값: FALSE)</td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">DATETIME</td>
+                <td class="col-desc">생성 일시 (기본값: NOW())</td>
+              </tr>
+              <tr>
+                <td class="col-name">ref_type</td>
+                <td class="col-type">VARCHAR(50)</td>
+                <td class="col-desc">
+                  연결 대상 타입: couple / todo / vendor / finance
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">ref_id</td>
+                <td class="col-type">BIGINT</td>
+                <td class="col-desc">
+                  연결 대상 레코드 ID (딥링크 이동에 활용)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s4-4">4-4. API 엔드포인트</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>메서드</th>
+                <th>엔드포인트</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-accent">GET</td>
+                <td><code>/api/notifications?userId={id}</code></td>
+                <td>사용자 알림 목록 조회 (unreadCount 포함)</td>
+              </tr>
+              <tr>
+                <td class="txt-accent">PATCH</td>
+                <td><code>/api/notifications/:id/read</code></td>
+                <td>특정 알림 읽음 처리</td>
+              </tr>
+              <tr>
+                <td class="txt-accent">PATCH</td>
+                <td><code>/api/notifications/read-all</code></td>
+                <td>전체 알림 일괄 읽음 처리</td>
+              </tr>
+              <tr>
+                <td class="txt-red">DELETE</td>
+                <td><code>/api/notifications/:id</code></td>
+                <td>특정 알림 삭제</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s4-5">4-5. 알림 자동 생성 정책</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>트리거 조건</th>
+                <th>알림 타입</th>
+                <th>생성 주체</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>할 일 마감일 당일 오전 9시</td>
+                <td><code>todo_deadline</code></td>
+                <td>cron</td>
+                <td>담당 플래너 대상</td>
+              </tr>
+              <tr>
+                <td>잔금 납부일 10일 전</td>
+                <td><code>payment_due</code></td>
+                <td>cron</td>
+                <td>담당 플래너 대상</td>
+              </tr>
+              <tr>
+                <td>결혼식 D-30, D-14, D-7, D-1</td>
+                <td><code>dday_reminder</code></td>
+                <td>cron</td>
+                <td>담당 플래너 대상</td>
+              </tr>
+              <tr>
+                <td>할 일 완료 처리 시</td>
+                <td><code>todo_completed</code></td>
+                <td>API 서버</td>
+                <td>즉시 발송</td>
+              </tr>
+              <tr>
+                <td>새 커플 등록 시</td>
+                <td><code>couple_added</code></td>
+                <td>API 서버</td>
+                <td>즉시 발송</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 5. 상담 신청 모달 ── -->
+        <section class="section" id="s5">
+          <div class="sec-eyebrow">05 — planners/[id].jsx</div>
+          <h2 class="sec-heading">플래너 상세 화면 — 상담 신청 모달</h2>
+          <p>
+            파일 경로: <code>app/(couple)/planners/[id].jsx</code>. Expo Router
+            동적 라우팅을 사용하며, 플래너 이름을 URL 파라미터로 받아
+            <code>planners.json</code>에서 해당 데이터를 조회합니다.
+          </p>
+
+          <h3 class="sub-heading" id="s5-1">5-1. State 구성</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>State 변수</th>
+                <th>초기값</th>
+                <th>타입</th>
+                <th>용도</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>modalVisible</code></td>
+                <td>false</td>
+                <td>Boolean</td>
+                <td>모달 표시 여부 제어</td>
+              </tr>
+              <tr>
+                <td><code>consultYear</code></td>
+                <td>''</td>
+                <td>String</td>
+                <td>희망 날짜 — 년도 (4자리 숫자)</td>
+              </tr>
+              <tr>
+                <td><code>consultMonth</code></td>
+                <td>''</td>
+                <td>String</td>
+                <td>희망 날짜 — 월 (최대 2자리)</td>
+              </tr>
+              <tr>
+                <td><code>consultDay</code></td>
+                <td>''</td>
+                <td>String</td>
+                <td>희망 날짜 — 일 (최대 2자리)</td>
+              </tr>
+              <tr>
+                <td><code>consultAmPm</code></td>
+                <td>'오전'</td>
+                <td>String</td>
+                <td>희망 시간 — 오전/오후 토글</td>
+              </tr>
+              <tr>
+                <td><code>consultHour</code></td>
+                <td>''</td>
+                <td>String</td>
+                <td>희망 시간 — 시간 숫자 입력</td>
+              </tr>
+              <tr>
+                <td><code>consultBudget</code></td>
+                <td>''</td>
+                <td>String</td>
+                <td>예산 (만원 단위 숫자)</td>
+              </tr>
+              <tr>
+                <td><code>submitting</code></td>
+                <td>false</td>
+                <td>Boolean</td>
+                <td>API 호출 중 로딩 상태</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s5-2">5-2. 입력 필드 상세</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>필드</th>
+                <th>구현 명세</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>날짜 — 년도</td>
+                <td>
+                  TextInput, <code>keyboardType='numeric'</code>,
+                  <code>maxLength=4</code>, 뒤에 '년' 텍스트
+                </td>
+              </tr>
+              <tr>
+                <td>날짜 — 월</td>
+                <td>
+                  TextInput, <code>keyboardType='numeric'</code>,
+                  <code>maxLength=2</code>, 뒤에 '월' 텍스트
+                </td>
+              </tr>
+              <tr>
+                <td>날짜 — 일</td>
+                <td>
+                  TextInput, <code>keyboardType='numeric'</code>,
+                  <code>maxLength=2</code>, 뒤에 '일' 텍스트
+                </td>
+              </tr>
+              <tr>
+                <td>날짜 레이아웃</td>
+                <td>
+                  세 필드가 <code>dateRow</code>로 가로 배치. 전송 시
+                  <code>padStart(2,'0')</code> 포맷 통일 → YYYY-MM-DD 조합
+                </td>
+              </tr>
+              <tr>
+                <td>시간 — 오전/오후</td>
+                <td>
+                  두 버튼 붙은 <code>ampmToggle</code> UI. 선택 쪽에 어두운 배경
+                  적용
+                </td>
+              </tr>
+              <tr>
+                <td>시간 — 시간 숫자</td>
+                <td>
+                  TextInput, <code>keyboardType='numeric'</code>,
+                  <code>maxLength=2</code>. '오전 2시' 형식으로 조합
+                </td>
+              </tr>
+              <tr>
+                <td>예산</td>
+                <td>
+                  TextInput, <code>keyboardType='numeric'</code>. 만원 단위 숫자
+                  입력
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s5-3">5-3. 유효성 검사 및 전송 처리</h3>
+          <p>
+            submitBtn 탭 시 아래 조건을 모두 확인하며, 하나라도 비어 있으면
+            Alert를 표시하고 전송을 중단합니다.
+          </p>
+          <ul class="bullet-list">
+            <li>consultYear, consultMonth, consultDay 모두 입력 여부 확인</li>
+            <li>consultHour 입력 여부 확인</li>
+            <li>consultBudget 입력 여부 확인</li>
+          </ul>
+          <p>
+            전송 처리는 <code>handleConsultSubmit</code> 함수가
+            <code>sendNotificationToPlanner</code>를 호출하며, 현재는
+            console.log + 800ms 딜레이로 구현되어 있습니다. 실제 서비스 연동 시
+            아래 코드로 교체합니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-line">await fetch('https://your-api.com/notify', {</span>
+<span class="c-line">  method: 'POST',</span>
+<span class="c-line">  headers: { 'Content-Type': 'application/json' },</span>
+<span class="c-line">  body: JSON.stringify({ plannerName, date, time, budget })</span>
+<span class="c-line">});</span></pre>
+          </div>
+
+          <h3 class="sub-heading" id="s5-4">5-4. 네비게이션</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>진입 경로</td>
+                <td>
+                  커플 홈 플래너 목록에서 카드 탭 →
+                  <code>router.push('/(couple)/planners/' + planner.name)</code>
+                </td>
+              </tr>
+              <tr>
+                <td>뒤로 가기 (헤더 버튼)</td>
+                <td>
+                  <code>router.replace('/(couple)')</code> — 홈 화면으로 이동
+                </td>
+              </tr>
+              <tr>
+                <td>뒤로 가기 (Android 물리)</td>
+                <td>
+                  BackHandler useEffect 등록 →
+                  <code>router.replace('/(couple)')</code>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 6. Supabase DB ── -->
+        <section class="section" id="s6">
+          <div class="sec-eyebrow">06 — Supabase DB</div>
+          <h2 class="sec-heading">Supabase DB 설계</h2>
+          <p>
+            모든 테이블은 <code>planner_id</code> 외래키로 플래너와 연결됩니다.
+            couples 테이블이 수금·일정·업체지출의 중심이 됩니다.
+          </p>
+
+          <h3 class="sub-heading">테이블 관계 구조</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>테이블</th>
+                <th>연결 관계 및 역할</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>planners</td>
+                <td>최상위 — planner_id 기준으로 모든 데이터 소유</td>
+              </tr>
+              <tr>
+                <td>couples</td>
+                <td>planner_id → planners</td>
+              </tr>
+              <tr>
+                <td>couple_payments</td>
+                <td>couple_id → couples (계약금·중도금·잔금 납부 일정)</td>
+              </tr>
+              <tr>
+                <td>couple_schedules</td>
+                <td>couple_id → couples (드레스·스튜디오·예식 등 일정)</td>
+              </tr>
+              <tr>
+                <td>vendors</td>
+                <td>planner_id → planners (협력 업체 정보)</td>
+              </tr>
+              <tr>
+                <td>vendor_costs</td>
+                <td>
+                  vendor_id → vendors, couple_id → couples (업체 지출 내역)
+                </td>
+              </tr>
+              <tr>
+                <td>todos</td>
+                <td>planner_id → planners, couple_id → couples (선택)</td>
+              </tr>
+              <tr>
+                <td>notifications</td>
+                <td>user_id → users, ref_id → 대상 테이블 (알림)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">주요 Supabase 조회 예시</h3>
+          <div class="code-block">
+            <pre><span class="c-comment">// 커플 목록 조회 (납부 일정 + 일정 포함)</span>
+<span class="c-line">const { data } = await supabase</span>
+<span class="c-line">  .from('couples')</span>
+<span class="c-line">  .select('*, couple_payments(*), couple_schedules(*)')</span>
+<span class="c-line">  .eq('planner_id', plannerId)</span>
+<span class="c-line">  .order('wedding_date', { ascending: true });</span>
+
+<span class="c-comment">// 할 일 목록 조회 (커플명 포함)</span>
+<span class="c-line">const { data } = await supabase</span>
+<span class="c-line">  .from('todos')</span>
+<span class="c-line">  .select('*, couples(groom_name, bride_name)')</span>
+<span class="c-line">  .eq('planner_id', plannerId)</span>
+<span class="c-line">  .order('due_date', { ascending: true });</span>
+
+<span class="c-comment">// 업체 지출 조회 (업체·커플명 포함)</span>
+<span class="c-line">const { data } = await supabase</span>
+<span class="c-line">  .from('vendor_costs')</span>
+<span class="c-line">  .select('*, vendors(name, type), couples(groom_name, bride_name)');</span></pre>
+          </div>
+        </section>
+
+        <!-- ── 7. TODO ── -->
+        <section class="section" id="s7">
+          <div class="sec-eyebrow">07 — TODO</div>
+          <h2 class="sec-heading">향후 작업 (TODO)</h2>
+
+          <h3 class="sub-heading">백엔드 연동</h3>
+          <ul class="bullet-list">
+            <li>Supabase 프로젝트 생성 및 테이블 DDL 실행</li>
+            <li>
+              RLS (Row Level Security) 정책 설정 — planner_id 기준 데이터 격리
+            </li>
+            <li>
+              각 화면의 하드코딩 더미 데이터 → Supabase API 호출로 전면 교체
+            </li>
+            <li>Supabase Auth 연동 — 플래너/커플 역할 분기 처리</li>
+          </ul>
+
+          <h3 class="sub-heading">알림 기능 고도화</h3>
+          <ul class="bullet-list">
+            <li>
+              NotificationContext.jsx 완성 및 각 화면
+              <code>useNotifications()</code> 훅 연결
+            </li>
+            <li>
+              로그인 처리 시 <code>setUserId()</code> 호출로 유저별 알림 자동
+              fetch
+            </li>
+            <li>
+              알림 탭 시 ref_type + ref_id로 해당 상세 페이지 딥링크 이동 구현
+            </li>
+            <li>
+              실시간 알림 방식 검토: API 폴링 → WebSocket → FCM 푸시 알림 단계적
+              도입
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">플래너 상세 화면</h3>
+          <ul class="bullet-list">
+            <li>sendNotificationToPlanner 실제 API 엔드포인트 연동</li>
+            <li>날짜 입력 유효성 강화 (존재하지 않는 날짜 체크)</li>
+            <li>시간 범위 유효성 검사 (1~12시 이내)</li>
+            <li>상담 신청 내역 저장 및 마이페이지 연동</li>
+            <li>
+              DatePicker 라이브러리 도입 검토
+              (<code>@react-native-community/datetimepicker</code>)
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">추가 예정 화면</h3>
+          <ul class="bullet-list">
+            <li>커플 상세 페이지: <code>/(planner)/customer/:id</code></li>
+            <li>캘린더 뷰 — 월별 결혼식·미팅 일정 시각화</li>
+            <li>푸시 알림 — 마감 임박 할 일, 미수금 기한 알림</li>
+          </ul>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>
