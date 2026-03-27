@@ -1,0 +1,1483 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>트러블슈팅 2026.03.27 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.03.27 Troubleshooting</span>
+          <span class="badge badge-ver">Day 05</span>
+          <span class="badge badge-status draft">미해결 포함</span>
+        </div>
+        <h1 class="post-title">트러블슈팅 문서</h1>
+        <p class="post-sub">
+          2026년 3월 27일 — Supabase 연동 · 마이페이지 · AuthGate
+        </p>
+        <p class="post-desc">
+          planners.json → Supabase <code>wedding_planners</code> 테이블
+          마이그레이션 과정에서 발생한 에러 6건과,
+          마이페이지(<code>mypage.jsx</code>) 개발 중 발생한 인증·라우팅 버그
+          6건, 총 12건의 트러블슈팅을 기록합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 3월 27일</div>
+          </div>
+          <div>
+            <div class="stat-label">이슈 건수</div>
+            <div class="stat-val">총 12건</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s0"><span class="toc-num">§</span>이슈 전체 목록</a>
+            </li>
+            <li>
+              <a href="#s1"
+                ><span class="toc-num">01</span>Supabase 연동 에러</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s1-1">#01 forEach of null</a></li>
+                <li><a href="#s1-2">#02 join of null</a></li>
+                <li><a href="#s1-3">#03 useEffect async</a></li>
+                <li><a href="#s1-4">#04 SyntaxError 중괄호</a></li>
+                <li><a href="#s1-5">#05 useMemo 의존성</a></li>
+                <li><a href="#s1-6">#06 Hook</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s2"
+                ><span class="toc-num">02</span>마이페이지 &amp; 인증</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s2-1">#07 마이 탭 이동 안 됨</a></li>
+                <li><a href="#s2-2">#08 로딩 스피너 화면 차단</a></li>
+                <li><a href="#s2-3">#09 profiles 테이블 없음</a></li>
+                <li><a href="#s2-4">#10 커플 로그인 무반응</a></li>
+                <li><a href="#s2-5">#11 로그인 화면 전환 오류</a></li>
+                <li><a href="#s2-6">#12 마이페이지 오류</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s3"><span class="toc-num">03</span>핵심 원칙 요약</a>
+            </li>
+            <li>
+              <a href="#s4"><span class="toc-num">04</span>체크리스트</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── 전체 목록 ── -->
+        <section class="section visible" id="s0">
+          <div class="sec-eyebrow">Issue Index</div>
+          <h2 class="sec-heading">이슈 전체 목록</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>에러 / 증상</th>
+                <th>발생 파일</th>
+                <th>핵심 원인</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-red">#01</td>
+                <td class="txt-muted">
+                  <code>Cannot read property 'forEach' of null</code>
+                </td>
+                <td class="txt-muted"><code>index.jsx</code></td>
+                <td class="txt-muted">
+                  배열 컬럼 null 저장 — 옵셔널 체이닝 누락
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#02</td>
+                <td class="txt-muted">
+                  <code>Cannot read property 'join' of null</code>
+                </td>
+                <td class="txt-muted"><code>index.jsx / [id].jsx</code></td>
+                <td class="txt-muted">
+                  배열 컬럼 null — <code>.join()</code> 호출 시 TypeError
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#03</td>
+                <td class="txt-muted">
+                  <code
+                    >useEffect must not return anything besides a function</code
+                  >
+                </td>
+                <td class="txt-muted"><code>[id].jsx / index.jsx</code></td>
+                <td class="txt-muted">
+                  <code>useEffect(async () =&gt; {})</code> — Promise 반환 문제
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#04</td>
+                <td class="txt-muted">
+                  <code>SyntaxError: Unexpected token</code>
+                </td>
+                <td class="txt-muted"><code>[id].jsx</code></td>
+                <td class="txt-muted">두 useEffect 블록 중괄호 쌍 불일치</td>
+              </tr>
+              <tr>
+                <td class="txt-red">#05</td>
+                <td class="txt-muted">필터/목록에 플래너 데이터 미표시</td>
+                <td class="txt-muted"><code>index.jsx</code></td>
+                <td class="txt-muted">
+                  <code>useMemo</code> 의존성 배열에
+                  <code>plannersData</code> 누락
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#06</td>
+                <td class="txt-muted">Hook 관련 에러 (조건부 return 위치)</td>
+                <td class="txt-muted"><code>[id].jsx / index.jsx</code></td>
+                <td class="txt-muted">
+                  <code>if (loading) return</code>을 Hook 선언 앞에 배치
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#07</td>
+                <td class="txt-muted">마이 탭 눌러도 화면 이동 안 됨</td>
+                <td class="txt-muted"><code>(couple)/_layout.jsx</code></td>
+                <td class="txt-muted">
+                  <code>tabBarButton</code>이 Expo Router 탭 전환 차단
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#08</td>
+                <td class="txt-muted">로딩 스피너가 화면 차단</td>
+                <td class="txt-muted"><code>mypage.jsx</code></td>
+                <td class="txt-muted">
+                  <code>loading</code> 초기값 <code>true</code> + 세션 없을 때
+                  <code>router.replace</code>
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#09</td>
+                <td class="txt-muted">
+                  <code>public.profiles</code> 테이블 없음 오류
+                </td>
+                <td class="txt-muted"><code>mypage.jsx</code></td>
+                <td class="txt-muted">
+                  실제 테이블명은 <code>user_profiles</code>
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#10</td>
+                <td class="txt-muted">커플 계정 로그인 무반응</td>
+                <td class="txt-muted"><code>login.jsx</code></td>
+                <td class="txt-muted">
+                  <code>user_metadata.role</code>이 <code>undefined</code> +
+                  <code>signOut</code> 누락
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#11</td>
+                <td class="txt-muted">로그인 후 홈 화면 자동 이동 안 됨</td>
+                <td class="txt-muted"><code>AuthGate</code></td>
+                <td class="txt-muted">
+                  couple 분기에 <code>inAuthGroup</code> 예외 포함
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#12</td>
+                <td class="txt-muted">플래너 계정 마이페이지 접근 시 튕김</td>
+                <td class="txt-muted"><code>AuthGate</code></td>
+                <td class="txt-muted">
+                  planner 분기에 <code>inCoupleGroup</code> 예외 없음
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 1. Supabase 연동 에러 ── -->
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">01 — Supabase Migration Errors</div>
+          <h2 class="sec-heading">Supabase 연동 에러</h2>
+          <p>
+            <code>planners.json</code>에서 Supabase
+            <code>wedding_planners</code> 테이블로 마이그레이션하는 과정에서
+            실제로 발생한 에러들을 정리합니다. 각 에러의 발생 상황, 원인, 해결
+            방법, 코드 예시를 포함합니다.
+          </p>
+
+          <!-- #01 -->
+          <h3 class="sub-heading" id="s1-1">
+            #01 &nbsp; Cannot read property 'forEach' of null
+          </h3>
+          <p>
+            Supabase에서 데이터를 받아오기 전, <code>useMemo</code> 내에서 배열
+            컬럼(<code>activity_regions</code>, <code>specialties</code> 등)에
+            접근할 때 발생합니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">index.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    Supabase 테이블 일부 row의 배열 컬럼이 <code>null</code>로
+                    저장되어 있음. <code>.forEach()</code>는 <code>null</code>에
+                    호출 불가.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    배열 접근 시 모두 <code>?.</code> 옵셔널 체이닝을 사용하면
+                    <code>null</code>일 때 <code>undefined</code>를 반환하고
+                    에러를 방지함.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box-red">
+            <p>ERROR &nbsp; Cannot read property 'forEach' of null</p>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">plannersData.forEach((planner) => {</span>
+<span class="c-line">  planner.activity_regions.forEach((r) => regions.add(r));</span>
+<span class="c-line">  planner.specialties.forEach((s) => specialties.add(s));</span>
+<span class="c-line">});</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">plannersData.forEach((planner) => {</span>
+<span class="c-line">  planner.activity_regions<span class="c-key">?.</span>forEach((r) => regions.add(r));    <span class="c-comment">// ✅</span></span>
+<span class="c-line">  planner.specialties<span class="c-key">?.</span>forEach((s) => specialties.add(s));      <span class="c-comment">// ✅</span></span>
+<span class="c-line">  planner.style_keywords<span class="c-key">?.</span>forEach((k) => styles.add(k));         <span class="c-comment">// ✅</span></span>
+<span class="c-line">});</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #02 -->
+          <h3 class="sub-heading" id="s1-2">
+            #02 &nbsp; Cannot read property 'join' of null
+          </h3>
+          <p>
+            FlatList <code>renderItem</code> 또는 상세 화면 JSX에서
+            <code>.join()</code>을 호출할 때 발생. Supabase row의 해당 컬럼이
+            <code>null</code>인 경우입니다.
+          </p>
+
+          <div class="highlight-box-red">
+            <p>ERROR &nbsp; Cannot read property 'join' of null</p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">index.jsx / [id].jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    일부 row(예: 테스트 계정)의 배열 컬럼이 <code>null</code>로
+                    저장되어 있어 <code>.join()</code> 호출 시
+                    <code>TypeError</code> 발생.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    모든 배열 접근에 <code>?.</code>을 추가. 추가로 테스트 row를
+                    fetch 시 필터링.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// index.jsx renderItem</span>
+<span class="c-line">&lt;Text&gt;{item.activity_regions.join(', ')}&lt;/Text&gt;</span>
+<span class="c-comment">// [id].jsx</span>
+<span class="c-line">&lt;Text&gt;{selectedPlanner.activity_regions.join(', ')}&lt;/Text&gt;</span>
+<span class="c-line">{selectedPlanner.service_scope.included.map(...)}</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// index.jsx renderItem</span>
+<span class="c-line">&lt;Text&gt;{item.activity_regions<span class="c-key">?.</span>join(', ')}&lt;/Text&gt;               <span class="c-comment">// ✅</span></span>
+<span class="c-comment">// [id].jsx</span>
+<span class="c-line">&lt;Text&gt;{selectedPlanner.activity_regions<span class="c-key">?.</span>join(', ')}&lt;/Text&gt;    <span class="c-comment">// ✅</span></span>
+<span class="c-line">{selectedPlanner.service_scope<span class="c-key">?.</span>included<span class="c-key">?.</span>map(...)}            <span class="c-comment">// ✅ 중첩 객체는 두 번</span></span>
+<span class="c-line">{selectedPlanner.base_price_krw<span class="c-key">?.</span>toLocaleString()}             <span class="c-comment">// ✅</span></span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #03 -->
+          <h3 class="sub-heading" id="s1-3">
+            #03 &nbsp; useEffect must not return anything besides a function
+          </h3>
+          <p>
+            <code>useEffect</code> 콜백에 <code>async</code>를 직접 붙여서
+            작성했을 때 발생합니다. <code>async</code> 함수는 항상
+            <code>Promise</code>를 반환하는데, <code>useEffect</code>는 cleanup
+            함수(또는 아무것도 반환하지 않음)만 허용합니다.
+          </p>
+
+          <div class="highlight-box-red">
+            <p>
+              ERROR &nbsp; useEffect must not return anything besides a function
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">[id].jsx / index.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>useEffect(async () =&gt; { ... })</code> 형태로
+                    작성하면 <code>Promise</code> 객체가 반환되어 React가
+                    경고/에러를 발생시킴.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>useEffect</code> 콜백 내부에 <code>async</code> 함수를
+                    별도로 선언하고 호출만 하는 패턴을 사용.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ❌ async를 직접 전달 → Promise 반환</span>
+<span class="c-line">useEffect(async () => {</span>
+<span class="c-line">  const { data } = await supabase.from('wedding_planners').select('*');</span>
+<span class="c-line">  setPlannersData(data);</span>
+<span class="c-line">}, []);</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ✅ 내부에서 async 함수를 선언하고 호출만</span>
+<span class="c-line">useEffect(() => {</span>
+<span class="c-line">  async function fetchPlanners() {</span>
+<span class="c-line">    const { data, error } = await supabase</span>
+<span class="c-line">      .from('wedding_planners')</span>
+<span class="c-line">      .select('*');</span>
+<span class="c-line">    if (!error && data) setPlannersData(data);</span>
+<span class="c-line">    setLoading(false);</span>
+<span class="c-line">  }</span>
+<span class="c-line">  fetchPlanners();  <span class="c-comment">// 호출만, return 안 함</span></span>
+<span class="c-line">}, []);</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #04 -->
+          <h3 class="sub-heading" id="s1-4">
+            #04 &nbsp; SyntaxError: Unexpected token
+          </h3>
+          <p>
+            파일 저장 후 Metro 번들러가 파일을 파싱하지 못하고 특정 줄(예:
+            <code>}, []);</code>)에서 에러가 발생합니다.
+          </p>
+
+          <div class="highlight-box-red">
+            <p>ERROR &nbsp; SyntaxError: Unexpected token</p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">[id].jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    두 개의 <code>useEffect</code> 블록을 추가하는 과정에서
+                    중괄호 쌍이 맞지 않거나, 하나의 <code>useEffect</code> 안에
+                    BackHandler 코드와 fetch 코드가 뒤섞여 블록이 올바르게
+                    닫히지 않음.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>useEffect</code>를 두 개로 완전히 분리하고, 각각의
+                    중괄호가 정확히 닫혔는지 확인.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">useEffect(() => {</span>
+<span class="c-line">  async function fetchPlanner() { ... }</span>
+<span class="c-line">  fetchPlanner();</span>
+<span class="c-comment">  // ❌ BackHandler 코드가 섞임</span>
+<span class="c-line">  const handleBackPress = () => { ... };</span>
+<span class="c-line">  const subscription = BackHandler.addEventListener(...);</span>
+<span class="c-line">  return () => subscription.remove();</span>
+<span class="c-line">}, []);  <span class="c-comment">// ← 파서가 여기서 오류</span></span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ✅ useEffect 1 — fetch (완전히 분리)</span>
+<span class="c-line">useEffect(() => {</span>
+<span class="c-line">  async function fetchPlanner() { ... }</span>
+<span class="c-line">  fetchPlanner();</span>
+<span class="c-line">}, [id]);</span>
+
+<span class="c-comment">// ✅ useEffect 2 — BackHandler (완전히 분리)</span>
+<span class="c-line">useEffect(() => {</span>
+<span class="c-line">  const handleBackPress = () => { ... };</span>
+<span class="c-line">  const subscription = BackHandler.addEventListener(...);</span>
+<span class="c-line">  return () => subscription.remove();</span>
+<span class="c-line">}, []);</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #05 -->
+          <h3 class="sub-heading" id="s1-5">
+            #05 &nbsp; 필터/목록에 플래너 데이터가 표시되지 않음
+          </h3>
+          <p>
+            Supabase fetch는 성공(data 로그 확인)했으나 화면에 플래너 카드가
+            하나도 표시되지 않고 '일치하는 플래너가 없습니다' 메시지가 출력되는
+            증상입니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">index.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>filteredPlanners</code> useMemo의 의존성 배열에
+                    <code>plannersData</code>가 누락되어, 데이터가 도착해도
+                    useMemo가 재실행되지 않고 초기 빈 배열(<code>[]</code>)로
+                    필터링한 결과를 계속 사용함.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>filteredPlanners</code>와
+                    <code>filterOptions</code> 두 useMemo 모두 의존성 배열에
+                    <code>plannersData</code>를 추가.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const filteredPlanners = useMemo(() => {</span>
+<span class="c-line">  return plannersData.filter(...);</span>
+<span class="c-line">}, [searchText, selectedFilters]);  <span class="c-comment">// ❌ plannersData 누락</span></span>
+
+<span class="c-line">const filterOptions = useMemo(() => {</span>
+<span class="c-line">  ...</span>
+<span class="c-line">}, []);  <span class="c-comment">// ❌ plannersData 누락</span></span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const filteredPlanners = useMemo(() => {</span>
+<span class="c-line">  return plannersData.filter(...);</span>
+<span class="c-line">}, [searchText, selectedFilters, <span class="c-key">plannersData</span>]);  <span class="c-comment">// ✅</span></span>
+
+<span class="c-line">const filterOptions = useMemo(() => {</span>
+<span class="c-line">  ...</span>
+<span class="c-line">}, [<span class="c-key">plannersData</span>]);  <span class="c-comment">// ✅</span></span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #06 -->
+          <h3 class="sub-heading" id="s1-6">
+            #06 &nbsp; Hook 관련 에러 (조건부 return 위치)
+          </h3>
+          <p>
+            로딩 처리를 위해 <code>if (loading) return ...</code>을 추가했더니
+            이전에 없던 Hook 관련 에러가 발생하는 증상입니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">[id].jsx / index.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>if (loading) return</code>을
+                    <code>useEffect</code> 선언보다 앞에 배치하면, 조건에 따라
+                    Hook이 건너뛰어지는 상황이 발생. React는 Hook이 매
+                    렌더링에서 동일한 순서로 호출되어야 한다는 Rules of Hooks를
+                    강제함.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    모든 <code>useState</code>, <code>useEffect</code>,
+                    <code>useMemo</code> 선언을 먼저 작성하고, 조건부
+                    <code>return</code>은 반드시 마지막에 배치.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">export default function Screen() {</span>
+<span class="c-line">  const [data, setData] = useState(null);</span>
+<span class="c-line">  const [loading, setLoading] = useState(true);</span>
+<span class="c-comment">  // ❌ Hook 앞에 return</span>
+<span class="c-line">  if (loading) return &lt;ActivityIndicator /&gt;;</span>
+<span class="c-line">  useEffect(() => { ... }, []);  <span class="c-comment">// ← 조건부 실행 → 에러!</span></span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">export default function Screen() {</span>
+<span class="c-comment">  // 1. 모든 useState</span>
+<span class="c-line">  const [data, setData] = useState(null);</span>
+<span class="c-line">  const [loading, setLoading] = useState(true);</span>
+<span class="c-comment">  // 2. 모든 useEffect</span>
+<span class="c-line">  useEffect(() => { ... }, []);</span>
+<span class="c-comment">  // 3. 모든 useMemo</span>
+<span class="c-line">  const filtered = useMemo(() => { ... }, [data]);</span>
+<span class="c-comment">  // 4. 조건부 return은 항상 마지막 ✅</span>
+<span class="c-line">  if (loading) return &lt;ActivityIndicator /&gt;;</span>
+<span class="c-line">  if (!data) return &lt;Text&gt;데이터 없음&lt;/Text&gt;;</span>
+<span class="c-line">  return &lt;View&gt;...&lt;/View&gt;;</span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 2. 마이페이지 & 인증 ── -->
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">02 — Mypage &amp; Auth Errors</div>
+          <h2 class="sec-heading">마이페이지 &amp; 인증 에러</h2>
+          <p>
+            Mongle 앱의 마이페이지(<code>mypage.jsx</code>) 개발 과정에서 발생한
+            6건의 트러블슈팅을 기록합니다. DB 테이블 구조는 아래와 같습니다.
+          </p>
+
+          <div class="tree-block">
+            <pre><span class="t-ink">auth.users</span><span class="t-line"> (Supabase 기본)</span>
+<span class="t-line">└── id ──────────────────────────────┐</span>
+                                     <span class="t-line">↓</span>
+<span class="t-ink">user_profiles</span>
+<span class="t-line">├── id         ← auth.users.id 와 1:1 매핑</span>
+<span class="t-line">├── role       ← </span><span class="t-str">"planner"</span><span class="t-line"> | </span><span class="t-str">"couple"</span>
+<span class="t-line">├── planner_id ─→ wedding_planners.id</span>
+<span class="t-line">└── couple_id  ─→ couples.id</span>
+
+<span class="t-ink">wedding_planners</span>
+<span class="t-line">└── name, brand_name, one_liner, specialties,</span>
+<span class="t-line">    style_keywords, career_years, weddings_completed</span>
+
+<span class="t-ink">couples</span>
+<span class="t-line">└── groom_name, bride_name, email, phone, user_id</span></pre>
+          </div>
+
+          <!-- #07 -->
+          <h3 class="sub-heading" id="s2-1">
+            #07 &nbsp; 마이 탭 눌러도 화면 이동 안 됨
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              ReferenceError: Property 'session' doesn't exist &nbsp;— 발생
+              위치: TouchableOpacity.props.onPress (app/(couple)/_layout.jsx)
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">(couple)/_layout.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>tabBarButton</code>으로 <code>onPress</code>를
+                    재정의하면 Expo Router의 기본 탭 전환 로직이 완전히 차단됨.
+                    또한 <code>session</code> 변수를 선언하지 않고
+                    <code>onPress</code> 내에서 참조.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>tabBarButton</code> 완전 제거하여 Expo Router 기본 탭
+                    전환에 위임. <code>session</code>은
+                    <code>useEffect + useState</code>로 별도 관리. 로그인 체크는
+                    <code>mypage.jsx</code> 내부에서 처리.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ❌ tabBarButton이 Expo Router 탭 전환을 막음</span>
+<span class="c-line">&lt;Tabs.Screen name="mypage" options={{</span>
+<span class="c-line">  tabBarButton: (props) =&gt; (</span>
+<span class="c-line">    &lt;TouchableOpacity {...props} onPress={() =&gt; {</span>
+<span class="c-line">      if (session) {  <span class="c-comment">// ← session 미선언 → ReferenceError</span></span>
+<span class="c-line">        router.push("/(couple)/mypage");</span>
+<span class="c-line">      } else {</span>
+<span class="c-line">        router.push("/(auth)/login");</span>
+<span class="c-line">      }</span>
+<span class="c-line">    }} /&gt;</span>
+<span class="c-line">  ),</span>
+<span class="c-line">}} /&gt;</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ✅ tabBarButton 없이 단순하게</span>
+<span class="c-line">const [session, setSession] = useState(null);</span>
+<span class="c-line">useEffect(() =&gt; {</span>
+<span class="c-line">  supabase.auth.getSession().then(({ data: { session } }) =&gt; {</span>
+<span class="c-line">    setSession(session);</span>
+<span class="c-line">  });</span>
+<span class="c-line">  const { data: { subscription } } = supabase.auth.onAuthStateChange(</span>
+<span class="c-line">    (_event, session) =&gt; setSession(session)</span>
+<span class="c-line">  );</span>
+<span class="c-line">  return () =&gt; subscription.unsubscribe();</span>
+<span class="c-line">}, []);</span>
+
+<span class="c-comment">// tabBarButton 완전 제거</span>
+<span class="c-line">&lt;Tabs.Screen name="mypage" options={{</span>
+<span class="c-line">  title: "마이",</span>
+<span class="c-line">  tabBarIcon: ({ color, size }) =&gt; (</span>
+<span class="c-line">    &lt;Ionicons name="person-outline" size={size} color={color} /&gt;</span>
+<span class="c-line">  ),</span>
+<span class="c-line">}} /&gt;</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #08 -->
+          <h3 class="sub-heading" id="s2-2">
+            #08 &nbsp; 로딩 스피너가 화면을 막아 마이페이지 진입 불가
+          </h3>
+          <p>
+            마이 탭을 눌러도 로딩 스피너만 표시되거나, 빈 화면이 유지됩니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">mypage.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>loading</code> 초기값을 <code>true</code>로 설정하여,
+                    세션 확인이 완료되기 전부터 <code>ActivityIndicator</code>가
+                    렌더링되어 화면 전체를 차단. 세션이 없을 때
+                    <code>router.replace</code>로 강제 이동시켜 정상적인 탭
+                    전환도 방해.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>loading</code> 초기값을 <code>false</code>로 변경.
+                    세션 없을 때 redirect 없이 그냥 <code>return</code>. 프로필
+                    로드 시작할 때만 <code>setLoading(true)</code> 호출.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ❌ loading 초기값 true → 세션 확인 전 스피너가 화면 차단</span>
+<span class="c-line">const [loading, setLoading] = useState(<span class="c-str">true</span>);</span>
+<span class="c-line">useEffect(() =&gt; {</span>
+<span class="c-line">  supabase.auth.getSession().then(({ data: { session } }) =&gt; {</span>
+<span class="c-line">    if (!session) {</span>
+<span class="c-line">      router.replace("/(auth)/login");  <span class="c-comment">// ← 탭 전환 방해</span></span>
+<span class="c-line">      return;</span>
+<span class="c-line">    }</span>
+<span class="c-line">    setSession(session);</span>
+<span class="c-line">    loadProfile(session.user.id);</span>
+<span class="c-line">  });</span>
+<span class="c-line">}, []);</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ✅ loading 초기값 false, 세션 없을 때 redirect 제거</span>
+<span class="c-line">const [loading, setLoading] = useState(<span class="c-key">false</span>);  <span class="c-comment">// ← false로 변경</span></span>
+<span class="c-line">useEffect(() =&gt; {</span>
+<span class="c-line">  supabase.auth.getSession().then(({ data: { session } }) =&gt; {</span>
+<span class="c-line">    if (!session) return;  <span class="c-comment">// ← redirect 없이 그냥 return</span></span>
+<span class="c-line">    setSession(session);</span>
+<span class="c-line">    setLoading(<span class="c-key">true</span>);  <span class="c-comment">// ← 프로필 로드 시작할 때만 true</span></span>
+<span class="c-line">    loadProfile(session.user.id);</span>
+<span class="c-line">  });</span>
+<span class="c-line">}, []);</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #09 -->
+          <h3 class="sub-heading" id="s2-3">
+            #09 &nbsp; 'public.profiles' 테이블을 찾을 수 없음
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              ERROR &nbsp; Could not find the table 'public.profiles' in the
+              schema cache
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">mypage.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>loadProfile</code> 함수에서 테이블명을
+                    <code>profiles</code>로 작성했으나, 실제 Supabase DB의
+                    테이블명은 <code>user_profiles</code>.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    모든 쿼리에서 <code>'profiles'</code> →
+                    <code>'user_profiles'</code>로 수정. Supabase 대시보드 →
+                    Table Editor에서 실제 테이블명 확인 후 코드에 작성.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const { data, error } = await supabase</span>
+<span class="c-line">  .from(<span class="c-str">'profiles'</span>)  <span class="c-comment">// ← 실제로는 'user_profiles'</span></span>
+<span class="c-line">  .select('role, planner_id, couple_id')</span>
+<span class="c-line">  .eq('id', userId)</span>
+<span class="c-line">  .single();</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// loadProfile 내부</span>
+<span class="c-line">const { data: profileRow, error: profileError } = await supabase</span>
+<span class="c-line">  .from(<span class="c-key">'user_profiles'</span>)  <span class="c-comment">// ← 수정</span></span>
+<span class="c-line">  .select('role, planner_id, couple_id')</span>
+<span class="c-line">  .eq('id', userId)</span>
+<span class="c-line">  .single();</span>
+
+<span class="c-comment">// handleDeleteAccount 내부도 동일하게 수정</span>
+<span class="c-line">const { error } = await supabase</span>
+<span class="c-line">  .from(<span class="c-key">'user_profiles'</span>)  <span class="c-comment">// ← 수정</span></span>
+<span class="c-line">  .delete()</span>
+<span class="c-line">  .eq('id', session.user.id);</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #10 -->
+          <h3 class="sub-heading" id="s2-4">
+            #10 &nbsp; 커플 계정 로그인 시 아무 반응 없음
+          </h3>
+          <p>
+            커플 계정으로 로그인 버튼을 눌러도 오류 메시지도, 화면 전환도,
+            alert도 아무것도 나타나지 않는 증상. 플래너 계정은 정상
+            로그인됩니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">login.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>user_metadata.role</code>로 계정 유형을 구분하려
+                    했으나, 가입 시 <code>user_metadata</code>에
+                    <code>role</code>을 저장하지 않아 값이
+                    <code>undefined</code>. 두 조건 모두 <code>false</code>가
+                    되고, <code>signOut</code> 없이 <code>return</code>하여
+                    로그인된 채로 아무것도 실행되지 않음.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>fetchUserRole</code>로 DB에서 직접
+                    <code>role</code> 조회. <code>user_profiles</code> 테이블을
+                    단일 진실 공급원(Single Source of Truth)으로 사용. 역할
+                    불일치 시 반드시 <code>signOut()</code> 호출.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ❌ user_metadata.role이 undefined</span>
+<span class="c-line">const userRole = data.user?.user_metadata?.role;  <span class="c-comment">// → undefined</span></span>
+<span class="c-comment">// 두 조건 모두 false → 아무것도 실행 안 됨</span>
+<span class="c-line">if (userRole === "planner" && !isPlanner) { ... }  <span class="c-comment">// false</span></span>
+<span class="c-line">if (userRole === "couple" && isPlanner) { ... }    <span class="c-comment">// false</span></span>
+<span class="c-comment">// signOut 없이 return → 로그인 상태로 멈춤</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ✅ fetchUserRole로 DB에서 직접 role 조회</span>
+<span class="c-line">import { signIn, signOut, fetchUserRole } from '../../lib/auth';</span>
+
+<span class="c-line">const handleLogin = async () =&gt; {</span>
+<span class="c-line">  const data = await signIn(email, password);</span>
+<span class="c-line">  const profile = await fetchUserRole(data.user.id);</span>
+<span class="c-line">  const userRole = profile.role;  <span class="c-comment">// "planner" | "couple"</span></span>
+
+<span class="c-line">  if (userRole === "planner" && !isPlanner) {</span>
+<span class="c-line">    await signOut();  <span class="c-comment">// ← 로그인 상태 반드시 되돌리기</span></span>
+<span class="c-line">    showAlert("웨딩 플래너 계정입니다.\n웨딩 플래너 탭을 선택해주세요.");</span>
+<span class="c-line">    return;</span>
+<span class="c-line">  }</span>
+<span class="c-line">  if (userRole === "couple" && isPlanner) {</span>
+<span class="c-line">    await signOut();  <span class="c-comment">// ← 마찬가지로 signOut 필수</span></span>
+<span class="c-line">    showAlert("예비 신혼 계정입니다.\n예비 신혼 탭을 선택해주세요.");</span>
+<span class="c-line">    return;</span>
+<span class="c-line">  }</span>
+<span class="c-line">  // 정상 → AuthGate onAuthStateChange가 자동 화면 전환</span>
+<span class="c-line">};</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #11 -->
+          <h3 class="sub-heading" id="s2-5">
+            #11 &nbsp; 커플 로그인 후 홈 화면으로 자동 이동 안 됨
+          </h3>
+          <p>
+            커플 계정 로그인 성공 후 <code>(auth)/login</code> 화면에 그대로
+            머무르고, <code>/(couple)</code> 홈으로 자동 이동하지 않는
+            증상입니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">AuthGate</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    AuthGate의 couple 분기 리다이렉트 조건에
+                    <code>inAuthGroup</code>이 예외로 포함되어 있어, 로그인 성공
+                    후 <code>(auth)</code> 화면에 있을 때
+                    <code>/(couple)</code>로 이동하는 조건이
+                    <code>false</code>가 됨.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    couple 분기에서 <code>inAuthGroup</code> 예외 제거. 로그인
+                    후 <code>(auth)</code>에 있으면 <code>/(couple)</code>로
+                    이동.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ❌ inAuthGroup 예외 때문에 (auth)에서 리다이렉트 안 됨</span>
+<span class="c-line">} else {  <span class="c-comment">// couple</span></span>
+<span class="c-line">  if (!inCoupleGroup && <span class="c-str">!inAuthGroup</span> && !inVendorsGroup && !inPlannersGroup)</span>
+<span class="c-line">  <span class="c-comment">// ↑ (auth)에 있으면 이 조건 false → 이동 안 함</span></span>
+<span class="c-line">    router.replace("/(couple)");</span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ✅ inAuthGroup 예외 제거</span>
+<span class="c-line">} else {  <span class="c-comment">// couple</span></span>
+<span class="c-line">  if (!inCoupleGroup && !inVendorsGroup && !inPlannersGroup)</span>
+<span class="c-line">  <span class="c-comment">// inAuthGroup 제거 → 로그인 후 (auth)에 있으면 (couple)로 이동</span></span>
+<span class="c-line">    router.replace("/(couple)");</span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box-yellow">
+            <p>
+              ⚠️ 주의 &nbsp; inAuthGroup 예외를 제거하면 비로그인 상태에서
+              (auth) 화면이 정상 유지되는지 확인 필요. session이 없는 경우
+              분기가 먼저 실행되어 (auth) 접근은 여전히 허용됨.
+            </p>
+          </div>
+
+          <!-- #12 -->
+          <h3 class="sub-heading" id="s2-6">
+            #12 &nbsp; 플래너 계정이 마이페이지 접근 시 튕김
+          </h3>
+          <p>
+            플래너 계정으로 로그인 후 마이 탭을 누르면
+            <code>(couple)/mypage</code> 대신 <code>(couple)</code> 홈으로
+            튕겨지는 증상입니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">AuthGate</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    AuthGate의 planner 분기에서 <code>inCoupleGroup</code>에
+                    대한 예외가 없어, 플래너가 <code>(couple)/mypage</code>에
+                    있을 때 <code>inPlannerGroup</code>이 <code>false</code>가
+                    되어 <code>/(couple)</code>로 리다이렉트.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">배경</div>
+                  <div class="white-value">
+                    <code>mypage.jsx</code>는
+                    <code>app/(couple)/</code> 디렉토리에 위치하지만, 플래너와
+                    커플 모두 접근할 수 있도록 설계되어 있어 플래너가
+                    <code>(couple)</code> 경로에 있는 것이 허용되어야 함.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">잘못된 코드</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ❌ 플래너가 (couple) 경로에 있으면 무조건 튕겨냄</span>
+<span class="c-line">if (role === "planner") {</span>
+<span class="c-line">  if (!inPlannerGroup && !inVendorsGroup && !inPlannersGroup)</span>
+<span class="c-line">  <span class="c-comment">// inCoupleGroup 예외 없음 → (couple)/mypage 접근 시 튕김</span></span>
+<span class="c-line">    router.replace("/(couple)");</span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 코드</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// ✅ inCoupleGroup 예외 추가</span>
+<span class="c-line">if (role === "planner") {</span>
+<span class="c-line">  if (!inPlannerGroup && <span class="c-key">!inCoupleGroup</span> && !inVendorsGroup && !inPlannersGroup)</span>
+<span class="c-line">  <span class="c-comment">// ↑ 추가 → 플래너가 (couple)/mypage 접근 허용</span></span>
+<span class="c-line">    router.replace("/(couple)");</span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 3. 핵심 원칙 요약 ── -->
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">03 — Core Principles</div>
+          <h2 class="sec-heading">핵심 원칙 요약</h2>
+
+          <h3 class="sub-heading">1. React Hook 순서 규칙 (Rules of Hooks)</h3>
+          <div class="highlight-box">
+            <p>
+              📌 필수 규칙 &nbsp; Hook은 항상 컴포넌트 최상단에서 동일한 순서로
+              호출되어야 합니다.
+            </p>
+          </div>
+          <div class="code-block">
+            <pre><span class="c-line">export default function Screen() {</span>
+<span class="c-comment">  // Step 1. 모든 useState 먼저</span>
+<span class="c-line">  const [data, setData] = useState(null);</span>
+<span class="c-line">  const [loading, setLoading] = useState(true);</span>
+<span class="c-comment">  // Step 2. 모든 useEffect</span>
+<span class="c-line">  useEffect(() => { ... }, []);</span>
+<span class="c-comment">  // Step 3. 모든 useMemo / useCallback</span>
+<span class="c-line">  const result = useMemo(() => { ... }, [data]);</span>
+<span class="c-comment">  // Step 4. 조건부 return — 항상 마지막!</span>
+<span class="c-line">  if (loading) return &lt;ActivityIndicator /&gt;;</span>
+<span class="c-line">  if (!data) return &lt;Text&gt;없음&lt;/Text&gt;;</span>
+<span class="c-line">  return &lt;View&gt;...&lt;/View&gt;;</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <h3 class="sub-heading">2. useEffect 내 async 사용 패턴</h3>
+          <div class="highlight-box-yellow">
+            <p>
+              ⚠️ 주의 &nbsp; useEffect에 async를 직접 전달하면 Promise가
+              반환되어 에러가 발생합니다.
+            </p>
+          </div>
+          <div class="code-block">
+            <pre><span class="c-comment">// ❌ 잘못된 방식</span>
+<span class="c-line">useEffect(async () => {</span>
+<span class="c-line">  const data = await fetch(...);</span>
+<span class="c-line">}, []);</span>
+
+<span class="c-comment">// ✅ 올바른 방식</span>
+<span class="c-line">useEffect(() => {</span>
+<span class="c-line">  async function fetchData() {</span>
+<span class="c-line">    const data = await fetch(...);</span>
+<span class="c-line">    setState(data);</span>
+<span class="c-line">  }</span>
+<span class="c-line">  fetchData();</span>
+<span class="c-line">}, []);</span></pre>
+          </div>
+
+          <h3 class="sub-heading">3. 옵셔널 체이닝 (?.) 적용 대상</h3>
+          <p>
+            Supabase 데이터는 일부 컬럼이 <code>null</code>일 수 있습니다. 배열
+            및 객체 접근 시 항상 <code>?.</code>를 사용하세요.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 배열 컬럼</span>
+<span class="c-line">planner.activity_regions?.join(", ")</span>
+<span class="c-line">planner.specialties?.map(...)</span>
+<span class="c-line">planner.style_keywords?.forEach(...)</span>
+<span class="c-comment">// 중첩 객체</span>
+<span class="c-line">planner.service_scope?.included?.map(...)  <span class="c-comment">// 두 번 필요</span></span>
+<span class="c-comment">// 숫자 메서드</span>
+<span class="c-line">planner.base_price_krw?.toLocaleString()</span></pre>
+          </div>
+
+          <h3 class="sub-heading">4. useMemo 의존성 관리</h3>
+          <div class="highlight-box">
+            <p>
+              💡 팁 &nbsp; useMemo 내에서 사용하는 state는 모두 의존성 배열에
+              포함해야 값이 최신 상태로 유지됩니다.
+            </p>
+          </div>
+          <div class="code-block">
+            <pre><span class="c-comment">// ❌ plannersData 누락 → 데이터 도착 후에도 재계산 안 됨</span>
+<span class="c-line">const filtered = useMemo(() => {</span>
+<span class="c-line">  return plannersData.filter(...);</span>
+<span class="c-line">}, [searchText, selectedFilters]);</span>
+
+<span class="c-comment">// ✅ 모든 참조 변수 포함</span>
+<span class="c-line">const filtered = useMemo(() => {</span>
+<span class="c-line">  return plannersData.filter(...);</span>
+<span class="c-line">}, [searchText, selectedFilters, <span class="c-key">plannersData</span>]);</span></pre>
+          </div>
+
+          <h3 class="sub-heading">5. Supabase 테스트 데이터 필터링</h3>
+          <p>
+            <code>wedding_planners</code> 테이블에 <code>brand_name</code>이
+            <code>null</code>인 테스트 계정이 존재하면 렌더링 에러가 발생합니다.
+            fetch 쿼리에 필터를 추가하세요.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-line">const { data, error } = await supabase</span>
+<span class="c-line">  .from('wedding_planners')</span>
+<span class="c-line">  .select('*')</span>
+<span class="c-line">  <span class="c-key">.not('brand_name', 'is', null)</span>  <span class="c-comment">// ✅ 불완전한 row 제외</span></span>
+<span class="c-line">  .order('created_at', { ascending: false });</span></pre>
+          </div>
+
+          <h3 class="sub-heading">
+            6. role 구분 — user_metadata vs user_profiles
+          </h3>
+          <div class="highlight-box">
+            <p>
+              📌 핵심 원칙 &nbsp; user_metadata는 가입 시 별도로 저장해야 하므로
+              신뢰할 수 없습니다. role 구분은 user_profiles 테이블을 단일 진실
+              공급원(Single Source of Truth)으로 사용하세요.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── 4. 남은 작업 & 체크리스트 ── -->
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">04 — Checklist</div>
+          <h2 class="sec-heading">재발 방지 체크리스트</h2>
+
+          <h3 class="sub-heading">재발 방지 체크리스트</h3>
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Check 01</span>
+                <span class="white-title">Supabase 테이블명 확인</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    Supabase 테이블명은 대시보드에서 반드시 확인 후 코드에 작성.
+                    파일명(<code>user_profiles_rows.csv</code> 등)이 힌트가 될
+                    수 있음.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Check 02</span>
+                <span class="white-title"
+                  >role은 user_profiles 테이블을 단일 소스로</span
+                >
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    role 구분은 <code>user_metadata</code>가 아닌
+                    <code>user_profiles</code> 테이블을 단일 소스로 사용.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Check 03</span>
+                <span class="white-title">tabBarButton 재정의 금지</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    Expo Router에서 <code>tabBarButton</code>으로
+                    <code>onPress</code>를 재정의하면 탭 전환이 차단됨. 인증
+                    체크는 화면 내부에서 처리할 것.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Check 04</span>
+                <span class="white-title">로그인 실패 시 signOut() 필수</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    역할 불일치 등 로그인 실패 시 반드시
+                    <code>signOut()</code>을 호출하여 세션 상태를 정리.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Check 05</span>
+                <span class="white-title"
+                  >AuthGate 수정 시 전체 조합 테스트</span
+                >
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    AuthGate 리다이렉트 조건 수정 시 모든 role × 경로
+                    조합(planner/couple × auth/couple/planner/vendors)을 테스트.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+    <script src="../../script.js"></script>
+  </body>
+</html>
