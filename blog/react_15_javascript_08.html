@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 8 — React Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <!-- ── NAV ── -->
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <!-- ── POST HEADER ── -->
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">JavaScript</span>
+          <span class="post-date">
+            작성일 <span id="date-created">—</span> &nbsp;·&nbsp; 수정일
+            <span id="date-updated">—</span>
+          </span>
+        </div>
+        <h1 class="post-title">JavaScript 8</h1>
+        <p class="post-subtitle">
+          <strong>DOM(Document Object Model)</strong>은 HTML 문서를 브라우저가
+          객체 트리로 변환한 프로그래밍 인터페이스입니다. 요소 선택, 내용 변경,
+          <strong>이벤트 연결</strong>까지 JavaScript로 화면을 동적으로 제어하는
+          핵심 개념을 살펴봅니다.
+        </p>
+      </header>
+    </div>
+
+    <!-- ── MAIN WRAPPER ── -->
+    <div class="main-wrapper">
+      <!-- ── TOC SIDEBAR ── -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-intro"
+                ><span class="toc-num">§</span>DOM 개요</a
+              >
+            </li>
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>요소 선택하기</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-1-ex"><span class="toc-num">※</span>예제</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>요소 내용 변경하기</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-2-ex"><span class="toc-num">※</span>예제</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>이벤트 연결</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-3-ex1"
+                    ><span class="toc-num">※</span>예제 1 — 클릭수</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-3-ex2"
+                    ><span class="toc-num">※</span>예제 2 — 글자수</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- ── POST BODY ── -->
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <!-- ── INTRO ── -->
+        <section class="section visible" id="section-intro">
+          <p class="sec-eyebrow">DOM (Document Object Model)</p>
+          <h2 class="sec-heading">DOM 개요</h2>
+          <p>
+            DOM(Document Object Model, 문서 객체 모델)은 HTML, XML 문서의
+            프로그래밍 인터페이스입니다. 브라우저가 정적인 텍스트 파일인 HTML을
+            읽어 들여, 이를 프로그램이 수정·삭제·추가할 수 있는
+            <strong>객체(Object) 구조</strong>로 변환한 것을 의미합니다.
+          </p>
+          <p>
+            JavaScript로 이 트리의 요소들을 선택하여 요소의 내용, 속성, 스타일을
+            변경하고, 새로운 요소를 추가하거나 기존 요소를 삭제할 수 있습니다.
+          </p>
+
+          <div class="tier-diagram">
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">HTML 문서</span>
+                <span class="tier-layer">원본 파일</span>
+              </div>
+              <div class="tier-content">
+                <p>브라우저가 텍스트 파일(.html)을 읽어 들입니다.</p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">DOM 트리 생성</span>
+                <span class="tier-layer">파싱</span>
+              </div>
+              <div class="tier-content">
+                <p>HTML 요소들을 노드(Node) 객체 트리로 변환합니다.</p>
+              </div>
+            </div>
+            <div class="tier-row">
+              <div class="tier-label">
+                <span class="tier-name">JavaScript 제어</span>
+                <span class="tier-layer">동적 조작</span>
+              </div>
+              <div class="tier-content">
+                <p>선택·변경·추가·삭제 등 DOM을 자유롭게 조작합니다.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <strong>[참고]</strong> 리액트는 DOM을 직접 제어하지 않고,
+              <strong>상태(State)</strong>로 화면을 바꾸는 방식을 사용합니다.
+            </p>
+          </div>
+
+          <h3 class="sub-heading">핵심 노드 타입</h3>
+          <p>
+            DOM은 HTML 요소들을 <strong>노드(Node)</strong>라고 불리는 객체들로
+            표현합니다.
+          </p>
+          <div class="layer-cards">
+            <div class="layer-card">
+              <div class="layer-badge js">Document</div>
+              <div class="layer-content">
+                <div class="layer-title">Document 노드</div>
+                <p class="layer-desc">DOM 트리의 최상위 노드입니다.</p>
+              </div>
+            </div>
+            <div class="layer-card">
+              <div class="layer-badge js">Element</div>
+              <div class="layer-content">
+                <div class="layer-title">Element 노드</div>
+                <p class="layer-desc">
+                  HTML 태그 — <code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code>,
+                  <code>&lt;div&gt;</code> 등 모든 HTML 요소입니다.
+                </p>
+              </div>
+            </div>
+            <div class="layer-card">
+              <div class="layer-badge js">Text</div>
+              <div class="layer-content">
+                <div class="layer-title">Text 노드</div>
+                <p class="layer-desc">HTML 요소 내의 텍스트 콘텐츠입니다.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 1 : 요소 선택하기 ── -->
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">요소 선택하기</h2>
+          <p>주요 DOM 메서드로 원하는 HTML 요소를 선택할 수 있습니다.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>메서드</th>
+                <th>반환값</th>
+                <th>선택자</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-style2">getElementById('id')</td>
+                <td>단일 요소</td>
+                <td>id로 선택</td>
+              </tr>
+              <tr>
+                <td class="td-style2">querySelector('선택자')</td>
+                <td>단일 요소</td>
+                <td>CSS 선택자로 첫 번째 요소</td>
+              </tr>
+              <tr>
+                <td class="td-style2">querySelectorAll('선택자')</td>
+                <td>NodeList</td>
+                <td>CSS 선택자로 모든 요소</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 예제 -->
+          <div class="section visible" id="section-1-ex">
+            <h3 class="sub-heading">예제</h3>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">HTML</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">html</span></div>
+              <div class="code-body">
+                <pre><span class="t">&lt;</span><span class="tn">h1</span> <span class="at">id</span><span class="t">=</span><span class="av">"title"</span><span class="t">&gt;</span><span class="tx">안녕하세요</span><span class="t">&lt;/</span><span class="tn">h1</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">p</span> <span class="at">class</span><span class="t">=</span><span class="av">"desc"</span><span class="t">&gt;</span><span class="tx">첫 번째 설명</span><span class="t">&lt;/</span><span class="tn">p</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">p</span> <span class="at">class</span><span class="t">=</span><span class="av">"desc"</span><span class="t">&gt;</span><span class="tx">두 번째 설명</span><span class="t">&lt;/</span><span class="tn">p</span><span class="t">&gt;</span></pre>
+              </div>
+            </div>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">단일 요소 선택</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">title = document.</span><span class="tn">getElementById</span><span class="tx">(</span><span class="av">'title'</span><span class="tx">);</span>
+<span class="tn">const</span> <span class="tx">firstDesc = document.</span><span class="tn">querySelector</span><span class="tx">(</span><span class="av">'.desc'</span><span class="tx">);</span></pre>
+              </div>
+            </div>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">여러 요소 선택</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">allDesc = document.</span><span class="tn">querySelectorAll</span><span class="tx">(</span><span class="av">'.desc'</span><span class="tx">);</span>
+
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(title);          </span><span class="cm">// &lt;h1 id="title"&gt;안녕하세요&lt;/h1&gt;</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(allDesc.length); </span><span class="cm">// 2</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 2 : 요소 내용 변경하기 ── -->
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">요소 내용 변경하기</h2>
+          <p>
+            선택한 요소의 내용을 읽거나 바꿀 때 사용하는 두 가지 속성입니다.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>속성</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">textContent</td>
+                <td>텍스트만 변경 (HTML 태그 무시)</td>
+              </tr>
+              <tr>
+                <td class="td-tag">innerHTML</td>
+                <td>HTML 포함 변경 (보안 주의!)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 예제 -->
+          <div class="section visible" id="section-2-ex">
+            <h3 class="sub-heading">예제</h3>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">title = document.</span><span class="tn">getElementById</span><span class="tx">(</span><span class="av">'title'</span><span class="tx">);</span>
+
+<span class="cm">// 텍스트 읽기</span>
+<span class="tx">console.</span><span class="tn">log</span><span class="tx">(title.textContent); </span><span class="cm">// "안녕하세요"</span>
+
+<span class="cm">// 텍스트 변경</span>
+<span class="tx">title.textContent = </span><span class="av">'반갑습니다'</span><span class="tx">;</span>
+
+<span class="cm">// HTML 포함 변경</span>
+<span class="tx">title.innerHTML = </span><span class="av">'반갑습니다 &lt;small&gt;😊&lt;/small&gt;'</span><span class="tx">;</span></pre>
+              </div>
+            </div>
+
+            <div class="compare-grid">
+              <div class="compare-card">
+                <div class="compare-head inline">textContent</div>
+                <div class="compare-body">
+                  <p>
+                    HTML 태그를 <strong>문자 그대로</strong> 출력합니다. 더
+                    안전합니다.
+                  </p>
+                  <div class="code-block">
+                    <div class="code-body">
+                      <pre><span class="tx">title.textContent = </span><span class="av">'&lt;b&gt;굵게&lt;/b&gt;'</span><span class="tx">;</span>
+<span class="cm">// 화면: &lt;b&gt;굵게&lt;/b&gt; (태그가 그대로 보임)</span></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="compare-card">
+                <div class="compare-head block">innerHTML</div>
+                <div class="compare-body">
+                  <p>HTML 태그를 <strong>실제 요소로</strong> 렌더링합니다.</p>
+                  <div class="code-block">
+                    <div class="code-body">
+                      <pre><span class="tx">title.innerHTML = </span><span class="av">'&lt;b&gt;굵게&lt;/b&gt;'</span><span class="tx">;</span>
+<span class="cm">// 화면: <b>굵게</b> (실제로 굵어짐)</span></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── SECTION 3 : 이벤트 연결 ── -->
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">이벤트 연결</h2>
+          <p>
+            <code>addEventListener</code>를 사용하면 특정 동작이 발생했을 때
+            실행할 함수를 요소에 연결할 수 있습니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">js</span></div>
+            <div class="code-body">
+              <pre><span class="tx">element.</span><span class="tn">addEventListener</span><span class="tx">(</span><span class="av">'이벤트타입'</span><span class="tx">, 콜백함수);</span></pre>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              콜백함수는
+              <strong>괄호를 붙이지 않고 함수명만</strong> 전달합니다.
+              매개변수가 있는 함수를 전달해야 한다면
+              <strong>화살표 함수</strong>를 사용합니다.
+            </p>
+          </div>
+
+          <h3 class="sub-heading">자주 쓰는 이벤트</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>이벤트</th>
+                <th>발생 시점</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-tag">click</td>
+                <td>클릭했을 때</td>
+              </tr>
+              <tr>
+                <td class="td-tag">input</td>
+                <td>입력값이 변할 때</td>
+              </tr>
+              <tr>
+                <td class="td-tag">submit</td>
+                <td>폼 제출할 때</td>
+              </tr>
+              <tr>
+                <td class="td-tag">keydown</td>
+                <td>키를 눌렀을 때</td>
+              </tr>
+              <tr>
+                <td class="td-tag">mouseover / mouseout</td>
+                <td>마우스 올림 / 벗어남</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 예제 1 -->
+          <div class="section visible" id="section-3-ex1">
+            <h3 class="sub-heading">예제 1 — 클릭수</h3>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">HTML</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">html</span></div>
+              <div class="code-body">
+                <pre><span class="t">&lt;</span><span class="tn">button</span> <span class="at">id</span><span class="t">=</span><span class="av">"btn"</span><span class="t">&gt;</span><span class="tx">클릭!</span><span class="t">&lt;/</span><span class="tn">button</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">p</span> <span class="at">id</span><span class="t">=</span><span class="av">"result"</span><span class="t">&gt;&lt;/</span><span class="tn">p</span><span class="t">&gt;</span></pre>
+              </div>
+            </div>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">JavaScript</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">btn = document.</span><span class="tn">getElementById</span><span class="tx">(</span><span class="av">'btn'</span><span class="tx">);</span>
+<span class="tn">const</span> <span class="tx">result = document.</span><span class="tn">getElementById</span><span class="tx">(</span><span class="av">'result'</span><span class="tx">);</span>
+<span class="tn">let</span> <span class="tx">clickCount = 0;</span>
+
+<span class="tx">btn.</span><span class="tn">addEventListener</span><span class="tx">(</span><span class="av">'click'</span><span class="tx">, </span><span class="tn">function</span><span class="tx">() {</span>
+    <span class="tx">clickCount++;</span>
+    <span class="tx">result.textContent = </span><span class="av">`${clickCount}번 클릭했습니다`</span><span class="tx">;</span>
+<span class="tx">});</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- 예제 2 -->
+          <div class="section visible" id="section-3-ex2">
+            <h3 class="sub-heading">예제 2 — 실시간 글자수 표시</h3>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">HTML</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">html</span></div>
+              <div class="code-body">
+                <pre><span class="t">&lt;</span><span class="tn">textarea</span> <span class="at">id</span><span class="t">=</span><span class="av">"message"</span> <span class="at">placeholder</span><span class="t">=</span><span class="av">"메시지 입력"</span><span class="t">&gt;&lt;/</span><span class="tn">textarea</span><span class="t">&gt;</span>
+<span class="t">&lt;</span><span class="tn">p</span><span class="t">&gt;</span><span class="tx">글자수: </span><span class="t">&lt;</span><span class="tn">span</span> <span class="at">id</span><span class="t">=</span><span class="av">"count"</span><span class="t">&gt;</span><span class="tx">0</span><span class="t">&lt;/</span><span class="tn">span</span><span class="t">&gt;</span><span class="tx">/100</span><span class="t">&lt;/</span><span class="tn">p</span><span class="t">&gt;</span></pre>
+              </div>
+            </div>
+
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">JavaScript</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">message = document.</span><span class="tn">getElementById</span><span class="tx">(</span><span class="av">'message'</span><span class="tx">);</span>
+<span class="tn">const</span> <span class="tx">count = document.</span><span class="tn">getElementById</span><span class="tx">(</span><span class="av">'count'</span><span class="tx">);</span>
+
+<span class="tx">message.</span><span class="tn">addEventListener</span><span class="tx">(</span><span class="av">'input'</span><span class="tx">, </span><span class="tn">function</span><span class="tx">() {</span>
+    <span class="tx">count.textContent = message.value.length;</span>
+<span class="tx">});</span></pre>
+              </div>
+            </div>
+
+            <div class="highlight-box">
+              <p>
+                <code>input</code> 이벤트는 키를 누를 때마다 즉시 발생합니다.
+                <code>message.value</code>로 현재 입력된 텍스트를 가져오고,
+                <code>.length</code>로 글자 수를 셉니다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── COMMENTS ── -->
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- ── POST FOOTER ── -->
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+  </body>
+</html>
