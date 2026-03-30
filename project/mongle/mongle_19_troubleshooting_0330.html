@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>트러블슈팅 2026.03.30 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.03.30 Troubleshooting</span>
+          <span class="badge badge-ver">Day 08</span>
+          <span class="badge badge-status draft">통합 리포트</span>
+        </div>
+        <h1 class="post-title">트러블슈팅 통합 문서</h1>
+        <p class="post-sub">
+          2026년 3월 30일 — Supabase 연동 · 초대 코드 · 멤버 관리 · 다중 초대
+        </p>
+        <p class="post-desc">
+          React Native(Expo Router) 채팅 화면에 Supabase를 연동하고 초대 코드
+          기반 멤버 초대 및 다중 초대 기능을 구현하는 과정에서 발생한 이슈 총
+          14건의 증상, 원인, 해결 방법을 Phase 1–3로 분류하여 기록한 통합
+          트러블슈팅 문서입니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">발생 일자</div>
+            <div class="stat-val">2026년 3월 30일</div>
+          </div>
+          <div>
+            <div class="stat-label">이슈 건수</div>
+            <div class="stat-val">총 9건</div>
+          </div>
+          <div>
+            <div class="stat-label">관련 파일</div>
+            <div class="stat-val">index.jsx · [id].jsx · Supabase RLS</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s0"><span class="toc-num">§</span>이슈 전체 목록</a>
+            </li>
+            <li>
+              <a href="#s1"
+                ><span class="toc-num">01</span>1 — Supabase 기본 연동</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s1-1">#01 미로그인 무한 로딩</a></li>
+                <li><a href="#s1-2">#02 .single() 에러</a></li>
+                <li><a href="#s1-3">#03 fetchRooms(null)</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s2"
+                ><span class="toc-num">02</span>2 — 초대 코드 · 멤버 관리</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s2-1">#04 초대 코드 오류</a></li>
+                <li><a href="#s2-2">#05 이메일 초대 오류</a></li>
+                <li><a href="#s2-3">#06 탭 전환 렌더링 오류</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s3"
+                ><span class="toc-num">03</span>3 — 채팅 다중 초대</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s3-2">#7 채팅방 무한 로딩</a></li>
+                <li><a href="#s3-3">#8 profiles 조인</a></li>
+                <li><a href="#s3-4">#9 RLS 무한 재귀 오류</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── § 이슈 전체 목록 ── -->
+        <section class="section visible" id="s0">
+          <div class="sec-eyebrow">Issue Index</div>
+          <h2 class="sec-heading">이슈 전체 목록</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>이슈 제목</th>
+                <th>Phase</th>
+                <th>관련 파일</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-red">#01</td>
+                <td class="txt-muted">미로그인 상태에서 무한 로딩</td>
+                <td class="txt-muted">Phase 1</td>
+                <td><code>index.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#02</td>
+                <td class="txt-muted">프로젝트 조회 시 .single() 에러</td>
+                <td class="txt-muted">Phase 1</td>
+                <td><code>index.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#03</td>
+                <td class="txt-muted">fetchRooms(null) 호출 후 무한 로딩</td>
+                <td class="txt-muted">Phase 1</td>
+                <td><code>index.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#04</td>
+                <td class="txt-muted">
+                  채팅방 생성 시 프로젝트 정보 없음 오류
+                </td>
+                <td class="txt-muted">Phase 1</td>
+                <td><code>index.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#05</td>
+                <td class="txt-muted">AIAssistantEntry 렌더링 크래시</td>
+                <td class="txt-muted">Phase 1</td>
+                <td><code>index.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#06</td>
+                <td class="txt-muted">
+                  채팅 목록 클릭 시 잘못된 화면으로 이동
+                </td>
+                <td class="txt-muted">Phase 1</td>
+                <td><code>index.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#07</td>
+                <td class="txt-muted">
+                  초대 코드 입력 시 유효하지 않은 코드 오류
+                </td>
+                <td class="txt-muted">Phase 2</td>
+                <td>Supabase RLS</td>
+              </tr>
+              <tr>
+                <td class="txt-red">#08</td>
+                <td class="txt-muted">
+                  이메일 초대 시 해당 이메일이 없다 오류
+                </td>
+                <td class="txt-muted">Phase 2</td>
+                <td><code>[id].jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#09</td>
+                <td class="txt-muted">
+                  헤더 점 3개 버튼 클릭 시 아무 동작 없음
+                </td>
+                <td class="txt-muted">Phase 2</td>
+                <td><code>[id].jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#10</td>
+                <td class="txt-muted">초대 모달 탭 전환 렌더링 오류</td>
+                <td class="txt-muted">Phase 2</td>
+                <td><code>[id].jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#11</td>
+                <td class="txt-muted">채팅방 내부 화면 무한 로딩</td>
+                <td class="txt-muted">Phase 3</td>
+                <td><code>[id].jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#12</td>
+                <td class="txt-muted">새 채팅방 생성 후 무한 로딩</td>
+                <td class="txt-muted">Phase 3</td>
+                <td><code>index.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#13</td>
+                <td class="txt-muted">profiles 조인 관계 없음 오류</td>
+                <td class="txt-muted">Phase 3</td>
+                <td><code>[id].jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#14</td>
+                <td class="txt-muted">RLS 정책 무한 재귀 오류</td>
+                <td class="txt-muted">Phase 3</td>
+                <td>Supabase RLS</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 01. Phase 1 ── -->
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">Phase 01 — Supabase Basic Integration</div>
+          <h2 class="sec-heading">Phase 1 — Supabase 기본 연동</h2>
+
+          <!-- #01 -->
+          <h3 class="sub-heading" id="s1-1">
+            #01 &nbsp; 미로그인 상태에서 무한 로딩
+          </h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">index.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">증상</div>
+                  <div class="white-value">
+                    로그인하지 않은 상태로 채팅 탭 진입 시 스피너가 멈추지 않고
+                    화면이 계속 로딩 중으로 표시됨.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>supabase.auth.getUser()</code>가 <code>null</code>을
+                    반환해도 <code>loading</code> 상태를 <code>false</code>로
+                    전환하는 코드가 없어 <code>loading</code>이
+                    <code>true</code>인 채로 멈춤.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>useFocusEffect</code> 내에서 <code>user</code>가
+                    <code>null</code>이면 즉시
+                    <code>setIsAuthenticated(false)</code>와
+                    <code>setLoading(false)</code>를 호출하고 데이터 fetch를
+                    건너뜀. 인증 상태를 <code>null</code>(확인 중) /
+                    <code>true</code> / <code>false</code> 세 단계로 분리.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const load = async () => {</span>
+<span class="c-line">  const pid = await fetchProjectId();</span>
+<span class="c-line">  await fetchRooms(pid);</span>
+<span class="c-line">};</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const load = async () => {</span>
+<span class="c-line">  const { data: { user } } = await supabase.auth.getUser();</span>
+<span class="c-line">  if (!user) {</span>
+<span class="c-line">    setIsAuthenticated(false);</span>
+<span class="c-line">    setLoading(false);  <span class="c-comment">// 반드시 호출</span></span>
+<span class="c-line">    return;</span>
+<span class="c-line">  }</span>
+<span class="c-line">  setIsAuthenticated(true);</span>
+<span class="c-line">  <span class="c-comment">// ...이후 fetch 로직</span></span>
+<span class="c-line">};</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              💡 인증이 필요한 화면은 <code>getUser()</code> 결과를 먼저
+              확인하고, <code>null</code> 케이스에서 반드시
+              <code>setLoading(false)</code>를 호출해야 합니다.
+            </p>
+          </div>
+
+          <!-- #02 -->
+          <h3 class="sub-heading" id="s1-2">
+            #02 &nbsp; 프로젝트 조회 시 .single() 에러
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>ERROR: Cannot coerce the result to a single JSON object</p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">index.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    Supabase <code>.single()</code>은 결과가 정확히 1건일 때만
+                    성공하며, 0건이면 에러를 throw함. 신규 유저는
+                    <code>projects</code> 테이블에 데이터가 없어 항상 0건이
+                    반환됨.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>.single()</code>을 <code>.maybeSingle()</code>로 변경.
+                    결과가 0건일 때 에러 대신 <code>null</code>을 반환하여 신규
+                    유저도 정상 처리됨.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">.limit(1).single();</span>
+<span class="c-comment">// 0건이면 에러 throw</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">.limit(1).maybeSingle();</span>
+<span class="c-comment">// 0건이면 null 반환 (에러 없음)</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #03 -->
+          <h3 class="sub-heading" id="s1-3">
+            #03 &nbsp; fetchRooms(null) 호출 후 무한 로딩
+          </h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">index.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">증상</div>
+                  <div class="white-value">
+                    프로젝트가 없는 유저로 로그인 시 채팅 목록 화면이 계속 로딩
+                    중으로 표시됨.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>fetchProjectId()</code>가 <code>null</code>을 반환하면
+                    <code>fetchRooms(null)</code>이 호출됨. <code>pid</code>가
+                    <code>null</code>이면 <code>return</code>만 하고
+                    <code>setLoading(false)</code>를 호출하지 않아
+                    <code>loading</code>이 <code>true</code>인 채로 유지됨.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>fetchRooms</code>에서 <code>pid</code>가
+                    <code>null</code>일 경우 <code>setLoading(false)</code>를
+                    먼저 호출한 후 <code>return</code> 처리.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const fetchRooms = async (pid) => {</span>
+<span class="c-line">  if (!pid) return;  <span class="c-comment">// setLoading(false) 누락!</span></span>
+<span class="c-line">  <span class="c-comment">// ...</span></span>
+<span class="c-line">};</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const fetchRooms = async (pid) => {</span>
+<span class="c-line">  if (!pid) {</span>
+<span class="c-line">    setLoading(false);  <span class="c-comment">// 반드시 호출</span></span>
+<span class="c-line">    return;</span>
+<span class="c-line">  }</span>
+<span class="c-line">  <span class="c-comment">// ...</span></span>
+<span class="c-line">};</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 02. Phase 2 ── -->
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">
+            Phase 02 — Invite Code &amp; Member Management
+          </div>
+          <h2 class="sec-heading">2 — 초대 코드 · 멤버 관리</h2>
+
+          <!-- #06 -->
+          <h3 class="sub-heading" id="s2-1">
+            #07 &nbsp; 초대 코드 입력 시 '유효하지 않은 초대 코드' 오류
+          </h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 위치</span>
+                <span class="white-title">Supabase RLS</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">증상</div>
+                  <div class="white-value">
+                    올바른 초대 코드를 입력해도 '유효하지 않은 초대 코드입니다'
+                    Alert가 표시되며 채팅방 참여 실패.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>chats</code> 테이블의 RLS 정책이 기존 멤버이거나
+                    프로젝트 소유자인 경우만 SELECT를 허용함. 아직 멤버가 아닌
+                    상태에서 <code>invite_code</code>로 조회하면 RLS에 막혀
+                    0건이 반환됨.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    Supabase SQL Editor에서
+                    <code>invite_code IS NOT NULL</code> 조건의 SELECT 정책을
+                    추가하여 초대 코드가 있는 채팅방은 누구나 조회 가능하도록
+                    변경.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment">-- chats: 초대 코드로 채팅방 조회 정책 추가</span>
+<span class="c-line">CREATE POLICY <span class="c-str">"초대 코드로 채팅방 조회"</span></span>
+<span class="c-line">  ON chats FOR SELECT</span>
+<span class="c-line">  USING (invite_code IS NOT NULL);</span></pre>
+          </div>
+
+          <!-- #08 -->
+          <h3 class="sub-heading" id="s2-2">
+            #08 &nbsp; 이메일 초대 시 '해당 이메일이 없다' 오류
+          </h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">[id].jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">증상</div>
+                  <div class="white-value">
+                    멤버 초대 화면에서 이메일을 입력하고 초대 보내기를 누르면
+                    '해당 이메일로 가입된 사용자를 찾을 수 없습니다' 오류 발생.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>profiles</code> 테이블 구조 확인 결과
+                    <code
+                      >id, role, planner_id, couple_id, expo_push_token</code
+                    >
+                    컬럼만 존재하며 <code>email</code> 컬럼이 없음. 이메일로
+                    유저를 조회하는 것이 구조적으로 불가능.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    이메일 초대 방식을 완전히 제거하고 초대 코드 단일 방식으로
+                    전환. <code>handleInviteByEmail</code>,
+                    <code>inviteTab</code>, <code>inviteEmail</code>,
+                    <code>inviting</code> state, 이메일 탭 UI를 모두 제거.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              💡 이메일 초대 기능을 다시 추가하려면
+              <code>profiles</code> 테이블에 <code>email</code> 컬럼 추가 및
+              <code>auth.users</code> 트리거 설정이 선행되어야 합니다.
+            </p>
+          </div>
+
+          <!-- #9 -->
+          <h3 class="sub-heading" id="s2-4">
+            #10 &nbsp; 초대 모달 탭 전환 관련 렌더링 오류
+          </h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">[id].jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">증상</div>
+                  <div class="white-value">
+                    이메일/코드 탭 전환 UI가 포함된 초대 모달에서 탭 전환 시
+                    렌더링 불안정. #05 AIAssistantEntry 오류와 동일한 패턴.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    이메일 탭과 코드 탭을 조건부 렌더링으로 처리하던 구조가
+                    state 변화에 따라 컴포넌트 트리가 변경되어 React 렌더링
+                    최적화와 충돌 가능성 존재.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    이메일 탭 제거와 동시에 탭 전환 UI 전체를 삭제하고 단일 초대
+                    코드 UI로 단순화. 탭 관련 state(<code>inviteTab</code>)도
+                    함께 제거.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// 탭 전환 구조</span>
+<span class="c-line">&lt;View style={styles.tabRow}&gt;</span>
+<span class="c-line">  &lt;TouchableOpacity onPress={() => setInviteTab(<span class="c-str">'email'</span>)}&gt;이메일로 초대&lt;/TouchableOpacity&gt;</span>
+<span class="c-line">  &lt;TouchableOpacity onPress={() => setInviteTab(<span class="c-str">'code'</span>)}&gt;초대 코드&lt;/TouchableOpacity&gt;</span>
+<span class="c-line">&lt;/View&gt;</span>
+<span class="c-line">{inviteTab === <span class="c-str">'email'</span> && &lt;EmailTab /&gt;}</span>
+<span class="c-line">{inviteTab === <span class="c-str">'code'</span>  && &lt;CodeTab /&gt;}</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// 단일 초대 코드 UI</span>
+<span class="c-line">&lt;View style={styles.codeSection}&gt;</span>
+<span class="c-line">  <span class="c-comment">// 초대 코드 생성 / 공유 UI만 표시</span></span>
+<span class="c-line">&lt;/View&gt;</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 03. Phase 3 ── -->
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">Phase 03 — Multi-invite Feature</div>
+          <h2 class="sec-heading">Phase 3 — 채팅 다중 초대 기능 개발</h2>
+
+          <!-- #12 -->
+          <h3 class="sub-heading" id="s3-2">
+            #7 &nbsp; 새 채팅방 생성 후 무한 로딩
+          </h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">index.jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">증상</div>
+                  <div class="white-value">
+                    채팅방 생성 모달에서 "만들기" 버튼을 눌렀을 때 로딩 스피너가
+                    멈추지 않고, 모달이 닫히지 않음.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>handleCreateRoom</code> 함수 내에서 각 에러 분기마다
+                    <code>setCreating(false)</code>를 수동으로 호출하는
+                    구조였으나, <code>chat_members</code> INSERT 이후 예외가
+                    발생하는 경로에서 <code>setCreating(false)</code>가 누락되어
+                    버튼이 영구 비활성화 상태 유지.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>handleCreateRoom</code> 전체를
+                    <code>try-catch-finally</code>로 감싸 성공·실패 모든 경우에
+                    <code>finally</code>에서
+                    <code>setCreating(false)</code> 보장.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// 분기마다 수동 호출 — 누락 위험</span>
+<span class="c-line">setCreating(true);</span>
+<span class="c-line">if (error1) { setCreating(false); return; }</span>
+<span class="c-line">if (error2) { setCreating(false); return; }</span>
+<span class="c-comment">// 중간 예외 발생 시 setCreating(false) 미호출</span>
+<span class="c-line">setCreating(false);</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// try-catch-finally 패턴</span>
+<span class="c-line">setCreating(true);</span>
+<span class="c-line">try {</span>
+<span class="c-line">  <span class="c-comment">// ... 모든 로직</span></span>
+<span class="c-line">} catch (e) {</span>
+<span class="c-line">  Alert.alert(<span class="c-str">'오류'</span>, <span class="c-str">'채팅방 생성 중 문제가 발생했습니다.'</span>);</span>
+<span class="c-line">} finally {</span>
+<span class="c-line">  setCreating(false);  <span class="c-comment">// ✅ 반드시 실행됨</span></span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #13 -->
+          <h3 class="sub-heading" id="s3-3">
+            #8 &nbsp; Supabase 조인 — profiles 관계 없음 오류
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              Could not find a relationship between 'chat_members' and
+              'profiles' in the schema cache
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 파일</span>
+                <span class="white-title">[id].jsx</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    Supabase의 테이블 조인
+                    문법(<code>tableName(columns)</code>)은 두 테이블 간에
+                    Foreign Key가 정의되어 있어야 동작함.
+                    <code>chat_members.user_id → profiles.id</code> 간 외래키가
+                    DB에 없어 스키마 캐시에서 관계를 찾지 못함.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">방법 A (즉시 적용)</div>
+                  <div class="white-value">
+                    분리 조회 후 JS 병합 — 추가 DB 설정 불필요. (#11과 동일한
+                    해결 방법)
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">방법 B (근본 해결)</div>
+                  <div class="white-value">
+                    Supabase에서 외래키 추가 후 조인 문법 사용 가능.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment">-- 방법 B — 외래키 추가 SQL</span>
+<span class="c-line">ALTER TABLE chat_members</span>
+<span class="c-line">  ADD CONSTRAINT chat_members_user_id_fkey</span>
+<span class="c-line">  FOREIGN KEY (user_id) REFERENCES profiles(id) ON DELETE CASCADE;</span>
+
+<span class="c-comment">-- 적용 후 아래 조인 문법 사용 가능</span>
+<span class="c-line"><span class="c-comment">-- .select('user_id, role, profiles(display_name, email)')</span></span></pre>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              💡 이번 작업에서는 방법 A로 해결. 외래키 없이도 동작하므로 추가 DB
+              마이그레이션 없이 즉시 배포 가능.
+            </p>
+          </div>
+
+          <!-- #14 -->
+          <h3 class="sub-heading" id="s3-4">
+            #9 &nbsp; RLS 정책 무한 재귀 오류
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              infinite recursion detected in policy for relation "chat_members"
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 위치</span>
+                <span class="white-title">Supabase RLS</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>chat_members</code> 테이블의 SELECT RLS 정책 내부에서
+                    다시 <code>chat_members</code>를 SELECT하는 구조. "해당
+                    chat_id에 내가 멤버인지" 확인하기 위해 같은 테이블을
+                    서브쿼리로 참조하면 무한 재귀 발생.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    RLS 정책을 <code>auth.uid() = user_id</code> 단순 비교
+                    방식으로 교체. 자기 자신을 참조하지 않으므로 재귀 없음.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">기존 정책</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">-- 무한 재귀 발생</span>
+<span class="c-line">CREATE POLICY <span class="c-str">"members can view"</span> ON chat_members</span>
+<span class="c-line">  FOR SELECT USING (</span>
+<span class="c-line">    auth.uid() IN (</span>
+<span class="c-line">      SELECT user_id FROM chat_members cm  <span class="c-comment">-- ← 자기 자신 참조!</span></span>
+<span class="c-line">      WHERE cm.chat_id = chat_members.chat_id</span>
+<span class="c-line">    )</span>
+<span class="c-line">  );</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정된 정책</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">-- 기존 정책 모두 삭제</span>
+<span class="c-line">DROP POLICY IF EXISTS <span class="c-str">"members can view"</span>    ON chat_members;</span>
+<span class="c-line">DROP POLICY IF EXISTS <span class="c-str">"owner can insert"</span>   ON chat_members;</span>
+<span class="c-line">DROP POLICY IF EXISTS <span class="c-str">"members can insert"</span> ON chat_members;</span>
+<span class="c-line">DROP POLICY IF EXISTS <span class="c-str">"owner can delete"</span>   ON chat_members;</span>
+
+<span class="c-comment">-- 단순 비교 — 재귀 없음</span>
+<span class="c-line">CREATE POLICY <span class="c-str">"members can view"</span> ON chat_members</span>
+<span class="c-line">  FOR SELECT USING (auth.uid() = user_id);</span>
+
+<span class="c-line">CREATE POLICY <span class="c-str">"members can insert"</span> ON chat_members</span>
+<span class="c-line">  FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);</span>
+
+<span class="c-line">CREATE POLICY <span class="c-str">"members can delete"</span> ON chat_members</span>
+<span class="c-line">  FOR DELETE USING (auth.uid() = user_id);</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              💡 Supabase RLS에서 동일 테이블을 참조하는 정책은 무한 재귀를
+              유발합니다. 같은 테이블의 다른 행을 확인해야 할 경우
+              <code>SECURITY DEFINER</code> 함수를 사용하거나 정책 설계를
+              단순화하세요.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── 04. 재발 방지 체크리스트 ── -->
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">04 — Prevention Checklist</div>
+          <h2 class="sec-heading">재발 방지 체크리스트</h2>
+
+          <h3 class="sub-heading">Supabase</h3>
+          <ul class="bullet-list">
+            <li>
+              단건 조회 시 결과가 0건일 수 있는 경우 <code>.single()</code> 대신
+              <code>.maybeSingle()</code> 사용
+            </li>
+            <li>
+              RLS 정책이 의도한 대로 동작하는지 SQL Editor에서 정책 목록을 먼저
+              확인
+            </li>
+            <li>
+              미인증 상태에서도 접근이 필요한 조회(초대 코드 등)는 별도 SELECT
+              정책 추가
+            </li>
+            <li>
+              insert 시 state 변수 대신 최신 값을 담은 로컬 변수를 사용하여
+              타이밍 이슈 방지
+            </li>
+            <li>Supabase 조인 전 두 테이블 간 Foreign Key 설정 여부 확인</li>
+            <li>
+              RLS 정책 작성 시 동일 테이블 서브쿼리 사용 금지 — 무한 재귀 유발
+            </li>
+            <li>
+              새 테이블 추가 시 RLS 활성화(<code>ENABLE ROW LEVEL SECURITY</code
+              >) 확인
+            </li>
+            <li>
+              Supabase 쿼리 에러는 반드시 <code>error</code> 변수로 받아
+              <code>console.error</code> 출력
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">React Native</h3>
+          <ul class="bullet-list">
+            <li>
+              비동기 데이터 로드 함수는 모든 분기(null, 에러, 성공)에서
+              <code>setLoading(false)</code>를 반드시 호출
+            </li>
+            <li>
+              async 함수에서 로딩 상태를 다룰 때는
+              <code>try-catch-finally</code> 패턴 사용
+            </li>
+            <li>
+              인증이 필요한 화면은 <code>getUser()</code> 결과를 먼저 확인하고
+              <code>null</code> 케이스를 명시적으로 처리
+            </li>
+            <li>
+              컴포넌트는 렌더 함수 내부에 선언하지 말 것 — 파일 최상단 또는 별도
+              파일로 분리
+            </li>
+            <li>
+              버튼이 보이지만 동작하지 않으면 <code>onPress</code> 핸들러 연결
+              여부를 먼저 확인
+            </li>
+            <li>
+              <code>chat_members</code> 테이블 생성 후 기존 채팅방 데이터
+              마이그레이션 필수
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">Expo Router</h3>
+          <ul class="bullet-list">
+            <li>
+              <code>router.push</code> 경로는 실제 <code>app/</code> 디렉터리
+              구조와 반드시 일치해야 함
+            </li>
+            <li>
+              경로 오류 디버깅 시 에러 스택의 파일 경로를 확인하여 실제 위치
+              파악
+            </li>
+          </ul>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+    <script src="../../script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1426 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 2026.03.30 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.03.30 Dev Document</span>
+          <span class="badge badge-ver">Day 08</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">개발 작업 문서</h1>
+        <p class="post-sub">
+          2026년 3월 30일 — 오류 해결 · 채팅 다중 초대 · Supabase 연동
+        </p>
+        <p class="post-desc">
+          Expo Router 라우팅 오류 수정 및 폴더 구조 개선,
+          <code>chat_members</code> 테이블 추가와 초대 코드 기반 채팅 다중 참여
+          기능 구현, RLS 보안 정책 설계까지 3개 Phase의 작업 내용을 기록합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 3월 30일</div>
+          </div>
+          <div>
+            <div class="stat-label">기술 스택</div>
+            <div class="stat-val">Expo Router · Supabase · React Native</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s0"><span class="toc-num">§</span>작업 개요</a>
+            </li>
+            <li>
+              <a href="#s1"><span class="toc-num">01</span>오류 해결 내역</a>
+              <!-- <ul class="toc-sub-list">
+                <li><a href="#s1-1">모듈 경로 오류</a></li>
+                <li><a href="#s1-2">중복 Screen 오류</a></li>
+                <li><a href="#s1-3">탭바 2중 렌더링</a></li>
+                <li><a href="#s1-4">Layout children 경고</a></li>
+              </ul> -->
+            </li>
+            <li>
+              <a href="#s2"><span class="toc-num">02</span>폴더 구조 개선</a>
+            </li>
+            <li>
+              <a href="#s3"><span class="toc-num">03</span>Git 작업 내역</a>
+            </li>
+            <li>
+              <a href="#s4"><span class="toc-num">04</span>DB 스키마</a>
+            </li>
+            <li>
+              <a href="#s5"><span class="toc-num">05</span>RLS 보안 정책</a>
+              <!-- <ul class="toc-sub-list">
+                <li><a href="#s5-1">chats 테이블</a></li>
+                <li><a href="#s5-2">chat_members 테이블</a></li>
+              </ul> -->
+            </li>
+            <li>
+              <a href="#s6"><span class="toc-num">06</span>채팅 기능 상세</a>
+              <!-- <ul class="toc-sub-list">
+                <li><a href="#s6-1">초대 코드 기반 참여</a></li>
+                <li><a href="#s6-2">멤버 초대 및 관리</a></li>
+                <li><a href="#s6-3">채팅방 생성 흐름</a></li>
+              </ul> -->
+            </li>
+            <li>
+              <a href="#s7"><span class="toc-num">07</span>이슈 및 해결 내역</a>
+            </li>
+            <li>
+              <a href="#s8"><span class="toc-num">08</span>코드 변경 요약</a>
+            </li>
+            <li>
+              <a href="#s9"><span class="toc-num">09</span>SQL 실행 내역</a>
+            </li>
+            <li>
+              <a href="#s10"><span class="toc-num">10</span>향후 권장 사항</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── § 작업 개요 ── -->
+        <section class="section visible" id="s0">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">작업 개요</h2>
+          <p>
+            Mongle-app(Expo Router 기반 React Native 웨딩 플래닝 앱) 개발
+            과정에서 수행한 세 가지 주요 작업을 통합 정리한 개발 작업
+            문서입니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">Phase A</span>
+                <span class="white-column-layer-tech">오류 해결</span>
+              </div>
+              <div class="white-column-content">
+                <p>모듈 경로, 중복 스크린, 탭바 렌더링 등 라우팅 문제 수정</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">Phase B</span>
+                <span class="white-column-layer-tech">채팅 다중 초대</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  <code>chat_members</code> 테이블 추가, 초대 코드 · 멤버 관리
+                  구현
+                </p>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">Phase C</span>
+                <span class="white-column-layer-tech">Supabase 연동</span>
+              </div>
+              <div class="white-column-content">
+                <p>RLS 정책, 마이그레이션, 트러블슈팅 내역 정리</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 01. 오류 해결 내역 ── -->
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">01 — Bug Fixes</div>
+          <h2 class="sec-heading">오류 해결 내역</h2>
+
+          <!-- 2-1 -->
+          <h3 class="sub-heading" id="s1-1">
+            1-1. 모듈 경로 오류 (Unable to resolve)
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              Unable to resolve "../../../hooks/useAi" from
+              "app\(couple)\(tabs)\chat\ai.jsx"
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">발생 위치</span>
+                <span class="white-title"
+                  >ai.jsx, dashboard.jsx 등 다수 파일</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    Expo Router 중첩 라우팅 구조에서 상대경로 계산 오류.
+                    <code>../../../</code>는 <code>app/</code>까지만 이동하여
+                    프로젝트 루트에 도달하지 못함.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>@/</code> 절대경로로 통일 (근본 해결)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">import { useAi } from <span class="c-str">'../../../hooks/useAi'</span></span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">import { useAi } from <span class="c-str">'@/hooks/useAi'</span></span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-2 -->
+          <h3 class="sub-heading" id="s1-2">
+            1-2. 중복 Screen 오류 (Duplicate screen named "chat")
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              Error: A navigator cannot contain multiple Screen components with
+              the same name (found duplicate screen named "chat")
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >동일한 "chat" 스크린 경로 중복 존재</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>app/(planner)/(tabs)/chat/</code>와
+                    <code>app/(planner)/chat/</code>가 동시에 존재하여 Expo
+                    Router가 동일한 "chat" 스크린으로 인식, 충돌 발생.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>app/(planner)/chat/</code> 폴더 전체 삭제.
+                    <code>app/(planner)/(tabs)/chat/</code>만 유지.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-3 -->
+          <h3 class="sub-heading" id="s1-3">
+            1-3. 탭바 2중 렌더링 및 불필요한 탭 노출
+          </h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >Screen 선언명과 실제 파일명 불일치 + 숨김 처리 누락</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">증상</div>
+                  <div class="white-value">
+                    하단 탭 내비게이션이 2개 겹쳐서 표시됨. <code>index</code>,
+                    <code>docs</code>, <code>budget</code>, <code>(tabs)</code>,
+                    <code>customer</code> 등 숨겨야 할 탭이 노출됨.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    존재하지 않는 Screen 선언 제거 후, 탭바에 노출되면 안 되는
+                    실제 파일에 <code>href: null</code> 추가.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// (planner)/_layout.jsx — 탭바 숨김 처리 추가</span>
+<span class="c-line">&lt;Tabs.Screen name=<span class="c-str">"budget"</span>        options={{ href: null }} /&gt;</span>
+<span class="c-line">&lt;Tabs.Screen name=<span class="c-str">"docs"</span>          options={{ href: null }} /&gt;</span>
+<span class="c-line">&lt;Tabs.Screen name=<span class="c-str">"index"</span>         options={{ href: null }} /&gt;</span>
+<span class="c-line">&lt;Tabs.Screen name=<span class="c-str">"customer/[id]"</span> options={{ href: null }} /&gt;</span></pre>
+          </div>
+
+          <!-- 2-4 -->
+          <h3 class="sub-heading" id="s1-4">
+            1-4. Layout children 경고 (No route named "X" exists)
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              [Layout children]: No route named "customer" exists in nested
+              children: [..., "customer/[id]"]
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title">폴더명과 Screen name 불일치</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>_layout.jsx</code>에서 <code>name="customer"</code>로
+                    선언했으나 실제 파일은 <code>customer/[id].jsx</code>만
+                    존재. <code>customer/index.jsx</code> 파일 없음.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">&lt;Tabs.Screen name=<span class="c-str">"customer"</span>      options={{ href: null }} /&gt;</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">&lt;Tabs.Screen name=<span class="c-str">"customer/[id]"</span> options={{ href: null }} /&gt;</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 02. 폴더 구조 개선 ── -->
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">02 — Folder Structure</div>
+          <h2 class="sec-heading">폴더 구조 개선</h2>
+
+          <h3 class="sub-heading">vendors 폴더 접근 문제</h3>
+          <p>
+            <code>(tabs)</code> 폴더 신규 생성 후 바깥의
+            <code>vendors</code> 폴더에 접근할 수 없어 업체 리스트 클릭 시 업체
+            정보 화면으로 이동되지 않는 문제가 발생했습니다.
+            <code>vendors/</code> 폴더를 <code>(tabs)/</code> 안으로 이동하고
+            <code>_layout.jsx</code>에 <code>vendors/[id]</code> 숨김 처리를
+            추가하여 해결했습니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">변경 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="tree-block">
+                  <pre><span class="t-ink">app/(planner)/</span>
+<span class="t-line">├── (tabs)/</span>
+<span class="t-line">│   └── ...</span>
+<span class="t-line">└── vendors/</span>
+<span class="t-line">    └── [id].jsx</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">변경 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="tree-block">
+                  <pre><span class="t-ink">app/(planner)/</span>
+<span class="t-line">├── (tabs)/</span>
+<span class="t-line">│   ├── </span><span class="t-key">vendors/</span>
+<span class="t-line">│   │   └── [id].jsx</span>
+<span class="t-line">│   └── ...</span>
+<span class="t-line">└── _layout.jsx</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 03. Git 작업 ── -->
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">03 — Git</div>
+          <h2 class="sec-heading">Git 작업 내역</h2>
+          <p>
+            로컬 변경사항과 원격 저장소 충돌 발생 시, 로컬 변경사항을 폐기하고
+            원격 코드를 Pull하는 방법입니다.
+          </p>
+
+          <div class="code-block">
+            <pre><span class="c-comment"># 로컬 변경사항 전부 폐기 후 원격 코드 pull</span>
+<span class="c-line">git reset --hard HEAD && git pull</span></pre>
+          </div>
+
+          <div class="highlight-box-red">
+            <p>
+              ⚠️ 이 명령어는 저장되지 않은 로컬 변경사항을 전부 삭제합니다. 실행
+              전 반드시 보존할 내용이 없는지 확인하세요.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── 04. DB 스키마 ── -->
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">04 — DB Schema</div>
+          <h2 class="sec-heading">DB 스키마</h2>
+          <p>
+            기존
+            <code>projects (user_id 1개) → chats → messages</code> 구조에서,
+            <code
+              >chats → chat_members (여러 user_id, 초대로 추가) → messages</code
+            >
+            구조로 변경되어 다중 사용자 채팅이 가능해졌습니다.
+          </p>
+
+          <h3 class="sub-heading">chats</h3>
+          <table class="normal-table">
+            <thead>
+              <tr>
+                <th>컬럼명</th>
+                <th>타입</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">
+                  id
+                  <span
+                    style="
+                      font-size: 0.68rem;
+                      background: rgba(200, 160, 80, 0.15);
+                      color: #8a6820;
+                      padding: 1px 5px;
+                      border-radius: 2px;
+                      font-weight: 600;
+                      margin-left: 4px;
+                    "
+                    >PK</span
+                  >
+                </td>
+                <td class="col-type">uuid</td>
+                <td class="col-desc">NOT NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">
+                  project_id
+                  <span
+                    style="
+                      font-size: 0.68rem;
+                      background: rgba(116, 155, 65, 0.15);
+                      color: var(--accent2);
+                      padding: 1px 5px;
+                      border-radius: 2px;
+                      font-weight: 600;
+                      margin-left: 4px;
+                    "
+                    >FK</span
+                  >
+                </td>
+                <td class="col-type">uuid</td>
+                <td class="col-desc">NOT NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">title</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">invite_code</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">UNIQUE — 신규 추가</td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamptz</td>
+                <td class="col-desc">now()</td>
+              </tr>
+              <tr>
+                <td class="col-name">updated_at</td>
+                <td class="col-type">timestamptz</td>
+                <td class="col-desc">now()</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">
+            chat_members
+            <span
+              style="
+                font-size: 0.72rem;
+                background: rgba(116, 155, 65, 0.12);
+                color: var(--accent2);
+                padding: 2px 7px;
+                border-radius: 2px;
+                font-weight: 600;
+                margin-left: 6px;
+              "
+              >신규 추가</span
+            >
+          </h3>
+          <table class="normal-table">
+            <thead>
+              <tr>
+                <th>컬럼명</th>
+                <th>타입</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">
+                  id
+                  <span
+                    style="
+                      font-size: 0.68rem;
+                      background: rgba(200, 160, 80, 0.15);
+                      color: #8a6820;
+                      padding: 1px 5px;
+                      border-radius: 2px;
+                      font-weight: 600;
+                      margin-left: 4px;
+                    "
+                    >PK</span
+                  >
+                </td>
+                <td class="col-type">uuid</td>
+                <td class="col-desc">NOT NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">
+                  chat_id
+                  <span
+                    style="
+                      font-size: 0.68rem;
+                      background: rgba(116, 155, 65, 0.15);
+                      color: var(--accent2);
+                      padding: 1px 5px;
+                      border-radius: 2px;
+                      font-weight: 600;
+                      margin-left: 4px;
+                    "
+                    >FK</span
+                  >
+                </td>
+                <td class="col-type">uuid</td>
+                <td class="col-desc">CASCADE</td>
+              </tr>
+              <tr>
+                <td class="col-name">
+                  user_id
+                  <span
+                    style="
+                      font-size: 0.68rem;
+                      background: rgba(116, 155, 65, 0.15);
+                      color: var(--accent2);
+                      padding: 1px 5px;
+                      border-radius: 2px;
+                      font-weight: 600;
+                      margin-left: 4px;
+                    "
+                    >FK</span
+                  >
+                </td>
+                <td class="col-type">uuid</td>
+                <td class="col-desc">CASCADE</td>
+              </tr>
+              <tr>
+                <td class="col-name">role</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">owner / member</td>
+              </tr>
+              <tr>
+                <td class="col-name">joined_at</td>
+                <td class="col-type">timestamptz</td>
+                <td class="col-desc">now()</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">messages</h3>
+          <table class="normal-table">
+            <thead>
+              <tr>
+                <th>컬럼명</th>
+                <th>타입</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">
+                  id
+                  <span
+                    style="
+                      font-size: 0.68rem;
+                      background: rgba(200, 160, 80, 0.15);
+                      color: #8a6820;
+                      padding: 1px 5px;
+                      border-radius: 2px;
+                      font-weight: 600;
+                      margin-left: 4px;
+                    "
+                    >PK</span
+                  >
+                </td>
+                <td class="col-type">uuid</td>
+                <td class="col-desc">NOT NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">
+                  chat_id
+                  <span
+                    style="
+                      font-size: 0.68rem;
+                      background: rgba(116, 155, 65, 0.15);
+                      color: var(--accent2);
+                      padding: 1px 5px;
+                      border-radius: 2px;
+                      font-weight: 600;
+                      margin-left: 4px;
+                    "
+                    >FK</span
+                  >
+                </td>
+                <td class="col-type">uuid</td>
+                <td class="col-desc">NOT NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">sender</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NOT NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">content</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NOT NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">created_at</td>
+                <td class="col-type">timestamptz</td>
+                <td class="col-desc">now()</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">profiles</h3>
+          <table class="normal-table">
+            <thead>
+              <tr>
+                <th>컬럼명</th>
+                <th>타입</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">
+                  id
+                  <span
+                    style="
+                      font-size: 0.68rem;
+                      background: rgba(200, 160, 80, 0.15);
+                      color: #8a6820;
+                      padding: 1px 5px;
+                      border-radius: 2px;
+                      font-weight: 600;
+                      margin-left: 4px;
+                    "
+                    >PK</span
+                  >
+                </td>
+                <td class="col-type">uuid</td>
+                <td class="col-desc">NOT NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">role</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">planner_id</td>
+                <td class="col-type">uuid</td>
+                <td class="col-desc">NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">couple_id</td>
+                <td class="col-type">uuid</td>
+                <td class="col-desc">NULL</td>
+              </tr>
+              <tr>
+                <td class="col-name">expo_push_token</td>
+                <td class="col-type">text</td>
+                <td class="col-desc">NULL</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 05. RLS 보안 정책 ── -->
+        <section class="section visible" id="s5">
+          <div class="sec-eyebrow">05 — RLS Policies</div>
+          <h2 class="sec-heading">RLS 보안 정책</h2>
+
+          <h3 class="sub-heading" id="s5-1">5-1. chats 테이블</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>정책명</th>
+                <th>명령</th>
+                <th>조건 (USING)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Users can manage own chats</td>
+                <td class="txt-accent">ALL</td>
+                <td class="txt-muted">
+                  <code
+                    >EXISTS (SELECT 1 FROM projects WHERE projects.id =
+                    chats.project_id AND projects.user_id = auth.uid())</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>members can view chats</td>
+                <td class="txt-accent">SELECT</td>
+                <td class="txt-muted">
+                  <code
+                    >auth.uid() IN (SELECT chat_members.user_id FROM
+                    chat_members WHERE chat_members.chat_id = chats.id)</code
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>초대 코드로 채팅방 조회</td>
+                <td class="txt-accent">SELECT</td>
+                <td class="txt-muted"><code>invite_code IS NOT NULL</code></td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            '초대 코드로 채팅방 조회' 정책을 추가하여 미가입 멤버도 초대 코드로
+            채팅방 조회가 가능하도록 수정했습니다.
+          </p>
+
+          <h3 class="sub-heading" id="s5-2">5-2. chat_members 테이블</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>정책명</th>
+                <th>명령</th>
+                <th>조건</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>멤버 조회</td>
+                <td class="txt-accent">SELECT</td>
+                <td class="txt-muted"><code>auth.uid() = user_id</code></td>
+              </tr>
+              <tr>
+                <td>본인만 멤버로 추가</td>
+                <td class="txt-accent">INSERT</td>
+                <td class="txt-muted"><code>auth.uid() = user_id</code></td>
+              </tr>
+              <tr>
+                <td>멤버 삭제</td>
+                <td class="txt-red">DELETE</td>
+                <td class="txt-muted"><code>auth.uid() = user_id</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box-red">
+            <p>
+              ⚠️ RLS 정책에서 <code>chat_members</code>를 다시 SELECT하는 구조는
+              <strong>무한 재귀(infinite recursion)</strong>를 유발합니다.
+              반드시 <code>auth.uid() = user_id</code> 방식으로 단순하게
+              작성해야 합니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── 06. 채팅 기능 상세 ── -->
+        <section class="section visible" id="s6">
+          <div class="sec-eyebrow">06 — Chat Feature</div>
+          <h2 class="sec-heading">채팅 기능 상세</h2>
+
+          <h3 class="sub-heading" id="s6-1">
+            6-1. 초대 코드 기반 채팅방 참여 (index.jsx)
+          </h3>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">코드로 입장</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>FAB 위에 열쇠 아이콘 버튼(<code>joinBtn</code>) 추가</li>
+                  <li>
+                    초대 코드 입력 모달에서 코드 입력 →
+                    <code>chats</code> 테이블에서
+                    <code>invite_code</code> 일치하는 방 조회
+                  </li>
+                  <li>
+                    이미 참여 중인 경우 중복 없이 해당 채팅방으로 바로 이동
+                  </li>
+                  <li>
+                    신규 참여 시 <code>chat_members</code>에
+                    <code>role: 'member'</code>로 insert
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">초대 코드 보기</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>채팅방 롱프레스 → '초대 코드 보기' 메뉴 선택</li>
+                  <li>
+                    <code>chats</code> 테이블에서 <code>invite_code</code> 조회
+                    후 큰 글씨로 모달 표시
+                  </li>
+                  <li>클립보드 복사 버튼(<code>expo-clipboard</code>) 제공</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="s6-2">
+            6-2. 멤버 초대 및 관리 ([id].jsx)
+          </h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">헤더 점 3개 메뉴</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    방치되어 있던 <code>menuBtn</code>에
+                    <code>setMenuVisible(true)</code> 연결. 메뉴 시트: 채팅방
+                    제목, 멤버 수, 멤버 목록, 멤버 초대 버튼, 닫기 버튼 표시.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">초대 코드 생성 및 공유</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <ul class="bullet-list">
+                    <li>
+                      '코드 생성' 버튼: 6자리 랜덤 코드 생성 후
+                      <code>chats.invite_code</code> 업데이트
+                    </li>
+                    <li>
+                      '코드 재생성' 버튼: 기존 코드 무효화 후 새 코드로 교체
+                    </li>
+                    <li>
+                      '공유' 버튼: <code>Share.share()</code>로 OS 기본 공유
+                      시트 호출
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">멤버 강퇴</span>
+                <span class="white-title">방장 전용</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>isOwner</code>가 <code>true</code>인 경우에만 멤버
+                    행에 강퇴 버튼 표시. 강퇴 시 <code>chat_members</code>에서
+                    해당 <code>user_id</code> 삭제 + 시스템 메시지 전송.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="s6-3">
+            6-3. 채팅방 생성 흐름 개선 (index.jsx)
+          </h3>
+          <ul class="bullet-list">
+            <li>
+              생성자를 <code>chat_members</code>에 <code>role: 'owner'</code>로
+              자동 등록
+            </li>
+            <li>
+              <code>project_id</code> 없는 신규 유저는 '내 웨딩 플랜' 기본
+              프로젝트 자동 생성
+            </li>
+            <li>
+              insert 시 state 변수 <code>projectId</code> 대신 로컬 변수
+              <code>pid</code> 사용으로 타이밍 버그 수정
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── 07. 이슈 및 해결 내역 ── -->
+        <section class="section visible" id="s7">
+          <div class="sec-eyebrow">07 — Issues</div>
+          <h2 class="sec-heading">이슈 및 해결 내역</h2>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Issue 01</span>
+                <span class="white-title"
+                  >초대 코드 입력 시 '유효하지 않은 초대 코드' 오류</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    chats RLS가 기존 멤버/소유자만 SELECT 허용하여 미가입자의
+                    <code>invite_code</code> 조회가 0건 반환됨.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>invite_code IS NOT NULL</code> 조건의 SELECT 정책
+                    추가.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Issue 02</span>
+                <span class="white-title"
+                  >이메일 초대 시 '해당 이메일이 없다' 오류</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    profiles 테이블에 email 컬럼 없어 이메일로 유저 조회 불가.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    이메일 초대 방식 제거, 초대 코드 방식으로 전환.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Issue 03</span>
+                <span class="white-title"
+                  >헤더 점 3개 버튼 클릭 시 아무 동작 없음</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    [id].jsx <code>menuBtn</code>에 onPress 핸들러 미연결.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>onPress={() => setMenuVisible(true)}</code> 연결.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Issue 04</span>
+                <span class="white-title">채팅방 목록/내부 화면 무한 로딩</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>try-catch-finally</code> 미적용으로 에러 시
+                    <code>setLoading(false)</code> 미호출.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    모든 비동기 함수에 <code>finally</code> 블록 추가.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Issue 05</span>
+                <span class="white-title"
+                  >chat_members와 profiles 조인 오류</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    Supabase 조인은 외래키 관계 필요.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">분리 조회 후 JS에서 병합 처리.</div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Issue 06</span>
+                <span class="white-title">RLS 무한 재귀 오류</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    정책에서 <code>chat_members</code>를 재귀 참조.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>auth.uid() = user_id</code> 단순 비교 방식으로 교체.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 08. 코드 변경 요약 ── -->
+        <section class="section visible" id="s8">
+          <div class="sec-eyebrow">08 — Changelog</div>
+          <h2 class="sec-heading">코드 변경 요약</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파일</th>
+                <th>변경 위치</th>
+                <th>변경 내용</th>
+                <th>분류</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>index.jsx</td>
+                <td class="txt-muted">handleCreateRoom()</td>
+                <td class="txt-muted">
+                  생성자를 chat_members에 owner로 자동 등록
+                </td>
+                <td class="txt-accent">개선</td>
+              </tr>
+              <tr>
+                <td>index.jsx</td>
+                <td class="txt-muted">handleJoinByCode()</td>
+                <td class="txt-muted">
+                  초대 코드로 채팅방 조회 후 chat_members insert
+                </td>
+                <td class="txt-accent">신규</td>
+              </tr>
+              <tr>
+                <td>index.jsx</td>
+                <td class="txt-muted">handleLongPress()</td>
+                <td class="txt-muted">'초대 코드 보기' 메뉴 항목 추가</td>
+                <td class="txt-accent">신규</td>
+              </tr>
+              <tr>
+                <td>index.jsx</td>
+                <td class="txt-muted">isInviteModalVisible</td>
+                <td class="txt-muted">
+                  초대 코드 표시 + 클립보드 복사 모달 추가
+                </td>
+                <td class="txt-accent">신규</td>
+              </tr>
+              <tr>
+                <td>index.jsx</td>
+                <td class="txt-muted">isJoinModalVisible</td>
+                <td class="txt-muted">초대 코드 입력 모달 추가</td>
+                <td class="txt-accent">신규</td>
+              </tr>
+              <tr>
+                <td>[id].jsx</td>
+                <td class="txt-muted">menuBtn</td>
+                <td class="txt-muted">onPress 핸들러 연결 (setMenuVisible)</td>
+                <td class="txt-red">버그 수정</td>
+              </tr>
+              <tr>
+                <td>[id].jsx</td>
+                <td class="txt-muted">fetchChatData()</td>
+                <td class="txt-muted">
+                  invite_code 함께 조회하도록 select 확장
+                </td>
+                <td class="txt-accent">개선</td>
+              </tr>
+              <tr>
+                <td>[id].jsx</td>
+                <td class="txt-muted">handleGenerateCode()</td>
+                <td class="txt-muted">초대 코드 생성 및 chats 업데이트</td>
+                <td class="txt-accent">신규</td>
+              </tr>
+              <tr>
+                <td>[id].jsx</td>
+                <td class="txt-muted">handleShareCode()</td>
+                <td class="txt-muted">Share.share()로 OS 공유 시트 호출</td>
+                <td class="txt-accent">신규</td>
+              </tr>
+              <tr>
+                <td>[id].jsx</td>
+                <td class="txt-muted">handleKickMember()</td>
+                <td class="txt-muted">방장의 멤버 강퇴 기능</td>
+                <td class="txt-accent">신규</td>
+              </tr>
+              <tr>
+                <td>[id].jsx</td>
+                <td class="txt-muted">이메일 초대 제거</td>
+                <td class="txt-muted">
+                  handleInviteByEmail, inviteTab, inviteEmail 등 제거
+                </td>
+                <td class="txt-muted">제거</td>
+              </tr>
+              <tr>
+                <td>[id].jsx</td>
+                <td class="txt-muted">초대 모달</td>
+                <td class="txt-muted">탭 UI → 단일 초대 코드 UI로 단순화</td>
+                <td class="txt-accent">개선</td>
+              </tr>
+              <tr>
+                <td>Supabase</td>
+                <td class="txt-muted">chats RLS</td>
+                <td class="txt-muted">'초대 코드로 채팅방 조회' 정책 추가</td>
+                <td class="txt-accent">신규</td>
+              </tr>
+              <tr>
+                <td>Supabase</td>
+                <td class="txt-muted">chat_members RLS</td>
+                <td class="txt-muted">'본인만 멤버로 추가' 정책 추가</td>
+                <td class="txt-accent">신규</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 09. SQL 실행 내역 ── -->
+        <section class="section visible" id="s9">
+          <div class="sec-eyebrow">09 — SQL</div>
+          <h2 class="sec-heading">SQL 실행 내역</h2>
+
+          <h3 class="sub-heading">9-1. chat_members 테이블 생성</h3>
+          <div class="code-block">
+            <pre><span class="c-line">CREATE TABLE chat_members (</span>
+<span class="c-line">  id        uuid PRIMARY KEY DEFAULT gen_random_uuid(),</span>
+<span class="c-line">  chat_id   uuid NOT NULL REFERENCES chats(id) ON DELETE CASCADE,</span>
+<span class="c-line">  user_id   uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,</span>
+<span class="c-line">  role      text,</span>
+<span class="c-line">  joined_at timestamptz DEFAULT now(),</span>
+<span class="c-line">  UNIQUE (chat_id, user_id)</span>
+<span class="c-line">);</span>
+<span class="c-line">ALTER TABLE chat_members ENABLE ROW LEVEL SECURITY;</span></pre>
+          </div>
+
+          <h3 class="sub-heading">9-2. invite_code 컬럼 추가</h3>
+          <div class="code-block">
+            <pre><span class="c-line">ALTER TABLE chats ADD COLUMN invite_code TEXT UNIQUE;</span></pre>
+          </div>
+
+          <h3 class="sub-heading">9-3. RLS 정책 추가</h3>
+          <div class="code-block">
+            <pre><span class="c-comment">-- chats: 초대 코드 조회 정책</span>
+<span class="c-line">CREATE POLICY "초대 코드로 채팅방 조회"</span>
+<span class="c-line">  ON chats FOR SELECT</span>
+<span class="c-line">  USING (invite_code IS NOT NULL);</span>
+
+<span class="c-comment">-- chat_members: 본인만 추가 가능</span>
+<span class="c-line">CREATE POLICY "본인만 멤버로 추가"</span>
+<span class="c-line">  ON chat_members FOR INSERT</span>
+<span class="c-line">  WITH CHECK (auth.uid() = user_id);</span>
+
+<span class="c-comment">-- chat_members: 본인 행만 조회</span>
+<span class="c-line">CREATE POLICY "멤버 조회"</span>
+<span class="c-line">  ON chat_members FOR SELECT</span>
+<span class="c-line">  USING (auth.uid() = user_id);</span></pre>
+          </div>
+
+          <h3 class="sub-heading">9-4. 기존 채팅방 데이터 마이그레이션</h3>
+          <p>
+            코드 적용 이전에 생성된 채팅방은 <code>chat_members</code>에
+            데이터가 없으므로 수동으로 등록해야 합니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-line">INSERT INTO chat_members (chat_id, user_id, role)</span>
+<span class="c-line">VALUES</span>
+<span class="c-line">  (<span class="c-str">'&lt;chat_id&gt;'</span>, <span class="c-str">'&lt;user_id&gt;'</span>, <span class="c-str">'owner'</span>);</span>
+<span class="c-comment">-- 기존 채팅방마다 소유자 user_id를 확인하여 반복 실행</span></pre>
+          </div>
+        </section>
+
+        <!-- ── 10. 향후 권장 사항 ── -->
+        <section class="section visible" id="s10">
+          <div class="sec-eyebrow">10 — Recommendations</div>
+          <h2 class="sec-heading">향후 권장 사항</h2>
+
+          <h3 class="sub-heading">개발 환경 / 코드 품질</h3>
+          <ul class="bullet-list">
+            <li>
+              모든 import에 <code>@/</code> 절대경로 사용으로 통일하여 경로 오류
+              방지
+            </li>
+            <li>
+              새 파일/폴더 추가 시 <code>_layout.jsx</code>의 Screen 선언과
+              동기화 필수
+            </li>
+            <li>
+              파일 추가/삭제 후 <code>npx expo start --clear</code>로 캐시
+              초기화 습관화
+            </li>
+            <li>
+              폴더 구조 변경 시 라우팅 경로(<code>router.push</code>) 일괄 점검
+              필요
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">기능 고도화</h3>
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Todo 01</span>
+                <span class="white-title">초대 코드 만료 시간 추가</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>expired_at</code> 컬럼 추가로 보안 강화.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Todo 02</span>
+                <span class="white-title">채팅방 나가기 시 방장 위임 기능</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    현재는 방장 퇴장 시 채팅방이 삭제됨. 방장 위임 기능 구현
+                    필요.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Todo 03</span>
+                <span class="white-title">읽지 않은 메시지 수 뱃지 표시</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>messages</code> 테이블에 <code>read_at</code> 컬럼
+                    추가.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Todo 04</span>
+                <span class="white-title">알림 음소거 상태 DB 저장</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>chat_members.is_muted</code> 컬럼으로 DB에 저장.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Todo 05</span>
+                <span class="white-title">멤버 목록 이름 표시</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>profiles</code> 테이블에 <code>nickname</code> 또는
+                    <code>display_name</code> 컬럼 추가 시 멤버 목록에 이름 표시
+                    가능.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Todo 06</span>
+                <span class="white-title"
+                  >프로젝트 생성 온보딩 플로우 구현</span
+                >
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    온보딩 플로우 구현 후 자동 생성 로직('내 웨딩 플랜') 제거
+                    필요.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Todo 07</span>
+                <span class="white-title"
+                  >profiles ↔ chat_members 외래키 추가</span
+                >
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    외래키 추가 시 분리 조회 → 조인 방식으로 쿼리 최적화 가능.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+    <script src="../../script.js"></script>
+  </body>
+</html>
