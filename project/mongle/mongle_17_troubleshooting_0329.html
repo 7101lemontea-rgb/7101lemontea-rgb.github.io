@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>트러블슈팅 2026.03.29 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.03.29 Troubleshooting</span>
+          <span class="badge badge-ver">Day 07</span>
+          <span class="badge badge-status draft">종합 리포트</span>
+        </div>
+        <h1 class="post-title">트러블슈팅 종합 리포트</h1>
+        <p class="post-sub">
+          2026년 3월 29일 — Vendor 시스템 · 상담 알림 · Expo Router
+        </p>
+        <p class="post-desc">
+          Mongle 웨딩 통합 서비스 개발 과정에서 발생한 주요 트러블슈팅 사례를
+          Vendor 시스템 구축, 상담 신청 알림 시스템, Expo Router 라우팅 및 역할
+          기반 접근 제어, 세 가지 영역으로 분류하여 종합 정리한 기술
+          리포트입니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">발생 일자</div>
+            <div class="stat-val">2026년 3월 29일</div>
+          </div>
+          <div>
+            <div class="stat-label">이슈 건수</div>
+            <div class="stat-val">총 12건</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s0"><span class="toc-num">§</span>이슈 전체 목록</a>
+            </li>
+            <li>
+              <a href="#s1"
+                ><span class="toc-num">01</span>Vendor 시스템 구축</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s1-1">#01 ReferenceError</a></li>
+                <li><a href="#s1-2">#02 Unmatched Route</a></li>
+                <li><a href="#s1-3">#03 로딩 / 결과없음 충돌</a></li>
+                <li><a href="#s1-4">#04 이미지 렌더링 실패</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s2"
+                ><span class="toc-num">02</span>상담 신청 알림 시스템</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s2-1">#05 수신자 ID 식별 오류</a></li>
+                <li><a href="#s2-2">#06 FK 제약 조건 위반</a></li>
+                <li><a href="#s2-3">#07 발신자 정보 누락</a></li>
+                <li><a href="#s2-4">#08 런타임 에러</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s3"><span class="toc-num">03</span>Expo Router 구조</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s3-1">#09 filter of undefined</a></li>
+                <li><a href="#s3-2">#10 No route named</a></li>
+                <li><a href="#s3-3">#11 역할 기반 라우팅 실패</a></li>
+                <li><a href="#s3-4">#12 알림 연동 오류</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── § 이슈 전체 목록 ── -->
+        <section class="section visible" id="s0">
+          <div class="sec-eyebrow">Issue Index</div>
+          <h2 class="sec-heading">이슈 전체 목록</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>에러 / 증상</th>
+                <th>영역</th>
+                <th>핵심 원인</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-red">#01</td>
+                <td class="txt-muted">Property 'hallData' doesn't exist</td>
+                <td class="txt-muted">Vendor 목록</td>
+                <td class="txt-muted">import 제거 후 내부 변수 참조 잔존</td>
+              </tr>
+              <tr>
+                <td class="txt-red">#02</td>
+                <td class="txt-muted">
+                  Unmatched Route — '/(couple)/vendors/123'
+                </td>
+                <td class="txt-muted">Vendor 상세</td>
+                <td class="txt-muted">
+                  그룹 폴더 경로 오기입 + category 파라미터 누락
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#03</td>
+                <td class="txt-muted">로딩 중 "결과 없음" 메시지 노출</td>
+                <td class="txt-muted">Vendor UX</td>
+                <td class="txt-muted">
+                  loading 상태 미분리 — 빈 배열 초기값 오인식
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#04</td>
+                <td class="txt-muted">일부 업체 이미지 렌더링 실패</td>
+                <td class="txt-muted">Vendor 썸네일</td>
+                <td class="txt-muted">
+                  프로토콜 생략 URL(<code>//cdn...</code>) 모바일 미인식
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#05</td>
+                <td class="txt-muted">FK 위반 — user_id 알림 삽입 실패</td>
+                <td class="txt-muted">상담 알림</td>
+                <td class="txt-muted">
+                  플래너 프로필 ID를 계정 UUID 자리에 삽입
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#06</td>
+                <td class="txt-muted">23503 Foreign Key Constraint (type)</td>
+                <td class="txt-muted">상담 알림</td>
+                <td class="txt-muted">
+                  <code>notification_types</code>에 없는
+                  <code>'info'</code> 사용
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#07</td>
+                <td class="txt-muted">sender_id 누락 — 채팅 연동 불가</td>
+                <td class="txt-muted">상담 알림</td>
+                <td class="txt-muted">초기 테이블 설계에 발신자 컬럼 누락</td>
+              </tr>
+              <tr>
+                <td class="txt-red">#08</td>
+                <td class="txt-muted">Property 'user' doesn't exist</td>
+                <td class="txt-muted">Auth 응답 처리</td>
+                <td class="txt-muted">
+                  <code>auth.getUser()</code> 응답 객체 구조 오해
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#09</td>
+                <td class="txt-muted">TypeError: 'filter' of undefined</td>
+                <td class="txt-muted">(planner) 탭</td>
+                <td class="txt-muted">Tabs.Screen name과 실제 파일명 불일치</td>
+              </tr>
+              <tr>
+                <td class="txt-red">#10</td>
+                <td class="txt-muted">
+                  WARN: No route named "X" in nested children
+                </td>
+                <td class="txt-muted">(planner) 탭</td>
+                <td class="txt-muted">
+                  _layout 등록 name에 해당하는 파일 누락
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#11</td>
+                <td class="txt-muted">역할 기반 라우팅 실패</td>
+                <td class="txt-muted">AuthGate</td>
+                <td class="txt-muted">
+                  세션 로드 전 렌더링 + role 대소문자 불일치
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-red">#12</td>
+                <td class="txt-muted">
+                  알림 목록 비어 있음 / 읽음 처리 미반영
+                </td>
+                <td class="txt-muted">알림 Context</td>
+                <td class="txt-muted">
+                  Realtime 구독 누락 + is_read / isRead 불일치
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 01. Vendor 시스템 구축 ── -->
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">Section 01 — Vendor System</div>
+          <h2 class="sec-heading">Vendor 시스템 구축 과정 트러블슈팅</h2>
+
+          <!-- #01 -->
+          <h3 class="sub-heading" id="s1-1">
+            #01 &nbsp; Property ReferenceError — 데이터 소스 전환 오류
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>Property 'hallData' (또는 'ALL_VENDORS') doesn't exist</p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >import 제거 후 내부 변수 참조 잔존</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">상황</div>
+                  <div class="white-value">
+                    로컬 JSON 파일을 삭제하고 Supabase API로 교체하는 과정에서
+                    화면 렌더링 불가 및 에러 발생.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>import hallData from ...</code> 구문은 삭제했으나,
+                    <code>useMemo</code> 또는 <code>useEffect</code> 내부에서
+                    해당 변수를 여전히 참조하여 데이터 가공을 시도.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">해결 방법</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>참조 제거:</strong> 소스 코드 전반에서 로컬
+              변수(<code>hallData</code>, <code>studioData</code> 등)를 참조하는
+              Spread 연산자 및 매핑 로직 전량 제거.
+            </li>
+            <li>
+              <strong>상태값 기반 전환:</strong> <code>useState</code>로 선언된
+              <code>vendors</code> 배열을 단일 데이터 원천(Single Source of
+              Truth)으로 지정, 서버 데이터 수신 후
+              <code>setVendors()</code> 호출로 구조 변경.
+            </li>
+          </ul>
+
+          <!-- #02 -->
+          <h3 class="sub-heading" id="s1-2">
+            #02 &nbsp; Unmatched Route — 경로 인식 불가
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              Unmatched Route — The route '/(couple)/vendors/123' could not be
+              found.
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인 1</span>
+                <span class="white-title"
+                  >그룹 폴더 오해 — (couple)을 URL에 직접 기입</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">상황</div>
+                  <div class="white-value">
+                    업체 상세 페이지 이동 시 Expo Router가 경로를 찾지 못하고
+                    에러 화면 출력.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>(couple)</code>과 같은 괄호 폴더는 URL 경로에 포함되지
+                    않음에도 불구하고 주소에 직접 기입.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인 2</span>
+                <span class="white-title"
+                  >동적 파라미터 누락 — category 미전달</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    상세 페이지 호출 시 어떤 테이블에서 데이터를 가져와야 할지
+                    알려주는 <code>category</code> 파라미터가 미전달되어 데이터
+                    로드 실패.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">router.push(<span class="c-str">`/(couple)/vendors/${id}`</span>);</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">router.push(<span class="c-str">`/vendors/${id}?category=${activeCategory}`</span>);</span></pre>
+                </div>
+                <p style="margin-top: 0.6rem">
+                  <code>(couple)</code>을 경로에서 제거하고,
+                  <code>category</code>를 쿼리 스트링으로 전달하여 상세 페이지가
+                  즉시 특정 테이블을 조회할 수 있도록 수정.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- #03 -->
+          <h3 class="sub-heading" id="s1-3">
+            #03 &nbsp; 로딩 상태와 '결과 없음' 메시지 충돌 — UX 오류
+          </h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >loading 상태 미분리 — 빈 배열 초기값 오인식</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">상황</div>
+                  <div class="white-value">
+                    앱 구동 직후 또는 카테고리 변경 시 데이터 로드 전 "해당하는
+                    업체가 없습니다" 메시지가 노출되어 사용자 혼란 유발.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>FlatList</code>의 <code>ListEmptyComponent</code>가
+                    데이터 배열 길이(<code>vendors.length === 0</code>)만
+                    체크하여, 초기 빈 배열 상태인 로딩 중에도 '데이터 없음'으로
+                    간주.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-line">const renderEmpty = () => {</span>
+<span class="c-line">  if (loading) return <span class="c-str">&lt;ActivityIndicator /&gt;</span>;  <span class="c-comment">// 로딩 중 스피너</span></span>
+<span class="c-line">  return <span class="c-str">&lt;Text&gt;</span>해당하는 업체가 없습니다.<span class="c-str">&lt;/Text&gt;</span>;  <span class="c-comment">// 로딩 완료 후 데이터 없을 때만</span></span>
+<span class="c-line">};</span></pre>
+          </div>
+
+          <!-- #04 -->
+          <h3 class="sub-heading" id="s1-4">
+            #04 &nbsp; 이미지 렌더링 실패 — 프로토콜 미지정
+          </h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >프로토콜 생략 URL — 모바일 환경 미인식</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">상황</div>
+                  <div class="white-value">
+                    일부 업체 이미지가 화면에 출력되지 않고 에러(엑스박스)로
+                    표시.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    DB에 저장된 일부 이미지 URL이
+                    <code>//cdn.example.com/...</code> 형태로
+                    프로토콜(<code>http:</code>, <code>https:</code>)이 생략된
+                    상대 경로로 저장되어 모바일 환경에서 인식 불가.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// 이미지 source 지정 시 startsWith('//') 조건으로 https: 강제 접두</span>
+<span class="c-line">uri: url.startsWith(<span class="c-str">'//'</span>) ? <span class="c-str">`https:${url}`</span> : url</span></pre>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <strong>Section 1 핵심 레슨:</strong>
+              ① Expo Router 그룹 폴더(<code>()</code>)는 URL에서 생략됨을 반드시
+              숙지. ② 서버 데이터 처리 시 <code>loading</code> 상태를 반드시
+              함께 관리하여 사용자 피드백 제공. ③ DB 전환 시 기존 JSON 키와 DB
+              컬럼명의 일치 여부 검수 필수.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── 02. 상담 신청 알림 시스템 ── -->
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">Section 02 — Consultation Notification</div>
+          <h2 class="sec-heading">상담 신청 알림 시스템 트러블슈팅</h2>
+          <p>
+            사용자가 플래너에게 상담 신청 시, 플래너 계정으로 실시간 알림을
+            전송하는 기능 구축 과정에서 발생한 트러블슈팅입니다. 단순 프로필
+            정보가 아닌 <strong>실제 유저 UUID를 찾아 연결</strong>하는 것이
+            핵심이었습니다.
+          </p>
+
+          <h3 class="sub-heading">최종 데이터 흐름도</h3>
+          <div class="component-box">
+            <pre>
+① 사용자: 상담 신청 버튼 클릭
+② App: auth.getUser()로 신청자(sender_id) 확보
+③ App: user_profiles Join으로 플래너의 실제 계정 UUID(user_id) 확보
+④ Supabase: notifications 테이블에 발신자, 수신자, 알림 내용 저장
+⑤ 결과: 플래너가 누가, 언제 신청했는지 확인하고 sender_id로 즉시 채팅 시작 가능</pre
+            >
+          </div>
+
+          <!-- #05 -->
+          <h3 class="sub-heading" id="s2-1">
+            #05 &nbsp; 알림 수신자(user_id) 식별 오류
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              FK 위반 — wedding_planners.id를 notifications.user_id에 삽입 시
+              에러 발생
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title">프로필 ID vs 계정 UUID 혼동</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>wedding_planners.id</code>는 플래너 프로필 ID이며,
+                    <code>notifications.user_id</code>는 실제
+                    계정(<code>auth.users</code>)의 UUID여야 함.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>user_profiles</code> 테이블을 Join하여 플래너 프로필에
+                    연결된 실제 계정 UUID를 조회하도록 쿼리 수정.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// wedding_planners와 user_profiles를 Join하여 실제 UUID 확보</span>
+<span class="c-line">const { data } = await supabase</span>
+<span class="c-line">  .from(<span class="c-str">'wedding_planners'</span>)</span>
+<span class="c-line">  .select(<span class="c-str">'*, user_profiles!planner_id(id)'</span>)</span>
+<span class="c-line">  .eq(<span class="c-str">'name'</span>, plannerName)</span>
+<span class="c-line">  .single();</span>
+<span class="c-comment">// 수신자 UUID: data.user_profiles[0].id</span></pre>
+          </div>
+
+          <!-- #06 -->
+          <h3 class="sub-heading" id="s2-2">
+            #06 &nbsp; 외래 키 제약 조건 위반 — Type Error
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              23503 Foreign Key Constraint — notifications.type 컬럼 FK 위반
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >notification_types에 없는 'info' 타입 사용</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>notifications.type</code> 컬럼이
+                    <code>notification_types</code> 테이블을 참조하는데,
+                    코드에서 전달한 <code>'info'</code>라는 값이 해당 테이블에
+                    미등록.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>notification_types</code> 테이블을 조회한 후 실제
+                    등록된 값인 <code>'info_consultation'</code>(또는
+                    <code>'notice'</code>)으로 코드 수정.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #07 -->
+          <h3 class="sub-heading" id="s2-3">
+            #07 &nbsp; 발신자 정보(sender_id) 누락 및 채팅 연동 불가
+          </h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >초기 테이블 설계에 발신자 컬럼 누락</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">현상</div>
+                  <div class="white-value">
+                    알림은 전송되지만 플래너가 발신자를 알 수 없어 채팅 연결이
+                    불가능.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    DB에 <code>sender_id</code> 컬럼(UUID 타입,
+                    <code>auth.users</code> 참조) 추가. 알림 전송 시
+                    <code>supabase.auth.getUser()</code>로 현재 로그인 유저 ID를
+                    함께 저장하도록 로직 수정.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #08 -->
+          <h3 class="sub-heading" id="s2-4">
+            #08 &nbsp; 'property user doesn't exist' 런타임 에러
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              property 'user' doesn't exist — 유저 ID 조회 과정에서 앱 강제 종료
+              또는 에러 Alert 발생
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >auth.getUser() 응답 객체 비구조화 할당 오류</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    Supabase Auth 응답 객체의 비구조화 할당 오류.
+                    <code>data</code> 객체를 거치지 않고 <code>user</code>에
+                    직접 접근 시도.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    Optional Chaining(<code>?.</code>)을 활용한 안전한 객체 접근
+                    방식으로 개선.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const { user } = await supabase.auth.getUser();</span>
+<span class="c-line">const myId = user.id;  <span class="c-comment">// TypeError 발생</span></span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const authRes = await supabase.auth.getUser();</span>
+<span class="c-line">const myId = authRes.data?.user?.id;  <span class="c-comment">// Optional Chaining 적용</span></span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <strong>Section 2 핵심 레슨:</strong>
+              ① '프로필 ID'와 '계정 UUID'를 엄격히 구분하여 개발. ② 컬럼 추가 후
+              클라이언트 코드 반영 여부 및 메트로 서버 재시작 확인. ③ Supabase
+              API 호출 시 <code>null</code> 가능성을 고려한 Optional Chaining
+              활용.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── 03. Expo Router ── -->
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">Section 03 — Expo Router</div>
+          <h2 class="sec-heading">
+            Expo Router 라우팅 및 역할 기반 접근 제어 트러블슈팅
+          </h2>
+
+          <!-- #09 -->
+          <h3 class="sub-heading" id="s3-1">
+            #09 &nbsp; TypeError: Cannot read property 'filter' of undefined
+          </h3>
+
+          <div class="highlight-box-red">
+            <p>
+              TypeError: Cannot read property 'filter' of undefined —
+              TabRouter.js, useNavigationBuilder.js
+            </p>
+          </div>
+
+          <p>
+            앱 실행 시 흰 화면이 뜨거나 Red Box 에러 발생. 호출 스택이
+            <code>TabRouter.js</code>, <code>useNavigationBuilder.js</code>를
+            가리키며 Stack → Tabs 레이아웃 변경 직후 주로 발생합니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인 1</span>
+                <span class="white-title"
+                  >Tabs.Screen name과 실제 파일명 불일치</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>_layout.jsx</code> 내의
+                    <code>&lt;Tabs.Screen name="..." /&gt;</code>에 명시된
+                    name과 실제 폴더 내의 물리적 파일이 존재하지 않거나 이름이
+                    다름.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인 2</span>
+                <span class="white-title"
+                  >Tabs 설정에서 라우터 경로 필터링 실패</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    Expo Router는 폴더 내의 모든 파일을 라우트로 간주하는데,
+                    Tabs 설정에서 이를 제대로 필터링하지 못할 때 발생.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">해결 방법</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>파일명 전수 조사:</strong> <code>Tabs.Screen</code>의
+              <code>name</code> 속성과 실제 <code>.jsx</code> 파일명의 대소문자,
+              특수문자(언더바/하이픈) 일치 여부 확인.
+            </li>
+            <li>
+              <strong>빈 파일 생성:</strong> 미구현 기능(<code>chat.jsx</code>
+              등)도 <code>Tabs.Screen</code>에 등록되어 있다면 빈 컴포넌트
+              파일이라도 생성 필요.
+            </li>
+            <li>
+              <strong>캐시 강제 삭제:</strong> 파일 구조 변경 후 메트로 번들러
+              캐시에 즉각 반영되지 않을 수 있으므로 캐시를 지우고 재시작.
+            </li>
+          </ul>
+          <div class="code-block">
+            <pre><span class="c-line">npx expo start -c  <span class="c-comment">// 캐시 강제 삭제 후 재시작</span></span></pre>
+          </div>
+
+          <!-- #10 -->
+          <h3 class="sub-heading" id="s3-2">
+            #10 &nbsp; WARN: No route named "X" exists in nested children
+          </h3>
+
+          <p>
+            터미널/콘솔에 노란색 경고창 발생. 특정 탭 아이콘이 미표시되거나 클릭
+            시 무반응인 증상입니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >_layout 등록 name에 해당하는 파일 누락</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>_layout.jsx</code>에 코드는 있으나, Expo Router가
+                    인식하는 실제 파일 목록(Nested Children)에 해당 파일이 누락.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    경고 메시지의 <code>nested children: [...]</code> 리스트를
+                    확인한 후, 목록에 없는 파일명은 <code>_layout.jsx</code>에서
+                    삭제하거나 실제 파일을 생성.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #11 -->
+          <h3 class="sub-heading" id="s3-3">
+            #11 &nbsp; 역할 기반 라우팅(Role-based Routing) 실패
+          </h3>
+
+          <p>
+            플래너로 로그인했는데 커플 페이지가 뜨거나, 인증 후에도 로그인
+            화면에 멈춰 있는 증상입니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인 1</span>
+                <span class="white-title"
+                  >세션 반환 속도보다 렌더링이 빨라 잘못된 리다이렉션</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>app/_layout.jsx</code>의 AuthGate 로직에서 Supabase
+                    세션 반환 속도보다 렌더링이 빨라 잘못된 리다이렉션 발생.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    세션과 프로필 로드 완료 전까지
+                    <code>ActivityIndicator</code>를 표시하여 잘못된 리다이렉션
+                    방지.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인 2</span>
+                <span class="white-title">role 컬럼 대소문자 불일치</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>user_profiles</code> 테이블의 <code>role</code> 컬럼
+                    값 대소문자 불일치 (예: <code>'Planner'</code> vs
+                    <code>'planner'</code>).
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>console.log(profile.role)</code>로 실제 DB 문자열을
+                    확인하고 조건문과 일치시키기.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- #12 -->
+          <h3 class="sub-heading" id="s3-4">
+            #12 &nbsp; 알림 데이터 연동 오류 — Context API
+          </h3>
+
+          <p>
+            알림 목록이 비어있거나, 읽음 처리(<code>markAsRead</code>) 후 화면에
+            즉시 미반영되는 증상입니다.
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인 1</span>
+                <span class="white-title">Supabase Realtime 구독 누락</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    Supabase Realtime 설정 미활성화 또는
+                    <code>useEffect</code> 내 구독 로직 오류.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>supabase.channel().subscribe()</code> 정상 연결 여부를
+                    네트워크 탭에서 확인.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인 2</span>
+                <span class="white-title"
+                  >is_read(snake_case) vs isRead(camelCase) 필드명 불일치</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    DB 컬럼명(<code>is_read</code>, snake_case)과 코드
+                    변수명(<code>isRead</code>, camelCase) 불일치로 매핑 오류
+                    발생.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>fetchNotifications</code>에서 DB 데이터를 가져올 때 UI
+                    형식으로 변환하는 매핑 계층 추가.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// DB snake_case → UI camelCase 변환</span>
+<span class="c-line">const mapped = data.map(n => ({ ...n, isRead: n.is_read }));</span></pre>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <strong>Best Practices:</strong>
+              ① 파일 생성 후 <code>_layout.jsx</code>에 등록하는 순서를 습관화.
+              ② 탭 바 미표시 상세 페이지에
+              <code>options={{ href: null }}</code> 설정으로 라우터 충돌 방지. ③
+              Supabase 연동 문제 발생 시 <code>.env</code> 파일의 URL 및 API Key
+              우선 확인.
+            </p>
+          </div>
+        </section>
+
+        <!-- ── 04. 종합 핵심 원칙 ── -->
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">04 — Core Principles</div>
+          <h2 class="sec-heading">종합 핵심 원칙</h2>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원칙 01</span>
+                <span class="white-title"
+                  >단일 데이터 원천 (Single Source of Truth)</span
+                >
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>useState</code>를 통한 단일 데이터 원천 유지. 로컬
+                    변수 참조를 제거하고 서버에서 받아온 데이터를 상태값으로
+                    일원화.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원칙 02</span>
+                <span class="white-title">로딩 상태 관리</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    비동기 처리 시 <code>loading</code> 플래그 필수.
+                    <code>ActivityIndicator</code>로 사용자 피드백을 제공하고
+                    로딩 상태와 결과 없음 상태를 반드시 분리.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원칙 03</span>
+                <span class="white-title">ID 체계 명확화</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    프로필 ID와 계정 UUID(<code>auth.users</code>)를 엄격히
+                    구분. FK 참조 테이블을 사전에 확인하여 위반 에러 방지.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원칙 04</span>
+                <span class="white-title">방어적 프로그래밍</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    Optional Chaining(<code>?.</code>) 적극 활용.
+                    <code>null</code> / <code>undefined</code> 방어 로직을 외부
+                    API 호출 모든 지점에 상시 적용.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원칙 05</span>
+                <span class="white-title">라우팅 규칙 준수</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    Expo Router 그룹 폴더(<code>()</code>)는 URL에서 생략됨을
+                    항상 숙지. 파일 생성 → <code>_layout.jsx</code> 등록 순서를
+                    습관화하고, 탭 바 미노출 화면에는 <code>href: null</code>을
+                    설정.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원칙 06</span>
+                <span class="white-title">데이터 매핑 일관성</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    DB snake_case ↔ UI camelCase 변환 계층을 명시적으로 구현. DB
+                    전환 시 기존 JSON 키와 DB 컬럼명의 일치 여부를 반드시 검수.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+    <script src="../../script.js"></script>
+  </body>
+</html>
