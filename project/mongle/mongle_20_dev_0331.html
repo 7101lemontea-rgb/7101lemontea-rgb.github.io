@@ -1,0 +1,1633 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 2026.03.31 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.03.31 Dev Document</span>
+          <span class="badge badge-ver">Day 09</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">개발 작업 문서</h1>
+        <p class="post-sub">
+          2026년 3월 31일 — 버그 수정 · Supabase 전면 연동 · 알림 기능 개발
+        </p>
+        <p class="post-desc">
+          플래너 더보기 라우팅 수정, 플래너 상세 페이지 Supabase 연동 및 RLS
+          정책 설정, 플래너 대시보드·커플 목록·할 일·비용·업체 화면 전면 연동,
+          커플 알림 기능 신규 개발까지 3개 파트의 작업 내용을 기록합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 3월 31일</div>
+          </div>
+          <div>
+            <div class="stat-label">기술 스택</div>
+            <div class="stat-val">React Native · Expo Router · Supabase</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s0"><span class="toc-num">§</span>문서 개요</a>
+            </li>
+            <li>
+              <a href="#s1"><span class="toc-num">A</span>버그 수정</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s1-1">A1. 더보기 화면 이동</a></li>
+                <li><a href="#s1-2">A2. 플래너 상세 조회</a></li>
+                <li><a href="#s1-3">A3. 상담 신청 실패</a></li>
+                <li><a href="#s1-4">A4. 수정 요약</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s2"><span class="toc-num">B</span>Supabase 연동 개발</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s2-1">B1. 인증 및 라우팅</a></li>
+                <li><a href="#s2-2">B2. 테이블 구조</a></li>
+                <li><a href="#s2-3">B3. 화면별 연동</a></li>
+                <li><a href="#s2-4">B4. Realtime 구독</a></li>
+                <li><a href="#s2-5">B5. 공통 개발 패턴</a></li>
+                <li><a href="#s2-6">B6. 트러블슈팅</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s3"><span class="toc-num">C</span>알림 기능 개발</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s3-1">C1. 작업 개요</a></li>
+                <li><a href="#s3-2">C2. 폴더 구조</a></li>
+                <li><a href="#s3-3">C3. Context 구조</a></li>
+                <li><a href="#s3-4">C4. index.jsx 수정</a></li>
+                <li><a href="#s3-5">C5. notifications.jsx</a></li>
+                <li><a href="#s3-6">C6. 라우팅 경로</a></li>
+                <li><a href="#s3-7">C7. 잔여 작업</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── § 문서 개요 ── -->
+        <section class="section visible" id="s0">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">문서 개요</h2>
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">프레임워크</span>
+              </div>
+              <div class="white-column-content"><p>React Native (Expo)</p></div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">라우터</span>
+              </div>
+              <div class="white-column-content"><p>expo-router</p></div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">백엔드</span>
+              </div>
+              <div class="white-column-content">
+                <p>Supabase (PostgreSQL + Auth + Realtime)</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">플래너 역할</span>
+              </div>
+              <div class="white-column-content">
+                <p>담당 커플 관리, 일정·비용·업체 관리</p>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">커플 역할</span>
+              </div>
+              <div class="white-column-content">
+                <p>자신의 일정 및 진행 현황 조회</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PART A. 버그 수정 ── -->
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">Part A — Bug Fixes</div>
+          <h2 class="sec-heading">버그 수정 작업</h2>
+
+          <!-- A1 -->
+          <h3 class="sub-heading" id="s1-1">
+            A1. 웨딩플래너 "더보기" 화면 이동 문제
+          </h3>
+          <p>
+            대상 파일: <code>app/(couple)/(tabs)/index.jsx</code> &nbsp;·&nbsp;
+            증상: "더보기" 버튼 클릭 시 화면 이동 없음
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title">_layout.jsx 라우팅 가드 문제</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>planners</code> 폴더가 <code>(couple)</code> 그룹 밖에
+                    위치하여, <code>(couple)</code> 그룹 외부 경로 이동 시 강제
+                    리다이렉트 로직이 동작했습니다. 어디로 이동해도
+                    <code>/(couple)</code>로 복귀됩니다.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const inSettingsGroup = rootSegment === <span class="c-str">'settings'</span>;</span>
+<span class="c-line">...</span>
+<span class="c-line">} else if (!inCoupleGroup) {</span>
+<span class="c-line">  router.replace(<span class="c-str">'/(couple)'</span>);</span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const inPlannerPage = rootSegment === <span class="c-str">'planners'</span>;  <span class="c-comment">// ✅ 추가</span></span>
+<span class="c-line">...</span>
+<span class="c-line">} else if (!inCoupleGroup && !inPlannerPage) {   <span class="c-comment">// ✅ 수정</span></span>
+<span class="c-line">  router.replace(<span class="c-str">'/(couple)'</span>);</span>
+<span class="c-line">}</span>
+<span class="c-comment">// 비로그인 조건도 동일하게 수정</span>
+<span class="c-line">if (!inAuthGroup && !inCoupleGroup && !inPlannerPage) {</span>
+<span class="c-line">  router.replace(<span class="c-str">'/(couple)'</span>);</span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              ✅ <code>planners/*</code> 경로에서 리다이렉트 차단 해제 —
+              "더보기" 정상 동작 확인
+            </p>
+          </div>
+
+          <!-- A2 -->
+          <h3 class="sub-heading" id="s1-2">
+            A2. 플래너 상세 페이지 Supabase 조회 오류
+          </h3>
+          <p>대상 파일: <code>app/(couple)/planners/[id].jsx</code></p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">문제 1</span>
+                <span class="white-title"
+                  >fetchPlanner 0 rows 반환 (PGRST116)</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>.eq('name', id)</code> 조회 시 라우트 파라미터 값
+                    불일치. <code>planners.json</code>의 <code>id</code> 필드가
+                    <code>name</code> 컬럼을 참조하고 있었음.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>mapPlanner</code>의 <code>id: p.name</code> 참조 방식
+                    확인 후 테이블에 <code>name = 'planner1'</code> 행 존재 →
+                    조회 정상 확인.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">문제 2</span>
+                <span class="white-title">user_profiles Join 실패</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>user_profiles!planner_id</code> Join 방향 오류. 실제
+                    외래키는
+                    <code>user_profiles.planner_id → wedding_planners.id</code
+                    >인데 역방향 Join 시도로 결과 없음.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    Join 제거 후 <code>.select('*')</code>으로 단순 조회. 수신자
+                    ID는 <code>handleConsultSubmit</code> 내부에서 별도 처리.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p>최종 <code>fetchPlanner</code> 코드입니다.</p>
+          <div class="code-block">
+            <pre><span class="c-line">useEffect(() => {</span>
+<span class="c-line">  async function fetchPlanner() {</span>
+<span class="c-line">    const { data, error } = await supabase</span>
+<span class="c-line">      .from(<span class="c-str">'wedding_planners'</span>)</span>
+<span class="c-line">      .select(<span class="c-str">'*'</span>)</span>
+<span class="c-line">      .eq(<span class="c-str">'name'</span>, id)</span>
+<span class="c-line">      .single();</span>
+<span class="c-line">    if (error) { console.error(<span class="c-str">'조회 에러:'</span>, error); }</span>
+<span class="c-line">    else { setSelectedPlanner(data); }</span>
+<span class="c-line">    setLoading(false);</span>
+<span class="c-line">  }</span>
+<span class="c-line">  fetchPlanner();</span>
+<span class="c-line">}, [id]);</span></pre>
+          </div>
+
+          <!-- A3 -->
+          <h3 class="sub-heading" id="s1-3">
+            A3. 상담 신청 실패 — 사용자 정보 식별 불가
+          </h3>
+          <p>
+            대상 파일: <code>app/(couple)/planners/[id].jsx</code> —
+            <code>handleConsultSubmit</code> 함수 &nbsp;·&nbsp; 증상: "사용자
+            정보를 식별할 수 없습니다" 에러
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">1단계</span>
+                <span class="white-title"
+                  >user_profiles Join 결과 빈 배열 반환</span
+                >
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    Join 쿼리 방식 문제 → A2에서 해결.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">2단계</span>
+                <span class="white-title"
+                  >별도 쿼리 변경 후에도 0 rows 반환</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    RLS(Row Level Security) 정책 미설정.
+                    <code>couple</code> 유저가 <code>planner</code>의
+                    <code>user_profiles</code> 행을 SELECT할 권한 없음. SQL
+                    Editor 직접 실행 시 정상 결과 → RLS 차단 확인.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    Supabase SQL Editor에서 RLS 정책 추가.
+                    <code>handleConsultSubmit</code>의 수신자 ID 조회 방식을
+                    별도 쿼리로 분리.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">관련 DB 구조</h3>
+          <table class="normal-table">
+            <thead>
+              <tr>
+                <th>테이블</th>
+                <th>컬럼</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">wedding_planners</td>
+                <td class="col-type">id (UUID, PK)</td>
+                <td class="col-desc"></td>
+              </tr>
+              <tr>
+                <td class="col-name"></td>
+                <td class="col-type">name</td>
+                <td class="col-desc">식별자 (라우트 파라미터)</td>
+              </tr>
+              <tr>
+                <td class="col-name">user_profiles</td>
+                <td class="col-type">id (UUID, PK)</td>
+                <td class="col-desc">= auth.uid()</td>
+              </tr>
+              <tr>
+                <td class="col-name"></td>
+                <td class="col-type">role</td>
+                <td class="col-desc">'couple' | 'planner'</td>
+              </tr>
+              <tr>
+                <td class="col-name"></td>
+                <td class="col-type">planner_id (FK)</td>
+                <td class="col-desc">→ wedding_planners.id</td>
+              </tr>
+              <tr>
+                <td class="col-name"></td>
+                <td class="col-type">couple_id (FK)</td>
+                <td class="col-desc">→ couples.id</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">RLS 정책 추가</span>
+                <span class="white-column-layer-tech">SQL</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">CREATE POLICY <span class="c-str">"Anyone can read planner profiles"</span></span>
+<span class="c-line">  ON user_profiles FOR SELECT</span>
+<span class="c-line">  USING (role = <span class="c-str">'planner'</span>);</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name"
+                  >handleConsultSubmit 수정</span
+                >
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// 수정 전</span>
+<span class="c-line">const plannerUserId = selectedPlanner?.user_profiles?.[0]?.id;</span>
+
+<span class="c-comment">// 수정 후 — 별도 쿼리 분리</span>
+<span class="c-line">const { data: userProfile, error: profileError } = await supabase</span>
+<span class="c-line">  .from(<span class="c-str">'user_profiles'</span>)</span>
+<span class="c-line">  .select(<span class="c-str">'id'</span>)</span>
+<span class="c-line">  .eq(<span class="c-str">'planner_id'</span>, selectedPlanner.id)</span>
+<span class="c-line">  .single();</span>
+<span class="c-line">if (profileError || !userProfile) {</span>
+<span class="c-line">  throw new Error(<span class="c-str">'플래너 계정 정보를 찾을 수 없습니다.'</span>);</span>
+<span class="c-line">}</span>
+<span class="c-line">await sendNotificationToPlanner({</span>
+<span class="c-line">  plannerId: userProfile.id,</span>
+<span class="c-line">  plannerName: selectedPlanner.name, ...</span>
+<span class="c-line">});</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- A4 -->
+          <h3 class="sub-heading" id="s1-4">A4. 전체 수정 요약</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파일</th>
+                <th>수정 내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>app/_layout.jsx</code></td>
+                <td class="txt-muted">
+                  planners 라우트 예외 처리 추가 (리다이렉트 차단 해제)
+                </td>
+              </tr>
+              <tr>
+                <td><code>app/(couple)/planners/[id].jsx</code></td>
+                <td class="txt-muted">
+                  fetchPlanner Join 제거 → 단순 <code>select('*')</code> 변경
+                </td>
+              </tr>
+              <tr>
+                <td><code>app/(couple)/planners/[id].jsx</code></td>
+                <td class="txt-muted">
+                  handleConsultSubmit 수신자 ID 조회 방식 변경 (별도 쿼리)
+                </td>
+              </tr>
+              <tr>
+                <td>Supabase DB (RLS 정책)</td>
+                <td class="txt-muted">
+                  user_profiles planner 행 SELECT 권한 추가
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── PART B. Supabase 연동 개발 ── -->
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">Part B — Supabase Integration</div>
+          <h2 class="sec-heading">Supabase 연동 개발</h2>
+
+          <!-- B1 -->
+          <h3 class="sub-heading" id="s2-1">B1. 인증 및 라우팅 구조</h3>
+          <p>
+            <code>app/_layout.jsx</code>의 <code>AuthGate</code> 컴포넌트가
+            세션을 관리하며 아래 값들을 <code>AuthContext</code>를 통해 앱
+            전체에 공급합니다.
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>제공 값</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>session</td>
+                <td class="txt-muted">Supabase 로그인 세션</td>
+              </tr>
+              <tr>
+                <td>role</td>
+                <td class="txt-muted">'planner' | 'couple' | null</td>
+              </tr>
+              <tr>
+                <td>planner_id</td>
+                <td class="txt-muted">user_profiles.planner_id</td>
+              </tr>
+              <tr>
+                <td>couple_id</td>
+                <td class="txt-muted">user_profiles.couple_id</td>
+              </tr>
+              <tr>
+                <td>registrationPending</td>
+                <td class="txt-muted">회원가입 OTP 인증 대기 상태</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>상태</th>
+                <th>이동 경로</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>비로그인</td>
+                <td class="txt-muted"><code>/(couple)</code></td>
+              </tr>
+              <tr>
+                <td>플래너 로그인</td>
+                <td class="txt-muted"><code>/(planner)/dashboard</code></td>
+              </tr>
+              <tr>
+                <td>커플 로그인</td>
+                <td class="txt-muted"><code>/(couple)</code></td>
+              </tr>
+              <tr>
+                <td>role이 null (OTP 대기)</td>
+                <td class="txt-muted">리다이렉션 없음</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">Before</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const [role, setRole] = useState(null);</span>
+<span class="c-line">setRole(profile?.role || null);</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">After</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const [profile, setProfile] = useState(null);</span>
+<span class="c-line">setProfile(data);</span>
+<span class="c-line">&lt;AuthContext.Provider value={{</span>
+<span class="c-line">  planner_id: profile?.planner_id ?? null,</span>
+<span class="c-line">  couple_id:  profile?.couple_id  ?? null,</span>
+<span class="c-line">}}&gt;</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- B2 -->
+          <h3 class="sub-heading" id="s2-2">B2. Supabase 테이블 구조</h3>
+
+          <table class="normal-table">
+            <thead>
+              <tr>
+                <th>테이블</th>
+                <th>주요 컬럼</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">couples</td>
+                <td class="col-desc">
+                  id, planner_id, groom_name, bride_name, wedding_date, venue,
+                  stage, progress, total_amount
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">couple_schedules</td>
+                <td class="col-desc">
+                  id, couple_id, planner_id, title, scheduled_date, time,
+                  category, done
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">couple_payments</td>
+                <td class="col-desc">
+                  id, couple_id, label, amount, <strong>due_date</strong>, paid,
+                  paid_at &nbsp;※ payment_date 아님
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">couple_vendor_costs</td>
+                <td class="col-desc">
+                  id, planner_id, couple_id, vendor_name, amount, paid &nbsp;※
+                  업체 지출 전용
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">wedding_planners</td>
+                <td class="col-desc">
+                  id, name, brand_name, title, profile_image_url, email
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">planner_vendors</td>
+                <td class="col-desc">
+                  id, planner_id, name, type, contact, manager, status, memo
+                  &nbsp;※ 협력업체 파트너
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">user_profiles</td>
+                <td class="col-desc">id, role, planner_id, couple_id</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">테이블 관계</h3>
+          <div class="tree-block">
+            <pre><span class="t-ink">couples</span><span class="t-line">.planner_id          → </span><span class="t-key">wedding_planners</span><span class="t-line">.id</span>
+<span class="t-ink">couple_schedules</span><span class="t-line">.couple_id    → </span><span class="t-key">couples</span><span class="t-line">.id</span>
+<span class="t-ink">couple_schedules</span><span class="t-line">.planner_id   → </span><span class="t-key">wedding_planners</span><span class="t-line">.id</span>
+<span class="t-ink">couple_payments</span><span class="t-line">.couple_id     → </span><span class="t-key">couples</span><span class="t-line">.id</span>
+<span class="t-ink">couple_vendor_costs</span><span class="t-line">.couple_id → </span><span class="t-key">couples</span><span class="t-line">.id</span>
+<span class="t-ink">planner_vendors</span><span class="t-line">.planner_id    → </span><span class="t-key">wedding_planners</span><span class="t-line">.id</span>
+<span class="t-ink">user_profiles</span><span class="t-line">.id            = auth.uid()</span></pre>
+          </div>
+
+          <!-- B3 -->
+          <h3 class="sub-heading" id="s2-3">B3. 화면별 연동 작업 내용</h3>
+
+          <h3 class="sub-heading">B3.1 dashboard.jsx — 플래너 대시보드</h3>
+          <p>
+            연동 테이블: <code>wedding_planners</code>, <code>couples</code>,
+            <code>couple_schedules</code>, <code>planner_vendors</code>,
+            <code>couple_payments</code>
+          </p>
+          <ul class="bullet-list">
+            <li>
+              하드코딩 임시 데이터 전체 제거. <code>useAuth()</code>에서
+              <code>planner_id</code>를 꺼내 모든 쿼리 필터로 사용.
+            </li>
+            <li>5개 테이블 Realtime 구독 — 변경 시 자동 갱신.</li>
+            <li>
+              진행률(%): <code>couples.progress</code>가 0이면
+              <code>couple_payments</code> 합계로 동적 계산.
+            </li>
+            <li>수금/미수금: <code>couple_payments</code> 기반 집계.</li>
+            <li>
+              협력 업체: <code>planner_vendors</code>에서 유형별 그룹화, 최대
+              3개 유형 표시.
+            </li>
+          </ul>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">오늘 할 일 카드</span>
+                <span class="white-title">동작 방식</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <ul class="bullet-list">
+                    <li>
+                      표시 순서: 오늘 미완료(urgent) → 이후 미완료(날짜순) →
+                      최대 5개
+                    </li>
+                    <li>
+                      <code>useRef(lockedTodoIds)</code>로 최초 로드 시 5개 ID
+                      고정
+                    </li>
+                    <li>완료 토글 시 그 자리에서 취소선 표시 (항목 유지)</li>
+                    <li>"완료 지우기" 버튼: 완료 항목 있을 때만 노출</li>
+                    <li>
+                      완료 지우기 후 <code>lockedTodoIds</code> 초기화 →
+                      <code>fetchTodos()</code> 재호출 → 새 5개 채움
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">B3.2 couple_list.jsx — 커플 목록</h3>
+          <p>
+            연동 테이블: <code>couples</code>, <code>couple_schedules</code>
+          </p>
+          <ul class="bullet-list">
+            <li>
+              <code>INITIAL_COUPLES</code>,
+              <code>INITIAL_SCHEDULES</code> 하드코딩 제거.
+            </li>
+            <li>
+              DB 날짜(YYYY-MM-DD) ↔ 표시용(YYYY년 M월 D일) 변환 유틸 추가.
+            </li>
+            <li>
+              커플 추가/수정: <code>supabase.insert / .update</code>. 커플 삭제:
+              <code>supabase.delete</code>.
+            </li>
+            <li>
+              일정 동기화: <code>new-</code> 접두사로 신규/기존 구분, 수정 완료
+              시 일괄 반영.
+            </li>
+            <li>
+              필드명 변경: <code>c.name</code> →
+              <code>groom_name/bride_name</code>, <code>c.date</code> →
+              <code>wedding_date</code>.
+            </li>
+            <li>
+              <code>avatarIdx</code> 제거:
+              <code>sorted.indexOf(c) % AVATAR_POOL.length</code>로 대체.
+            </li>
+          </ul>
+
+          <div class="highlight-box-red">
+            <p>
+              ⚠️ stage 값 주의 — DB 저장값에 띄어쓰기 없음:
+              <code>'최종점검'</code> / <code>'준비중'</code> /
+              <code>'초기상담'</code> / <code>'계약완료'</code>. STAGE_STYLE
+              fallback은 <code>??</code> 대신 <code>||</code> 사용 (빈 문자열도
+              처리).
+            </p>
+          </div>
+
+          <h3 class="sub-heading">B3.3 planner_todo_list.jsx — 할 일 목록</h3>
+          <p>
+            연동 테이블: <code>couple_schedules</code>, <code>couples</code>
+          </p>
+          <ul class="bullet-list">
+            <li>
+              <code>ALL_TODOS</code>, <code>COUPLE_OPTIONS</code> 하드코딩 제거.
+            </li>
+            <li>
+              필드명: <code>item.text</code> → <code>item.title</code>, 날짜:
+              <code>item.dueDate(YYYYMMDD)</code> →
+              <code>item.scheduled_date(YYYY-MM-DD)</code>.
+            </li>
+            <li>urgent 판단: <code>scheduled_date === todayDb</code>.</li>
+            <li>
+              완료 토글: 낙관적 업데이트 + <code>supabase.update</code>, 실패 시
+              롤백.
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">B3.4 planner_budget.jsx — 비용 현황</h3>
+          <p>
+            연동 테이블: <code>couples</code>, <code>couple_payments</code>,
+            <code>couple_vendor_costs</code>
+          </p>
+          <ul class="bullet-list">
+            <li>
+              <code>INIT_COUPLES</code> 하드코딩 제거. couples + couple_payments
+              + couple_vendor_costs 한 번에 join 조회.
+            </li>
+            <li>
+              <code>total_amount</code>가 0이면
+              <code>couple_payments</code> 합계로 자동 계산.
+            </li>
+            <li>
+              수금 항목 추가: <code>couple_payments.insert</code> (due_date
+              컬럼). 업체 지출 추가: <code>couple_vendor_costs.insert</code>.
+            </li>
+            <li>커플 추가 모달 제거 — <code>couple_list</code>에서 관리.</li>
+          </ul>
+
+          <div class="highlight-box-red">
+            <p>
+              ⚠️ <code>couple_payments</code> 컬럼:
+              <code>payment_date</code> (X) → <code>due_date</code> (O).
+              <code>planner_vendors</code> 혼동 주의: 업체 지출용이 아닌 파트너
+              관리 테이블. 업체 지출 전용:
+              <code>couple_vendor_costs</code> 테이블 신규 생성.
+            </p>
+          </div>
+
+          <h3 class="sub-heading">
+            B3.5 wedding_vendor_partners.jsx — 협력 업체
+          </h3>
+          <p>연동 테이블: <code>planner_vendors</code></p>
+          <ul class="bullet-list">
+            <li>
+              <code>INITIAL_VENDORS</code> 하드코딩 제거.
+              <code>planner_id</code> 필터로 담당 플래너 업체만 조회.
+            </li>
+            <li>
+              추가/수정/삭제 모두 Supabase CRUD로 교체. Realtime 구독으로 변경
+              시 자동 갱신.
+            </li>
+          </ul>
+
+          <!-- B4 -->
+          <h3 class="sub-heading" id="s2-4">B4. Realtime 구독 구조</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>화면</th>
+                <th>구독 테이블</th>
+                <th>필터</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>dashboard</td>
+                <td class="txt-muted">
+                  couples, couple_schedules, planner_vendors, couple_payments
+                </td>
+                <td class="txt-muted">planner_id</td>
+              </tr>
+              <tr>
+                <td>couple_list</td>
+                <td class="txt-muted">couples, couple_schedules</td>
+                <td class="txt-muted">planner_id</td>
+              </tr>
+              <tr>
+                <td>planner_todo_list</td>
+                <td class="txt-muted">couple_schedules</td>
+                <td class="txt-muted">planner_id</td>
+              </tr>
+              <tr>
+                <td>planner_budget</td>
+                <td class="txt-muted">
+                  couples, couple_payments, couple_vendor_costs
+                </td>
+                <td class="txt-muted">planner_id</td>
+              </tr>
+              <tr>
+                <td>wedding_vendor_partners</td>
+                <td class="txt-muted">planner_vendors</td>
+                <td class="txt-muted">planner_id</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box">
+            <p>
+              📌 Realtime 활성화 필요 테이블 (Supabase Dashboard → Database →
+              Replication): <code>couples</code>, <code>couple_schedules</code>,
+              <code>couple_payments</code>, <code>couple_vendor_costs</code>,
+              <code>planner_vendors</code><br />채널 네이밍 규칙:
+              <code>{화면}-{테이블}-${planner_id}</code> &nbsp; 예)
+              <code>dashboard-couples-${planner_id}</code>
+            </p>
+          </div>
+
+          <!-- B5 -->
+          <h3 class="sub-heading" id="s2-5">B5. 공통 개발 패턴</h3>
+
+          <h3 class="sub-heading">planner_id 사용 방법</h3>
+          <div class="highlight-box-red">
+            <p>
+              하드코딩 절대 금지 — 반드시 AuthContext에서 동적으로 가져올 것
+            </p>
+          </div>
+          <div class="code-block">
+            <pre><span class="c-line">const { planner_id } = useAuth();</span>
+<span class="c-line">useEffect(() => {</span>
+<span class="c-line">  if (!planner_id) return;  <span class="c-comment">// early return 필수</span></span>
+<span class="c-line">  fetchData();</span>
+<span class="c-line">}, [planner_id]);</span></pre>
+          </div>
+
+          <h3 class="sub-heading">낙관적 업데이트 패턴</h3>
+          <div class="code-block">
+            <pre><span class="c-comment">// 1. UI 즉시 반영</span>
+<span class="c-line">setTodos(prev => prev.map(t => t.id === id ? {...t, done: !done} : t));</span>
+<span class="c-comment">// 2. DB 업데이트</span>
+<span class="c-line">const { error } = await supabase.from(...).update({done: !done}).eq('id', id);</span>
+<span class="c-comment">// 3. 실패 시 롤백</span>
+<span class="c-line">if (error) setTodos(prev => prev.map(t => t.id === id ? {...t, done} : t));</span></pre>
+          </div>
+
+          <h3 class="sub-heading">날짜 변환 규칙</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>형식</th>
+                <th>설명 / 용도</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>YYYY-MM-DD</td>
+                <td class="txt-muted">DB 저장값 (예: 2026-04-05)</td>
+              </tr>
+              <tr>
+                <td>YYYY년 M월 D일</td>
+                <td class="txt-muted">화면 표시 (예: 2026년 4월 5일)</td>
+              </tr>
+              <tr>
+                <td>YYYYMMDD</td>
+                <td class="txt-muted">폼 입력값 (planner_todo_list)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">avatarIdx 대체</h3>
+          <div class="code-block">
+            <pre><span class="c-comment">// Before: DB에 없는 컬럼</span>
+<span class="c-line">AVATAR_POOL[c.avatarIdx % AVATAR_POOL.length]</span>
+<span class="c-comment">// After: 배열 인덱스로 대체</span>
+<span class="c-line">AVATAR_POOL[sorted.indexOf(c) % AVATAR_POOL.length]</span></pre>
+          </div>
+
+          <!-- B6 -->
+          <h3 class="sub-heading" id="s2-6">B6. 트러블슈팅 요약</h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">#01</span>
+                <span class="white-title"
+                  >Property 'profile' doesn't exist</span
+                >
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    profile을 <code>useState</code>로 상태 승격하여 해결.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">#02</span>
+                <span class="white-title">planner_id 하드코딩</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>useAuth()</code>로 동적 조회하도록 전면 수정.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">#03</span>
+                <span class="white-title"
+                  >plannerId vs planner_id 네이밍 불일치</span
+                >
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    Context 필드명을 snake_case로 통일.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">#04~06</span>
+                <span class="white-title"
+                  >비용 현황 0 표시 · 컬럼명 오류 · 테이블 혼동</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">#04</div>
+                  <div class="white-value">
+                    비용 현황이 전부 0 → <code>couple_payments</code> 집계로
+                    동적 계산.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">#05</div>
+                  <div class="white-value">
+                    <code>couple_payments</code> 컬럼명
+                    오류(<code>payment_date</code>) → <code>due_date</code>로
+                    통일.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">#06</div>
+                  <div class="white-value">
+                    <code>planner_vendors</code> 테이블 혼동 → 업체 지출 전용
+                    <code>couple_vendor_costs</code> 신규 생성.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">#07~12</span>
+                <span class="white-title">기타 오류</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">#07</div>
+                  <div class="white-value">
+                    Identifier 'searchText' 중복 선언 → 중복 state 선언 블록
+                    삭제.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">#08</div>
+                  <div class="white-value">
+                    coupleName prop 없음 → 미리 계산 후 prop으로 전달.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">#09</div>
+                  <div class="white-value">
+                    완료 토글 시 취소선 미표시 →
+                    <code>useRef(lockedTodoIds)</code>로 5개 ID 고정.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">#10</div>
+                  <div class="white-value">
+                    담당 커플 수 0 표시 → Supabase에서
+                    <code>planner_id</code> 직접 입력.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">#11</div>
+                  <div class="white-value">
+                    stage 필터 동작 안 함 → 코드를 DB 저장값 형식에 맞게 수정.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">#12</div>
+                  <div class="white-value">
+                    Cannot read property 'bg' of undefined →
+                    <code>avatarIdx</code> 제거 +
+                    <code>STAGE_STYLE ?? → ||</code> 변경.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── PART C. 알림 기능 개발 ── -->
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">Part C — Notification Feature</div>
+          <h2 class="sec-heading">알림(Notification) 기능 개발</h2>
+
+          <!-- C1 -->
+          <h3 class="sub-heading" id="s3-1">C1. 작업 개요</h3>
+          <p>
+            대상 파일: <code>app/(couple)/(tabs)/index.jsx</code> (수정),
+            <code>app/(couple)/notifications.jsx</code> (신규 생성),
+            <code>context/NotificationContext.jsx</code> (수정 없음)
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>작업 전</th>
+                <th>작업 후</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-muted">
+                  알림 버튼 onPress 없음, 빨간 dot 항상 표시
+                </td>
+                <td class="txt-muted">
+                  unreadCount 기반 조건부 dot, 알림 화면으로 라우팅
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-muted">별도 fetch + useAuthStore 이중 관리</td>
+                <td class="txt-muted">NotificationContext 단일 관리</td>
+              </tr>
+              <tr>
+                <td class="txt-muted">모두 읽음/삭제 기능 없음</td>
+                <td class="txt-muted">모두 읽음 버튼 + 알림 삭제 기능 추가</td>
+              </tr>
+              <tr>
+                <td class="txt-muted">FlatList 단순 카드 리스트</td>
+                <td class="txt-muted">
+                  읽음/안읽음 섹션 분리 + 하단 모달 상세
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- C2 -->
+          <h3 class="sub-heading" id="s3-2">C2. 폴더 구조</h3>
+
+          <div class="tree-block">
+            <pre><span class="t-ink">app/</span>
+<span class="t-line">├── (auth)/</span>
+<span class="t-line">│   ├── _layout.jsx</span>
+<span class="t-line">│   ├── login.jsx</span>
+<span class="t-line">│   └── register.jsx</span>
+<span class="t-line">├── (couple)/</span>
+<span class="t-line">│   ├── (tabs)/          ← 탭 네비게이터</span>
+<span class="t-line">│   │   ├── _layout.jsx</span>
+<span class="t-line">│   │   ├── </span><span class="t-key">index.jsx</span><span class="t-line">    ← ✅ 수정 (홈 화면)</span>
+<span class="t-line">│   │   ├── budget.jsx</span>
+<span class="t-line">│   │   ├── docs.jsx</span>
+<span class="t-line">│   │   ├── mypage.jsx</span>
+<span class="t-line">│   │   └── timeline.jsx</span>
+<span class="t-line">│   └── </span><span class="t-key">notifications.jsx</span><span class="t-line"> ← ✅ 전면 교체 (탭 바 없는 전체 화면)</span>
+<span class="t-line">└── (planner)/</span>
+<span class="t-line">    ├── dashboard.jsx</span>
+<span class="t-line">    ├── notifications.jsx ← 기존 planner용 (수정 없음)</span>
+<span class="t-line">    └── ...</span></pre>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              📌 <code>notifications.jsx</code>를 <code>(tabs)</code> 폴더 밖에
+              두는 이유: (tabs) 안에 넣으면 하단 탭 바가 알림 화면에도 표시되고,
+              탭 네비게이터가 알림을 탭 항목으로 인식할 수 있습니다. planner도
+              동일하게 <code>(planner)/notifications.jsx</code> 구조 사용 중.
+            </p>
+          </div>
+
+          <!-- C3 -->
+          <h3 class="sub-heading" id="s3-3">C3. NotificationContext 구조</h3>
+          <p>
+            <code>user_id</code> 기반으로 추상화되어 planner/couple 구분 없이
+            동작합니다.
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>제공 값</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>notifications</td>
+                <td class="txt-muted">알림 목록 배열</td>
+              </tr>
+              <tr>
+                <td>unreadCount</td>
+                <td class="txt-muted">읽지 않은 알림 개수</td>
+              </tr>
+              <tr>
+                <td>loading</td>
+                <td class="txt-muted">로딩 상태</td>
+              </tr>
+              <tr>
+                <td>setUserId(id)</td>
+                <td class="txt-muted">
+                  유저 ID 등록 → notifications 테이블 fetch 시작
+                </td>
+              </tr>
+              <tr>
+                <td>markAsRead(id)</td>
+                <td class="txt-muted">
+                  단건 읽음 처리 (DB + 로컬 상태 동시 반영)
+                </td>
+              </tr>
+              <tr>
+                <td>markAllRead()</td>
+                <td class="txt-muted">전체 읽음 처리</td>
+              </tr>
+              <tr>
+                <td>deleteNotif(id)</td>
+                <td class="txt-muted">알림 삭제</td>
+              </tr>
+              <tr>
+                <td>refresh()</td>
+                <td class="txt-muted">알림 목록 새로고침</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">Supabase notifications 테이블</h3>
+          <table class="normal-table">
+            <thead>
+              <tr>
+                <th>컬럼</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-name">id</td>
+                <td class="col-desc">PK</td>
+              </tr>
+              <tr>
+                <td class="col-name">user_id</td>
+                <td class="col-desc">
+                  알림 대상 유저 ID (planner/couple 공통)
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">title / body</td>
+                <td class="col-desc">알림 제목 / 본문</td>
+              </tr>
+              <tr>
+                <td class="col-name">is_read</td>
+                <td class="col-desc">읽음 여부 (boolean)</td>
+              </tr>
+              <tr>
+                <td class="col-name">type</td>
+                <td class="col-desc">
+                  info_consultation / info_wedding / info_message / info_payment
+                </td>
+              </tr>
+              <tr>
+                <td class="col-name">icon / icon_color / icon_bg</td>
+                <td class="col-desc">아이콘 이름, 색상, 배경색 (Ionicons)</td>
+              </tr>
+              <tr>
+                <td class="col-name">ref_type</td>
+                <td class="col-desc">
+                  딥링크 대상 (budget / payment / timeline / schedule)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- C4 -->
+          <h3 class="sub-heading" id="s3-4">
+            C4. (couple)/(tabs)/index.jsx 수정 내용
+          </h3>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// 변경 1 — import 추가</span>
+<span class="c-line">import { useEffect } from <span class="c-str">'react'</span>;</span>
+<span class="c-line">import { useNotifications } from <span class="c-str">'../../context/NotificationContext'</span>;</span>
+<span class="c-line">import { useAuth } from <span class="c-str">'../../context/AuthContext'</span>;</span>
+
+<span class="c-comment">// 변경 2 — 훅 연결 및 setUserId 호출</span>
+<span class="c-line">const { unreadCount, setUserId } = useNotifications();</span>
+<span class="c-line">const auth = useAuth();</span>
+<span class="c-line">const coupleUserId = auth?.couple_id ?? auth?.user_id ?? null;</span>
+<span class="c-line">useEffect(() => {</span>
+<span class="c-line">  if (coupleUserId) { setUserId(coupleUserId); }</span>
+<span class="c-line">  <span class="c-comment">// cleanup 생략: 탭 이동 후 돌아와도 알림 상태 유지</span></span>
+<span class="c-line">}, [coupleUserId]);</span></pre>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// onPress 없음, dot 항상 표시</span>
+<span class="c-line">&lt;TouchableOpacity style={styles.notifBtn} activeOpacity={0.7}&gt;</span>
+<span class="c-line">  &lt;Ionicons name="notifications-outline" size={20} /&gt;</span>
+<span class="c-line">  &lt;View style={styles.notifDot} /&gt;</span>
+<span class="c-line">&lt;/TouchableOpacity&gt;</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// onPress 연결, dot 조건부 표시</span>
+<span class="c-line">&lt;TouchableOpacity</span>
+<span class="c-line">  style={styles.notifBtn}</span>
+<span class="c-line">  activeOpacity={0.7}</span>
+<span class="c-line">  onPress={() => router.push(<span class="c-str">'/(couple)/notifications'</span>)}</span>
+<span class="c-line">&gt;</span>
+<span class="c-line">  &lt;Ionicons name="notifications-outline" size={20} /&gt;</span>
+<span class="c-line">  {unreadCount &gt; 0 && &lt;View style={styles.notifDot} /&gt;}</span>
+<span class="c-line">&lt;/TouchableOpacity&gt;</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- C5 -->
+          <h3 class="sub-heading" id="s3-5">
+            C5. (couple)/notifications.jsx 전면 교체
+          </h3>
+
+          <h3 class="sub-heading">알림 탭 동작 흐름</h3>
+          <div class="component-box">
+            <pre>
+알림 아이템 탭
+  ↓
+openDetail(notif) 호출
+  ↓
+markAsRead(notif.id) — DB + 로컬 상태 읽음 처리
+  ↓
+하단 모달 시트 슬라이드업 (spring 애니메이션)
+  ↓
+[ref_type 있음] "바로 이동" 버튼 표시
+  ↓
+버튼 탭 → closeDetail() → setTimeout 230ms → router.push(dest)</pre
+            >
+          </div>
+
+          <h3 class="sub-heading">딥링크 매핑 (DEEPLINK_MAP)</h3>
+          <div class="code-block">
+            <pre><span class="c-line">const DEEPLINK_MAP = {</span>
+<span class="c-line">  budget:   <span class="c-str">'/(couple)/(tabs)/budget'</span>,</span>
+<span class="c-line">  payment:  <span class="c-str">'/(couple)/(tabs)/budget'</span>,</span>
+<span class="c-line">  timeline: <span class="c-str">'/(couple)/(tabs)/timeline'</span>,</span>
+<span class="c-line">  schedule: <span class="c-str">'/(couple)/(tabs)/timeline'</span>,</span>
+<span class="c-comment">  // 확장 예시</span>
+<span class="c-line">  chat:     <span class="c-str">'/(couple)/(tabs)/chat'</span>,</span>
+<span class="c-line">  docs:     <span class="c-str">'/(couple)/(tabs)/docs'</span>,</span>
+<span class="c-line">};</span></pre>
+          </div>
+
+          <h3 class="sub-heading">아이콘 결정 우선순위</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>우선순위</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1순위</td>
+                <td class="txt-muted">DB의 icon 필드 직접 지정</td>
+              </tr>
+              <tr>
+                <td>2순위</td>
+                <td class="txt-muted">
+                  type 필드로 ICON_BY_TYPE 맵에서 자동 매핑
+                </td>
+              </tr>
+              <tr>
+                <td>3순위</td>
+                <td class="txt-muted">
+                  기본값: <code>notifications-outline</code>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="code-block">
+            <pre><span class="c-line">const ICON_BY_TYPE = {</span>
+<span class="c-line">  info_consultation: <span class="c-str">'calendar-outline'</span>,</span>
+<span class="c-line">  info_wedding:      <span class="c-str">'heart-outline'</span>,</span>
+<span class="c-line">  info_message:      <span class="c-str">'chatbubble-outline'</span>,</span>
+<span class="c-line">  info_payment:      <span class="c-str">'card-outline'</span>,</span>
+<span class="c-line">};</span></pre>
+          </div>
+
+          <!-- C6 -->
+          <h3 class="sub-heading" id="s3-6">C6. 라우팅 경로 정리</h3>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">커플</span>
+                <span class="white-column-layer-tech">couple</span>
+              </div>
+              <div class="white-column-content">
+                <table class="gen-table">
+                  <thead>
+                    <tr>
+                      <th>화면</th>
+                      <th>경로</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>홈 탭</td>
+                      <td class="txt-muted"><code>/(couple)/(tabs)</code></td>
+                    </tr>
+                    <tr>
+                      <td>알림</td>
+                      <td class="txt-muted">
+                        <code>/(couple)/notifications</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>예산 탭</td>
+                      <td class="txt-muted">
+                        <code>/(couple)/(tabs)/budget</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>타임라인 탭</td>
+                      <td class="txt-muted">
+                        <code>/(couple)/(tabs)/timeline</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>채팅 탭</td>
+                      <td class="txt-muted">
+                        <code>/(couple)/(tabs)/chat</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>마이페이지</td>
+                      <td class="txt-muted">
+                        <code>/(couple)/(tabs)/mypage</code>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">플래너</span>
+                <span class="white-column-layer-tech">planner</span>
+              </div>
+              <div class="white-column-content">
+                <table class="gen-table">
+                  <thead>
+                    <tr>
+                      <th>화면</th>
+                      <th>경로</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>대시보드</td>
+                      <td class="txt-muted">
+                        <code>/(planner)/dashboard</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>알림</td>
+                      <td class="txt-muted">
+                        <code>/(planner)/notifications</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>커플 목록</td>
+                      <td class="txt-muted">
+                        <code>/(planner)/couple_list</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>할 일 목록</td>
+                      <td class="txt-muted">
+                        <code>/(planner)/planner_todo_list</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>예산 관리</td>
+                      <td class="txt-muted">
+                        <code>/(planner)/planner_budget</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>업체 파트너</td>
+                      <td class="txt-muted">
+                        <code>/(planner)/wedding_vendor_partners</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>고객 상세</td>
+                      <td class="txt-muted">
+                        <code>/(planner)/customer/[id]</code>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- C7 -->
+          <h3 class="sub-heading" id="s3-7">C7. 잔여 작업 및 핵심 주의사항</h3>
+
+          <h3 class="sub-heading">잔여 작업</h3>
+          <ul class="bullet-list">
+            <li>커플 앱(couple) 화면 Supabase 연동 — timeline.jsx 등</li>
+            <li>Row Level Security(RLS) 정책 전체 설정</li>
+            <li>
+              <code>couple_vendor_costs</code> 테이블 Realtime 활성화 확인
+            </li>
+            <li>
+              <code>couples.stage</code> 값 통일 (DB에 '준비중' 형태로
+              저장되도록 앱 전체 확인)
+            </li>
+            <li>
+              AuthContext에서 couple 유저 ID 키 이름 확인 (<code
+                >couple_id</code
+              >
+              vs <code>user_id</code>)
+            </li>
+            <li>
+              NotificationProvider가 <code>(couple)</code> 레이아웃을 감싸고
+              있는지 확인
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">RLS 정책 권장 SQL</h3>
+          <div class="code-block">
+            <pre><span class="c-comment">-- 커플: 자신의 일정만 조회</span>
+<span class="c-line">CREATE POLICY <span class="c-str">"couple read own schedules"</span> ON couple_schedules</span>
+<span class="c-line">  FOR SELECT USING (couple_id = auth.uid());</span>
+
+<span class="c-comment">-- 플래너: 담당 커플 전체 관리</span>
+<span class="c-line">CREATE POLICY <span class="c-str">"planner manage schedules"</span> ON couple_schedules</span>
+<span class="c-line">  FOR ALL USING (planner_id = auth.uid());</span></pre>
+          </div>
+
+          <h3 class="sub-heading">핵심 주의사항</h3>
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">주의 01</span>
+                <span class="white-title">테이블 혼동 절대 금지</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>planner_vendors</code>(협력업체 파트너) vs
+                    <code>couple_vendor_costs</code>(커플별 업체 지출) — 절대
+                    혼동 금지.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">주의 02</span>
+                <span class="white-title">컬럼명 및 stage 저장값</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">컬럼명</div>
+                  <div class="white-value">
+                    <code>couple_payments</code> 컬럼:
+                    <code>payment_date</code> (X) → <code>due_date</code> (O)
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">stage 값</div>
+                  <div class="white-value">
+                    DB 저장값 띄어쓰기 없음: <code>'준비중'</code> /
+                    <code>'최종점검'</code> / <code>'초기상담'</code> /
+                    <code>'계약완료'</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">주의 03</span>
+                <span class="white-title">planner_id 및 Realtime 채널명</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">planner_id</div>
+                  <div class="white-value">
+                    하드코딩 절대 금지 — 반드시 <code>useAuth()</code>에서 동적
+                    사용
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">채널명</div>
+                  <div class="white-value">
+                    화면별로 고유하게 지정 (중복 시 이벤트 누락).
+                    <code
+                      >DB에서 가져온 커플 데이터에 avatarIdx 없음 —
+                      sorted.indexOf(c)</code
+                    >로 대체.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+    <script src="../../script.js"></script>
+  </body>
+</html>
