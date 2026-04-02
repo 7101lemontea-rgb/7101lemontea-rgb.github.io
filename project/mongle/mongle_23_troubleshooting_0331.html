@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>트러블슈팅 2026.03.31 (2/2) — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.03.31 Troubleshooting</span>
+          <span class="badge badge-ver">2 / 2</span>
+          <span class="badge badge-status draft">총 20건</span>
+        </div>
+        <h1 class="post-title">트러블슈팅 문서 (2)</h1>
+        <p class="post-sub">
+          2026년 3월 31일 — UI/UX · 알림 기능 · 연동 전 체크리스트
+        </p>
+        <p class="post-desc">
+          트러블슈팅 문서 (1)에 이어 후반부 8건을 기록합니다. 대시보드 오늘 할
+          일 순서 오류(#13), 완료 지우기 후 빈 자리 미채움(#14), 알림 기능
+          이슈(알림#1~6), 연동 전 체크리스트를 다룹니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">발생 일자</div>
+            <div class="stat-val">2026년 3월 31일</div>
+          </div>
+          <div>
+            <div class="stat-label">이슈 건수</div>
+            <div class="stat-val">8건 (후반부)</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s0"><span class="toc-num">§</span>이슈 목록 (후반부)</a>
+            </li>
+            <li>
+              <a href="#s1"><span class="toc-num">04</span>UI/UX 이슈</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s1-1">#13 오늘 할 일 순서 오류</a></li>
+                <li><a href="#s1-2">#14 완료 지우기 후 빈 자리</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s2"><span class="toc-num">05</span>알림 기능 이슈</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s2-1">알림#1 버튼 무반응</a></li>
+                <li><a href="#s2-2">알림#2 데이터 로드 안 됨</a></li>
+                <li><a href="#s2-3">알림#3 이중 관리 구조</a></li>
+                <li><a href="#s2-4">알림#4 tabs 배치 오류</a></li>
+                <li><a href="#s2-5">알림#5 파일 혼동</a></li>
+                <li><a href="#s2-6">알림#6 딥링크 누락</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s3"
+                ><span class="toc-num">06</span>연동 전 체크리스트</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s3-1">DB 설정 확인</a></li>
+                <li><a href="#s3-2">코드 패턴 확인</a></li>
+                <li><a href="#s3-3">테이블 혼동 주의</a></li>
+                <li><a href="#s3-4">알림 배포 전 확인</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <!-- § 이슈 목록 (후반부) -->
+        <section class="section visible" id="s0">
+          <div class="sec-eyebrow">Issue Index — 2 / 2</div>
+          <h2 class="sec-heading">이슈 목록 (후반부 8건)</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>이슈</th>
+                <th>카테고리</th>
+                <th>관련 파일</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-red">#13</td>
+                <td class="txt-muted">
+                  대시보드 '오늘 할 일'에 날짜 무관 항목 표시
+                </td>
+                <td class="txt-muted">UI/UX</td>
+                <td><code>dashboard.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">#14</td>
+                <td class="txt-muted">
+                  완료 지우기 후 빈 자리가 채워지지 않음
+                </td>
+                <td class="txt-muted">UI/UX</td>
+                <td><code>dashboard.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">알림#1</td>
+                <td class="txt-muted">알림 버튼 클릭 시 아무 동작 없음</td>
+                <td class="txt-muted">알림 기능</td>
+                <td><code>(tabs)/index.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">알림#2</td>
+                <td class="txt-muted">알림 화면에서 데이터가 로드되지 않음</td>
+                <td class="txt-muted">알림 기능</td>
+                <td><code>notifications.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">알림#3</td>
+                <td class="txt-muted">notifications.jsx 이중 관리 구조 문제</td>
+                <td class="txt-muted">알림 기능</td>
+                <td><code>notifications.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">알림#4</td>
+                <td class="txt-muted">
+                  notifications.jsx를 (tabs) 안에 배치 시 UI 깨짐
+                </td>
+                <td class="txt-muted">알림 기능</td>
+                <td><code>notifications.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">알림#5</td>
+                <td class="txt-muted">
+                  (couple)/index.jsx와 (couple)/(tabs)/index.jsx 혼동
+                </td>
+                <td class="txt-muted">알림 기능</td>
+                <td><code>app/(couple)/</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">알림#6</td>
+                <td class="txt-muted">딥링크 기능 누락</td>
+                <td class="txt-muted">알림 기능</td>
+                <td><code>notifications.jsx</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box">
+            <p>
+              📄 전반부 12건(라우팅·Supabase·렌더링)은
+              <strong>트러블슈팅 문서 (1)</strong>을 참고하세요.
+            </p>
+          </div>
+        </section>
+
+        <!-- 04. UI/UX -->
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">Chapter 04 — UI/UX</div>
+          <h2 class="sec-heading">UI/UX 이슈</h2>
+
+          <!-- #13 -->
+          <h3 class="sub-heading" id="s1-1">
+            #13 &nbsp; 대시보드 '오늘 할 일'에 오늘 일정이 아닌 항목 표시
+          </h3>
+          <p>
+            대상 파일: <code>dashboard.jsx</code> &nbsp;·&nbsp; 증상: 오늘 할 일
+            카드에 날짜 무관하게 전체 일정 앞 5개가 표시됨
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >날짜 필터 없이 상위 5개 슬라이싱</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인 1</div>
+                  <div class="white-value">
+                    <code>todos.slice(0, 5)</code>로 날짜 상관없이 상위 5개를
+                    표시.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인 2</div>
+                  <div class="white-value">
+                    <code>urgentTodos</code>는 상단 뱃지 카운트에만 사용되고
+                    카드 목록에 반영 안 됨.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">해결 — 표시 순서 재정의</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>우선순위</th>
+                <th>조건</th>
+                <th>정렬</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-accent">1순위</td>
+                <td class="txt-muted">오늘 미완료 (urgent)</td>
+                <td class="txt-muted"><code>scheduled_date === today</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">2순위</td>
+                <td class="txt-muted">이후 미완료 (upcoming)</td>
+                <td class="txt-muted">날짜 오름차순</td>
+              </tr>
+              <tr>
+                <td class="txt-muted">최대</td>
+                <td class="txt-muted">5개 표시</td>
+                <td class="txt-muted">—</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="code-block">
+            <pre><span class="c-line">const urgentTodos = todos.filter(</span>
+<span class="c-line">  t => !t.done && t.scheduled_date === today</span>
+<span class="c-line">);</span>
+<span class="c-line">const upcomingTodos = todos</span>
+<span class="c-line">  .filter(t => !t.done && t.scheduled_date > today)</span>
+<span class="c-line">  .sort((a, b) => a.scheduled_date.localeCompare(b.scheduled_date));</span>
+<span class="c-line">const dashboardTodos = [...urgentTodos, ...upcomingTodos].slice(0, 5);</span></pre>
+          </div>
+
+          <!-- #14 -->
+          <h3 class="sub-heading" id="s1-2">
+            #14 &nbsp; 완료 지우기 후 빈 자리가 채워지지 않음
+          </h3>
+          <p>
+            대상 파일: <code>dashboard.jsx</code> &nbsp;·&nbsp; 증상: 완료
+            지우기 버튼 클릭 후 빈 자리가 새 항목으로 채워지지 않음 (5개 → 3개)
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >DB에서 새 항목을 다시 불러오는 로직 없음</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>setTodos(prev => prev.filter(t => !t.done))</code>으로
+                    state에서만 제거. DB에서 새 항목을 다시 불러오는 로직 없음.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    완료 지우기 시 <code>lockedTodoIds</code>를 초기화하고
+                    <code>fetchTodos()</code>를 재호출하여 DB에서 새 5개 로드.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-line">onPress={() => {</span>
+<span class="c-line">  setTodos(prev => prev.filter(t => !t.done));</span>
+<span class="c-line">  lockedTodoIds.current = []; <span class="c-comment">// 고정 목록 초기화</span></span>
+<span class="c-line">  fetchTodos(); <span class="c-comment">// DB에서 새 5개 로드</span></span>
+<span class="c-line">}}</span></pre>
+          </div>
+        </section>
+
+        <!-- 05. 알림 기능 이슈 -->
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">Chapter 05 — Notification Feature</div>
+          <h2 class="sec-heading">알림(Notification) 기능 이슈</h2>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">작업 범위</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">관련 파일 1</div>
+                  <div class="white-value">
+                    <code>app/(couple)/(tabs)/index.jsx</code>
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">관련 파일 2</div>
+                  <div class="white-value">
+                    <code>app/(couple)/notifications.jsx</code>
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">참조 파일</div>
+                  <div class="white-value">
+                    <code>context/NotificationContext.jsx</code> (수정 없음)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 알림#1 -->
+          <h3 class="sub-heading" id="s2-1">
+            알림#1 &nbsp; 알림 버튼 클릭 시 아무 동작 없음
+          </h3>
+          <p>
+            대상 파일: <code>app/(couple)/(tabs)/index.jsx</code> &nbsp;·&nbsp;
+            증상: 알림 아이콘 탭해도 반응 없음, 알림 dot이 항상 표시됨
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >onPress 핸들러 없음 + dot 항상 렌더링</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인 1</div>
+                  <div class="white-value">
+                    알림 버튼에 <code>onPress</code> 핸들러 없음.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인 2</div>
+                  <div class="white-value">
+                    <code>notifDot</code>이 조건 없이 항상 렌더링 (하드코딩).
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">원인 3</div>
+                  <div class="white-value">
+                    <code>useNotifications</code> 훅 미연결 →
+                    <code>unreadCount</code> 값 사용 불가.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// onPress 없음, dot 항상 표시</span>
+<span class="c-line">&lt;TouchableOpacity style={styles.notifBtn} activeOpacity={0.7}&gt;</span>
+<span class="c-line">  &lt;Ionicons name="notifications-outline" size={20} color="#3a2e2a" /&gt;</span>
+<span class="c-line">  &lt;View style={styles.notifDot} /&gt;</span>
+<span class="c-line">&lt;/TouchableOpacity&gt;</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// onPress 연결, dot 조건부 표시</span>
+<span class="c-line">&lt;TouchableOpacity</span>
+<span class="c-line">  style={styles.notifBtn}</span>
+<span class="c-line">  activeOpacity={0.7}</span>
+<span class="c-line">  onPress={() => router.push(<span class="c-str">'/(couple)/notifications'</span>)}</span>
+<span class="c-line">&gt;</span>
+<span class="c-line">  &lt;Ionicons name="notifications-outline" size={20} color="#3a2e2a" /&gt;</span>
+<span class="c-line">  {unreadCount &gt; 0 && &lt;View style={styles.notifDot} /&gt;}</span>
+<span class="c-line">&lt;/TouchableOpacity&gt;</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 알림#2 -->
+          <h3 class="sub-heading" id="s2-2">
+            알림#2 &nbsp; 알림 화면에서 데이터가 로드되지 않음
+          </h3>
+          <p>
+            대상 파일: <code>app/(couple)/notifications.jsx</code> &nbsp;·&nbsp;
+            증상: 알림 화면 진입 시 알림 목록이 비어 있음 (Supabase에 데이터
+            존재함에도)
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >setUserId() 미호출 — fetchNotifications 실행 안 됨</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>NotificationContext</code>의
+                    <code>fetchNotifications()</code>는
+                    <code>setUserId()</code> 호출 시 실행.
+                    <code>(couple)</code> 화면 어디에서도
+                    <code>setUserId()</code>를 호출하지 않음. Context 초기
+                    <code>userId</code>가 <code>null</code> → fetch 자체가
+                    실행되지 않음.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// index.jsx에서 setUserId 호출</span>
+<span class="c-line">const auth = useAuth();</span>
+<span class="c-line">const coupleUserId = auth?.couple_id ?? auth?.user_id ?? null;</span>
+<span class="c-line">useEffect(() => {</span>
+<span class="c-line">  if (coupleUserId) {</span>
+<span class="c-line">    setUserId(coupleUserId);</span>
+<span class="c-line">  }</span>
+<span class="c-line">}, [coupleUserId]);</span></pre>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              주의: auth 객체의 키 이름은 AuthContext 구현에 따라 다를 수 있음
+              (<code>couple_id</code> vs <code>user_id</code>)
+            </p>
+          </div>
+
+          <!-- 알림#3 -->
+          <h3 class="sub-heading" id="s2-3">
+            알림#3 &nbsp; notifications.jsx 이중 관리 구조 문제
+          </h3>
+          <p>
+            대상 파일: <code>app/(couple)/notifications.jsx</code> &nbsp;·&nbsp;
+            증상: <code>NotificationContext</code>와 별개로 자체 fetch 수행 →
+            읽음 상태 동기화 문제
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title">Context 도입 이전 코드 잔존</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    기존 <code>notifications.jsx</code>가
+                    <code>useAuthStore</code> + 직접 fetch 방식으로 구현.
+                    <code>NotificationContext</code> 도입 이전 코드가 그대로
+                    남아 있었음.
+                  </div>
+                </div>
+                <div>
+                  <div class="white-label">해결</div>
+                  <div class="white-value">
+                    <code>NotificationContext</code> 방식으로 전면 교체.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>기존</th>
+                <th>변경 후</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>데이터 관리</td>
+                <td class="txt-red">useAuthStore + 직접 fetch</td>
+                <td class="txt-accent">useNotifications Context</td>
+              </tr>
+              <tr>
+                <td>UI 구조</td>
+                <td class="txt-muted">FlatList 단순 카드</td>
+                <td class="txt-muted">읽음/안읽음 섹션 분리</td>
+              </tr>
+              <tr>
+                <td>알림 탭 동작</td>
+                <td class="txt-muted">즉시 딥링크 이동</td>
+                <td class="txt-muted">모달 시트 → 바로 이동 버튼</td>
+              </tr>
+              <tr>
+                <td>모두 읽음</td>
+                <td class="txt-red">없음</td>
+                <td class="txt-accent">헤더 우측 버튼</td>
+              </tr>
+              <tr>
+                <td>알림 삭제</td>
+                <td class="txt-red">없음</td>
+                <td class="txt-accent">모달 내 삭제 버튼</td>
+              </tr>
+              <tr>
+                <td>딥링크</td>
+                <td class="txt-muted">있음 (유지)</td>
+                <td class="txt-muted">있음 (DEEPLINK_MAP으로 관리)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 알림#4 -->
+          <h3 class="sub-heading" id="s2-4">
+            알림#4 &nbsp; notifications.jsx를 (tabs) 안에 배치 시 UI 깨짐
+          </h3>
+          <p>
+            대상 파일: <code>app/(couple)/notifications.jsx</code> &nbsp;·&nbsp;
+            증상: 알림 화면 하단에 탭 바가 표시되고 탭 네비게이터가 알림을 탭
+            항목으로 인식
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">원인</span>
+                <span class="white-title"
+                  >(tabs) 폴더 안의 파일은 모두 탭 네비게이터 적용</span
+                >
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">원인</div>
+                  <div class="white-value">
+                    <code>(tabs)</code> 폴더 안의 파일은 모두 탭 네비게이터의
+                    적용을 받음.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>위치</th>
+                <th>결과</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>app/(couple)/notifications.jsx</code></td>
+                <td class="txt-accent">✅ 탭 바 없음 — 올바른 위치</td>
+              </tr>
+              <tr>
+                <td><code>app/(couple)/(tabs)/notifications.jsx</code></td>
+                <td class="txt-red">❌ 탭 바 표시됨 — 잘못된 위치</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 알림#5 -->
+          <h3 class="sub-heading" id="s2-5">
+            알림#5 &nbsp; (couple)/index.jsx와 (couple)/(tabs)/index.jsx 혼동
+          </h3>
+          <p>
+            대상 파일: <code>app/(couple)/</code> &nbsp;·&nbsp; 증상: 두 파일 중
+            어느 파일을 수정해야 할지 혼동
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파일</th>
+                <th>역할</th>
+                <th>수정 필요</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>(couple)/index.jsx</code></td>
+                <td class="txt-muted">Redirect 전용 (실제 화면 아님)</td>
+                <td class="txt-muted">❌ 수정 불필요</td>
+              </tr>
+              <tr>
+                <td><code>(couple)/(tabs)/index.jsx</code></td>
+                <td class="txt-muted">실제 홈 화면</td>
+                <td class="txt-accent">✅ 수정 대상</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 알림#6 -->
+          <h3 class="sub-heading" id="s2-6">알림#6 &nbsp; 딥링크 기능 누락</h3>
+          <p>
+            대상 파일: <code>app/(couple)/notifications.jsx</code> &nbsp;·&nbsp;
+            증상: 파일 교체 과정에서 <code>ref_type</code> 기반 딥링크 로직
+            누락될 뻔함
+          </p>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">해결</span>
+                <span class="white-title">DEEPLINK_MAP으로 명시적 관리</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    파일 전면 교체 과정에서 누락될 뻔한 딥링크 로직을
+                    <code>DEEPLINK_MAP</code> 객체로 명시적으로 관리. 새로운
+                    <code>ref_type</code> 추가 시 DEEPLINK_MAP에 항목만 추가하면
+                    됨.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block">
+            <pre><span class="c-line">const DEEPLINK_MAP = {</span>
+<span class="c-line">  budget:   <span class="c-str">'/(couple)/(tabs)/budget'</span>,</span>
+<span class="c-line">  payment:  <span class="c-str">'/(couple)/(tabs)/budget'</span>,</span>
+<span class="c-line">  timeline: <span class="c-str">'/(couple)/(tabs)/timeline'</span>,</span>
+<span class="c-line">  schedule: <span class="c-str">'/(couple)/(tabs)/timeline'</span>,</span>
+<span class="c-comment">  // 확장 예시</span>
+<span class="c-line">  chat:     <span class="c-str">'/(couple)/(tabs)/chat'</span>,</span>
+<span class="c-line">  docs:     <span class="c-str">'/(couple)/(tabs)/docs'</span>,</span>
+<span class="c-line">};</span>
+<span class="c-comment">// 이동 흐름: "바로 이동" 버튼 탭 → closeDetail() → setTimeout 230ms → router.push(dest)</span></pre>
+          </div>
+        </section>
+
+        <!-- 06. 연동 전 체크리스트 -->
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">Chapter 06 — Pre-Integration Checklist</div>
+          <h2 class="sec-heading">연동 전 체크리스트</h2>
+
+          <!-- DB 설정 -->
+          <h3 class="sub-heading" id="s3-1">DB 설정 확인</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>확인 방법</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-muted">
+                  <code>couples.planner_id</code>에 실제 플래너 ID가 입력되어
+                  있는가?
+                </td>
+                <td class="txt-muted">Supabase 대시보드 → couples 테이블</td>
+              </tr>
+              <tr>
+                <td class="txt-muted">
+                  <code>user_profiles</code>에 <code>role</code>,
+                  <code>planner_id</code>, <code>couple_id</code>가 모두
+                  세팅되어 있는가?
+                </td>
+                <td class="txt-muted">
+                  Supabase 대시보드 → user_profiles 테이블
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-muted">
+                  쿼리에 사용하는 컬럼명이 실제 DB 컬럼명과 일치하는가?
+                </td>
+                <td class="txt-muted">
+                  CSV 또는 Supabase 대시보드에서 직접 확인
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-muted">
+                  Realtime 필요 테이블에 활성화되어 있는가?
+                </td>
+                <td class="txt-muted">
+                  Database → Replication → 해당 테이블 토글 ON
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- 코드 패턴 확인 -->
+          <h3 class="sub-heading" id="s3-2">코드 패턴 확인</h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">패턴 01</span>
+                <span class="white-title">planner_id 하드코딩 여부</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    ❌ 하드코딩 금지 — <code>useAuth()</code>에서 동적 조회.
+                    useEffect 내 <code>if (!planner_id) return;</code> early
+                    return 필수.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">패턴 02</span>
+                <span class="white-title">Realtime 채널명 고유성</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>{화면}-{테이블}-${planner_id}</code> 패턴 — 중복 시
+                    이벤트 누락 발생.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">패턴 03</span>
+                <span class="white-title">외부 컴포넌트 내부 함수 참조</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    ❌ 직접 참조 금지 — prop으로 전달. (#10 coupleName 사례
+                    참고)
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">패턴 04</span>
+                <span class="white-title">Falsy fallback 처리</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>??</code> 아닌 <code>||</code> 사용 — 빈
+                    문자열(<code>''</code>)도 처리해야 하는 경우. (#12
+                    STAGE_STYLE 사례 참고)
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">패턴 05</span>
+                <span class="white-title">DB에 없는 컬럼 참조</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    ❌ <code>avatarIdx</code> 등 하드코딩 시절 컬럼 사용 금지 —
+                    <code>sorted.indexOf(c)</code> 방식으로 대체.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 테이블 혼동 주의 -->
+          <h3 class="sub-heading" id="s3-3">테이블 혼동 주의사항</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>테이블</th>
+                <th>올바른 용도</th>
+                <th>사용 화면</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>planner_vendors</code></td>
+                <td class="txt-muted">협력업체 파트너 목록</td>
+                <td class="txt-muted">
+                  <code>wedding_vendor_partners.jsx</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>couple_vendor_costs</code></td>
+                <td class="txt-muted">커플별 업체 지출</td>
+                <td class="txt-muted"><code>planner_budget.jsx</code></td>
+              </tr>
+              <tr>
+                <td><code>couple_payments</code></td>
+                <td class="txt-muted">
+                  <code>due_date</code> 컬럼 사용 (<code>payment_date</code> ❌)
+                </td>
+                <td class="txt-muted"><code>planner_budget.jsx</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box-red">
+            <p>
+              ⚠️ <code>couples.stage</code> DB 저장값: '준비중' / '최종점검' /
+              '초기상담' / '계약완료' — 띄어쓰기 없음. 코드의
+              STAGE_FILTERS·STAGE_OPTIONS·STAGE_STYLE 키와 반드시 일치시켜야 함.
+            </p>
+          </div>
+
+          <!-- 알림 배포 전 확인 -->
+          <h3 class="sub-heading" id="s3-4">알림 기능 배포 전 확인</h3>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">확인 01</span>
+                <span class="white-title"
+                  >AuthContext couple 유저 ID 키 이름</span
+                >
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>couple_id</code> 또는 <code>user_id</code> — 실제 키로
+                    <code>index.jsx</code> 수정.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">확인 02</span>
+                <span class="white-title">NotificationProvider 래핑 위치</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>app/(couple)/_layout.jsx</code> 또는
+                    <code>app/_layout.jsx</code>에서 감싸고 있는지 확인.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">확인 03</span>
+                <span class="white-title"
+                  >Supabase notifications 테이블 user_id</span
+                >
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    couple 유저 ID가 올바르게 저장되어 있는지 확인.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">확인 04</span>
+                <span class="white-title">실시간 알림 구독</span>
+              </div>
+              <div class="white-body" style="grid-template-columns: 1fr">
+                <div>
+                  <div class="white-value">
+                    <code>app/_layout.jsx</code>에서 Realtime 구독 정상
+                    동작하는지 확인.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">확인 05</span>
+                <span class="white-title">알림 동작 시나리오 검증</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">ref_type 없는 알림</div>
+                  <div class="white-value">"바로 이동" 버튼 미표시 — 정상.</div>
+                </div>
+                <div>
+                  <div class="white-label">알림 삭제 후 목록</div>
+                  <div class="white-value">즉시 반영 (로컬 상태 필터링).</div>
+                </div>
+                <div>
+                  <div class="white-label">모두 읽음 처리 후</div>
+                  <div class="white-value">
+                    <code>unreadCount = 0</code>, dot 사라짐.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+    <script src="../../script.js"></script>
+  </body>
+</html>
