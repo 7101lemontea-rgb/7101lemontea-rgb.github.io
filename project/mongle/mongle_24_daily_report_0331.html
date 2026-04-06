@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>데일리 리포트 2026.03.31 — Mongle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.03.31 Daily Report</span>
+          <span class="badge badge-ver">Day 09</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">데일리 리포트</h1>
+        <p class="post-sub">
+          2026년 3월 31일 — Supabase 연동 · 실시간 동기화 · 알림 · 데모 촬영
+        </p>
+        <p class="post-desc">
+          플래너 전용 5개 화면 Supabase 전면 연동, 플래너-커플 간 실시간 데이터
+          동기화 검증, 커플 알림 시스템 연동, planners 폴더 라우팅 오류·RLS 권한
+          문제 해결, scrcpy 데모 영상 촬영까지 개발 Day 9 전 과정을 기록합니다.
+        </p>
+
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 3월 31일</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s0"><span class="toc-num">§</span>오늘의 작업 요약</a>
+            </li>
+            <li>
+              <a href="#s1"
+                ><span class="toc-num">01</span>플래너 화면 Supabase 연동</a
+              >
+            </li>
+            <li>
+              <a href="#s2"
+                ><span class="toc-num">02</span>실시간 데이터 동기화</a
+              >
+            </li>
+            <li>
+              <a href="#s3"
+                ><span class="toc-num">03</span>커플 알림 Supabase 연동</a
+              >
+            </li>
+            <li>
+              <a href="#s4"><span class="toc-num">04</span>이슈 해결</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s4-1">원인 1 — 라우팅 가드</a></li>
+                <li><a href="#s4-2">원인 2 — Join 쿼리</a></li>
+                <li><a href="#s4-3">원인 3 — RLS 정책</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s5"><span class="toc-num">05</span>데모 영상 촬영</a>
+            </li>
+            <li>
+              <a href="#s6"><span class="toc-num">06</span>결과 및 성과</a>
+            </li>
+            <li>
+              <a href="#s7"><span class="toc-num">07</span>내일 예정 작업</a>
+            </li>
+            <li>
+              <a href="#s8"><span class="toc-num">08</span>오늘의 회고</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── 오늘의 작업 요약 ── -->
+        <section class="section visible" id="s0">
+          <div class="sec-eyebrow">Today's Summary</div>
+          <h2 class="sec-heading">오늘의 작업 요약</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>내용</th>
+                <th>파일</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-accent">연동</td>
+                <td>플래너 대시보드 Supabase 연동</td>
+                <td><code>dashboard.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">연동</td>
+                <td>할 일 목록 Supabase 연동</td>
+                <td><code>planner_todo_list.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">연동</td>
+                <td>비용 현황 Supabase 연동</td>
+                <td><code>planner_budget.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">연동</td>
+                <td>협력 업체 Supabase 연동</td>
+                <td><code>wedding_vendor_partners.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">연동</td>
+                <td>커플 목록 Supabase 연동</td>
+                <td><code>couple_list.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-accent">연동</td>
+                <td>커플 알림 시스템 Supabase 연동</td>
+                <td><code>(couple)/notifications.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-muted">검증</td>
+                <td>플래너-커플 간 실시간 데이터 동기화 검증</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td class="txt-red">버그</td>
+                <td>planners 라우팅 가드 예외 처리 추가</td>
+                <td><code>app/_layout.jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">버그</td>
+                <td>fetchPlanner Join 제거 → 단순 select('*') 변경</td>
+                <td><code>planners/[id].jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">버그</td>
+                <td>handleConsultSubmit 수신자 ID 별도 쿼리 처리</td>
+                <td><code>planners/[id].jsx</code></td>
+              </tr>
+              <tr>
+                <td class="txt-red">버그</td>
+                <td>user_profiles planner 행 SELECT RLS 정책 추가</td>
+                <td>Supabase DB</td>
+              </tr>
+              <tr>
+                <td class="txt-muted">촬영</td>
+                <td>주요 플로우 데모 영상 촬영 (scrcpy)</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 1. 플래너 화면 Supabase 연동 ── -->
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">01 — Supabase Integration</div>
+          <h2 class="sec-heading">플래너 전용 화면 Supabase 연동</h2>
+          <p>
+            아래 5개 화면을 Supabase와 연동하여 실시간 DB 데이터가 화면에 정상
+            반영되는지 확인했습니다.
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>화면</th>
+                <th>파일</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>대시보드</td>
+                <td><code>dashboard.jsx</code></td>
+              </tr>
+              <tr>
+                <td>할 일 목록</td>
+                <td><code>planner_todo_list.jsx</code></td>
+              </tr>
+              <tr>
+                <td>비용 현황</td>
+                <td><code>planner_budget.jsx</code></td>
+              </tr>
+              <tr>
+                <td>협력 업체</td>
+                <td><code>wedding_vendor_partners.jsx</code></td>
+              </tr>
+              <tr>
+                <td>커플 목록</td>
+                <td><code>couple_list.jsx</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ul class="bullet-list">
+            <li>
+              하드코딩 임시 데이터 전체 제거 후 <code>useAuth()</code>에서
+              <code>planner_id</code>를 꺼내 모든 쿼리 필터로 사용.
+            </li>
+            <li>5개 테이블 Realtime 구독 추가 — 변경 시 자동 갱신.</li>
+            <li>
+              채널 네이밍 규칙:
+              <code>{화면}-{테이블}-${planner_id}</code> 패턴으로 중복 방지.
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── 2. 실시간 데이터 동기화 ── -->
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">02 — Realtime Sync</div>
+          <h2 class="sec-heading">플래너-커플 데이터 실시간 동기화</h2>
+          <p>
+            플래너가 일정을 수정했을 때 커플 화면에 즉시 반영되는지, 반대의
+            경우도 유효한지 상호 데이터 무결성을 검토했습니다.
+          </p>
+
+          <ul class="bullet-list">
+            <li>
+              플래너가 <code>couple_schedules</code>에 일정을 추가·수정하면 커플
+              화면에서 실시간으로 확인 가능한 것을 검증.
+            </li>
+            <li>
+              Supabase Realtime 채널이 <code>planner_id</code> 기반 필터로
+              올바르게 범위를 제한하고 있음을 확인.
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── 3. 커플 알림 연동 ── -->
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">03 — Notification Integration</div>
+          <h2 class="sec-heading">(couple)/notifications.jsx Supabase 연동</h2>
+          <p>
+            커플용 알림 화면을 Supabase와 연동하고 실시간 알림 피드가 정상
+            표시되는지 확인했습니다.
+          </p>
+
+          <ul class="bullet-list">
+            <li>
+              <code>NotificationContext</code>의 <code>setUserId()</code>를
+              <code>(couple)/(tabs)/index.jsx</code>에서 호출하도록 연결하여
+              알림 데이터 fetch 활성화.
+            </li>
+            <li>
+              읽음/안읽음 섹션 분리, 하단 모달 상세, 모두 읽음 버튼, 알림 삭제
+              기능까지 포함된 전면 교체 버전으로 완성.
+            </li>
+            <li>
+              알림 dot이 <code>unreadCount &gt; 0</code> 조건부로 표시되도록
+              수정.
+            </li>
+          </ul>
+        </section>
+
+        <!-- ── 4. 이슈 해결 ── -->
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">04 — Issue Resolution</div>
+          <h2 class="sec-heading">
+            이슈 — planners 폴더 접근 오류 및 상담 신청 실패
+          </h2>
+
+          <div class="highlight-box-red">
+            <p>ERROR: 상담 신청 실패 — 사용자 정보를 식별할 수 없습니다.</p>
+          </div>
+
+          <p>
+            <code>app/(couple)/planners/[id].jsx</code>의
+            <code>handleConsultSubmit</code> 함수에서 사용자 정보를 가져오지
+            못하는 문제였습니다. 원인은 세 단계에 걸쳐 발생했습니다.
+          </p>
+
+          <!-- 원인 1 -->
+          <h3 class="sub-heading" id="s4-1">
+            원인 1 — 라우팅 가드 문제 (<code>app/_layout.jsx</code>)
+          </h3>
+          <p>
+            <code>planners</code> 폴더가 <code>(couple)</code> 그룹 밖에 위치해
+            있어, <code>_layout.jsx</code>의 라우팅 가드가 해당 경로를 비정상
+            접근으로 판단하고 <code>/(couple)</code>로 강제 리다이렉트했습니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">} else if (!inCoupleGroup) {</span>
+<span class="c-line">  router.replace(<span class="c-str">'/(couple)'</span>);</span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-line">const inPlannerPage = rootSegment === <span class="c-str">'planners'</span>; <span class="c-comment">// 추가</span></span>
+<span class="c-line">} else if (!inCoupleGroup && !inPlannerPage) {   <span class="c-comment">// 수정</span></span>
+<span class="c-line">  router.replace(<span class="c-str">'/(couple)'</span>);</span>
+<span class="c-line">}</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 원인 2 -->
+          <h3 class="sub-heading" id="s4-2">
+            원인 2 — Supabase Join 쿼리 방향 오류
+            (<code>planners/[id].jsx</code>)
+          </h3>
+          <p>
+            <code>user_profiles!planner_id</code> Join이 외래키 방향과 반대로
+            시도되어 빈 배열 <code>[]</code>을 반환했고, 이로 인해
+            <code>user_profiles[0]?.id</code>가 <code>undefined</code>가
+            되었습니다.
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 전</span>
+                <span class="white-column-layer-tech">❌</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// 역방향 Join 시도</span>
+<span class="c-line">.select(<span class="c-str">`*, user_profiles!planner_id (id)`</span>)</span></pre>
+                </div>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">수정 후</span>
+                <span class="white-column-layer-tech">✅</span>
+              </div>
+              <div class="white-column-content">
+                <div class="code-block">
+                  <pre><span class="c-comment">// Join 제거, 단순 조회</span>
+<span class="c-line">.select(<span class="c-str">'*'</span>)</span>
+<span class="c-comment">// 수신자 ID는 handleConsultSubmit 내부에서 별도 쿼리 처리</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 원인 3 -->
+          <h3 class="sub-heading" id="s4-3">원인 3 — RLS 정책 미설정</h3>
+          <p>
+            커플 유저가 플래너의 <code>user_profiles</code> 행을 SELECT할 권한이
+            없었습니다. SQL Editor에서 직접 실행 시 정상 결과가 반환되어 RLS
+            차단임을 확인했습니다.
+          </p>
+
+          <div class="code-block">
+            <pre><span class="c-comment">-- SQL Editor에서 실행</span>
+<span class="c-line">CREATE POLICY <span class="c-str">"Anyone can read planner profiles"</span></span>
+<span class="c-line">  ON user_profiles FOR SELECT</span>
+<span class="c-line">  USING (role = <span class="c-str">'planner'</span>);</span></pre>
+          </div>
+
+          <h3 class="sub-heading">수정 파일 요약</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파일</th>
+                <th>수정 내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>app/_layout.jsx</code></td>
+                <td class="txt-muted">planners 라우트 예외 처리 추가</td>
+              </tr>
+              <tr>
+                <td><code>app/(couple)/planners/[id].jsx</code></td>
+                <td class="txt-muted">
+                  fetchPlanner Join 제거 → 단순 <code>select('*')</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code>app/(couple)/planners/[id].jsx</code></td>
+                <td class="txt-muted">
+                  handleConsultSubmit 수신자 ID 별도 쿼리 처리
+                </td>
+              </tr>
+              <tr>
+                <td>Supabase DB</td>
+                <td class="txt-muted">
+                  user_profiles 테이블 planner 행 SELECT 정책 추가
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 5. 데모 영상 촬영 ── -->
+        <section class="section visible" id="s5">
+          <div class="sec-eyebrow">05 — Demo Recording</div>
+          <h2 class="sec-heading">시연 영상 데모 촬영 (scrcpy)</h2>
+          <p><code>scrcpy</code>를 활용하여 아래 주요 플로우를 녹화했습니다.</p>
+
+          <ul class="bullet-list">
+            <li>메인 화면 · 로그인 동작</li>
+            <li>웨딩 업체 리스트 및 상세 화면</li>
+            <li>웨딩 플래너 리스트 및 상세 화면</li>
+            <li>일정 관리 화면</li>
+          </ul>
+        </section>
+
+        <!-- ── 6. 결과 및 성과 ── -->
+        <section class="section visible" id="s6">
+          <div class="sec-eyebrow">06 — Results</div>
+          <h2 class="sec-heading">결과 및 성과</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-accent">인프라</td>
+                <td class="txt-muted">
+                  플래너 핵심 대시보드 5개 화면 Supabase 연동 완료
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-accent">동기화</td>
+                <td class="txt-muted">
+                  플래너-커플 간 실시간 데이터 반영 검증 완료
+                </td>
+              </tr>
+              <tr>
+                <td class="txt-accent">알림</td>
+                <td class="txt-muted">커플용 알림 시스템 Supabase 연동 완료</td>
+              </tr>
+              <tr>
+                <td class="txt-accent">안정성</td>
+                <td class="txt-muted">라우팅 오류 및 RLS 권한 문제 해결</td>
+              </tr>
+              <tr>
+                <td class="txt-accent">자료화</td>
+                <td class="txt-muted">주요 사용자 흐름 데모 영상 초안 확보</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ── 7. 내일 예정 작업 ── -->
+        <section class="section visible" id="s7">
+          <div class="sec-eyebrow">07 — Tomorrow's Plan</div>
+          <h2 class="sec-heading">내일 예정 작업 (2026.04.01)</h2>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Task 01</span>
+                <span class="white-title">미촬영 화면 추가 촬영</span>
+                <span class="color-badge p1">P0</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">작업 내용</div>
+                  <div class="white-value">
+                    scrcpy를 활용하여 아직 촬영되지 않은 나머지 화면 추가 촬영.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Task 02</span>
+                <span class="white-title">시연 영상 편집 및 자막 작업</span>
+                <span class="color-badge p1">P0</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">작업 내용</div>
+                  <div class="white-value">
+                    촬영된 영상 편집 및 자막 삽입 작업.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Task 03</span>
+                <span class="white-title">잔여 버그 및 UI 이슈 수정</span>
+              </div>
+              <div class="white-body">
+                <div>
+                  <div class="white-label">작업 내용</div>
+                  <div class="white-value">
+                    촬영 과정에서 발견된 잔여 버그 및 UI 이슈 수정.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 8. 오늘의 회고 ── -->
+        <section class="section visible" id="s8">
+          <div class="sec-eyebrow">08 — Retrospective</div>
+          <h2 class="sec-heading">오늘의 회고</h2>
+
+          <div class="highlight-box">
+            <p>
+              시연 영상을 촬영하는 과정은 단순히 기록을 남기는 것이 아니라,
+              사용자의 관점에서 전체 기능을 전수 점검하는 과정임을 깨달았습니다.
+              평소 개발하며 놓쳤던 미완성 부분들을 시연 중 발견하게 되었고,
+              수정에 시간이 소요되었지만 서비스 완성도를 한 단계 끌어올리는
+              계기가 되었습니다. 내일은 편집에 집중하여 프로젝트를 잘 마무리할
+              예정입니다.
+            </p>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>

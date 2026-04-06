@@ -73,7 +73,7 @@
               <a href="#s1"><span class="toc-num">04</span>UI/UX 이슈</a>
               <ul class="toc-sub-list">
                 <li><a href="#s1-1">#13 오늘 할 일 순서 오류</a></li>
-                <li><a href="#s1-2">#14 완료 지우기 후 빈 자리</a></li>
+                <li><a href="#s1-2">#14 완료 후 목록 재생성</a></li>
               </ul>
             </li>
             <li>
@@ -83,20 +83,13 @@
                 <li><a href="#s2-2">알림#2 데이터 로드 안 됨</a></li>
                 <li><a href="#s2-3">알림#3 이중 관리 구조</a></li>
                 <li><a href="#s2-4">알림#4 tabs 배치 오류</a></li>
-                <li><a href="#s2-5">알림#5 파일 혼동</a></li>
-                <li><a href="#s2-6">알림#6 딥링크 누락</a></li>
+                <li><a href="#s2-6">알림#5 딥링크 누락</a></li>
               </ul>
             </li>
             <li>
               <a href="#s3"
                 ><span class="toc-num">06</span>연동 전 체크리스트</a
               >
-              <ul class="toc-sub-list">
-                <li><a href="#s3-1">DB 설정 확인</a></li>
-                <li><a href="#s3-2">코드 패턴 확인</a></li>
-                <li><a href="#s3-3">테이블 혼동 주의</a></li>
-                <li><a href="#s3-4">알림 배포 전 확인</a></li>
-              </ul>
             </li>
           </ul>
         </div>
@@ -160,16 +153,9 @@
                 <td class="txt-muted">알림 기능</td>
                 <td><code>notifications.jsx</code></td>
               </tr>
+
               <tr>
                 <td class="txt-red">알림#5</td>
-                <td class="txt-muted">
-                  (couple)/index.jsx와 (couple)/(tabs)/index.jsx 혼동
-                </td>
-                <td class="txt-muted">알림 기능</td>
-                <td><code>app/(couple)/</code></td>
-              </tr>
-              <tr>
-                <td class="txt-red">알림#6</td>
                 <td class="txt-muted">딥링크 기능 누락</td>
                 <td class="txt-muted">알림 기능</td>
                 <td><code>notifications.jsx</code></td>
@@ -601,38 +587,7 @@
           </table>
 
           <!-- 알림#5 -->
-          <h3 class="sub-heading" id="s2-5">
-            알림#5 &nbsp; (couple)/index.jsx와 (couple)/(tabs)/index.jsx 혼동
-          </h3>
-          <p>
-            대상 파일: <code>app/(couple)/</code> &nbsp;·&nbsp; 증상: 두 파일 중
-            어느 파일을 수정해야 할지 혼동
-          </p>
-
-          <table class="gen-table">
-            <thead>
-              <tr>
-                <th>파일</th>
-                <th>역할</th>
-                <th>수정 필요</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>(couple)/index.jsx</code></td>
-                <td class="txt-muted">Redirect 전용 (실제 화면 아님)</td>
-                <td class="txt-muted">❌ 수정 불필요</td>
-              </tr>
-              <tr>
-                <td><code>(couple)/(tabs)/index.jsx</code></td>
-                <td class="txt-muted">실제 홈 화면</td>
-                <td class="txt-accent">✅ 수정 대상</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- 알림#6 -->
-          <h3 class="sub-heading" id="s2-6">알림#6 &nbsp; 딥링크 기능 누락</h3>
+          <h3 class="sub-heading" id="s2-6">알림#5 &nbsp; 딥링크 기능 누락</h3>
           <p>
             대상 파일: <code>app/(couple)/notifications.jsx</code> &nbsp;·&nbsp;
             증상: 파일 교체 과정에서 <code>ref_type</code> 기반 딥링크 로직
