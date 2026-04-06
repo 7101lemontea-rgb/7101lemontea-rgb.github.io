@@ -1128,6 +1128,96 @@ figure.doc-figure figcaption {
   color: var(--ink-muted);
 }
 
+/* Video Player Custom Section */
+.video-wrapper {
+  margin: 2.5rem 0;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.video-header {
+  padding: 1.25rem 1.5rem;
+  background: #fdfdfd;
+  border-bottom: 1px solid #f1f3f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.video-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.video-dot {
+  width: 8px;
+  height: 8px;
+  background: #ff4b4b; /* 녹화 중인 듯한 느낌의 포인트 컬러 */
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+
+.video-title {
+  font-family: "Pretendard", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #343a40;
+}
+
+.video-content {
+  padding: 1rem;
+  background: #111; /* 영상 집중도를 위해 배경을 어둡게 설정 */
+  display: flex;
+  justify-content: center;
+}
+
+.video-content video {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.video-footer {
+  padding: 1rem 1.5rem;
+  background: #f8f9fa;
+  display: flex;
+  gap: 20px;
+}
+
+.video-meta-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.video-meta-label {
+  font-size: 0.75rem;
+  color: #868e96;
+  margin-bottom: 2px;
+}
+
+.video-meta-value {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 /* ── ANIMATIONS ── */
 @keyframes fadeUp {
   from {
