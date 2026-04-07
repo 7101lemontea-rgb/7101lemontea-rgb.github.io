@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 10 — React Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">JavaScript</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-07</span> &nbsp;·&nbsp;
+            수정일
+            <span id="date-updated">2026-04-07</span>
+          </span>
+        </div>
+        <h1 class="post-title">JavaScript 10</h1>
+        <p class="post-subtitle">
+          코드의 간결함을 극대화하는 <strong>단축 평가</strong> 논리와 리액트
+          개발의 필수 무기인 <strong>map(), filter()</strong> 배열 메서드의 핵심
+          활용법을 정리합니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"><span class="toc-num">1.</span>단축 평가</a>
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-1-1"
+                    ><span class="toc-num">1.1.</span>A && B</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-2"
+                    ><span class="toc-num">1.2.</span>A || B</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-ex"
+                    ><span class="toc-num">※</span>실습 문제</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>배열 메서드</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-2-1"
+                    ><span class="toc-num">2.1.</span>map()</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-2"
+                    ><span class="toc-num">2.2.</span>filter()</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-3"
+                    ><span class="toc-num">2.3.</span>메서드 체이닝</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-ex"
+                    ><span class="toc-num">※</span>연습 문제</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">단축 평가 (Short-circuit Evaluation)</h2>
+          <p>
+            논리 연산자 <code>&&</code>, <code>||</code>가 좌측 피연산자의 값만
+            보고 전체 결과를 확정하여, 필요한 경우에만 우측 피연산자를 평가하는
+            방식입니다.
+          </p>
+
+          <div id="section-1-1" style="margin-bottom: 2rem">
+            <h3 class="sub-heading">1.1. A && B (AND)</h3>
+            <p>
+              왼쪽(A)이 <strong>Truthy</strong>일 때만 오른쪽(B)을 반환합니다.
+            </p>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">isAdmin = </span><span class="tn">true</span><span class="tx">;</span>
+<span class="tx">isAdmin && console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"관리자 메뉴 접근 가능"</span><span class="tx">);</span>
+<span class="cm">// isAdmin이 true일 때만 메시지가 출력됩니다.</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-1-2" style="margin-bottom: 2rem">
+            <h3 class="sub-heading">1.2. A || B (OR)</h3>
+            <p>
+              왼쪽(A)이 <strong>Falsy</strong>일 때 오른쪽(B)을 반환합니다. 주로
+              기본값을 설정할 때 사용합니다.
+            </p>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">isLoggedIn = </span><span class="tn">false</span><span class="tx">;</span>
+<span class="tx">isLoggedIn || console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">"로그인이 필요합니다."</span><span class="tx">);</span>
+<span class="cm">// 로그인하지 않은 경우(false)에만 메시지가 출력됩니다.</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box" id="section-1-ex">
+            <p><strong>※ 실습:</strong> 단축 평가 활용하기</p>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="cm">// 1. 존재 여부 확인 후 출력</span>
+<span class="tx">user && user.name && console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">`안녕하세요, ${user.name}님!`</span><span class="tx">);</span>
+
+<span class="cm">// 2. 기본값 출력</span>
+<span class="tn">const</span> <span class="tx">displayName = nameA || </span><span class="av">"이름 없음"</span><span class="tx">;</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">배열 메서드 (map & filter)</h2>
+          <p>
+            데이터 목록을 다루는 리액트 환경에서 가장 중요하게 다뤄지는
+            메서드들입니다.
+          </p>
+
+          <div id="section-2-1" style="margin-bottom: 2rem">
+            <h3 class="sub-heading">2.1. map()</h3>
+            <p>
+              배열의 모든 요소를 순회하며 콜백 함수의 실행 결과를 모아
+              <strong>새로운 배열</strong>을 반환합니다.
+            </p>
+            <div class="highlight-box">
+              <p>
+                <strong>[Why React?]</strong> 데이터 목록을 JSX 엘리먼트로
+                변환하여 화면에 렌더링할 때 필수적으로 사용됩니다.
+              </p>
+            </div>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">numbers = [1, 2, 3];</span>
+<span class="tn">const</span> <span class="tx">doubled = numbers.</span><span class="tn">map</span><span class="tx">(num => num * 2); </span><span class="cm">// [2, 4, 6]</span>
+
+<span class="cm">// 객체 배열에서 특정 속성만 추출</span>
+<span class="tn">const</span> <span class="tx">names = users.</span><span class="tn">map</span><span class="tx">(user => user.name);</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-2-2" style="margin-bottom: 2rem">
+            <h3 class="sub-heading">2.2. filter()</h3>
+            <p>
+              배열 요소 중 콜백 함수의 조건이 <strong>true</strong>인 요소만
+              골라 새로운 배열을 반환합니다.
+            </p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">js</span></div>
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">numbers = [1, 2, 3, 4, 5];</span>
+<span class="tn">const</span> <span class="tx">evens = numbers.</span><span class="tn">filter</span><span class="tx">(num => num % 2 === 0); </span><span class="cm">// [2, 4]</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-2-3" style="margin-bottom: 2rem">
+            <h3 class="sub-heading">2.3. 메서드 체이닝 (Chaining)</h3>
+            <p>
+              filter와 map을 연결하여 특정 조건의 데이터를 추출하고 가공하는
+              과정을 한 번에 처리할 수 있습니다.
+            </p>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">availableNames = products</span>
+<span class="tx">  .</span><span class="tn">filter</span><span class="tx">(p => p.inStock)</span>
+<span class="tx">  .</span><span class="tn">map</span><span class="tx">(p => p.name);</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="section visible" id="section-2-ex">
+            <h3 class="sub-heading">연습 문제 종합</h3>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="cm">// 1. 80점 이상 필터링</span>
+<span class="tn">const</span> <span class="tx">highScore = scores.</span><span class="tn">filter</span><span class="tx">(s => s >= 80);</span>
+
+<span class="cm">// 2. 2학년 이상 학생 이름 추출</span>
+<span class="tn">const</span> <span class="tx">results = students</span>
+<span class="tx">  .</span><span class="tn">filter</span><span class="tx">(s => s.grade >= 2)</span>
+<span class="tx">  .</span><span class="tn">map</span><span class="tx">(s => s.name);</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+  </body>
+</html>
