@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 11 — Spread Operator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">JavaScript</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-08</span> &nbsp;·&nbsp;
+            수정일
+            <span id="date-updated">2026-04-08</span>
+          </span>
+        </div>
+        <h1 class="post-title">JavaScript 11: 스프레드 연산자</h1>
+        <p class="post-subtitle">
+          배열과 객체를 자유자재로 다루기 위한
+          <strong>스프레드 연산자(...)</strong>의 개념과 리액트에서의 활용법을
+          정리합니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"><span class="toc-num">1.</span>개요</a>
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>배열 스프레드</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#section-2-1">2.1. 배열 복사</a></li>
+                <li><a href="#section-2-2">2.2. 배열 결합 및 추가</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>객체 스프레드</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#section-3-1">3.1. 객체 복사 및 합치기</a></li>
+                <li><a href="#section-3-2">3.2. 속성 덮어쓰기</a></li>
+                <li><a href="#section-3-3">3.3. React 상태 업데이트</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-ex"><span class="toc-num">※</span>연습 문제</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">스프레드 연산자 (Spread Operator)</h2>
+          <p>
+            스프레드 연산자(<code>...</code>)는 말 그대로 배열이나 객체의 요소를
+            펼쳐서 <strong>개별 요소로 분리</strong>해주는 연산자입니다.
+          </p>
+          <div class="highlight-box">
+            <p><strong>주요 용도</strong></p>
+            <ul>
+              <li>배열이나 객체를 개별 인자로 풀어 함수에 전달</li>
+              <li>배열이나 객체를 복사하거나 결합</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">배열 스프레드</h2>
+
+          <div id="section-2-1" style="margin-bottom: 2rem">
+            <h3 class="sub-heading">2.1. 배열 복사</h3>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">original = [1, 2, 3];</span>
+<span class="tn">const</span> <span class="tx">copy = [...original];</span></pre>
+              </div>
+            </div>
+            <p><strong>※ 참조와 복사의 차이</strong></p>
+            <p>
+              <code>const copy = arr;</code>와 같이 단순 할당하면 두 변수는 같은
+              주소를 가리킵니다. 복사본을 수정하면 원본도 변경되는 문제가
+              발생합니다.
+            </p>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="cm">// 단순 할당 (원본 영향 O)</span>
+<span class="tn">const</span> <span class="tx">arr = [1, 2, 3];</span>
+<span class="tn">const</span> <span class="tx">copy = arr;</span>
+<span class="tx">copy[0] = 100; </span><span class="cm">// console.log(arr) -> [100, 2, 3]</span>
+
+<span class="cm">// 스프레드 연산자 (원본 유지)</span>
+<span class="tn">const</span> <span class="tx">arr2 = [1, 2, 3];</span>
+<span class="tn">const</span> <span class="tx">copy2 = [...arr2];</span>
+<span class="tx">copy2[0] = 100; </span><span class="cm">// console.log(arr2) -> [1, 2, 3]</span></pre>
+              </div>
+            </div>
+            <div class="highlight-box">
+              <p><strong>⚠️ 주의할 점: 얕은 복사(Shallow Copy)</strong></p>
+              <p>
+                가장 바깥쪽만 복사하며, 중첩된 배열/객체는 여전히 참조를
+                공유합니다.
+              </p>
+              <p>
+                <strong>[참고] 깊은 복사 방법:</strong>
+                <code>JSON.parse(JSON.stringify(obj))</code> 또는
+                <code>Lodash</code>의 <code>_.cloneDeep()</code> 사용
+              </p>
+            </div>
+          </div>
+
+          <div id="section-2-2">
+            <h3 class="sub-heading">2.2. 배열 결합 및 추가</h3>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="cm">// 배열 결합</span>
+<span class="tn">const</span> <span class="tx">arr1 = [1, 2, 3], arr2 = [4, 5, 6];</span>
+<span class="tn">const</span> <span class="tx">combined = [...arr1, ...arr2]; </span><span class="cm">// [1, 2, 3, 4, 5, 6]</span>
+
+<span class="cm">// 요소 추가</span>
+<span class="tn">const</span> <span class="tx">newArr = [...arr1, 4, 5]; </span><span class="cm">// [1, 2, 3, 4, 5]</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">객체 스프레드</h2>
+
+          <div id="section-3-1" style="margin-bottom: 2rem">
+            <h3 class="sub-heading">3.1. 객체 복사 및 합치기</h3>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">original = { name: "홍길동", age: 25 };</span>
+<span class="tn">const</span> <span class="tx">copy = { ...original };</span>
+
+<span class="cm">// 객체 합치기</span>
+<span class="tn">const</span> <span class="tx">details = { city: "서울" };</span>
+<span class="tn">const</span> <span class="tx">merged = { ...original, ...details };</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-3-2" style="margin-bottom: 2rem">
+            <h3 class="sub-heading">3.2. 속성 덮어쓰기</h3>
+            <p>
+              동일한 키가 존재할 경우,
+              <strong>뒤에 오는 값이 앞의 값을 덮어씁니다.</strong>
+            </p>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">user = { name: "홍길동", age: 25 };</span>
+
+<span class="cm">// 스프레드가 뒤에 오는 경우 (원본에 의해 덮어씌워짐)</span>
+<span class="tn">const</span> <span class="tx">result1 = { age: 30, ...user }; </span><span class="cm">// { age: 25, name: '홍길동' }</span>
+
+<span class="cm">// 스프레드가 앞에 오는 경우 (새로운 값으로 업데이트)</span>
+<span class="tn">const</span> <span class="tx">result2 = { ...user, age: 30 }; </span><span class="cm">// { name: '홍길동', age: 30 }</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div id="section-3-3">
+            <h3 class="sub-heading">3.3. React 상태 업데이트 적용</h3>
+            <p>
+              리액트의 상태(State)를 업데이트할 때 기존 객체를 보존하면서 특정
+              필드만 수정하는 용도로 자주 쓰입니다.
+            </p>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">[user, setUser] = useState({ name: '홍길동', age: 25 });</span>
+
+<span class="cm">// 나이만 업데이트</span>
+<span class="tn">const</span> <span class="tx">handleBirthday = () => {</span>
+<span class="tx">  setUser({ ...user, age: user.age + 1 });</span>
+<span class="tx">};</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-ex">
+          <h2 class="sec-heading">연습 문제 종합</h2>
+          <div class="highlight-box">
+            <p><strong>Q1. 출력 결과는?</strong></p>
+            <pre>
+const fruits = ['사과', '바나나'];
+const more = [...fruits, '포도'];
+fruits.push('망고');</pre
+            >
+            <p>
+              <em
+                >A: fruits: ['사과', '바나나', '망고'], more: ['사과', '바나나',
+                '포도']</em
+              >
+            </p>
+          </div>
+          <div class="highlight-box" style="margin-top: 1rem">
+            <p><strong>Q2. 리액트 이메일 변경 함수 완성</strong></p>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">handleEmailChange = (newEmail) => {</span>
+<span class="tx">  setUser({ ...user, email: newEmail });</span>
+<span class="tx">};</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+  </body>
+</html>

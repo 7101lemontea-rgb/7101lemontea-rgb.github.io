@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript 12 — Destructuring Assignment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">JavaScript</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-08</span> &nbsp;·&nbsp;
+            수정일
+            <span id="date-updated">2026-04-08</span>
+          </span>
+        </div>
+        <h1 class="post-title">JavaScript 12: 구조 분해 할당</h1>
+        <p class="post-subtitle">
+          배열이나 객체의 속성을 해체하여 개별 변수에 효율적으로 담는
+          <strong>구조 분해 할당(Destructuring)</strong>을 알아봅니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>개요 및 Why React?</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>객체 구조 분해</a
+              >
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>배열 구조 분해</a
+              >
+            </li>
+            <li>
+              <a href="#section-4"
+                ><span class="toc-num">4.</span>함수 인자 및 React 활용</a
+              >
+            </li>
+            <li>
+              <a href="#section-ex"><span class="toc-num">※</span>연습 문제</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">구조 분해 할당 (Destructuring Assignment)</h2>
+          <p>
+            배열이나 객체의 속성을 해체하여 그 값을 개별 변수에 담을 수 있게
+            하는 표현식입니다.
+          </p>
+          <div class="highlight-box">
+            <p><strong>Why React?</strong></p>
+            <ul>
+              <li>
+                <strong>props 활용:</strong> 부모가 전달하는
+                <code>props</code> 객체를 받아올 때 <code>props.name</code> 대신
+                구조 분해를 사용하여 코드를 간결하게 만듭니다.
+              </li>
+              <li>
+                <strong>Hooks 사용:</strong> <code>useState</code>를 사용할 때
+                반환되는 배열을 처리하기 위해 필수적으로 사용됩니다.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">객체 구조 분해</h2>
+          <p>
+            객체의 <strong>키(key)</strong> 이름을 기준으로 변수에 할당하며,
+            순서는 상관없습니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">const</span> <span class="tx">user = { name: "김철수", age: 30, email: "kim@example.com" };</span>
+
+<span class="cm">// 1. 기본 구조 분해 할당</span>
+<span class="tn">const</span> <span class="tx">{ name, email } = user;</span>
+
+<span class="cm">// 2. 변수명 변경 (key: 새변수명)</span>
+<span class="tn">const</span> <span class="tx">{ name: userName, email: userEmail } = user;</span>
+
+<span class="cm">// 3. 기본값 설정</span>
+<span class="tn">const</span> <span class="tx">{ name, phone = "없음" } = user;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">배열 구조 분해</h2>
+          <p>
+            배열의 <strong>인덱스 순서</strong>를 기준으로 변수에 할당합니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">const</span> <span class="tx">colors = ["red", "green", "blue"];</span>
+
+<span class="cm">// 인덱스 순서대로 할당</span>
+<span class="tn">const</span> <span class="tx">[first, second, third] = colors;</span>
+
+<span class="cm">// 일부 값 무시 (쉼표 사용)</span>
+<span class="tn">const</span> <span class="tx">[firstColor, , thirdColor] = colors; </span><span class="cm">// green 건너뜀</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <p class="sec-eyebrow">04</p>
+          <h2 class="sec-heading">함수 및 React에서의 활용</h2>
+
+          <div style="margin-bottom: 2rem">
+            <h3 class="sub-heading">함수 인자 구조 분해</h3>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="cm">// 인자에서 바로 객체 해체</span>
+<span class="tn">function</span> <span class="tn">printUser</span><span class="tx">({ name, age }) {</span>
+<span class="tx">  console.</span><span class="tn">log</span><span class="tx">(name, age);</span>
+<span class="tx">}</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="sub-heading">React 코드 예시</h3>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="cm">// 컴포넌트 Props 받기</span>
+<span class="tn">const</span> <span class="tx">UserCard = ({ name, age, email }) => {</span>
+<span class="tx">  </span><span class="tn">return</span> <span class="tx">&lt;div&gt;{name}&lt;/div&gt;;</span>
+<span class="tx">};</span>
+
+<span class="cm">// Hook 사용 시 배열 구조 분해</span>
+<span class="tn">const</span> <span class="tx">[count, setCount] = useState(0);</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-ex">
+          <h2 class="sec-heading">연습 문제</h2>
+          <div class="highlight-box">
+            <p><strong>Q1. 객체 구조 분해</strong></p>
+            <pre>
+const person = { name: "홍길동", age: 30, city: "서울" };
+const { name, city } = person;</pre
+            >
+          </div>
+
+          <div class="highlight-box" style="margin-top: 1rem">
+            <p><strong>Q2. 화살표 함수와 템플릿 리터럴</strong></p>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">printUser = ({ name, age }) => {</span>
+<span class="tx">  console.</span><span class="tn">log</span><span class="tx">(</span><span class="av">`이름 : ${name}, 나이 : ${age}`</span><span class="tx">);</span>
+<span class="tx">};</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box" style="margin-top: 1rem">
+            <p><strong>Q3. 배열 인자 합계 계산</strong></p>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="tn">const</span> <span class="tx">sumFirstTwo = ([first, second]) => {</span>
+<span class="tx">  </span><span class="tn">return</span> <span class="tx">first + second;</span>
+<span class="tx">};</span></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+  </body>
+</html>
