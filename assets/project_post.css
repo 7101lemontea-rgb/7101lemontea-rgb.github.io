@@ -325,39 +325,48 @@ strong {
   color: var(--ink);
   font-weight: 500;
 }
+/* ── CODE ── */
 code {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.85em;
   background: var(--tag-green);
   color: var(--accent2);
-  padding: 0.1rem 0.38rem;
+  padding: 0.15rem 0.4rem;
   border-radius: 2px;
+
+  vertical-align: baseline;
+  display: inline-block;
+  line-height: 1;
 }
 
 /* ── BULLET LIST ── */
 .bullet-list {
   list-style: none;
+  margin: 0.8rem 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  margin: 0.8rem 0;
-}
-.bullet-list li {
-  display: flex;
   gap: 0.6rem;
-  font-size: 0.88rem;
-  color: var(--ink-muted);
-  line-height: 1.6;
-}
-.bullet-list li::before {
-  content: "→";
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  margin-top: 0.15rem;
-  flex-shrink: 0;
 }
 
+.bullet-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+.bullet-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
 /* ── INFO CARD ── */
 .info-card {
   background: var(--card-bg);

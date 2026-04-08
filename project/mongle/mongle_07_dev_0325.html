@@ -84,11 +84,11 @@
                 <li><a href="#t1">1. 수정 기능 추가</a></li>
                 <li><a href="#t2">2. 날짜 입력 방식 개선</a></li>
                 <li><a href="#t3">3. 달력 일정 추가 모달</a></li>
-                <li><a href="#t4">4. 색상 팔레트 확장</a></li>
+                <!-- <li><a href="#t4">4. 색상 팔레트 확장</a></li> -->
                 <li><a href="#t5">5. 월별 필터링</a></li>
                 <li><a href="#t6">6. 데이터 통합</a></li>
                 <li><a href="#t7">7. 비용·잔금 관리 모달</a></li>
-                <li><a href="#t8">8. 도트 색상 규칙</a></li>
+                <!-- <li><a href="#t8">8. 도트 색상 규칙</a></li> -->
                 <li><a href="#t9">9. 버그 수정</a></li>
               </ul>
             </li>
@@ -96,21 +96,22 @@
               <a href="#part2"><span class="toc-num">P2</span>Git 이슈 해결</a>
               <ul class="toc-sub-list">
                 <li><a href="#g1">G1. 폴더 소실</a></li>
-                <li><a href="#g2">G2. 괄호() 경로 오류</a></li>
-                <li><a href="#g3">G3. not a git repository</a></li>
+                <!-- <li><a href="#g2">G2. 괄호() 경로 오류</a></li>
+                <li><a href="#g3">G3. not a git repository</a></li> -->
               </ul>
+              `
             </li>
             <li>
               <a href="#part3"
                 ><span class="toc-num">P3</span>login · register</a
               >
               <ul class="toc-sub-list">
-                <li><a href="#t10">10. 로그인 버튼 그라데이션</a></li>
-                <li><a href="#t11">11. 로그인 버튼 그림자</a></li>
-                <li><a href="#t12">12. Lottie 색상 교체</a></li>
+                <!-- <li><a href="#t10">10. 로그인 버튼 그라데이션</a></li> -->
+                <!-- <li><a href="#t11">11. 로그인 버튼 그림자</a></li> -->
+                <!-- <li><a href="#t12">12. Lottie 색상 교체</a></li>
                 <li><a href="#t13">13. Lottie 배경 적용</a></li>
-                <li><a href="#t14">14. 가입하기 버튼 그라데이션</a></li>
-                <li><a href="#t15">15. 이메일 인증 커스텀 모달</a></li>
+                <li><a href="#t14">14. 가입하기 버튼 그라데이션</a></li> -->
+                <!-- <li><a href="#t15">15. 이메일 인증 커스텀 모달</a></li> -->
               </ul>
             </li>
           </ul>
@@ -235,6 +236,16 @@
 
           <!-- 1 -->
           <h3 class="sub-heading" id="t1">1. 타임라인 수정 기능 추가</h3>
+
+          <figure class="doc-figure">
+            <img
+              src="../../assets/mongle/modal_01.png"
+              alt="Mongle — Timeline Modal screen"
+              width="30%"
+            />
+            <figcaption>Mongle — 타임라인 모달 화면</figcaption>
+          </figure>
+
           <p>
             기존 화면에는 타임라인 항목을 수정할 수 있는 기능이 없었습니다. 수정
             모달(<code>TimelineEditModal</code>)을 추가하여 인라인 편집이
@@ -344,6 +355,14 @@
 
           <!-- 3 -->
           <h3 class="sub-heading" id="t3">3. 달력 일정 추가 모달 구현</h3>
+          <figure class="doc-figure">
+            <img
+              src="../../assets/mongle/calender_01.png"
+              alt="Mongle — Calendar screen"
+              width="30%"
+            />
+            <figcaption>Mongle — 달력 화면</figcaption>
+          </figure>
           <p>
             달력 카드 헤더에 "+ 일정 추가" 버튼을 추가하고, 모달을 통해 일정을
             등록할 수 있도록 구현했습니다.
@@ -465,6 +484,15 @@
 
           <!-- 7 -->
           <h3 class="sub-heading" id="t7">7. 비용·잔금 관리 모달 구현</h3>
+
+          <figure class="doc-figure">
+            <img
+              src="../../assets/mongle/budget_01.png"
+              alt="Mongle — Budget screen"
+              width="30%"
+            />
+            <figcaption>Mongle — 비용 관리 화면</figcaption>
+          </figure>
           <p>
             기존 하드코딩된 비용/잔금 데이터를 통합 상태로 관리하고, 수정 모달을
             구현했습니다.

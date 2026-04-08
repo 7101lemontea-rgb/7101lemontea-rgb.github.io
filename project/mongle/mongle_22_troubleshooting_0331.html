@@ -29,17 +29,17 @@
         <div class="header-meta">
           <span class="badge badge-type">2026.03.31 Troubleshooting</span>
           <span class="badge badge-ver">1 / 2</span>
-          <span class="badge badge-status draft">총 20건</span>
+          <span class="badge badge-status draft">총 16건</span>
         </div>
         <h1 class="post-title">트러블슈팅 문서 (1)</h1>
         <p class="post-sub">
           2026년 3월 31일 — 라우팅 · Supabase 쿼리·RLS · 인증·컴포넌트 렌더링
         </p>
         <p class="post-desc">
-          Mongle 웨딩 플래너 앱 개발 중 발생한 이슈 총 19건의 전반부 12건을
+          Mongle 웨딩 플래너 앱 개발 중 발생한 이슈 총 16건의 전반부 9건을
           기록합니다. 라우팅 가드 누락(ISSUE-01), 플래너 상세 조회
-          실패(ISSUE-02~03), Supabase 쿼리·RLS 오류(#04~#08), 인증·Context 및
-          컴포넌트 렌더링 에러(#01~#03, #09~#12)를 다룹니다.
+          실패(ISSUE-02~03), Supabase 쿼리·RLS 오류(#04~#05), 인증·Context 및
+          컴포넌트 렌더링 에러(#01~#03, #06~#09)를 다룹니다.
         </p>
         <div class="post-stats">
           <div>
@@ -48,7 +48,7 @@
           </div>
           <div>
             <div class="stat-label">이슈 건수</div>
-            <div class="stat-val">12건 (전반부)</div>
+            <div class="stat-val">9건 (전반부)</div>
           </div>
           <div>
             <div class="stat-label">작성일</div>
@@ -76,11 +76,9 @@
             <li>
               <a href="#s2"><span class="toc-num">02</span>Supabase 쿼리·RLS</a>
               <ul class="toc-sub-list">
-                <li><a href="#s2-3">#04 비용 현황 전부 0</a></li>
-                <li><a href="#s2-4">#05 컬럼명 오류 due_date</a></li>
-                <li><a href="#s2-5">#06 테이블 혼동</a></li>
-                <li><a href="#s2-6">#07 담당 커플 수 0</a></li>
-                <li><a href="#s2-7">#08 stage 필터 동작 안 함</a></li>
+                <li><a href="#s2-3">#04 비용 현황 오류</a></li>
+
+                <li><a href="#s2-6">#05 담당 커플 수 0</a></li>
               </ul>
             </li>
             <li>
@@ -91,10 +89,10 @@
                 <li><a href="#s3-1">#01 profile doesn't exist</a></li>
                 <li><a href="#s3-2">#02 planner_id 하드코딩</a></li>
                 <li><a href="#s3-3">#03 네이밍 불일치</a></li>
-                <li><a href="#s3-4">#09 searchText 중복</a></li>
-                <li><a href="#s3-5">#10 스코프 에러</a></li>
-                <li><a href="#s3-6">#11 취소선 미표시</a></li>
-                <li><a href="#s3-7">#12 Cannot read 'bg'</a></li>
+                <li><a href="#s3-4">#06 searchText 중복</a></li>
+                <li><a href="#s3-5">#07 스코프 에러</a></li>
+                <li><a href="#s3-6">#08 취소선 미표시</a></li>
+                <li><a href="#s3-7">#09 Cannot read 'bg'</a></li>
               </ul>
             </li>
           </ul>
@@ -143,32 +141,14 @@
                 <td class="txt-muted">Supabase 쿼리</td>
                 <td><code>planner_budget.jsx</code></td>
               </tr>
+
               <tr>
                 <td class="txt-red">#05</td>
-                <td class="txt-muted">
-                  couple_payments 컬럼명 오류 (due_date)
-                </td>
-                <td class="txt-muted">Supabase 쿼리</td>
-                <td><code>planner_budget.jsx</code></td>
-              </tr>
-              <tr>
-                <td class="txt-red">#06</td>
-                <td class="txt-muted">planner_vendors 테이블 혼동</td>
-                <td class="txt-muted">Supabase 쿼리</td>
-                <td><code>planner_budget.jsx</code></td>
-              </tr>
-              <tr>
-                <td class="txt-red">#07</td>
                 <td class="txt-muted">담당 커플 수 0으로 표시</td>
                 <td class="txt-muted">Supabase 쿼리</td>
                 <td><code>dashboard.jsx</code></td>
               </tr>
-              <tr>
-                <td class="txt-red">#08</td>
-                <td class="txt-muted">stage 필터 동작 안 함 (띄어쓰기)</td>
-                <td class="txt-muted">Supabase 쿼리</td>
-                <td><code>couple_list.jsx</code></td>
-              </tr>
+
               <tr>
                 <td class="txt-red">#01</td>
                 <td class="txt-muted">Property 'profile' doesn't exist</td>
@@ -188,25 +168,25 @@
                 <td><code>context/AuthContext.js</code></td>
               </tr>
               <tr>
-                <td class="txt-red">#09</td>
+                <td class="txt-red">#06</td>
                 <td class="txt-muted">searchText 중복 선언</td>
                 <td class="txt-muted">컴포넌트 렌더링</td>
                 <td><code>couple_list.jsx</code></td>
               </tr>
               <tr>
-                <td class="txt-red">#10</td>
+                <td class="txt-red">#07</td>
                 <td class="txt-muted">coupleName 스코프 에러</td>
                 <td class="txt-muted">컴포넌트 렌더링</td>
                 <td><code>planner_todo_list.jsx</code></td>
               </tr>
               <tr>
-                <td class="txt-red">#11</td>
+                <td class="txt-red">#08</td>
                 <td class="txt-muted">완료 토글 시 취소선 미표시</td>
                 <td class="txt-muted">컴포넌트 렌더링</td>
                 <td><code>dashboard.jsx</code></td>
               </tr>
               <tr>
-                <td class="txt-red">#12</td>
+                <td class="txt-red">#09</td>
                 <td class="txt-muted">
                   Cannot read property 'bg' of undefined
                 </td>
@@ -218,7 +198,7 @@
 
           <div class="highlight-box">
             <p>
-              📄 후반부 (#13~#14 UI/UX · 알림#1~6 · 연동 전 체크리스트)는
+              📄 후반부 (#13~#14 UI/UX · 알림#1~5 · 연동 전 체크리스트)는
               <strong>트러블슈팅 문서 (2)</strong>에서 계속됩니다.
             </p>
           </div>
@@ -586,118 +566,8 @@
           </div>
 
           <!-- #05 -->
-          <h3 class="sub-heading" id="s2-4">
-            #05 &nbsp; couple_payments 컬럼명 오류 (due_date)
-          </h3>
-          <p>
-            대상 파일: <code>planner_budget.jsx</code> &nbsp;·&nbsp; 증상:
-            <code>couple_payments</code> 조회 시 데이터 없음 또는 쿼리 에러 발생
-          </p>
-
-          <div class="white-card-list">
-            <div class="white-card">
-              <div class="white-header">
-                <span class="white-num">원인</span>
-                <span class="white-title">payment_date → due_date</span>
-              </div>
-              <div class="white-body">
-                <div>
-                  <div class="white-label">원인</div>
-                  <div class="white-value">
-                    select/insert 쿼리에 <code>payment_date</code> 컬럼으로
-                    요청. 실제 DB 컬럼명은 <code>due_date</code>.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <table class="gen-table">
-            <thead>
-              <tr>
-                <th>구분</th>
-                <th>잘못된 값</th>
-                <th>올바른 값</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>컬럼명 (select)</td>
-                <td class="txt-red">payment_date</td>
-                <td class="txt-accent">due_date</td>
-              </tr>
-              <tr>
-                <td>insert 키</td>
-                <td class="txt-red">payment_date: recvForm.date</td>
-                <td class="txt-accent">due_date: recvForm.date</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- #06 -->
-          <h3 class="sub-heading" id="s2-5">
-            #06 &nbsp; planner_vendors 테이블 혼동 — 업체 지출 데이터 없음
-          </h3>
-          <p>
-            대상 파일: <code>planner_budget.jsx</code> &nbsp;·&nbsp; 증상: 업체
-            지출 탭에 데이터가 표시되지 않음
-          </p>
-
-          <div class="white-card-list">
-            <div class="white-card">
-              <div class="white-header">
-                <span class="white-num">원인</span>
-                <span class="white-title"
-                  >협력업체 파트너 테이블 ≠ 업체 지출 테이블</span
-                >
-              </div>
-              <div class="white-body">
-                <div>
-                  <div class="white-label">원인</div>
-                  <div class="white-value">
-                    <code>planner_vendors</code>를 업체 지출 테이블로 오해하여
-                    Join. 실제로는 협력업체 파트너 관리 테이블로
-                    <code>amount</code>, <code>paid</code> 컬럼 없음.
-                  </div>
-                </div>
-                <div>
-                  <div class="white-label">해결</div>
-                  <div class="white-value">
-                    업체 지출 전용 <code>couple_vendor_costs</code> 테이블 신규
-                    생성 후 해당 테이블로 조회.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <table class="gen-table">
-            <thead>
-              <tr>
-                <th>테이블</th>
-                <th>실제 용도</th>
-                <th>사용 화면</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>planner_vendors</code></td>
-                <td class="txt-muted">협력업체 파트너 목록</td>
-                <td class="txt-muted">
-                  <code>wedding_vendor_partners.jsx</code>
-                </td>
-              </tr>
-              <tr>
-                <td><code>couple_vendor_costs</code></td>
-                <td class="txt-muted">커플별 업체 지출 (신규 생성)</td>
-                <td class="txt-muted"><code>planner_budget.jsx</code></td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- #07 -->
           <h3 class="sub-heading" id="s2-6">
-            #07 &nbsp; 담당 커플 수가 0으로 표시
+            #05 &nbsp; 비용 현황 전부 0으로 표시
           </h3>
           <p>
             대상 파일: <code>dashboard.jsx</code> &nbsp;·&nbsp; 증상: 대시보드
@@ -743,78 +613,6 @@
                 >couples.planner_id = user_profiles.planner_id =
                 auth.uid()</code
               >
-            </p>
-          </div>
-
-          <!-- #08 -->
-          <h3 class="sub-heading" id="s2-7">
-            #08 &nbsp; stage 필터 동작 안 함 (띄어쓰기 불일치)
-          </h3>
-          <p>
-            대상 파일: <code>couple_list.jsx</code> &nbsp;·&nbsp; 증상:
-            '최종점검', '준비중' 탭을 눌러도 해당 커플이 표시되지 않음
-          </p>
-
-          <div class="white-card-list">
-            <div class="white-card">
-              <div class="white-header">
-                <span class="white-num">원인</span>
-                <span class="white-title"
-                  >코드 ↔ DB 저장값 띄어쓰기 불일치</span
-                >
-              </div>
-              <div class="white-body">
-                <div>
-                  <div class="white-label">코드</div>
-                  <div class="white-value">
-                    STAGE_FILTERS에 띄어쓰기 있는 값('준비 중', '최종 점검')
-                    정의.
-                  </div>
-                </div>
-                <div>
-                  <div class="white-label">DB</div>
-                  <div class="white-value">
-                    stage 컬럼에 띄어쓰기 없는 값('준비중', '최종점검') 저장.
-                    <code>c.stage === STAGE_FILTERS[activeStage]</code> 비교가
-                    항상 <code>false</code>.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <table class="gen-table">
-            <thead>
-              <tr>
-                <th>수정 전 (코드)</th>
-                <th>수정 후 (DB 기준)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="txt-red">'최종 점검'</td>
-                <td class="txt-accent">'최종점검'</td>
-              </tr>
-              <tr>
-                <td class="txt-red">'준비 중'</td>
-                <td class="txt-accent">'준비중'</td>
-              </tr>
-              <tr>
-                <td class="txt-red">'초기 상담'</td>
-                <td class="txt-accent">'초기상담'</td>
-              </tr>
-              <tr>
-                <td class="txt-red">'계약 완료'</td>
-                <td class="txt-accent">'계약완료'</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="highlight-box">
-            <p>
-              수정 대상: <code>STAGE_FILTERS</code>, <code>STAGE_OPTIONS</code>,
-              <code>STAGE_STYLE</code> 키, <code>EMPTY_FORM</code> 기본값,
-              <code>coupleToForm</code> fallback 값
             </p>
           </div>
         </section>
@@ -981,9 +779,9 @@
             </tbody>
           </table>
 
-          <!-- #09 -->
+          <!-- #086 -->
           <h3 class="sub-heading" id="s3-4">
-            #09 &nbsp; Identifier 'searchText' has already been declared
+            #06 &nbsp; Identifier 'searchText' has already been declared
           </h3>
           <p>
             대상 파일: <code>couple_list.jsx</code> &nbsp;·&nbsp; 증상:
@@ -1028,9 +826,9 @@
             </p>
           </div>
 
-          <!-- #10 -->
+          <!-- #07 -->
           <h3 class="sub-heading" id="s3-5">
-            #10 &nbsp; ReferenceError: Property 'coupleName' doesn't exist
+            #07 &nbsp; ReferenceError: Property 'coupleName' doesn't exist
           </h3>
           <p>
             대상 파일: <code>planner_todo_list.jsx</code> &nbsp;·&nbsp; 증상: 할
@@ -1089,9 +887,9 @@
             </div>
           </div>
 
-          <!-- #11 -->
+          <!-- #08 -->
           <h3 class="sub-heading" id="s3-6">
-            #11 &nbsp; 완료 토글 시 취소선이 표시되지 않음
+            #08 &nbsp; 완료 토글 시 취소선이 표시되지 않음
           </h3>
           <p>
             대상 파일: <code>dashboard.jsx</code> &nbsp;·&nbsp; 증상: 항목 탭 시
@@ -1141,9 +939,9 @@
 <span class="c-line">  .filter(Boolean);</span></pre>
           </div>
 
-          <!-- #12 -->
+          <!-- #09 -->
           <h3 class="sub-heading" id="s3-7">
-            #12 &nbsp; TypeError: Cannot read property 'bg' of undefined
+            #09 &nbsp; TypeError: Cannot read property 'bg' of undefined
           </h3>
           <p>
             대상 파일: <code>couple_list.jsx</code> &nbsp;·&nbsp; 증상: 커플

@@ -91,18 +91,18 @@
               >
               <ul class="toc-sub-list">
                 <li><a href="#s2-1">#05 수신자 ID 식별 오류</a></li>
-                <li><a href="#s2-2">#06 FK 제약 조건 위반</a></li>
-                <li><a href="#s2-3">#07 발신자 정보 누락</a></li>
-                <li><a href="#s2-4">#08 런타임 에러</a></li>
+                <!-- <li><a href="#s2-2">#06 FK 제약 조건 위반</a></li> -->
+                <li><a href="#s2-3">#06 발신자 정보 누락</a></li>
+                <!-- <li><a href="#s2-4">#08 런타임 에러</a></li> -->
               </ul>
             </li>
             <li>
               <a href="#s3"><span class="toc-num">03</span>Expo Router 구조</a>
               <ul class="toc-sub-list">
-                <li><a href="#s3-1">#09 filter of undefined</a></li>
-                <li><a href="#s3-2">#10 No route named</a></li>
-                <li><a href="#s3-3">#11 역할 기반 라우팅 실패</a></li>
-                <li><a href="#s3-4">#12 알림 연동 오류</a></li>
+                <!-- <li><a href="#s3-1">#07 filter of undefined</a></li> -->
+                <li><a href="#s3-2">#07 No route named</a></li>
+                <li><a href="#s3-3">#08 역할 기반 라우팅 실패</a></li>
+                <li><a href="#s3-4">#09 알림 연동 오류</a></li>
               </ul>
             </li>
           </ul>
@@ -166,7 +166,7 @@
                   플래너 프로필 ID를 계정 UUID 자리에 삽입
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="txt-red">#06</td>
                 <td class="txt-muted">23503 Foreign Key Constraint (type)</td>
                 <td class="txt-muted">상담 알림</td>
@@ -174,29 +174,29 @@
                   <code>notification_types</code>에 없는
                   <code>'info'</code> 사용
                 </td>
-              </tr>
+              </tr> -->
               <tr>
-                <td class="txt-red">#07</td>
+                <td class="txt-red">#06</td>
                 <td class="txt-muted">sender_id 누락 — 채팅 연동 불가</td>
                 <td class="txt-muted">상담 알림</td>
                 <td class="txt-muted">초기 테이블 설계에 발신자 컬럼 누락</td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="txt-red">#08</td>
                 <td class="txt-muted">Property 'user' doesn't exist</td>
                 <td class="txt-muted">Auth 응답 처리</td>
                 <td class="txt-muted">
                   <code>auth.getUser()</code> 응답 객체 구조 오해
                 </td>
-              </tr>
-              <tr>
+              </tr> -->
+              <!-- <tr>
                 <td class="txt-red">#09</td>
                 <td class="txt-muted">TypeError: 'filter' of undefined</td>
                 <td class="txt-muted">(planner) 탭</td>
                 <td class="txt-muted">Tabs.Screen name과 실제 파일명 불일치</td>
-              </tr>
+              </tr> -->
               <tr>
-                <td class="txt-red">#10</td>
+                <td class="txt-red">#07</td>
                 <td class="txt-muted">
                   WARN: No route named "X" in nested children
                 </td>
@@ -206,7 +206,7 @@
                 </td>
               </tr>
               <tr>
-                <td class="txt-red">#11</td>
+                <td class="txt-red">#08</td>
                 <td class="txt-muted">역할 기반 라우팅 실패</td>
                 <td class="txt-muted">AuthGate</td>
                 <td class="txt-muted">
@@ -214,7 +214,7 @@
                 </td>
               </tr>
               <tr>
-                <td class="txt-red">#12</td>
+                <td class="txt-red">#09</td>
                 <td class="txt-muted">
                   알림 목록 비어 있음 / 읽음 처리 미반영
                 </td>
@@ -532,50 +532,9 @@
 <span class="c-comment">// 수신자 UUID: data.user_profiles[0].id</span></pre>
           </div>
 
-          <!-- #06 -->
-          <h3 class="sub-heading" id="s2-2">
-            #06 &nbsp; 외래 키 제약 조건 위반 — Type Error
-          </h3>
-
-          <div class="highlight-box-red">
-            <p>
-              23503 Foreign Key Constraint — notifications.type 컬럼 FK 위반
-            </p>
-          </div>
-
-          <div class="white-card-list">
-            <div class="white-card">
-              <div class="white-header">
-                <span class="white-num">원인</span>
-                <span class="white-title"
-                  >notification_types에 없는 'info' 타입 사용</span
-                >
-              </div>
-              <div class="white-body">
-                <div>
-                  <div class="white-label">원인</div>
-                  <div class="white-value">
-                    <code>notifications.type</code> 컬럼이
-                    <code>notification_types</code> 테이블을 참조하는데,
-                    코드에서 전달한 <code>'info'</code>라는 값이 해당 테이블에
-                    미등록.
-                  </div>
-                </div>
-                <div>
-                  <div class="white-label">해결</div>
-                  <div class="white-value">
-                    <code>notification_types</code> 테이블을 조회한 후 실제
-                    등록된 값인 <code>'info_consultation'</code>(또는
-                    <code>'notice'</code>)으로 코드 수정.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- #07 -->
           <h3 class="sub-heading" id="s2-3">
-            #07 &nbsp; 발신자 정보(sender_id) 누락 및 채팅 연동 불가
+            #06 &nbsp; 발신자 정보(sender_id) 누락 및 채팅 연동 불가
           </h3>
 
           <div class="white-card-list">
@@ -601,46 +560,6 @@
                     <code>auth.users</code> 참조) 추가. 알림 전송 시
                     <code>supabase.auth.getUser()</code>로 현재 로그인 유저 ID를
                     함께 저장하도록 로직 수정.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- #08 -->
-          <h3 class="sub-heading" id="s2-4">
-            #08 &nbsp; 'property user doesn't exist' 런타임 에러
-          </h3>
-
-          <div class="highlight-box-red">
-            <p>
-              property 'user' doesn't exist — 유저 ID 조회 과정에서 앱 강제 종료
-              또는 에러 Alert 발생
-            </p>
-          </div>
-
-          <div class="white-card-list">
-            <div class="white-card">
-              <div class="white-header">
-                <span class="white-num">원인</span>
-                <span class="white-title"
-                  >auth.getUser() 응답 객체 비구조화 할당 오류</span
-                >
-              </div>
-              <div class="white-body">
-                <div>
-                  <div class="white-label">원인</div>
-                  <div class="white-value">
-                    Supabase Auth 응답 객체의 비구조화 할당 오류.
-                    <code>data</code> 객체를 거치지 않고 <code>user</code>에
-                    직접 접근 시도.
-                  </div>
-                </div>
-                <div>
-                  <div class="white-label">해결</div>
-                  <div class="white-value">
-                    Optional Chaining(<code>?.</code>)을 활용한 안전한 객체 접근
-                    방식으로 개선.
                   </div>
                 </div>
               </div>
@@ -692,87 +611,9 @@
             Expo Router 라우팅 및 역할 기반 접근 제어 트러블슈팅
           </h2>
 
-          <!-- #09 -->
-          <h3 class="sub-heading" id="s3-1">
-            #09 &nbsp; TypeError: Cannot read property 'filter' of undefined
-          </h3>
-
-          <div class="highlight-box-red">
-            <p>
-              TypeError: Cannot read property 'filter' of undefined —
-              TabRouter.js, useNavigationBuilder.js
-            </p>
-          </div>
-
-          <p>
-            앱 실행 시 흰 화면이 뜨거나 Red Box 에러 발생. 호출 스택이
-            <code>TabRouter.js</code>, <code>useNavigationBuilder.js</code>를
-            가리키며 Stack → Tabs 레이아웃 변경 직후 주로 발생합니다.
-          </p>
-
-          <div class="white-card-list">
-            <div class="white-card">
-              <div class="white-header">
-                <span class="white-num">원인 1</span>
-                <span class="white-title"
-                  >Tabs.Screen name과 실제 파일명 불일치</span
-                >
-              </div>
-              <div class="white-body">
-                <div>
-                  <div class="white-label">원인</div>
-                  <div class="white-value">
-                    <code>_layout.jsx</code> 내의
-                    <code>&lt;Tabs.Screen name="..." /&gt;</code>에 명시된
-                    name과 실제 폴더 내의 물리적 파일이 존재하지 않거나 이름이
-                    다름.
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="white-card">
-              <div class="white-header">
-                <span class="white-num">원인 2</span>
-                <span class="white-title"
-                  >Tabs 설정에서 라우터 경로 필터링 실패</span
-                >
-              </div>
-              <div class="white-body">
-                <div>
-                  <div class="white-label">원인</div>
-                  <div class="white-value">
-                    Expo Router는 폴더 내의 모든 파일을 라우트로 간주하는데,
-                    Tabs 설정에서 이를 제대로 필터링하지 못할 때 발생.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <h3 class="sub-heading">해결 방법</h3>
-          <ul class="bullet-list">
-            <li>
-              <strong>파일명 전수 조사:</strong> <code>Tabs.Screen</code>의
-              <code>name</code> 속성과 실제 <code>.jsx</code> 파일명의 대소문자,
-              특수문자(언더바/하이픈) 일치 여부 확인.
-            </li>
-            <li>
-              <strong>빈 파일 생성:</strong> 미구현 기능(<code>chat.jsx</code>
-              등)도 <code>Tabs.Screen</code>에 등록되어 있다면 빈 컴포넌트
-              파일이라도 생성 필요.
-            </li>
-            <li>
-              <strong>캐시 강제 삭제:</strong> 파일 구조 변경 후 메트로 번들러
-              캐시에 즉각 반영되지 않을 수 있으므로 캐시를 지우고 재시작.
-            </li>
-          </ul>
-          <div class="code-block">
-            <pre><span class="c-line">npx expo start -c  <span class="c-comment">// 캐시 강제 삭제 후 재시작</span></span></pre>
-          </div>
-
-          <!-- #10 -->
+          <!-- #07 -->
           <h3 class="sub-heading" id="s3-2">
-            #10 &nbsp; WARN: No route named "X" exists in nested children
+            #07 &nbsp; WARN: No route named "X" exists in nested children
           </h3>
 
           <p>
@@ -808,9 +649,9 @@
             </div>
           </div>
 
-          <!-- #11 -->
+          <!-- #08 -->
           <h3 class="sub-heading" id="s3-3">
-            #11 &nbsp; 역할 기반 라우팅(Role-based Routing) 실패
+            #08 &nbsp; 역할 기반 라우팅(Role-based Routing) 실패
           </h3>
 
           <p>
@@ -869,9 +710,9 @@
             </div>
           </div>
 
-          <!-- #12 -->
+          <!-- #09 -->
           <h3 class="sub-heading" id="s3-4">
-            #12 &nbsp; 알림 데이터 연동 오류 — Context API
+            #09 &nbsp; 알림 데이터 연동 오류 — Context API
           </h3>
 
           <p>

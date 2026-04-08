@@ -38,9 +38,9 @@
         </p>
         <p class="post-desc">
           planners.json → Supabase <code>wedding_planners</code> 테이블
-          마이그레이션 과정에서 발생한 에러 6건과,
-          마이페이지(<code>mypage.jsx</code>) 개발 중 발생한 인증·라우팅 버그
-          6건, 총 12건의 트러블슈팅을 기록합니다.
+          마이그레이션 과정에서 발생한 에러와,
+          마이페이지(<code>mypage.jsx</code>) 개발 중 발생한 인증·라우팅 버그를
+          기록합니다.
         </p>
         <div class="post-stats">
           <div>
@@ -79,11 +79,11 @@
               >
               <ul class="toc-sub-list">
                 <li><a href="#s1-1">#01 forEach of null</a></li>
-                <li><a href="#s1-2">#02 join of null</a></li>
-                <li><a href="#s1-3">#03 useEffect async</a></li>
-                <li><a href="#s1-4">#04 SyntaxError 중괄호</a></li>
-                <li><a href="#s1-5">#05 useMemo 의존성</a></li>
-                <li><a href="#s1-6">#06 Hook</a></li>
+
+                <li><a href="#s1-3">#02 useEffect async</a></li>
+
+                <li><a href="#s1-5">#03 useMemo 의존성</a></li>
+                <li><a href="#s1-6">#04 Hook</a></li>
               </ul>
             </li>
             <li>
@@ -91,12 +91,12 @@
                 ><span class="toc-num">02</span>마이페이지 &amp; 인증</a
               >
               <ul class="toc-sub-list">
-                <li><a href="#s2-1">#07 마이 탭 이동 안 됨</a></li>
-                <li><a href="#s2-2">#08 로딩 스피너 화면 차단</a></li>
-                <li><a href="#s2-3">#09 profiles 테이블 없음</a></li>
-                <li><a href="#s2-4">#10 커플 로그인 무반응</a></li>
-                <li><a href="#s2-5">#11 로그인 화면 전환 오류</a></li>
-                <li><a href="#s2-6">#12 마이페이지 오류</a></li>
+                <li><a href="#s2-1">#05 마이 탭 이동 안 됨</a></li>
+                <li><a href="#s2-2">#06 로딩 스피너 화면 차단</a></li>
+
+                <li><a href="#s2-4">#07 커플 로그인 무반응</a></li>
+
+                <li><a href="#s2-6">#08 마이페이지 오류</a></li>
               </ul>
             </li>
             <li>
@@ -136,18 +136,9 @@
                   배열 컬럼 null 저장 — 옵셔널 체이닝 누락
                 </td>
               </tr>
+
               <tr>
                 <td class="txt-red">#02</td>
-                <td class="txt-muted">
-                  <code>Cannot read property 'join' of null</code>
-                </td>
-                <td class="txt-muted"><code>index.jsx / [id].jsx</code></td>
-                <td class="txt-muted">
-                  배열 컬럼 null — <code>.join()</code> 호출 시 TypeError
-                </td>
-              </tr>
-              <tr>
-                <td class="txt-red">#03</td>
                 <td class="txt-muted">
                   <code
                     >useEffect must not return anything besides a function</code
@@ -158,16 +149,9 @@
                   <code>useEffect(async () =&gt; {})</code> — Promise 반환 문제
                 </td>
               </tr>
+
               <tr>
-                <td class="txt-red">#04</td>
-                <td class="txt-muted">
-                  <code>SyntaxError: Unexpected token</code>
-                </td>
-                <td class="txt-muted"><code>[id].jsx</code></td>
-                <td class="txt-muted">두 useEffect 블록 중괄호 쌍 불일치</td>
-              </tr>
-              <tr>
-                <td class="txt-red">#05</td>
+                <td class="txt-red">#03</td>
                 <td class="txt-muted">필터/목록에 플래너 데이터 미표시</td>
                 <td class="txt-muted"><code>index.jsx</code></td>
                 <td class="txt-muted">
@@ -176,7 +160,7 @@
                 </td>
               </tr>
               <tr>
-                <td class="txt-red">#06</td>
+                <td class="txt-red">#04</td>
                 <td class="txt-muted">Hook 관련 에러 (조건부 return 위치)</td>
                 <td class="txt-muted"><code>[id].jsx / index.jsx</code></td>
                 <td class="txt-muted">
@@ -184,7 +168,7 @@
                 </td>
               </tr>
               <tr>
-                <td class="txt-red">#07</td>
+                <td class="txt-red">#05</td>
                 <td class="txt-muted">마이 탭 눌러도 화면 이동 안 됨</td>
                 <td class="txt-muted"><code>(couple)/_layout.jsx</code></td>
                 <td class="txt-muted">
@@ -192,7 +176,7 @@
                 </td>
               </tr>
               <tr>
-                <td class="txt-red">#08</td>
+                <td class="txt-red">#06</td>
                 <td class="txt-muted">로딩 스피너가 화면 차단</td>
                 <td class="txt-muted"><code>mypage.jsx</code></td>
                 <td class="txt-muted">
@@ -200,18 +184,9 @@
                   <code>router.replace</code>
                 </td>
               </tr>
+
               <tr>
-                <td class="txt-red">#09</td>
-                <td class="txt-muted">
-                  <code>public.profiles</code> 테이블 없음 오류
-                </td>
-                <td class="txt-muted"><code>mypage.jsx</code></td>
-                <td class="txt-muted">
-                  실제 테이블명은 <code>user_profiles</code>
-                </td>
-              </tr>
-              <tr>
-                <td class="txt-red">#10</td>
+                <td class="txt-red">#07</td>
                 <td class="txt-muted">커플 계정 로그인 무반응</td>
                 <td class="txt-muted"><code>login.jsx</code></td>
                 <td class="txt-muted">
@@ -219,16 +194,9 @@
                   <code>signOut</code> 누락
                 </td>
               </tr>
+
               <tr>
-                <td class="txt-red">#11</td>
-                <td class="txt-muted">로그인 후 홈 화면 자동 이동 안 됨</td>
-                <td class="txt-muted"><code>AuthGate</code></td>
-                <td class="txt-muted">
-                  couple 분기에 <code>inAuthGroup</code> 예외 포함
-                </td>
-              </tr>
-              <tr>
-                <td class="txt-red">#12</td>
+                <td class="txt-red">#08</td>
                 <td class="txt-muted">플래너 계정 마이페이지 접근 시 튕김</td>
                 <td class="txt-muted"><code>AuthGate</code></td>
                 <td class="txt-muted">
@@ -324,82 +292,8 @@
           </div>
 
           <!-- #02 -->
-          <h3 class="sub-heading" id="s1-2">
-            #02 &nbsp; Cannot read property 'join' of null
-          </h3>
-          <p>
-            FlatList <code>renderItem</code> 또는 상세 화면 JSX에서
-            <code>.join()</code>을 호출할 때 발생. Supabase row의 해당 컬럼이
-            <code>null</code>인 경우입니다.
-          </p>
-
-          <div class="highlight-box-red">
-            <p>ERROR &nbsp; Cannot read property 'join' of null</p>
-          </div>
-
-          <div class="white-card-list">
-            <div class="white-card">
-              <div class="white-header">
-                <span class="white-num">발생 파일</span>
-                <span class="white-title">index.jsx / [id].jsx</span>
-              </div>
-              <div class="white-body">
-                <div>
-                  <div class="white-label">원인</div>
-                  <div class="white-value">
-                    일부 row(예: 테스트 계정)의 배열 컬럼이 <code>null</code>로
-                    저장되어 있어 <code>.join()</code> 호출 시
-                    <code>TypeError</code> 발생.
-                  </div>
-                </div>
-                <div>
-                  <div class="white-label">해결</div>
-                  <div class="white-value">
-                    모든 배열 접근에 <code>?.</code>을 추가. 추가로 테스트 row를
-                    fetch 시 필터링.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="white-column-table">
-            <div class="white-column-row">
-              <div class="white-column-label">
-                <span class="white-column-layer-name">잘못된 코드</span>
-                <span class="white-column-layer-tech">❌</span>
-              </div>
-              <div class="white-column-content">
-                <div class="code-block">
-                  <pre><span class="c-comment">// index.jsx renderItem</span>
-<span class="c-line">&lt;Text&gt;{item.activity_regions.join(', ')}&lt;/Text&gt;</span>
-<span class="c-comment">// [id].jsx</span>
-<span class="c-line">&lt;Text&gt;{selectedPlanner.activity_regions.join(', ')}&lt;/Text&gt;</span>
-<span class="c-line">{selectedPlanner.service_scope.included.map(...)}</span></pre>
-                </div>
-              </div>
-            </div>
-            <div class="white-column-row" style="border-bottom: none">
-              <div class="white-column-label">
-                <span class="white-column-layer-name">수정된 코드</span>
-                <span class="white-column-layer-tech">✅</span>
-              </div>
-              <div class="white-column-content">
-                <div class="code-block">
-                  <pre><span class="c-comment">// index.jsx renderItem</span>
-<span class="c-line">&lt;Text&gt;{item.activity_regions<span class="c-key">?.</span>join(', ')}&lt;/Text&gt;               <span class="c-comment">// ✅</span></span>
-<span class="c-comment">// [id].jsx</span>
-<span class="c-line">&lt;Text&gt;{selectedPlanner.activity_regions<span class="c-key">?.</span>join(', ')}&lt;/Text&gt;    <span class="c-comment">// ✅</span></span>
-<span class="c-line">{selectedPlanner.service_scope<span class="c-key">?.</span>included<span class="c-key">?.</span>map(...)}            <span class="c-comment">// ✅ 중첩 객체는 두 번</span></span>
-<span class="c-line">{selectedPlanner.base_price_krw<span class="c-key">?.</span>toLocaleString()}             <span class="c-comment">// ✅</span></span></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- #03 -->
           <h3 class="sub-heading" id="s1-3">
-            #03 &nbsp; useEffect must not return anything besides a function
+            #02 &nbsp; useEffect must not return anything besides a function
           </h3>
           <p>
             <code>useEffect</code> 콜백에 <code>async</code>를 직접 붙여서
@@ -479,92 +373,9 @@
             </div>
           </div>
 
-          <!-- #04 -->
-          <h3 class="sub-heading" id="s1-4">
-            #04 &nbsp; SyntaxError: Unexpected token
-          </h3>
-          <p>
-            파일 저장 후 Metro 번들러가 파일을 파싱하지 못하고 특정 줄(예:
-            <code>}, []);</code>)에서 에러가 발생합니다.
-          </p>
-
-          <div class="highlight-box-red">
-            <p>ERROR &nbsp; SyntaxError: Unexpected token</p>
-          </div>
-
-          <div class="white-card-list">
-            <div class="white-card">
-              <div class="white-header">
-                <span class="white-num">발생 파일</span>
-                <span class="white-title">[id].jsx</span>
-              </div>
-              <div class="white-body">
-                <div>
-                  <div class="white-label">원인</div>
-                  <div class="white-value">
-                    두 개의 <code>useEffect</code> 블록을 추가하는 과정에서
-                    중괄호 쌍이 맞지 않거나, 하나의 <code>useEffect</code> 안에
-                    BackHandler 코드와 fetch 코드가 뒤섞여 블록이 올바르게
-                    닫히지 않음.
-                  </div>
-                </div>
-                <div>
-                  <div class="white-label">해결</div>
-                  <div class="white-value">
-                    <code>useEffect</code>를 두 개로 완전히 분리하고, 각각의
-                    중괄호가 정확히 닫혔는지 확인.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="white-column-table">
-            <div class="white-column-row">
-              <div class="white-column-label">
-                <span class="white-column-layer-name">잘못된 코드</span>
-                <span class="white-column-layer-tech">❌</span>
-              </div>
-              <div class="white-column-content">
-                <div class="code-block">
-                  <pre><span class="c-line">useEffect(() => {</span>
-<span class="c-line">  async function fetchPlanner() { ... }</span>
-<span class="c-line">  fetchPlanner();</span>
-<span class="c-comment">  // ❌ BackHandler 코드가 섞임</span>
-<span class="c-line">  const handleBackPress = () => { ... };</span>
-<span class="c-line">  const subscription = BackHandler.addEventListener(...);</span>
-<span class="c-line">  return () => subscription.remove();</span>
-<span class="c-line">}, []);  <span class="c-comment">// ← 파서가 여기서 오류</span></span></pre>
-                </div>
-              </div>
-            </div>
-            <div class="white-column-row" style="border-bottom: none">
-              <div class="white-column-label">
-                <span class="white-column-layer-name">수정된 코드</span>
-                <span class="white-column-layer-tech">✅</span>
-              </div>
-              <div class="white-column-content">
-                <div class="code-block">
-                  <pre><span class="c-comment">// ✅ useEffect 1 — fetch (완전히 분리)</span>
-<span class="c-line">useEffect(() => {</span>
-<span class="c-line">  async function fetchPlanner() { ... }</span>
-<span class="c-line">  fetchPlanner();</span>
-<span class="c-line">}, [id]);</span>
-
-<span class="c-comment">// ✅ useEffect 2 — BackHandler (완전히 분리)</span>
-<span class="c-line">useEffect(() => {</span>
-<span class="c-line">  const handleBackPress = () => { ... };</span>
-<span class="c-line">  const subscription = BackHandler.addEventListener(...);</span>
-<span class="c-line">  return () => subscription.remove();</span>
-<span class="c-line">}, []);</span></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- #05 -->
+          <!-- #03 -->
           <h3 class="sub-heading" id="s1-5">
-            #05 &nbsp; 필터/목록에 플래너 데이터가 표시되지 않음
+            #03 &nbsp; 필터/목록에 플래너 데이터가 표시되지 않음
           </h3>
           <p>
             Supabase fetch는 성공(data 로그 확인)했으나 화면에 플래너 카드가
@@ -637,9 +448,9 @@
             </div>
           </div>
 
-          <!-- #06 -->
+          <!-- #04 -->
           <h3 class="sub-heading" id="s1-6">
-            #06 &nbsp; Hook 관련 에러 (조건부 return 위치)
+            #04 &nbsp; Hook 관련 에러 (조건부 return 위치)
           </h3>
           <p>
             로딩 처리를 위해 <code>if (loading) return ...</code>을 추가했더니
@@ -746,9 +557,9 @@
 <span class="t-line">└── groom_name, bride_name, email, phone, user_id</span></pre>
           </div>
 
-          <!-- #07 -->
+          <!-- #05 -->
           <h3 class="sub-heading" id="s2-1">
-            #07 &nbsp; 마이 탭 눌러도 화면 이동 안 됨
+            #05 &nbsp; 마이 탭 눌러도 화면 이동 안 됨
           </h3>
 
           <div class="highlight-box-red">
@@ -841,9 +652,9 @@
             </div>
           </div>
 
-          <!-- #08 -->
+          <!-- #06 -->
           <h3 class="sub-heading" id="s2-2">
-            #08 &nbsp; 로딩 스피너가 화면을 막아 마이페이지 진입 불가
+            #06 &nbsp; 로딩 스피너가 화면을 막아 마이페이지 진입 불가
           </h3>
           <p>
             마이 탭을 눌러도 로딩 스피너만 표시되거나, 빈 화면이 유지됩니다.
@@ -923,88 +734,9 @@
             </div>
           </div>
 
-          <!-- #09 -->
-          <h3 class="sub-heading" id="s2-3">
-            #09 &nbsp; 'public.profiles' 테이블을 찾을 수 없음
-          </h3>
-
-          <div class="highlight-box-red">
-            <p>
-              ERROR &nbsp; Could not find the table 'public.profiles' in the
-              schema cache
-            </p>
-          </div>
-
-          <div class="white-card-list">
-            <div class="white-card">
-              <div class="white-header">
-                <span class="white-num">발생 파일</span>
-                <span class="white-title">mypage.jsx</span>
-              </div>
-              <div class="white-body">
-                <div>
-                  <div class="white-label">원인</div>
-                  <div class="white-value">
-                    <code>loadProfile</code> 함수에서 테이블명을
-                    <code>profiles</code>로 작성했으나, 실제 Supabase DB의
-                    테이블명은 <code>user_profiles</code>.
-                  </div>
-                </div>
-                <div>
-                  <div class="white-label">해결</div>
-                  <div class="white-value">
-                    모든 쿼리에서 <code>'profiles'</code> →
-                    <code>'user_profiles'</code>로 수정. Supabase 대시보드 →
-                    Table Editor에서 실제 테이블명 확인 후 코드에 작성.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="white-column-table">
-            <div class="white-column-row">
-              <div class="white-column-label">
-                <span class="white-column-layer-name">잘못된 코드</span>
-                <span class="white-column-layer-tech">❌</span>
-              </div>
-              <div class="white-column-content">
-                <div class="code-block">
-                  <pre><span class="c-line">const { data, error } = await supabase</span>
-<span class="c-line">  .from(<span class="c-str">'profiles'</span>)  <span class="c-comment">// ← 실제로는 'user_profiles'</span></span>
-<span class="c-line">  .select('role, planner_id, couple_id')</span>
-<span class="c-line">  .eq('id', userId)</span>
-<span class="c-line">  .single();</span></pre>
-                </div>
-              </div>
-            </div>
-            <div class="white-column-row" style="border-bottom: none">
-              <div class="white-column-label">
-                <span class="white-column-layer-name">수정된 코드</span>
-                <span class="white-column-layer-tech">✅</span>
-              </div>
-              <div class="white-column-content">
-                <div class="code-block">
-                  <pre><span class="c-comment">// loadProfile 내부</span>
-<span class="c-line">const { data: profileRow, error: profileError } = await supabase</span>
-<span class="c-line">  .from(<span class="c-key">'user_profiles'</span>)  <span class="c-comment">// ← 수정</span></span>
-<span class="c-line">  .select('role, planner_id, couple_id')</span>
-<span class="c-line">  .eq('id', userId)</span>
-<span class="c-line">  .single();</span>
-
-<span class="c-comment">// handleDeleteAccount 내부도 동일하게 수정</span>
-<span class="c-line">const { error } = await supabase</span>
-<span class="c-line">  .from(<span class="c-key">'user_profiles'</span>)  <span class="c-comment">// ← 수정</span></span>
-<span class="c-line">  .delete()</span>
-<span class="c-line">  .eq('id', session.user.id);</span></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- #10 -->
+          <!-- #07 -->
           <h3 class="sub-heading" id="s2-4">
-            #10 &nbsp; 커플 계정 로그인 시 아무 반응 없음
+            #07 &nbsp; 커플 계정 로그인 시 아무 반응 없음
           </h3>
           <p>
             커플 계정으로 로그인 버튼을 눌러도 오류 메시지도, 화면 전환도,
@@ -1092,91 +824,9 @@
             </div>
           </div>
 
-          <!-- #11 -->
-          <h3 class="sub-heading" id="s2-5">
-            #11 &nbsp; 커플 로그인 후 홈 화면으로 자동 이동 안 됨
-          </h3>
-          <p>
-            커플 계정 로그인 성공 후 <code>(auth)/login</code> 화면에 그대로
-            머무르고, <code>/(couple)</code> 홈으로 자동 이동하지 않는
-            증상입니다.
-          </p>
-
-          <div class="white-card-list">
-            <div class="white-card">
-              <div class="white-header">
-                <span class="white-num">발생 파일</span>
-                <span class="white-title">AuthGate</span>
-              </div>
-              <div class="white-body">
-                <div>
-                  <div class="white-label">원인</div>
-                  <div class="white-value">
-                    AuthGate의 couple 분기 리다이렉트 조건에
-                    <code>inAuthGroup</code>이 예외로 포함되어 있어, 로그인 성공
-                    후 <code>(auth)</code> 화면에 있을 때
-                    <code>/(couple)</code>로 이동하는 조건이
-                    <code>false</code>가 됨.
-                  </div>
-                </div>
-                <div>
-                  <div class="white-label">해결</div>
-                  <div class="white-value">
-                    couple 분기에서 <code>inAuthGroup</code> 예외 제거. 로그인
-                    후 <code>(auth)</code>에 있으면 <code>/(couple)</code>로
-                    이동.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="white-column-table">
-            <div class="white-column-row">
-              <div class="white-column-label">
-                <span class="white-column-layer-name">잘못된 코드</span>
-                <span class="white-column-layer-tech">❌</span>
-              </div>
-              <div class="white-column-content">
-                <div class="code-block">
-                  <pre><span class="c-comment">// ❌ inAuthGroup 예외 때문에 (auth)에서 리다이렉트 안 됨</span>
-<span class="c-line">} else {  <span class="c-comment">// couple</span></span>
-<span class="c-line">  if (!inCoupleGroup && <span class="c-str">!inAuthGroup</span> && !inVendorsGroup && !inPlannersGroup)</span>
-<span class="c-line">  <span class="c-comment">// ↑ (auth)에 있으면 이 조건 false → 이동 안 함</span></span>
-<span class="c-line">    router.replace("/(couple)");</span>
-<span class="c-line">}</span></pre>
-                </div>
-              </div>
-            </div>
-            <div class="white-column-row" style="border-bottom: none">
-              <div class="white-column-label">
-                <span class="white-column-layer-name">수정된 코드</span>
-                <span class="white-column-layer-tech">✅</span>
-              </div>
-              <div class="white-column-content">
-                <div class="code-block">
-                  <pre><span class="c-comment">// ✅ inAuthGroup 예외 제거</span>
-<span class="c-line">} else {  <span class="c-comment">// couple</span></span>
-<span class="c-line">  if (!inCoupleGroup && !inVendorsGroup && !inPlannersGroup)</span>
-<span class="c-line">  <span class="c-comment">// inAuthGroup 제거 → 로그인 후 (auth)에 있으면 (couple)로 이동</span></span>
-<span class="c-line">    router.replace("/(couple)");</span>
-<span class="c-line">}</span></pre>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="highlight-box-yellow">
-            <p>
-              ⚠️ 주의 &nbsp; inAuthGroup 예외를 제거하면 비로그인 상태에서
-              (auth) 화면이 정상 유지되는지 확인 필요. session이 없는 경우
-              분기가 먼저 실행되어 (auth) 접근은 여전히 허용됨.
-            </p>
-          </div>
-
-          <!-- #12 -->
+          <!-- #08 -->
           <h3 class="sub-heading" id="s2-6">
-            #12 &nbsp; 플래너 계정이 마이페이지 접근 시 튕김
+            #08 &nbsp; 플래너 계정이 마이페이지 접근 시 튕김
           </h3>
           <p>
             플래너 계정으로 로그인 후 마이 탭을 누르면

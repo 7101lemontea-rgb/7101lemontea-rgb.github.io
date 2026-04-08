@@ -42,7 +42,9 @@
         </p>
 
         <p class="post-desc">
-          모듈 경로 및 라우팅 오류 해결, chat_members 테이블을 활용한 다중 초대 채팅 시스템 구축, RLS 보안 정책 최적화 등 앱의 안정성과 확장성을 확보한 과정을 기록합니다.
+          모듈 경로 및 라우팅 오류 해결, chat_members 테이블을 활용한 다중 초대
+          채팅 시스템 구축, RLS 보안 정책 최적화 등 앱의 안정성과 확장성을
+          확보한 과정을 기록합니다.
         </p>
 
         <div class="post-stats">
@@ -67,38 +69,73 @@
         <div class="toc-sticky">
           <div class="toc-title">Contents</div>
           <ul class="toc-list">
-            <li><a href="#s0"><span class="toc-num">§</span>오늘의 작업 요약</a></li>
-            <li><a href="#s1"><span class="toc-num">01</span>오전 데일리 스크럼</a></li>
-            <li><a href="#s2"><span class="toc-num">02</span>오늘의 목표</a></li>
-            <li><a href="#s3"><span class="toc-num">03</span>실제 수행 작업</a></li>
-            <li><a href="#s4"><span class="toc-num">04</span>이슈 및 해결 내역</a></li>
-            <li><a href="#s5"><span class="toc-num">05</span>DB 스키마 변경</a></li>
-            <li><a href="#s6"><span class="toc-num">06</span>RLS 보안 정책</a></li>
-            <li><a href="#s7"><span class="toc-num">07</span>코드 변경 요약</a></li>
-            <li><a href="#s8"><span class="toc-num">08</span>내일의 계획</a></li>
-            <li><a href="#s9"><span class="toc-num">09</span>권장 사항 & 회고</a></li>
+            <li>
+              <a href="#s0"><span class="toc-num">§</span>오늘의 작업 요약</a>
+            </li>
+            <li>
+              <a href="#s1"
+                ><span class="toc-num">01</span>오전 데일리 스크럼</a
+              >
+            </li>
+            <li>
+              <a href="#s2"><span class="toc-num">02</span>오늘의 목표</a>
+            </li>
+            <li>
+              <a href="#s3"><span class="toc-num">03</span>실제 수행 작업</a>
+            </li>
+            <li>
+              <a href="#s4"><span class="toc-num">04</span>이슈 및 해결 내역</a>
+            </li>
+            <li>
+              <a href="#s5"><span class="toc-num">05</span>DB 스키마 변경</a>
+            </li>
+            <li>
+              <a href="#s6"><span class="toc-num">06</span>RLS 보안 정책</a>
+            </li>
+            <li>
+              <a href="#s7"><span class="toc-num">07</span>코드 변경 요약</a>
+            </li>
+            <li>
+              <a href="#s8"><span class="toc-num">08</span>내일의 계획</a>
+            </li>
+            <li>
+              <a href="#s9"><span class="toc-num">09</span>권장 사항 & 회고</a>
+            </li>
           </ul>
         </div>
       </aside>
 
       <article class="post-body">
         <section class="section visible" id="s0">
-          <div class="sec-eyebrow">Phase Overview</div>
+          <div class="sec-eyebrow">Today's Summary</div>
           <h2 class="sec-heading">오늘의 작업 요약</h2>
-          <div class="phase-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
-            <div style="background: #f9f9f9; padding: 1rem; border-radius: 8px;">
-              <strong style="color: #ff6b6b; display: block; margin-bottom: 0.5rem;">Phase A: 오류 해결</strong>
-              <p style="font-size: 0.9rem; margin: 0;">모듈 경로, 중복 Screen, 탭바 렌더링 등 라우팅 문제 수정</p>
-            </div>
-            <div style="background: #f9f9f9; padding: 1rem; border-radius: 8px;">
-              <strong style="color: #ff6b6b; display: block; margin-bottom: 0.5rem;">Phase B: 채팅 다중 초대</strong>
-              <p style="font-size: 0.9rem; margin: 0;">chat_members 추가, 초대 코드 및 멤버 관리 구현</p>
-            </div>
-            <div style="background: #f9f9f9; padding: 1rem; border-radius: 8px;">
-              <strong style="color: #ff6b6b; display: block; margin-bottom: 0.5rem;">Phase C: Supabase 연동</strong>
-              <p style="font-size: 0.9rem; margin: 0;">RLS 정책, 마이그레이션, DB 스키마 변경 정리</p>
-            </div>
-          </div>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>내용</th>
+                <th>단계</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="txt-red">버그</td>
+                <td>모듈 경로, 중복 Screen, 탭바 렌더링 등 라우팅 문제 수정</td>
+                <td>Phase A: 오류 해결</td>
+              </tr>
+              <tr>
+                <td class="txt-accent">기능</td>
+                <td>chat_members 추가, 초대 코드 및 멤버 관리 구현</td>
+                <td>Phase B: 채팅 다중 초대</td>
+              </tr>
+              <tr>
+                <td class="txt-accent">연동</td>
+                <td>RLS 정책, 마이그레이션, DB 스키마 변경 정리</td>
+                <td>Phase C: Supabase 연동</td>
+              </tr>
+            </tbody>
+          </table>
         </section>
 
         <section class="section" id="s1">
@@ -114,7 +151,7 @@
             </thead>
             <tbody>
               <tr>
-                <td><strong>서영</strong></td>
+                <td><strong>정서영</strong></td>
                 <td>채팅 Supabase 연동, Planner/Couple 채팅 기능</td>
                 <td>그룹(다중) 채팅 기능 구현</td>
               </tr>
@@ -167,39 +204,71 @@
         <section class="section" id="s4">
           <div class="sec-eyebrow">Troubleshooting</div>
           <h2 class="sec-heading">이슈 및 해결 내역</h2>
-          
+
           <h3 class="mini-heading">1. 모듈 경로 오류 (Unable to resolve)</h3>
           <blockquote>
-            <strong>원인:</strong> Expo Router 중첩 구조에서 상대경로(../../../) 오계산으로 루트 도달 실패<br>
-            <strong>해결:</strong> <code>@/</code> 절대경로 별칭(Alias)으로 코드 베이스 통일
+            <strong>원인:</strong> Expo Router 중첩 구조에서 상대경로(../../../)
+            오계산으로 루트 도달 실패<br />
+            <strong>해결:</strong> <code>@/</code> 절대경로 별칭(Alias)으로 코드
+            베이스 통일
           </blockquote>
 
           <h3 class="mini-heading">2. chat_members ↔ profiles 조인 오류</h3>
-          <p>Foreign Key 미설정으로 인한 조인 실패 현상을 분리 조회 후 JS에서 병합하는 방식으로 즉시 대응했습니다.</p>
-          <pre style="background: #2d2d2d; color: #f8f8f2; padding: 1rem; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 0.85rem;">
+          <p>
+            Foreign Key 미설정으로 인한 조인 실패 현상을 분리 조회 후 JS에서
+            병합하는 방식으로 즉시 대응했습니다.
+          </p>
+          <pre
+            style="
+              background: #2d2d2d;
+              color: #f8f8f2;
+              padding: 1rem;
+              border-radius: 6px;
+              font-family: &quot;DM Mono&quot;, monospace;
+              font-size: 0.85rem;
+            "
+          >
 const { data: memberData } = await supabase.from('chat_members').select('user_id');
 const userIds = memberData.map((m) => m.user_id);
-const { data: profilesData } = await supabase.from('profiles').in('id', userIds);</pre>
+const { data: profilesData } = await supabase.from('profiles').in('id', userIds);</pre
+          >
 
           <h3 class="mini-heading">3. RLS 정책 무한 재귀 오류</h3>
           <blockquote>
-            <strong>현상:</strong> "infinite recursion detected in policy"<br>
-            <strong>해결:</strong> SELECT 정책 내 서브쿼리 제거. <code>auth.uid() = user_id</code> 단순 비교로 수정
+            <strong>현상:</strong> "infinite recursion detected in policy"<br />
+            <strong>해결:</strong> SELECT 정책 내 서브쿼리 제거.
+            <code>auth.uid() = user_id</code> 단순 비교로 수정
           </blockquote>
         </section>
 
         <section class="section" id="s5">
           <div class="sec-eyebrow">Database</div>
           <h2 class="sec-heading">DB 스키마 변경</h2>
-          <p>기존 1:1 구조에서 1:N 다중 사용자 채팅이 가능하도록 구조를 고도화했습니다.</p>
-          <pre style="background: #f4f4f4; padding: 1rem; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 0.85rem; border-left: 4px solid #ff6b6b;">
+          <p>
+            기존 1:1 구조에서 1:N 다중 사용자 채팅이 가능하도록 구조를
+            고도화했습니다.
+          </p>
+          <pre
+            style="
+              background: #f4f4f4;
+              padding: 1rem;
+              border-radius: 6px;
+              font-family: &quot;DM Mono&quot;, monospace;
+              font-size: 0.85rem;
+              border-left: 4px solid #ff6b6b;
+            "
+          >
 CREATE TABLE chat_members (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   chat_id uuid REFERENCES chats(id),
   user_id uuid REFERENCES auth.users(id),
   role text -- owner | member
-);</pre>
-          <p style="color: #d63031; font-weight: bold; font-size: 0.9rem;">⚠️ 기존 채팅방 데이터는 SQL Editor를 통해 소유자(owner) 수동 등록 마이그레이션이 필수적입니다.</p>
+);</pre
+          >
+          <p style="color: #d63031; font-weight: bold; font-size: 0.9rem">
+            ⚠️ 기존 채팅방 데이터는 SQL Editor를 통해 소유자(owner) 수동 등록
+            마이그레이션이 필수적입니다.
+          </p>
         </section>
 
         <section class="section" id="s6">
@@ -232,10 +301,23 @@ CREATE TABLE chat_members (
           <div class="sec-eyebrow">Retrospective</div>
           <h2 class="sec-heading">오늘의 회고</h2>
           <p>
-            "오늘은 오전부터 오류가 많이 발생하여 이것을 고치느라 어려운 하루였다. 실제로 코드가 많아지고 프로그램이 복잡해지면서 어디서 오류가 발생하는지 파악하고 어떻게 해결해야 하는지 고민하는 시간이 길어졌다. 다행히 마지막에 계속 붙잡고 있던 오류가 해결되어서 다행이었다."
+            "오늘은 오전부터 오류가 많이 발생하여 이것을 고치느라 어려운
+            하루였다. 실제로 코드가 많아지고 프로그램이 복잡해지면서 어디서
+            오류가 발생하는지 파악하고 어떻게 해결해야 하는지 고민하는 시간이
+            길어졌다. 다행히 마지막에 계속 붙잡고 있던 오류가 해결되어서
+            다행이었다."
           </p>
-          <div style="background: #fff0f0; padding: 1rem; border-left: 4px solid #ff6b6b; margin-top: 1rem;">
-            <strong>핵심 학습:</strong> Expo Router 구조와 라우팅 경로는 항상 일치해야 하며, Supabase RLS에서 자기 참조는 무한 루프의 원인이 됨을 명확히 이해했습니다.
+          <div
+            style="
+              background: #fff0f0;
+              padding: 1rem;
+              border-left: 4px solid #ff6b6b;
+              margin-top: 1rem;
+            "
+          >
+            <strong>핵심 학습:</strong> Expo Router 구조와 라우팅 경로는 항상
+            일치해야 하며, Supabase RLS에서 자기 참조는 무한 루프의 원인이 됨을
+            명확히 이해했습니다.
           </div>
         </section>
 
@@ -243,10 +325,40 @@ CREATE TABLE chat_members (
           <div class="sec-eyebrow">Next Plan</div>
           <h2 class="sec-heading">내일의 계획</h2>
           <ul class="bullet-list">
-            <li><strong>timeline.jsx 연동:</strong> Supabase 일정 데이터 바인딩</li>
-            <li><strong>데이터 동기화:</strong> Planner - Couple 간 실시간 상태 동기화</li>
-            <li><strong>통합 테스트:</strong> 채팅 및 초대 코드 시나리오 전수 점검</li>
+            <li>
+              <strong>timeline.jsx 연동:</strong> Supabase 일정 데이터 바인딩
+            </li>
+            <li>
+              <strong>데이터 동기화:</strong> Planner - Couple 간 실시간 상태
+              동기화
+            </li>
+            <li>
+              <strong>통합 테스트:</strong> 채팅 및 초대 코드 시나리오 전수 점검
+            </li>
           </ul>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
         </section>
       </article>
     </div>
