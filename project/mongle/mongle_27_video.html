@@ -456,13 +456,16 @@
         flex-direction: column;
         gap: 1px;
         background: var(--border);
+
+        border: 1px solid var(--border);
         border-radius: var(--radius);
         overflow: hidden;
+        /* ---------------------- */
       }
       .scene-row {
         display: grid;
         grid-template-columns: 54px 1fr auto;
-        background: var(--bg2);
+        background: #fcfbfa;
         transition: background 0.18s;
         position: relative;
         overflow: hidden;
@@ -496,16 +499,23 @@
         font-family: var(--font-display);
         font-size: 1.9rem;
         color: var(--border2);
-        padding: 0.4rem 0.4rem 0.4rem 0.4rem;
+        padding: 0.4rem;
         border-right: 1px solid var(--border);
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: color 0.18s;
+        transition:
+          color 0.18s,
+          background 0.18s;
+        background: #faf6f3;
       }
       .scene-row:hover .scene-num,
       .scene-row.active-scene .scene-num {
         color: var(--accent);
+      }
+
+      .scene-row:hover .scene-num {
+        background: #fcefe9; /* 호버 시 숫자 칸만 살짝 더 어둡게 */
       }
 
       .scene-content {
@@ -707,7 +717,7 @@
       <div class="hero-meta">
         <span class="badge badge-type">Demo</span>
         <span class="badge badge-ver">2026.04.02</span>
-        <span class="badge badge-status">Team of 4</span>
+        <span class="badge badge-status">Mongle</span>
       </div>
       <h1 class="hero-title">시연 <span class="hl">영상</span></h1>
       <p class="hero-sub">AI 웨딩 어시스턴트 플랫폼 — Mongle</p>
@@ -769,11 +779,11 @@
             </div>
             <div class="vmeta-item">
               <span class="vmeta-label">팀</span>
-              <span class="vmeta-val">4인 · 11일</span>
+              <span class="vmeta-val">4인</span>
             </div>
             <div class="vmeta-item">
               <span class="vmeta-label">기간</span>
-              <span class="vmeta-val">03.23 – 04.02</span>
+              <span class="vmeta-val">03.23 – 04.02 (11일)</span>
             </div>
             <div class="vmeta-item">
               <span class="vmeta-label">완성도</span>
@@ -848,18 +858,112 @@
               <div class="scene-ts"><span class="ts-btn">1:15</span></div>
             </div>
 
-            <div class="scene-row" data-time="165">
+            <div class="scene-row" data-time="100">
               <div class="scene-num">05</div>
               <div class="scene-content">
-                <div class="scene-title">일정 동기화 & 예산 관리</div>
+                <div class="scene-title">채팅 AI</div>
                 <div class="scene-desc">
-                  플래너 등록 일정이 커플 앱에 실시간 반영, 예산 항목별 트래킹
-                </div>
-                <div class="scene-tags">
-                  <span class="scene-tag purple">PostgreSQL RLS</span>
+                  채팅 AI 응답 생성 과정 시연: FastAPI → GPT-4 mini→ FastAPI →
+                  Expo 앱
                 </div>
               </div>
-              <div class="scene-ts"><span class="ts-btn">2:45</span></div>
+              <div class="scene-ts"><span class="ts-btn">1:40</span></div>
+            </div>
+            <div class="scene-row" data-time="125">
+              <div class="scene-num">06</div>
+              <div class="scene-content">
+                <div class="scene-title">비용 관리 UI</div>
+                <div class="scene-desc">
+                  비용 관리 UI, Supabase에서 비용 데이터 불러와 화면에 렌더링
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">2:05</span></div>
+            </div>
+            <div class="scene-row" data-time="150">
+              <div class="scene-num">07</div>
+              <div class="scene-content">
+                <div class="scene-title">비용 AI</div>
+                <div class="scene-desc">
+                  비용 견적 최적화 AI 과정 시연: FastAPI → GPT-4 → FastAPI →
+                  Expo 앱
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">2:30</span></div>
+            </div>
+            <div class="scene-row" data-time="178">
+              <div class="scene-num">08</div>
+              <div class="scene-content">
+                <div class="scene-title">마이페이지 및 로그아웃</div>
+                <div class="scene-desc">
+                  마이페이지 및 로그아웃 흐름 시연, Supabase Auth 세션 삭제 로직
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">2:58</span></div>
+            </div>
+            <div class="scene-row" data-time="186">
+              <div class="scene-num">09</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 UI</div>
+                <div class="scene-desc">
+                  플래너 UI 시연, 플래너 계정 로그인 및 Supabase에서 관련 데이터
+                  렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">3:06</span></div>
+            </div>
+            <div class="scene-row" data-time="216">
+              <div class="scene-num">10</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 할 일 목록 UI</div>
+                <div class="scene-desc">
+                  플래너 할 일 목록 UI 시연, Supabase에서 관련 데이터 불러오기
+                  및 렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">3:36</span></div>
+            </div>
+            <div class="scene-row" data-time="240">
+              <div class="scene-num">11</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 커플 목록 UI</div>
+                <div class="scene-desc">
+                  플래너 커플 목록 UI 시연, Supabase에서 관련 데이터 불러오기 및
+                  렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">4:00</span></div>
+            </div>
+            <div class="scene-row" data-time="270">
+              <div class="scene-num">12</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 업체 목록 UI</div>
+                <div class="scene-desc">
+                  플래너 업체 목록 UI 시연, Supabase에서 관련 데이터 불러오기 및
+                  렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">4:30</span></div>
+            </div>
+            <div class="scene-row" data-time="300">
+              <div class="scene-num">13</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 비용 현황 UI</div>
+                <div class="scene-desc">
+                  플래너 비용 현황 UI 시연, Supabase에서 관련 데이터 불러오기 및
+                  렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">5:00</span></div>
+            </div>
+            <div class="scene-row" data-time="334">
+              <div class="scene-num">14</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 UI 내비게이션</div>
+                <div class="scene-desc">
+                  플래너 UI 내비게이션 시연, 화면 간 이동 및 데이터 렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">5:34</span></div>
             </div>
           </div>
         </div>
@@ -869,7 +973,7 @@
           <div class="sec-eyebrow">Tech Stack</div>
           <h2 class="sec-heading">사용 기술</h2>
           <div class="highlight-box">
-            React Native(Expo) 앱 2종 + Vite 웹 대시보드를
+            React Native(Expo) 앱 / Vite 웹 대시보드를
             <strong>단일 Supabase 프로젝트</strong>에 연결, RLS 정책으로
             커플·플래너 권한을 분리했습니다.
           </div>

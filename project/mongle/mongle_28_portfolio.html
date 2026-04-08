@@ -13,6 +13,17 @@
       rel="stylesheet"
     />
     <style>
+      ::selection {
+        background-color: #f09fb1;
+        color: #ffffff;
+      }
+
+      /* 파이어폭스 브라우저 호환성을 위해 추가 */
+      ::-moz-selection {
+        background-color: #f09fb1;
+        color: #ffffff;
+      }
+
       *,
       *::before,
       *::after {
@@ -22,13 +33,13 @@
       }
 
       :root {
-        --bg: #1a1118;
-        --bg2: #231720;
-        --bg3: #2d1f2a;
-        --border: rgba(255, 255, 255, 0.06);
-        --border2: rgba(255, 255, 255, 0.1);
-        --text: #f2ede8;
-        --muted: #b5a7ad;
+        --bg: #fdfaf8;
+        --bg2: #f5f0ed;
+        --bg3: #fef2ed;
+        --border: rgba(180, 100, 70, 0.1);
+        --border2: rgba(180, 100, 70, 0.2);
+        --text: #4e4c4a;
+        --muted: #806d65;
         --accent: #f06878;
         --accent2: #ff8fa0;
         --red: #ff6055;
@@ -95,16 +106,22 @@
         margin: 0 0 0.8rem;
       }
       .pf-name em {
-        color: var(--accent);
+        background: linear-gradient(to right, #f09fc6, #f7b28f);
+
+        -webkit-background-clip: text;
+        background-clip: text;
+
+        color: transparent;
+
         font-style: normal;
-        text-shadow: 0 0 40px rgba(240, 104, 120, 0.5);
+        text-shadow: 0 0 40px rgba(255, 216, 210, 0.7);
       }
 
       .pf-tagline {
         font-family: "DM Serif Display", serif;
-        font-style: italic;
+
         font-size: 0.92rem;
-        color: var(--muted);
+        color: #988780;
         line-height: 1.6;
       }
 
@@ -125,31 +142,61 @@
         margin-bottom: 1rem;
         border: 0.5px solid var(--border2);
       }
+
       .kpi-cell {
-        background: var(--bg2);
+        background: linear-gradient(to bottom, #f9f1e6, #fae5f0);
         padding: 0.8rem 0.9rem;
         display: flex;
         flex-direction: column;
         gap: 2px;
-        transition: background 0.2s;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
       }
-      .kpi-cell:hover {
-        background: var(--bg3);
+
+      /* 호버 시 나타날 그라데이션 층 */
+      .kpi-cell::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, #f6eddf, #fad8e9);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
       }
+
+      .kpi-cell:hover::before {
+        opacity: 1;
+      }
+
       .kpi-num {
         font-family: "Bebas Neue", sans-serif;
         font-size: 2.1rem;
         letter-spacing: 0.04em;
-        color: var(--accent);
+        background: linear-gradient(to bottom, #f18484, #f47aa8);
+
+        -webkit-background-clip: text;
+        background-clip: text;
+
+        color: transparent;
+
+        font-style: normal;
+        text-shadow: 0 0 40px rgba(255, 216, 210, 0.7);
         line-height: 1;
-        text-shadow: 0 0 20px rgba(240, 104, 120, 0.4);
+
+        pointer-events: none;
       }
+
       .kpi-lbl {
         font-family: "DM Mono", monospace;
         font-size: 0.58rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--muted);
+        pointer-events: none;
       }
 
       /* Contact row */
@@ -190,11 +237,7 @@
       }
 
       .link-card {
-        background: linear-gradient(
-          135deg,
-          rgba(240, 104, 120, 0.6) 0%,
-          rgba(176, 136, 224, 0.6) 100%
-        );
+        background: linear-gradient(to bottom, #f6eddf, #fad8e9);
         border: 0.5px solid rgba(240, 104, 120, 0.2);
         border-radius: 12px;
         padding: 1.1rem 1.3rem;
@@ -210,7 +253,7 @@
           box-shadow 0.2s;
       }
       .link-card:hover {
-        border-color: var(--accent);
+        border-color: #e5b0b6;
         background: rgba(240, 104, 120, 0.14);
         transform: translateY(-2px);
         box-shadow: 0 8px 24px rgba(240, 104, 120, 0.18);
@@ -268,8 +311,15 @@
         z-index: 1;
       }
 
+      .pf-sidebar {
+        background: linear-gradient(160deg, #fef6f0 0%, #fdf0f5 100%);
+        border: 0.5px solid var(--border2);
+        border-radius: 14px;
+        padding: 1.2rem 1rem;
+      }
+
       .s-label {
-        font-family: "DM Mono", monospace;
+        font-family: "Pretendard", sans-serif;
         font-size: 0.82rem;
         font-weight: 500;
         letter-spacing: 0.16em;
@@ -299,7 +349,9 @@
       .pf-sec {
         margin-bottom: 1.5rem;
       }
-
+      .pf-sec2 {
+        margin-bottom: 3.1rem;
+      }
       /* Project desc */
       .p-desc {
         font-size: 0.9rem;
@@ -358,7 +410,7 @@
         padding: 3px 8px;
         border-radius: 100px;
         border: 0.5px solid rgba(96, 168, 232, 0.25);
-        color: rgba(108, 154, 195, 0.8);
+        color: rgba(85, 141, 189, 0.8);
         background: rgba(96, 168, 232, 0.07);
         transition:
           color 0.18s,
@@ -374,7 +426,7 @@
       .tag-hi {
         background: rgba(240, 104, 120, 0.1);
         border-color: rgba(240, 104, 120, 0.35);
-        color: var(--accent2);
+        color: rgba(232, 99, 110, 0.8);
       }
       .tag-hi:hover {
         background: rgba(240, 104, 120, 0.22);
@@ -388,16 +440,16 @@
         border-radius: 10px;
         overflow: hidden;
         margin-top: 0.4rem;
-        background: var(--bg2);
+        background: #ffffff;
       }
       .arch-item {
         display: grid;
-        grid-template-columns: 80px 1fr;
+        grid-template-columns: 90px 1fr;
         border-bottom: 0.5px solid var(--border);
         transition: background 0.15s;
       }
       .arch-item:hover {
-        background: var(--bg3);
+        background: #fdf7f6;
       }
       .arch-item:last-child {
         border-bottom: none;
@@ -405,7 +457,7 @@
       .arch-l {
         padding: 0.55rem 0.7rem;
         border-right: 0.5px solid var(--border);
-        background: var(--bg3);
+        background: rgba(230, 61, 61, 0.06);
       }
       .arch-layer {
         font-family: "DM Mono", monospace;
@@ -428,65 +480,80 @@
 
       /* Team */
       .team {
+        border: 0.5px solid var(--border2);
+        border-radius: 10px;
+        overflow: hidden;
         margin-top: 0.4rem;
+        background: #ffffff;
       }
       .team-item {
-        padding: 0.5rem 0.4rem;
+        display: grid;
+        grid-template-columns: 90px 1fr;
         border-bottom: 0.5px solid var(--border);
-        border-radius: 6px;
-        transition:
-          background 0.18s,
-          padding-left 0.18s;
+        transition: background 0.15s;
         cursor: default;
       }
       .team-item:hover {
-        background: var(--bg3);
-        padding-left: 0.7rem;
+        background: #fdf7f6;
       }
       .team-item:last-child {
         border-bottom: none;
       }
-      .team-me {
-        background: rgba(240, 104, 120, 0.07);
-        border: 0.5px solid rgba(240, 104, 120, 0.2);
-        border-radius: 6px;
-        padding: 0.45rem 0.55rem;
-        margin: 0 -0.4rem;
-        transition:
-          background 0.18s,
-          border-color 0.18s;
+      .team-l {
+        padding: 0.55rem 0.7rem;
+        border-right: 0.5px solid var(--border);
+        background: rgba(230, 61, 61, 0.06);
       }
-      .team-me:hover {
-        background: rgba(240, 104, 120, 0.14);
-        border-color: rgba(240, 104, 120, 0.45);
-        padding-left: 0.8rem;
+      .team-me .team-l {
+        background: rgba(222, 166, 11, 0.1);
+      }
+      .team-item.team-me {
+        background: rgba(222, 166, 11, 0.06);
+      }
+      .team-item.team-me:hover {
+        background: rgba(222, 166, 11, 0.2);
       }
       .t-name {
-        font-size: 0.9rem;
+        font-size: 0.82rem;
         font-weight: 500;
-        letter-spacing: 0.1rem;
+        letter-spacing: 0.04rem;
         color: var(--text);
       }
       .t-me-badge {
         font-family: "DM Mono", monospace;
-        font-size: 0.72rem;
-        color: var(--accent);
-        border: 0.5px solid rgba(240, 104, 120, 0.4);
-        border-radius: 100px;
-        padding: 1px 6px;
-        margin-left: 5px;
+        font-size: 0.65rem;
+        color: rgba(218, 171, 0, 0.9);
+        border: 0.5px solid rgba(218, 164, 0, 0.6);
+        border-radius: 50px;
+        padding: 1px 5px;
+        margin-left: 4px;
       }
       .t-role {
         font-family: "DM Mono", monospace;
-        font-size: 0.8rem;
+        font-size: 0.64rem;
         color: var(--accent);
-        margin: 1px 0;
+        margin-top: 1px;
+        opacity: 0.85;
+      }
+
+      .t-me-role {
+        font-family: "DM Mono", monospace;
+        font-size: 0.64rem;
+        color: rgb(207, 148, 0);
+        margin-top: 1px;
         opacity: 0.85;
       }
       .t-desc {
+        padding: 0.55rem 0.7rem;
         font-size: 0.8rem;
         color: var(--muted);
-        line-height: 1.4;
+        line-height: 1.5;
+        align-self: center;
+      }
+
+      .t-name {
+        display: flex;
+        align-items: center;
       }
 
       /* Retro */
@@ -498,7 +565,7 @@
       }
       .retro-item {
         border-radius: 7px;
-        padding: 0.55rem 0.7rem;
+        padding: 0.3rem 0.4rem;
         background: var(--bg2);
       }
       .retro-lbl {
@@ -506,7 +573,7 @@
         font-size: 0.72rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        margin-bottom: 2px;
+        margin-bottom: 1px;
       }
       .lbl-prob {
         color: var(--red);
@@ -520,7 +587,7 @@
       .retro-txt {
         font-size: 0.9rem;
         color: var(--muted);
-        line-height: 1.5;
+        line-height: 1.2;
       }
 
       /* Footer */
@@ -560,7 +627,7 @@
       .retro-item {
         border-radius: 8px;
         padding: 1rem;
-        background: var(--bg2);
+        background: #ffffff;
         border: 0.5px solid var(--border);
         transition:
           border-color 0.2s,
@@ -622,8 +689,8 @@
           background: linear-gradient(
             90deg,
             var(--accent) 0%,
-            var(--purple) 50%,
-            var(--blue) 100%
+            #f09fc6 50%,
+            #f7b28f 100%
           );
           border-radius: 2px;
           margin-bottom: 2.2rem;
@@ -685,7 +752,7 @@
         </a>
         <a
           class="link-card"
-          href="https://7101lemontea-rgb.github.io/project/mongle/mongle_26_report.html"
+          href="https://7101lemontea-rgb.github.io/project/mongle/mongle_27_video.html"
           target="_blank"
         >
           <div class="link-icon">
@@ -729,27 +796,14 @@
           </div>
 
           <div class="pf-sec">
-            <div class="s-label">My Role — UI/UX 및 DB 연동</div>
-            <div class="role-grid">
-              <div class="role-card">
-                <div class="rc-title">앱 디자인 및 UI/UX</div>
-                <div class="rc-desc">Figma로 메인 UI 설계, UI/UX 개발</div>
-              </div>
-              <div class="role-card">
-                <div class="rc-title">Supabase DB 연동</div>
-                <div class="rc-desc">
-                  RLS 정책 역할별 세분화, 실시간 동기화 구현
-                </div>
-              </div>
-              <div class="role-card">
-                <div class="rc-title">그룹 채팅 연동</div>
-                <div class="rc-desc">실시간 채팅 DB 구조 설계 및 구현</div>
-              </div>
-              <div class="role-card">
-                <div class="rc-title">일정 / 비용 동기화</div>
-                <div class="rc-desc">플래너–커플 간 실시간 양방향 동기화</div>
-              </div>
-            </div>
+            <figure class="post-figure">
+              <img
+                style="width: 90%"
+                src="Mongle_Img.png"
+                alt="Mongle — main, login, AIchat, Timeline 4개 레이어"
+              />
+              <figcaption></figcaption>
+            </figure>
           </div>
 
           <div class="pf-sec">
@@ -760,9 +814,7 @@
               <span class="tag tag-hi">예산 관리</span>
               <span class="tag tag-hi">일정 관리</span>
               <span class="tag tag-hi">AI 챗봇 상담</span>
-              <span class="tag">커플 UI</span>
-              <span class="tag">플래너 UI</span>
-              <span class="tag">웹 대시보드</span>
+              
             </div>
           </div>
 
@@ -772,22 +824,20 @@
               <div class="retro-item">
                 <div class="retro-lbl lbl-prob">Problem</div>
                 <div class="retro-txt">
-                  Supabase RLS 오류 — 불명확한 에러 메시지로 인해 데이터 접근
-                  권한 원인 파악에 어려움을 겪었습니다.
+                  Supabase RLS 오류 — 불명확한 에러 메시지로 인해 원인 파악에 어려움을 겪었습니다.
                 </div>
               </div>
               <div class="retro-item">
                 <div class="retro-lbl lbl-act">Action</div>
                 <div class="retro-txt">
-                  RLS 정책을 역할별로 세분화하여 테스트하고, 실시간 채팅 및 일정
+                  RLS 정책을 역할별로 세분화하여 채팅 및 일정
                   동기화 로직을 성공적으로 구현했습니다.
                 </div>
               </div>
               <div class="retro-item">
                 <div class="retro-lbl lbl-ins">Insight</div>
                 <div class="retro-txt">
-                  기획 단계에서 데이터 구조와 보안 정책을 함께 설계하는 것이
-                  개발 안정성 확보에 필수적임을 깨달았습니다.
+                  데이터 구조와 보안 정책은 기획 단계부터 함께 설계해야 한다는 것을 깨달았습니다.
                 </div>
               </div>
             </div>
@@ -795,8 +845,8 @@
         </div>
 
         <!-- RIGHT -->
-        <div>
-          <div class="pf-sec">
+        <div class="">
+          <div class="pf-sec2">
             <div class="s-label">Tech Stack</div>
             <div class="tags">
               <span class="tag tag-hi">React Native</span>
@@ -812,7 +862,7 @@
             </div>
           </div>
 
-          <div class="pf-sec">
+          <div class="pf-sec2">
             <div class="s-label">Architecture</div>
             <div class="arch">
               <div class="arch-item">
@@ -847,31 +897,40 @@
           </div>
 
           <div class="pf-sec">
-            <div class="s-label">팀 구성</div>
-            <div class="team">
-              <div class="team-item">
-                <div class="t-name">윤지현</div>
-                <div class="t-role">PM / AI</div>
-                <div class="t-desc">AI 기능 · DB 연동 · Web UI 기획</div>
-              </div>
-              <div class="team-item team-me">
-                <div class="t-name">
-                  정서영<span class="t-me-badge">Me</span>
-                </div>
-                <div class="t-role">Front-End / Design</div>
-                <div class="t-desc">앱 디자인 · UI 개발 · DB 연동</div>
-              </div>
-              <div class="team-item">
-                <div class="t-name">이건영</div>
-                <div class="t-role">Front-End</div>
-                <div class="t-desc">채팅 · 로그인 · 디버깅</div>
-              </div>
-              <div class="team-item">
-                <div class="t-name">강주영</div>
-                <div class="t-role">Back-End</div>
-                <div class="t-desc">API 개발 · DB 설계 · 플래너 화면</div>
-              </div>
-            </div>
+  <div class="s-label">팀 구성</div>
+  <div class="team">
+    <div class="team-item">
+      <div class="team-l">
+        <div class="t-name">윤지현</div>
+        <div class="t-role">PM / AI</div>
+      </div>
+      <div class="t-desc">AI 기능 · 웹 UI · DB 연동</div>
+    </div>
+    <div class="team-item team-me">
+  <div class="team-l">
+    <div class="t-name">
+      정서영<span class="t-me-badge">Me</span>
+    </div>
+    <div class="t-me-role">Front-End</div>
+  </div>
+  <div class="t-desc">앱 디자인 · UI · DB 연동</div>
+</div>
+    <div class="team-item">
+      <div class="team-l">
+        <div class="t-name">이건영</div>
+        <div class="t-role">Front-End</div>
+      </div>
+      <div class="t-desc">채팅 · 로그인 · 디버깅</div>
+    </div>
+    <div class="team-item">
+      <div class="team-l">
+        <div class="t-name">강주영</div>
+        <div class="t-role">Back-End</div>
+      </div>
+      <div class="t-desc">API 개발 · DB 설계 · 웹 UI</div>
+    </div>
+  </div>
+</div>
           </div>
         </div>
       </div>
