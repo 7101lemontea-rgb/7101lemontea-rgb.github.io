@@ -1,3 +1,4 @@
+// script.js
 /* =========================================
    GitHub Blog Script
    - section animation
