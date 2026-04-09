@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 2026.04.09 — Fortune Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.04.09 Dev Document</span>
+          <span class="badge badge-ver">Day 15</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">개발 작업 문서</h1>
+        <p class="post-sub">
+          2026년 4월 9일 — 전역 PIN 잠금 시스템 및 보안 로직 구현
+        </p>
+        <p class="post-desc">
+          보안 강화를 위한 SHA-256 해시 기반 PIN 인증 시스템을 구축했습니다.
+          오버레이 방식의 잠금 화면 인터페이스와 앱 생명주기를 연동한 자동 잠금
+          기능을 포함합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 4월 9일</div>
+          </div>
+          <div>
+            <div class="stat-label">기술 스택</div>
+            <div class="stat-val">Flutter · Riverpod · Crypto</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val">2026-04-09</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val">2026-04-09</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s1"><span class="toc-num">§</span>작업 개요</a>
+            </li>
+            <li>
+              <a href="#s2"><span class="toc-num">A</span>구현 방식 결정</a>
+            </li>
+            <li>
+              <a href="#s3"
+                ><span class="toc-num">B</span>핵심 로직 (Provider)</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s3-1">B1. PIN 해시 보안</a></li>
+                <li><a href="#s3-2">B2. 자동 잠금 메커니즘</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s4"><span class="toc-num">C</span>UI 및 인터랙션</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s4-1">C1. PinScreen 3대 모드</a></li>
+                <li><a href="#s4-2">C2. 설정 화면 연동</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s5"><span class="toc-num">D</span>변경 파일 목록</a>
+            </li>
+            <li>
+              <a href="#s6"><span class="toc-num">E</span>미완료 작업</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">작업 개요</h2>
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">대상 기능</span>
+              </div>
+              <div class="white-column-content">
+                <p>앱 전역 PIN 잠금 (Security)</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">기존 상태</span>
+              </div>
+              <div class="white-column-content">
+                <p>DB 스키마만 존재, 실제 잠금 화면 및 로직 부재</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">구현 내용</span>
+              </div>
+              <div class="white-column-content">
+                <p>PIN 설정/변경/해제, 자동 잠금, SHA-256 보안 적용</p>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">추가 패키지</span>
+              </div>
+              <div class="white-column-content">
+                <p>crypto (기존 선언됨)</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">Part A — Implementation Strategy</div>
+          <h2 class="sec-heading">구현 방식 결정: 오버레이 vs 라우트</h2>
+          <p>
+            보안 무결성을 위해 라우트 리다이렉션 대신
+            <strong>오버레이(최상위 위젯 교체) 방식</strong>을 채택했습니다.
+          </p>
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">01</span>
+                <span class="white-title">라우트 방식의 한계</span>
+              </div>
+              <div class="white-body">
+                <div class="white-value">
+                  redirect 로직이 초기 프로필 설정(/setup)과 충돌하며, 뒤로가기
+                  제스처를 통한 우회 위험이 있습니다.
+                </div>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">02</span>
+                <span class="white-title">오버레이 방식의 장점</span>
+              </div>
+              <div class="white-body">
+                <div class="white-value">
+                  MaterialApp.router 자체를 조건부로 렌더링하여 라우터와 독립된
+                  완전한 잠금을 보장합니다.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="code-block">
+            <pre><span class="c-comment">// app.dart — 잠금 상태에 따른 원천 분기</span>
+<span class="c-line">if (!pinState.isLoading && pinState.isLocked) {</span>
+<span class="c-line">  return MaterialApp(home: PinScreen(mode: PinScreenMode.unlock));</span>
+<span class="c-line">}</span>
+<span class="c-line">return MaterialApp.router(routerConfig: router, ...);</span></pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">Part B — Logic & Security</div>
+          <h2 class="sec-heading">핵심 로직 (pin_notifier.dart)</h2>
+
+          <h3 class="sub-heading" id="s3-1">B1. SHA-256 기반 PIN 보안</h3>
+          <p>
+            사용자의 PIN은 평문으로 저장되지 않으며, 단방향 해시 함수를 통해
+            안전하게 관리됩니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-line">String _hashPin(String pin) {</span>
+<span class="c-line">  final bytes = utf8.encode(pin);</span>
+<span class="c-line">  return sha256.convert(bytes).toString();</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <h3 class="sub-heading" id="s3-2">B2. 자동 잠금 및 생명주기 연동</h3>
+          <p>
+            <code>AppLifecycleListener</code>를 활용하여 백그라운드 전환 시점을
+            기록하고, 복귀 시 설정된 임계 시간(auto_lock_seconds) 초과 여부를
+            확인합니다.
+          </p>
+          <div class="component-box">
+            <pre>
+onBackground() ──> 현재 시각 기록 (_backgroundTime)
+onForeground() ──> 경과 시간 계산
+                   if (elapsed >= limit) state.isLocked = true;</pre
+            >
+          </div>
+        </section>
+
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">Part C — UI Components</div>
+          <h2 class="sec-heading">UI 및 인터랙션 디자인</h2>
+
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_pin_02.png"
+              alt="Mongle — PIN 설정 화면 1"
+            />
+            <figcaption>Fortune Garden — PIN 설정 화면 1</figcaption>
+          </figure>
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_pin_03.png"
+              alt="Mongle — PIN 설정 화면 2"
+            />
+            <figcaption>Fortune Garden — PIN 설정 화면 2</figcaption>
+          </figure>
+
+          <h3 class="sub-heading" id="s4-1">C1. PinScreen 3대 동작 모드</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>모드</th>
+                <th>진입 경로</th>
+                <th>핵심 단계</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>unlock</code></td>
+                <td>앱 시작/복귀</td>
+                <td>PIN 입력 → 해시 비교 후 잠금 해제</td>
+              </tr>
+              <tr>
+                <td><code>setup</code></td>
+                <td>설정 토글 ON</td>
+                <td>PIN 입력 → 동일 PIN 재입력 확인 (신규 등록)</td>
+              </tr>
+              <tr>
+                <td><code>change</code></td>
+                <td>PIN 변경 탭</td>
+                <td>기존 PIN 확인 → 새 PIN 입력 → 재입력 확인</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s4-2">C2. 설정 화면(Settings) 연동</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>PIN 활성화:</strong> SwitchListTile 연동 및 setup 모드
+              호출
+            </li>
+            <li>
+              <strong>자동 잠금 시간:</strong> 즉시/30초/1분/3분/5분 선택지 제공
+              (StreamBuilder 구독)
+            </li>
+            <li>
+              <strong>상태 분기:</strong> PIN 비활성화 시 '변경' 및 '자동 잠금'
+              항목을 UI에서 자동 은닉
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="s5">
+          <div class="sec-eyebrow">Part D — Changed Files</div>
+          <h2 class="sec-heading">변경 파일 목록</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파일 경로</th>
+                <th>유형</th>
+                <th>변경 내용 요약</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <code>lib/presentation/providers/pin_notifier.dart</code>
+                </td>
+                <td>신규</td>
+                <td>StateNotifier 기반 PIN 상태 관리 및 보안 로직</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>lib/presentation/screens/pin/pin_screen.dart</code>
+                </td>
+                <td>신규</td>
+                <td>숫자 키패드 및 4자리 도트 애니메이션 UI</td>
+              </tr>
+              <tr>
+                <td><code>lib/app.dart</code></td>
+                <td>수정</td>
+                <td>AppLifecycleListener 추가 및 잠금 상태 분기 처리</td>
+              </tr>
+              <tr>
+                <td>
+                  <code
+                    >lib/presentation/screens/settings/settings_screen.dart</code
+                  >
+                </td>
+                <td>수정</td>
+                <td>PIN 설정 UI 및 자동 잠금 시간 설정 추가</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="s6">
+          <div class="sec-eyebrow">Part E — Backlog</div>
+          <h2 class="sec-heading">미완료 작업 (우선순위)</h2>
+          <ul class="bullet-list">
+            <li>
+              <strong>대시보드 통계 시각화:</strong> DonutChart 및 BarChart
+              컴포넌트 개발
+            </li>
+            <li>
+              <strong>전체 화면 QA:</strong> SCR-003~011 기능 누락 및 예외 상황
+              점검
+            </li>
+          </ul>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
