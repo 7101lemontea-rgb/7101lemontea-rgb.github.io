@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React 01 — Vite Project Setup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">React</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-09</span> &nbsp;·&nbsp;
+            수정일
+            <span id="date-updated">2026-04-09</span>
+          </span>
+        </div>
+        <h1 class="post-title">React: Vite 활용 프로젝트 설치</h1>
+        <p class="post-subtitle">
+          모던 프런트엔드 개발 환경에서 빠른 속도와 효율성을 제공하는 빌드
+          도구인
+          <strong>Vite</strong>를 사용하여 React 프로젝트를 설치하는 방법을
+          알아봅니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>Vite의 정의와 특징</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>설치 및 실행 순서</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-2-1"
+                    ><span class="toc-num">a.</span>작업 디렉토리 이동</a
+                  >
+                </li>
+
+                <li>
+                  <a href="#section-2-2"
+                    ><span class="toc-num">b.</span>프로젝트 생성</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-3"
+                    ><span class="toc-num">c.</span>라이브러리 설치</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-4"
+                    ><span class="toc-num">d.</span>개발 서버 실행 및 접속</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">Vite의 정의와 특징</h2>
+          <p>
+            Vite는 기본 설정이 적용된 React 애플리케이션을 설치하는 도구입니다.
+            빌드 도구 및 개발 서버가 내장되어 있어 기존 방식보다 빠른 개발
+            환경을 제공합니다.
+          </p>
+          <div class="highlight-box">
+            <ul>
+              <li>
+                <strong>프레임워크 지원:</strong> React, Vue, Svelte 등 다양한
+                프레임워크를 지원합니다.
+              </li>
+              <li>
+                <strong>필요 환경:</strong> Node.js 설치가 필수적입니다. (LTS
+                버전인 20 이상의 짝수 버전 권장)
+              </li>
+              <li>
+                <strong>버전 확인:</strong> 터미널에서
+                <code>node -v</code> 명령어를 통해 설치된 버전을 확인해야
+                합니다.
+              </li>
+            </ul>
+          </div>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react_01.png"
+              alt="명령 프롬프트 버전 확인"
+              style="width: 80%"
+            />
+            <figcaption>명령 프롬프트 버전 확인</figcaption>
+          </figure>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">설치 및 실행 순서</h2>
+
+          <h3 class="sub-heading">a. 작업 디렉토리 이동</h3>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react_02.png"
+              alt="작업 디렉토리 이동"
+              style="width: 60%"
+            />
+            <figcaption>작업 디렉토리 이동</figcaption>
+          </figure>
+          <p>
+            명령 프롬프트(CMD) 혹은 터미널에서 프로젝트를 생성할 대상 폴더로
+            이동합니다.
+          </p>
+
+          <h3 class="sub-heading">b. 프로젝트 생성</h3>
+          <p>다음 명령어를 입력하여 프로젝트 생성을 시작합니다.</p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tx">npm create vite@latest [프로젝트명]</span></pre>
+            </div>
+          </div>
+          <p>명령어 실행 후 나타나는 선택지에서 다음과 같이 설정합니다.</p>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react_03.png"
+              alt="프로젝트 생성 선택지"
+              style="width: 60%"
+            />
+            <figcaption>프로젝트 생성 선택지</figcaption>
+          </figure>
+          <div class="highlight-box">
+            <ul>
+              <li><strong>진행 여부(y/n):</strong> <code>y</code> 선택</li>
+              <li><strong>Framework:</strong> <code>React</code> 선택</li>
+              <li>
+                <strong>Variant:</strong> <code>JavaScript</code> 선택 (필요에
+                따라 추가 옵션 No/Yes 선택)
+              </li>
+            </ul>
+          </div>
+
+          <h3 class="sub-heading">c. 에디터 활용 및 라이브러리 설치</h3>
+          <p>
+            프로젝트 생성이 완료되면 VS Code에서 해당 폴더를 실행합니다. 이후
+            터미널에서 아래 명령어를 입력하여 필요한 패키지를 설치합니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tx">npm install</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">d. 개발 서버 실행 및 접속</h3>
+          <p>설치가 완료된 후 개발 서버를 구동하여 브라우저에서 확인합니다.</p>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react_04.png"
+              alt="개발 서버 실행 및 접속"
+              style="width: 80%"
+            />
+            <figcaption>개발 서버 실행 및 접속</figcaption>
+          </figure>
+          <div class="highlight-box">
+            <ul>
+              <li>
+                <strong>개발 서버 실행:</strong>
+                <code>npm run dev</code> 명령어를 입력합니다.
+              </li>
+              <li>
+                <strong>개발 서버 접속:</strong> 브라우저 주소창에
+                <code>http://localhost:5173</code>을 입력합니다. (Vite 기반
+                React 프로젝트는 기본적으로 5173번 포트를 사용합니다.)
+              </li>
+              <li>
+                <strong>개발 서버 종료:</strong> 터미널에서
+                <code>Ctrl + C</code>를 입력하여 종료합니다.
+              </li>
+            </ul>
+          </div>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react_05.png"
+              alt="개발 서버 브라우저 접속"
+              style="width: 80%"
+            />
+            <figcaption>개발 서버 브라우저 접속</figcaption>
+          </figure>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+  </body>
+</html>
