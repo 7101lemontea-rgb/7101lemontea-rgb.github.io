@@ -139,6 +139,42 @@ const POSTS = [
       "코드의 간결함을 극대화하는 단축 평가 논리와 리액트 개발의 필수 무기인 map(), filter() 배열 메서드의 핵심 활용법을 정리합니다.",
     date: "2026.04.07",
   },
+
+  {
+    href: "react_18_javascript_11.html",
+    tag: "React",
+    title: "React 18. JavaScript 기초 11",
+    excerpt:
+      "배열과 객체를 자유자재로 다루기 위한 스프레드 연산자(...)의 개념과 리액트에서의 활용법을 정리합니다.",
+    date: "2026.04.08",
+  },
+
+  {
+    href: "react_19_javascript_12.html",
+    tag: "React",
+    title: "React 19. JavaScript 기초 12",
+    excerpt:
+      "배열이나 객체의 속성을 해체하여 개별 변수에 효율적으로 담는 구조 분해 할당(Destructuring)을 알아봅니다.",
+    date: "2026.04.08",
+  },
+
+  {
+    href: "react_20_react_01.html",
+    tag: "React",
+    title: "React 20. React 기초 01",
+    excerpt:
+      "개발 환경에서 빠른 속도와 효율성을 제공하는 빌드 도구인 Vite를 사용하여 React 프로젝트를 설치하는 방법을 알아봅니다.",
+    date: "2026.04.09",
+  },
+
+  {
+    href: "react_21_react_02.html",
+    tag: "React",
+    title: "React 21. React 기초 02",
+    excerpt:
+      "Vite로 생성한 React 프로젝트의 내부 구조와 각 파일의 역할, 그리고 애플리케이션의 실행 흐름에 대해 정리합니다.",
+    date: "2026.04.09",
+  },
 ];
 
 // index.html 블로그 섹션 최근 3개 렌더링

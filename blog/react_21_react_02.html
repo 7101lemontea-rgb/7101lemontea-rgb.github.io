@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React 02 — Project Structure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">React</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-09</span> &nbsp;·&nbsp;
+            수정일
+            <span id="date-updated">2026-04-09</span>
+          </span>
+        </div>
+        <h1 class="post-title">React: 프로젝트 폴더 구조</h1>
+        <p class="post-subtitle">
+          Vite로 생성한 React 프로젝트의 내부 구조와 각 파일의 역할, 그리고
+          애플리케이션의 실행 흐름에 대해 정리합니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>주요 파일 설명</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>애플리케이션 실행 흐름</a
+              >
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>단계별 상세 설명</a
+              >
+            </li>
+            <li>
+              <a href="#section-4"
+                ><span class="toc-num">4.</span>public vs assets 폴더</a
+              >
+            </li>
+            <li>
+              <a href="#section-5"
+                ><span class="toc-num">5.</span>번들링(Bundling)의 개념</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">주요 파일 설명</h2>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react_06.png"
+              alt="프로젝트 폴더 구조"
+              style="width: 80%"
+            />
+            <figcaption>프로젝트 폴더 구조</figcaption>
+          </figure>
+          <p>
+            프로젝트의 루트 디렉토리와 <code>src</code> 폴더 내 주요 파일들의
+            역할은 다음과 같습니다.
+          </p>
+
+          <div class="table-wrapper" style="margin-top: 1.5rem">
+            <table style="width: 100%; border-collapse: collapse">
+              <thead>
+                <tr
+                  style="border-bottom: 2px solid var(--rule); text-align: left"
+                >
+                  <th style="padding: 0.8rem">파일명</th>
+                  <th style="padding: 0.8rem">역할</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--rule)">
+                  <td
+                    style="
+                      padding: 0.8rem;
+                      font-family: var(--font-mono);
+                      font-size: 0.9rem;
+                    "
+                  >
+                    index.html
+                  </td>
+                  <td style="padding: 0.8rem">
+                    브라우저가 가장 먼저 로드하는 파일이며, 실제 콘텐츠가
+                    주입되는 빈 컨테이너 역할을 수행합니다.
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--rule)">
+                  <td
+                    style="
+                      padding: 0.8rem;
+                      font-family: var(--font-mono);
+                      font-size: 0.9rem;
+                    "
+                  >
+                    main.jsx
+                  </td>
+                  <td style="padding: 0.8rem">
+                    React 애플리케이션의 진입점(Entry Point)으로, HTML 요소와
+                    React 컴포넌트를 연결합니다.
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--rule)">
+                  <td
+                    style="
+                      padding: 0.8rem;
+                      font-family: var(--font-mono);
+                      font-size: 0.9rem;
+                    "
+                  >
+                    App.jsx
+                  </td>
+                  <td style="padding: 0.8rem">
+                    메인 컴포넌트이며, 앱의 전체 구조와 레이아웃을 담당합니다.
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--rule)">
+                  <td
+                    style="
+                      padding: 0.8rem;
+                      font-family: var(--font-mono);
+                      font-size: 0.9rem;
+                    "
+                  >
+                    package.json
+                  </td>
+                  <td style="padding: 0.8rem">
+                    프로젝트 이름, 버전, 패키지 목록, 실행 스크립트 등을
+                    관리합니다.
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--rule)">
+                  <td
+                    style="
+                      padding: 0.8rem;
+                      font-family: var(--font-mono);
+                      font-size: 0.9rem;
+                    "
+                  >
+                    package-lock.json
+                  </td>
+                  <td style="padding: 0.8rem">
+                    패키지의 정확한 버전을 잠금 처리하여 팀원 간 동일한 환경을
+                    보장합니다.
+                  </td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--rule)">
+                  <td
+                    style="
+                      padding: 0.8rem;
+                      font-family: var(--font-mono);
+                      font-size: 0.9rem;
+                    "
+                  >
+                    vite.config.js
+                  </td>
+                  <td style="padding: 0.8rem">
+                    개발 서버 포트, 프록시, 빌드 옵션 등 Vite 관련 설정을
+                    담당합니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">애플리케이션 실행 흐름</h2>
+          <div class="highlight-box">
+            <ol>
+              <li>
+                <strong>브라우저 진입:</strong> <code>index.html</code> 파일을
+                로드합니다.
+              </li>
+              <li>
+                <strong>스크립트 실행:</strong> <code>index.html</code> 내부에
+                포함된 <code>main.jsx</code> 모듈을 실행합니다.
+              </li>
+              <li>
+                <strong>React 렌더링:</strong> <code>main.jsx</code>에서 root
+                요소를 찾아 <code>App.jsx</code> 컴포넌트를 화면에 그립니다.
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">단계별 상세 설명</h2>
+
+          <h3 class="sub-heading">3.1. index.html (브라우저 진입점)</h3>
+          <p>
+            초기 상태는 비어 있는
+            <code>&lt;div id="root"&gt;&lt;/div&gt;</code> 요소만을 포함하며,
+            JavaScript가 동적으로 내용을 주입합니다.
+          </p>
+          <ul>
+            <li>
+              <strong>SPA(Single Page Application):</strong> 단 한 장의 HTML
+              파일로 전체 페이지를 동적으로 구성합니다.
+            </li>
+            <li>
+              <strong>Mount:</strong> React 앱이 실제 DOM 요소에 부착되는 과정을
+              뜻합니다.
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">3.2. main.jsx (React 진입점)</h3>
+          <p>
+            <code>createRoot</code>를 통해 HTML의 root 요소를 제어하고 React
+            컴포넌트를 렌더링합니다.
+          </p>
+          <div class="highlight-box">
+            <p><strong>StrictMode의 역할:</strong></p>
+            <ul>
+              <li>
+                개발 환경에서 잠재적 버그 감지를 위해 컴포넌트를 두 번
+                호출합니다.
+              </li>
+              <li>컴포넌트의 순수성(Pure Function)을 검증합니다.</li>
+            </ul>
+          </div>
+
+          <h3 class="sub-heading">3.3. App.jsx (메인 컴포넌트)</h3>
+          <ul>
+            <li>
+              <strong>CSS Import:</strong> <code>import './App.css'</code>를
+              통해 스타일을 적용합니다.
+            </li>
+            <li>
+              <strong>함수형 컴포넌트:</strong> JavaScript 함수 형식을 통해 UI를
+              정의합니다.
+            </li>
+            <li>
+              <strong>JSX 반환:</strong> HTML과 유사한 마크업 구조를 JavaScript
+              안에서 반환합니다.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <p class="sec-eyebrow">04</p>
+          <h2 class="sec-heading">public 폴더와 assets 폴더 비교</h2>
+          <div class="table-wrapper">
+            <table
+              style="width: 100%; border-collapse: collapse; font-size: 0.9rem"
+            >
+              <thead>
+                <tr
+                  style="border-bottom: 2px solid var(--rule); text-align: left"
+                >
+                  <th style="padding: 0.8rem">구분</th>
+                  <th style="padding: 0.8rem">public/</th>
+                  <th style="padding: 0.8rem">src/assets/</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--rule)">
+                  <td style="padding: 0.8rem; font-weight: 600">번들링 여부</td>
+                  <td style="padding: 0.8rem">포함되지 않음 (그대로 배포)</td>
+                  <td style="padding: 0.8rem">포함됨 (최적화 수행)</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--rule)">
+                  <td style="padding: 0.8rem; font-weight: 600">파일명</td>
+                  <td style="padding: 0.8rem">원본 이름 유지</td>
+                  <td style="padding: 0.8rem">고유 해시값 추가</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--rule)">
+                  <td style="padding: 0.8rem; font-weight: 600">접근 방법</td>
+                  <td style="padding: 0.8rem">
+                    경로 직접 접근 (<code>/logo.png</code>)
+                  </td>
+                  <td style="padding: 0.8rem"><code>import</code> 문 사용</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-5">
+          <p class="sec-eyebrow">05</p>
+          <h2 class="sec-heading">번들링(Bundling)의 개념</h2>
+          <p>여러 파일을 브라우저 최적화 상태로 변환하는 과정입니다.</p>
+          <ul>
+            <li>
+              <strong>파일 병합:</strong> 여러 JS 파일을 하나로 합쳐 네트워크
+              요청 횟수를 줄입니다.
+            </li>
+            <li>
+              <strong>압축(Minification):</strong> 공백 제거 및 이미지 최적화를
+              수행합니다.
+            </li>
+            <li>
+              <strong>Tree Shaking:</strong> 사용하지 않는 코드를 제거하여
+              결과물 용량을 최소화합니다.
+            </li>
+          </ul>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+  </body>
+</html>
