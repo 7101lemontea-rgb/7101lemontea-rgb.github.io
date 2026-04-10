@@ -175,6 +175,23 @@ const POSTS = [
       "Vite로 생성한 React 프로젝트의 내부 구조와 각 파일의 역할, 그리고 애플리케이션의 실행 흐름에 대해 정리합니다.",
     date: "2026.04.09",
   },
+
+  {
+    href: "react_22_react_03.html",
+    tag: "React",
+    title: "React 22. React 기초 03",
+    excerpt:
+      "React 프로젝트에서 화면을 설계할 때 가장 기본이 되는 JSX(JavaScript XML)의 개념과 필수 규칙에 대해 정리합니다.",
+    date: "2026.04.10",
+  },
+  {
+    href: "react_23_react_04.html",
+    tag: "React",
+    title: "React 23. React 기초 04",
+    excerpt:
+      "특정 조건에 따라 서로 다른 UI를 화면에 출력하는 기법인 조건부 렌더링(Conditional Rendering)에 대해 정리합니다.",
+    date: "2026.04.10",
+  },
 ];
 
 // index.html 블로그 섹션 최근 3개 렌더링

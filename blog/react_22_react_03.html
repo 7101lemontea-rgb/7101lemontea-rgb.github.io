@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React 03 — JSX Syntax</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">React</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-10</span> &nbsp;·&nbsp;
+            수정일
+            <span id="date-updated">2026-04-10</span>
+          </span>
+        </div>
+        <h1 class="post-title">React: JSX 문법의 정의와 주요 규칙</h1>
+        <p class="post-subtitle">
+          React 프로젝트에서 화면을 설계할 때 가장 기본이 되는
+          <strong>JSX(JavaScript XML)</strong>의 개념과 필수 규칙에 대해
+          정리합니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"><span class="toc-num">1.</span>JSX의 정의</a>
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>JSX 기본 규칙</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-2-a"
+                    ><span class="toc-num">a.</span>부모 요소로 감싸기</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-b"
+                    ><span class="toc-num">b.</span>표현식 사용</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-c"
+                    ><span class="toc-num">c.</span>태그 닫기</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-d"
+                    ><span class="toc-num">d.</span>camelCase 사용</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-e"
+                    ><span class="toc-num">e.</span>인라인 스타일 객체화</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-f"
+                    ><span class="toc-num">f.</span>주석 작성</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>디버깅 퀴즈</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">JSX의 정의</h2>
+          <p>
+            JSX는 JavaScript 코드 내부에서 HTML과 유사한 마크업을 작성할 수
+            있도록 지원하는 확장 문법입니다.
+          </p>
+          <div class="highlight-box">
+            <ul>
+              <li>
+                <strong>변환 과정:</strong> 브라우저는 JSX를 직접 해석하지
+                못하므로, Babel과 같은 도구를 통해 일반 JavaScript 코드로
+                변환하는 과정이 필요합니다.
+              </li>
+              <li>
+                <strong>장점:</strong> UI 로직(JavaScript)과 UI 구조(HTML)를 한
+                곳에서 관리할 수 있어 가독성과 개발 효율성이 높습니다.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">JSX 기본 규칙</h2>
+
+          <h3 class="sub-heading" id="section-2-a">
+            a. 하나의 부모 요소로 감싸기
+          </h3>
+          <p>
+            JSX에서는 반드시 하나의 부모 요소가 다수의 자식 요소를 감싸는
+            형태여야 합니다. 불필요한 태그 생성을 피하려면
+            Fragment(<code>&lt;&gt;...&lt;/&gt;</code>)를 사용합니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">function</span> <span class="tx">App() {</span>
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;&gt;</span>
+<span class="tx">      &lt;h1&gt;제목&lt;/h1&gt;</span>
+<span class="tx">      &lt;p&gt;내용&lt;/p&gt;</span>
+<span class="tx">    &lt;/&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="section-2-b">
+            b. JavaScript 표현식 사용 ({ })
+          </h3>
+          <p>
+            중괄호 <code>{ }</code>를 통해 JavaScript 변수나 표현식을 마크업
+            내에 삽입합니다.
+          </p>
+          <ul>
+            <li>
+              <strong>표현식만 가능:</strong> 변수, 수식, 삼항 연산자 등 값으로
+              평가되는 식만 허용됩니다. (if, for문 사용 불가)
+            </li>
+            <li>
+              <strong>렌더링 특성:</strong> 숫자, 문자열은 표시되나
+              <code>true</code>, <code>false</code>, <code>null</code> 등은
+              화면에 나타나지 않습니다.
+            </li>
+            <li>
+              <strong>객체 처리:</strong> 객체 자체를 넣으면 오류가 발생하므로
+              점 표기법으로 개별 값을 추출해야 합니다.
+            </li>
+          </ul>
+
+          <h3 class="sub-heading" id="section-2-c">c. 태그 닫기 의무화</h3>
+          <p>
+            모든 태그는 반드시 닫아야 하며, 자식이 없는 태그는
+            <code>&lt;input /&gt;</code>과 같은 셀프 클로징 형식을 권장합니다.
+          </p>
+
+          <h3 class="sub-heading" id="section-2-d">d. camelCase 속성명 사용</h3>
+          <p>
+            HTML 속성은 JavaScript 예약어와의 충돌 방지를 위해 카멜케이스를
+            사용합니다.
+          </p>
+          <div class="highlight-box">
+            <ul>
+              <li><code>class</code> → <code>className</code></li>
+              <li><code>onclick</code> → <code>onClick</code></li>
+              <li><code>for</code> → <code>htmlFor</code></li>
+            </ul>
+          </div>
+
+          <h3 class="sub-heading" id="section-2-e">
+            e. 인라인 스타일의 객체화
+          </h3>
+          <p>
+            스타일은 문자열이 아닌 객체 형태로 전달하며, 속성명에 카멜케이스를
+            적용합니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tx">&lt;div style={{ color: "red", fontSize: "20px" }}&gt;텍스트&lt;/div&gt;</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="section-2-f">f. 주석 작성</h3>
+          <p>JSX 내부 주석은 <code>{/* ... */}</code> 형식을 사용합니다.</p>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">디버깅 퀴즈</h2>
+          <p>아래의 오류가 포함된 코드를 올바르게 수정하는 방법입니다.</p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">function</span> <span class="tx">App() {</span>
+<span class="tn">  const</span> <span class="tx">title = "리액트 수업";</span>
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;h1&gt;{title}&lt;/h1&gt;</span>
+<span class="tx">    &lt;p class="desc"&gt;반갑습니다.&lt;/p&gt;</span>
+<span class="tx">    &lt;br&gt;</span>
+<span class="tx">    &lt;div style="color: red"&gt;경고&lt;/div&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+          <div class="highlight-box" style="margin-top: 1rem">
+            <ul>
+              <li>
+                <strong>부모 태그 누락:</strong> 전체를
+                <code>&lt;&gt;...&lt;/&gt;</code>로 감싸야 합니다.
+              </li>
+              <li>
+                <strong>속성명 오류:</strong> <code>class</code>를
+                <code>className</code>으로 수정합니다.
+              </li>
+              <li>
+                <strong>태그 미종결:</strong> <code>&lt;br&gt;</code>을
+                <code>&lt;br /&gt;</code>로 닫습니다.
+              </li>
+              <li>
+                <strong>스타일 형식 오류:</strong>
+                <code>style={{ color: "red" }}</code>로 수정합니다.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+  </body>
+</html>

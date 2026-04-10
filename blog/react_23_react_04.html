@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React 04 — Conditional Rendering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">React</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-09</span> &nbsp;·&nbsp;
+            수정일
+            <span id="date-updated">2026-04-09</span>
+          </span>
+        </div>
+        <h1 class="post-title">React: 조건부 렌더링</h1>
+        <p class="post-subtitle">
+          특정 조건에 따라 서로 다른 UI를 화면에 출력하는 기법인
+          <strong>조건부 렌더링(Conditional Rendering)</strong>에 대해
+          정리합니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>조건부 렌더링의 개념</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>주요 구현 방법</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-2-a"
+                    ><span class="toc-num">a.</span>if 문을 활용한 렌더링</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-b"
+                    ><span class="toc-num">b.</span>삼항 연산자</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-c"
+                    ><span class="toc-num">c.</span>논리 연산자 (&&)</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>실습 과제 및 구현 예시</a
+              >
+              <ul class="toc-sub-list">
+                <li>
+                  <a href="#section-3-a"
+                    ><span class="toc-num">a.</span>날씨 안내 컴포넌트</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-3-b"
+                    ><span class="toc-num">b.</span>쇼핑몰 재고 표시</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-3-c"
+                    ><span class="toc-num">c.</span>좋아요 버튼</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">조건부 렌더링의 개념</h2>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react03_05.png"
+              alt="조건부 렌더링의 예시"
+              style="width: 100%"
+            />
+            <figcaption>조건부 렌더링의 예시</figcaption>
+          </figure>
+          <p>
+            조건부 렌더링은 JavaScript의 조건 처리 로직을 사용하여
+            애플리케이션의 상태에 부합하는 요소만을 선택적으로 화면에 그리는
+            방식입니다.
+          </p>
+          <div class="highlight-box">
+            <p><strong>주요 사용 예시:</strong></p>
+            <ul>
+              <li>사용자 로그인 여부에 따른 '로그인/로그아웃' 버튼 전환</li>
+              <li>
+                데이터 로딩 상태에 따른 스피너(Spinner) 또는 스켈레톤 UI 표시
+              </li>
+              <li>권한에 따른 특정 메뉴 활성화 또는 비활성화</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">주요 구현 방법</h2>
+
+          <h3 class="sub-heading" id="section-2-a">a. if 문을 활용한 렌더링</h3>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react03_04.png"
+              alt="if 문을 활용한 조건부 렌더링 예시"
+              style="width: 80%"
+            />
+            <figcaption>if 문을 활용한 조건부 렌더링 예시</figcaption>
+          </figure>
+          <p>
+            함수 내부에서 <code>return</code> 문이 실행되기 전에 사용합니다.
+            컴포넌트 전체 구조를 변경하거나 특정 조건에서 렌더링을 완전히
+            차단(null 반환)할 때 적합합니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">function</span> <span class="tx">LoginStatus({ isLoggedIn, username = "사용자" }) {</span>
+<span class="tn">  if</span> <span class="tx">(isLoggedIn) {</span>
+<span class="tn">    return</span> <span class="tx">(</span>
+<span class="tx">      &lt;div&gt;</span>
+<span class="tx">        &lt;p&gt;{username}님, 안녕하세요!&lt;/p&gt;</span>
+<span class="tx">        &lt;button&gt;로그아웃&lt;/button&gt;</span>
+<span class="tx">      &lt;/div&gt;</span>
+<span class="tx">    );</span>
+<span class="tx">  }</span>
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;div&gt;</span>
+<span class="tx">      &lt;p&gt;로그인이 필요합니다.&lt;/p&gt;</span>
+<span class="tx">      &lt;button&gt;로그인&lt;/button&gt;</span>
+<span class="tx">    &lt;/div&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="section-2-b">
+            b. 삼항 연산자 (Ternary Operator)
+          </h3>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react03_07.png"
+              alt="삼항 연산자를 활용한 조건부 렌더링 예시"
+              style="width: 60%"
+            />
+            <figcaption>삼항 연산자를 활용한 조건부 렌더링 예시</figcaption>
+          </figure>
+          <p>
+            JSX 내부에서 인라인으로 조건을 처리할 때 가장 자주 사용되는
+            방식입니다.
+            <code>조건 ? 참일_때_결과 : 거짓일_때_결과</code> 형식을 따릅니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">function</span> <span class="tx">SubscribeButton({ isSubscribed }) {</span>
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;button&gt;</span>
+<span class="tx">      {isSubscribed ? "구독중 ✓" : "구독하기"}</span>
+<span class="tx">    &lt;/button&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+          <ul>
+            <li>
+              <strong>텍스트 변경:</strong> 상태에 따라 버튼이나 라벨의 문구를
+              즉각적으로 교체합니다.
+            </li>
+            <li>
+              <strong>스타일 변경:</strong>
+              <code>className={isDark ? 'dark-mode' : 'light-mode'}</code>와
+              같이 동적 스타일링에 유용합니다.
+            </li>
+          </ul>
+
+          <h3 class="sub-heading" id="section-2-c">c. 논리 연산자 (&&)</h3>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react03_06.png"
+              alt="논리 연산자를 활용한 조건부 렌더링 예시"
+              style="width: 30%"
+            />
+            <figcaption>논리 연산자를 활용한 조건부 렌더링 예시</figcaption>
+          </figure>
+          <p>
+            조건이 참일 때만 요소를 출력하고, 거짓일 때는 아무것도 렌더링하지
+            않을 때 효율적입니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">function</span> <span class="tx">NewMail({ newMailCount }) {</span>
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;&gt;</span>
+<span class="tx">      &lt;h3&gt;메일함 {newMailCount &gt; 0 &amp;&amp; "🆕"}&lt;/h3&gt;</span>
+<span class="tx">      {newMailCount &gt; 0 &amp;&amp; (</span>
+<span class="tx">        &lt;div&gt;새로운 메시지가 {newMailCount}개 있습니다.&lt;/div&gt;</span>
+<span class="tx">      )}</span>
+<span class="tx">    &lt;/&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">실습 과제 및 구현 예시</h2>
+
+          <h3 class="sub-heading" id="section-3-a">a. 날씨 안내 컴포넌트</h3>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react03_01.png"
+              alt="날씨 안내 컴포넌트 예시"
+              style="width: 60%"
+            />
+            <figcaption>날씨 안내 컴포넌트 예시</figcaption>
+          </figure>
+          <p>
+            <code>if...else if</code>문을 활용하여 온도별 메시지를 할당합니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">function</span> <span class="tx">Weather({ temperature }) {</span>
+<span class="tn">  let</span> <span class="tx">message;</span>
+<span class="tn">  if</span> <span class="tx">(temperature &gt;= 30) message = "🥵 매우 더워요";</span>
+<span class="tn">  else if</span> <span class="tx">(temperature &gt;= 20) message = "😊 적당해요";</span>
+<span class="tn">  else</span> <span class="tx">message = "🥶 매우 추워요";</span>
+
+
+<span class="tn">  return</span> <span class="tx">&lt;div&gt;{message}&lt;/div&gt;;</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="section-3-b">b. 쇼핑몰 재고 표시</h3>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react03_02.png"
+              alt="쇼핑몰 재고 표시 컴포넌트 예시"
+              style="width: 60%"
+            />
+            <figcaption>쇼핑몰 재고 표시 컴포넌트 예시</figcaption>
+          </figure>
+          <p>삼항 연산자와 논리 연산자를 혼합하여 상태를 출력합니다.</p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tx">&lt;p&gt;상태: {product.stock === 0 ? "❌ 품절" : `${product.stock}개 남음`}&lt;/p&gt;</span>
+<span class="tx">{product.onSale &amp;&amp; &lt;span&gt;🔥 할인중!&lt;/span&gt;}</span></pre>
+              <pre><span class="tx">{discount ? (</span>
+<span class="tx">  &lt;&gt;</span>
+<span class="tx">    &lt;span style={{ textDecoration: "line-through" }}&gt;{price}원&lt;/span&gt;</span>
+<span class="tx">    &lt;span&gt; ({discount}원)&lt;/span&gt;</span>
+<span class="tx">  &lt;/&gt;</span>
+<span class="tx">) : (</span>
+<span class="tx">  &lt;span&gt;{price}원&lt;/span&gt;</span>
+<span class="tx">)}</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" id="section-3-c">c. 좋아요 버튼</h3>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react03_03.png"
+              alt="좋아요 버튼 컴포넌트 예시"
+              style="width: 60%"
+            />
+            <figcaption>좋아요 버튼 컴포넌트 예시</figcaption>
+          </figure>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">function</span> <span class="tx">Like({ isLiked }) {</span>
+<span class="tn">  return</span> <span class="tx">&lt;button&gt;{isLiked ? '❤️' : '🤍'}&lt;/button&gt;;</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+  </body>
+</html>
