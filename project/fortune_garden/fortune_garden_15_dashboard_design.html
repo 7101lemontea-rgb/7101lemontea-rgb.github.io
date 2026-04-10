@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 2026.04.10 — Fortune Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.04.10 Dev Document</span>
+
+          <span class="badge badge-status">진행중</span>
+        </div>
+        <h1 class="post-title">개발 작업 문서</h1>
+        <p class="post-sub">
+          대시보드 디자인 리뉴얼: 히어로 헤더 및 하이브리드 디자인 시스템 구축
+        </p>
+        <p class="post-desc">
+          아이보리 크림과 딥 에메랄드 톤을 결합한 신규 테마 'Fortune Garden
+          Hybrid'를 적용하고, Lottie 애니메이션과 SVG 에셋을 활용한 몰입감 있는
+          히어로 헤더를 구현했습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 기간</div>
+            <div class="stat-val">2026.04.10</div>
+          </div>
+          <div>
+            <div class="stat-label">주요 기술</div>
+            <div class="stat-val">Lottie · SVG · Newsreader Serif</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val">2026-04-10</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val">2026-04-10</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s1"><span class="toc-num">§</span>작업 개요</a>
+            </li>
+            <li>
+              <a href="#s2"
+                ><span class="toc-num">A</span>디자인 시스템 (Hybrid)</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s2-1">A1. 테마 및 타이포그래피</a></li>
+                <li><a href="#s2-2">A2. GrainOverlay 구현</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s3"><span class="toc-num">B</span>대시보드 리뉴얼</a>
+              <ul class="toc-sub-list">
+                <li><a href="#s3-1">B1. _HeroHeader 구성</a></li>
+                <li><a href="#s3-2">B2. 월 이동 및 상태 관리</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s4"
+                ><span class="toc-num">C</span>에셋 최적화 (Lottie)</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#s4-1">C1. JSON 색상 커스텀</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#s5"><span class="toc-num">D</span>변경 파일 목록</a>
+            </li>
+            <li>
+              <a href="#s6"><span class="toc-num">E</span>향후 과제</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">작업 개요</h2>
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">대상 화면</span>
+              </div>
+              <div class="white-column-content">
+                <p>SCR-002 /dashboard (대시보드)</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">컨셉</span>
+              </div>
+              <div class="white-column-content">
+                <p>Tactile Archivist(라이트) + Verdant Atelier(다크) 혼합</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">핵심 구현</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  히어로 헤더, 월 이동 기능, 개인 모드 프로필 표시, 디자인 전면
+                  리뉴얼
+                </p>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">신규 에셋</span>
+              </div>
+              <div class="white-column-content">
+                <p>header.png, Lottie Animations (Plant 시리즈)</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">Part A — Design System</div>
+          <h2 class="sec-heading">Fortune Garden Hybrid 테마</h2>
+
+          <h3 class="sub-heading" id="s2-1">A1. 컬러 토큰 및 타이포그래피</h3>
+
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_fonts_01.png"
+              alt="Fortune Garden — Newsreader 서체"
+            />
+            <figcaption>Fortune Garden — Newsreader 서체</figcaption>
+          </figure>
+          <p>
+            세리프 서체인 <strong>Newsreader</strong>를 포인트로 활용하여
+            클래식하고 정돈된 느낌을 부여했습니다.
+          </p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>모드</th>
+                <th>배경색</th>
+                <th>Primary (올리브/민트)</th>
+                <th>주요 서체</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Light</strong></td>
+                <td><code>#FCF9F0</code> (아이보리)</td>
+                <td><code>#384B2C</code></td>
+                <td rowspan="2">
+                  Newsreader Italic (금액/헤더)<br />System Sans-serif (본문)
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Dark</strong></td>
+                <td><code>#0D2A1D</code> (딥 에메랄드)</td>
+                <td><code>#4EDEA3</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading" id="s2-2">A2. 질감 효과 (GrainOverlay)</h3>
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_textile_01.png"
+              alt="Fortune Garden — https://www.transparenttextures.com/"
+            />
+            <figcaption>
+              Fortune Garden — https://www.transparenttextures.com/
+            </figcaption>
+          </figure>
+          <p>
+            고급스러운 종이 질감을 위해 <code>assets/images/grain.png</code>를
+            반복 타일링하여 앱 전역에 오버레이했습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 4% 투명도의 그레인 질감 적용</span>
+<span class="c-line">Image.asset('grain.png', repeat: ImageRepeat.repeat, opacity: 0.04)</span></pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">Part B — Dashboard Renewal</div>
+          <h2 class="sec-heading">대시보드 주요 기능 구현</h2>
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_header_02.png"
+              alt="Fortune Garden — 헤더 디자인"
+            />
+            <figcaption>
+              Fortune Garden — 히어로 헤더 디자인 (Lottie 애니메이션 포함)
+            </figcaption>
+          </figure>
+
+          <h3 class="sub-heading" id="s3-1">B1. _HeroHeader (SliverAppBar)</h3>
+          <p>
+            스크롤 시 올리브색 AppBar로 자연스럽게 접히는 인터랙티브 헤더를
+            구성했습니다.
+          </p>
+          <ul class="bullet-list">
+            <li>
+              <strong>배경:</strong> 1920×350 비율의 <code>header1.svg</code>를
+              하단 정렬 배치
+            </li>
+            <li>
+              <strong>Lottie 연동:</strong> 흔들리는 식물 애니메이션을 Stack으로
+              배치하여 생동감 부여
+            </li>
+            <li>
+              <strong>인사말 로직:</strong> 현재 시각에 따라 '새벽', '아침',
+              '오후', '저녁', '밤' 메시지 분기
+            </li>
+            <li>
+              <strong>오버랩 효과:</strong> 요약 카드를
+              <code>-24px</code> 이동시켜 헤더와 본문 연결
+            </li>
+          </ul>
+
+          <h3 class="sub-heading" id="s3-2">
+            B2. 월 이동(Navigator) 및 상태 관리
+          </h3>
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_dashboard_03.png"
+              alt="Fortune Garden — 대시보드 월 이동 UI"
+            />
+            <figcaption>
+              Fortune Garden — 대시보드 월 이동 UI (이전/다음 버튼 및 월 표시)
+            </figcaption>
+          </figure>
+          <p>
+            <code>selectedMonthProvider</code>를 통해 조회 기준 월을 관리하며,
+            미래 데이터 조회를 차단하는 로직을 포함했습니다.
+          </p>
+          <div class="component-box">
+            <pre>
+SelectedMonthNotifier
+├── prev() : 이전 달 이동
+├── next() : 다음 달 이동 (현재 달이면 동작 안함)
+└── reset() : 오늘 날짜로 복구</pre
+            >
+          </div>
+        </section>
+
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">Part C — Asset Optimization</div>
+          <h2 class="sec-heading">Lottie 에셋 색상 작업</h2>
+
+          <h3 class="sub-heading" id="s4-1">
+            C1. JSON 직접 수정을 통한 테마 최적화
+          </h3>
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_lottie_01.png"
+              alt="Fortune Garden — Lottie 에셋 색상 작업"
+            />
+            <figcaption>Fortune Garden — Lottie 에셋 색상 작업</figcaption>
+          </figure>
+          <p>
+            런타임 성능 부하를 줄이기 위해 Lottie JSON 파일의
+            <code>fl(fill)</code> 및 <code>st(stroke)</code> 값을 직접 테마
+            컬러로 치환했습니다.
+          </p>
+        </section>
+
+        <section class="section visible" id="s5">
+          <div class="sec-eyebrow">Part D — Changed Files</div>
+          <h2 class="sec-heading">변경 파일 목록</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파일 경로</th>
+                <th>유형</th>
+                <th>변경 내용 요약</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>lib/core/theme/app_theme.dart</code></td>
+                <td>신규</td>
+                <td>Hybrid 테마 정의 및 GrainOverlay 위젯 추가</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>lib/presentation/providers/app_providers.dart</code>
+                </td>
+                <td>수정</td>
+                <td>selectedMonthProvider 추가 및 데이터 공급자 연동</td>
+              </tr>
+              <tr>
+                <td>
+                  <code
+                    >lib/presentation/screens/dashboard/dashboard_screen.dart</code
+                  >
+                </td>
+                <td>수정</td>
+                <td>HeroHeader 및 디자인 리뉴얼 전체 구현</td>
+              </tr>
+              <tr>
+                <td>
+                  <code
+                    >lib/presentation/screens/dashboard/dashboard_charts.dart</code
+                  >
+                </td>
+                <td>수정</td>
+                <td>차트 내 테마 컬러 상수 적용 및 기타 항목 색상 조정</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="s6">
+          <div class="sec-eyebrow">Part E — Backlog</div>
+          <h2 class="sec-heading">미완료 작업 (우선순위)</h2>
+          <ul class="bullet-list">
+            <li>
+              <strong>거래 내역/상세 디자인:</strong> SCR-003~005 화면에 신규
+              테마 및 카드 스타일 적용
+            </li>
+            <li>
+              <strong>리포트 고도화:</strong> SCR-006 화면의 통계 시각화 및
+              리뉴얼 스타일 통일
+            </li>
+          </ul>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
