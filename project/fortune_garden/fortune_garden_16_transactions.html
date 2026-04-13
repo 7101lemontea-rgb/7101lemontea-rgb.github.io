@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 2026.04.10 — Fortune Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+    <style>
+      /* 추가 스타일 보정 */
+      .color-chip {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        margin-right: 6px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">2026.04.10 Dev Document</span>
+          <span class="badge badge-status">진행중</span>
+        </div>
+        <h1 class="post-title">개발 작업 문서</h1>
+        <p class="post-sub">
+          거래 내역(SCR-003) 전면 리뉴얼 및 데이터 기반 분석 카드 구현
+        </p>
+        <p class="post-desc">
+          Fortune Garden Hybrid 테마의 전역 적용과 함께, 순수 Dart 연산을 활용한
+          지출 패턴 분석 시스템을 구축하고 데스크탑 최적화 레이아웃을
+          적용했습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 기간</div>
+            <div class="stat-val">2026.04.13</div>
+          </div>
+          <div>
+            <div class="stat-label">주요 기술</div>
+            <div class="stat-val">
+              Riverpod · Clean Architecture · Newsreader
+            </div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val">2026-04-13</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val">2026-04-13</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#s1"><span class="toc-num">§</span>프로젝트 개요</a>
+            </li>
+            <li>
+              <a href="#s2"><span class="toc-num">A</span>디자인 시스템 v1.1</a>
+            </li>
+            <li>
+              <a href="#s3"><span class="toc-num">B</span>거래 내역 리뉴얼</a>
+            </li>
+            <li>
+              <a href="#s4"
+                ><span class="toc-num">C</span>데이터 분석 (AnalysisCard)</a
+              >
+            </li>
+            <li>
+              <a href="#s5"><span class="toc-num">D</span>세션 작업 요약</a>
+            </li>
+            <li>
+              <a href="#s6"><span class="toc-num">E</span>향후 과제</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="s1">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">프로젝트 개요</h2>
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">앱 정보</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  <strong>Fortune Garden</strong>: 2인 가구용 크로스플랫폼
+                  가계부 (Win/Android)
+                </p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">아키텍처</span>
+              </div>
+              <div class="white-column-content">
+                <p>Clean Architecture (Presentation / Application / Data)</p>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">기술 스택</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  Riverpod, Drift(SQLite), GoRouter, FL Chart, Newsreader Serif
+                </p>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">DB 스키마</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  9개 테이블 (Version 2): profiles, accounts, transactions,
+                  categories 등
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="s2">
+          <div class="sec-eyebrow">Part A — Design System</div>
+          <h2 class="sec-heading">Fortune Garden Hybrid (v1.1)</h2>
+
+          <h3 class="sub-heading">A1. 컬러 토큰 업데이트</h3>
+          </figure>
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_transactions_color.png"
+              alt="Fortune Garden — 컬러 토큰 업데이트"
+              width="70%"
+            />
+            <figcaption>Fortune Garden — 컬러 토큰 업데이트</figcaption>
+          </figure>
+
+          <h3 class="sub-heading">A2. 컴포넌트 및 타이포그래피 규칙</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>Typography:</strong> 헤드라인은
+              <em>Newsreader Italic</em>, 본문은 System Sans-serif 사용
+            </li>
+            <li>
+              <strong>GrainOverlay:</strong> 앱 전역 Scaffold에
+              <code>grain.png</code> (Opacity 0.04) 오버레이 적용
+            </li>
+            <li>
+              <strong>Card:</strong> Border radius 16px, OutlineVariant 테두리
+              적용, Elevation 0 고정
+            </li>
+            <li>
+              <strong>Desktop:</strong> Viewport 너비 720px 기준으로 레이아웃
+              분기 처리
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="s3">
+          <div class="sec-eyebrow">Part B — Transaction Screen</div>
+          <h2 class="sec-heading">거래 내역 화면 (SCR-003) 전면 재작성</h2>
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_transactions_01.png"
+              alt="Fortune Garden — 거래 내역 화면 리뉴얼 전"
+              width="70%"
+            />
+            <figcaption>Fortune Garden — 거래 내역 화면 리뉴얼 전</figcaption>
+          </figure>
+          <p>
+            하드코딩된 색상을 제거하고, 복합 필터링 및 데스크탑 최적화 패널을
+            도입했습니다.
+          </p>
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_transactions_02.png"
+              alt="Fortune Garden — 거래 내역 화면 리뉴얼 후"
+              width="70%"
+            />
+            <figcaption>Fortune Garden — 거래 내역 화면 리뉴얼 전</figcaption>
+          </figure>
+
+          <h3 class="sub-heading">B1. 주요 기능 및 레이아웃</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>복합 필터:</strong> 월 이동 바(Provider), 수입/지출 칩
+              필터, 실시간 검색 기능 탑재
+            </li>
+            <li>
+              <strong>날짜 그룹핑:</strong> 일별 헤더에 요일 및 당일 수입/지출
+              합계 표시
+            </li>
+            <li>
+              <strong>인터랙션:</strong> 스와이프를 통한 거래 삭제 및 컨텍스트
+              기반 라우팅(push)
+            </li>
+            <li>
+              <strong>데스크탑 레이아웃:</strong> 좌측 목록 컬럼과 우측 요약
+              패널(400px)로 이원화
+            </li>
+          </ul>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// 날짜 그룹핑 및 구분선 규칙</span>
+<span class="c-line">if (isFirst) hideDivider();</span>
+<span class="c-line">if (nextIsHeader) useHeavyDivider(); // outline opacity 0.5</span></pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="s4">
+          <div class="sec-eyebrow">Part C — Data Analysis</div>
+          <h2 class="sec-heading">월간 분석 카드 (AnalysisCard)</h2>
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_transactions_03.png"
+              alt="Fortune Garden — 월간 분석 카드"
+              width="50%"
+            />
+            <figcaption>Fortune Garden — 월간 분석 카드</figcaption>
+          </figure>
+          <p>
+            AI API 없이 순수 Dart 산술 연산을 통해 전문 자산 관리 보고서 느낌의
+            통찰을 제공합니다.
+          </p>
+
+          <h3 class="sub-heading">C1. 분석 로직 설계</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>분석 항목</th>
+                <th>계산 공식 / 로직</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>지출 속도</strong></td>
+                <td>(현재 지출 / 전월 동기 누적 지출 - 1) × 100</td>
+              </tr>
+              <tr>
+                <td><strong>일일 페이스</strong></td>
+                <td>총 지출 / 이번 달 경과 일수 (권장 지출 가이드 생성)</td>
+              </tr>
+              <tr>
+                <td><strong>가변 비중</strong></td>
+                <td>변동비(식비, 의류 등 ID: 1,3,5,6) / 전체 지출 비중 분석</td>
+              </tr>
+              <tr>
+                <td><strong>집중 요일</strong></td>
+                <td>전체 거래 중 가장 빈도가 높은 요일 및 카테고리 추출</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="component-box">
+            <strong>문어체 알림 예시:</strong><br />
+            "현재 지출 속도는 전월 동기 대비 15% 빠르게 진행 중입니다. 예산
+            준수를 위해 향후 일일 평균 45,000원 이내로 소비 조정을 권장합니다."
+          </div>
+        </section>
+
+        <section class="section visible" id="s5">
+          <div class="sec-eyebrow">Part D — Session Worklog</div>
+          <h2 class="sec-heading">세션 작업 내역 요약</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>작업 구분</th>
+                <th>대상 파일</th>
+                <th>변경 내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>테마 고도화</strong></td>
+                <td><code>app_theme.dart</code></td>
+                <td>Hybrid 테마 색상 전면 업데이트 및 상수화</td>
+              </tr>
+              <tr>
+                <td><strong>코드 정규화</strong></td>
+                <td><code>dashboard_screen.dart</code></td>
+                <td>하드코딩된 ARGB 색상을 AppTheme 상수로 교체</td>
+              </tr>
+              <tr>
+                <td><strong>기능 구현</strong></td>
+                <td><code>transactions_screen.dart</code></td>
+                <td>SCR-003 리뉴얼 및 데스크탑/모바일 레이아웃 분기</td>
+              </tr>
+              <tr>
+                <td><strong>신규 모듈</strong></td>
+                <td><code>monthly_analysis.dart</code></td>
+                <td>데이터 기반 분석 로직 및 AnalysisCard UI 구현</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="s6">
+          <div class="sec-eyebrow">Part E — Next Steps</div>
+          <h2 class="sec-heading">향후 과제 (Backlog)</h2>
+          <ul class="bullet-list">
+            <li>
+              <strong>SCR-004/005:</strong> 거래 상세 및 수동 입력 화면 디자인
+              시스템 적용
+            </li>
+            <li>
+              <strong>SCR-006:</strong> 리포트 화면의 통계 시각화 및 분석 로직
+              확장
+            </li>
+            <li>
+              <strong>기능 확장:</strong> <code>app_settings</code> 연동을 통한
+              사용자 지정 목표 예산 반영
+            </li>
+            <li>
+              <strong>카테고리:</strong> DB 스키마 확장을 통한 변동비(Flexible)
+              카테고리 동적 설정
+            </li>
+          </ul>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>

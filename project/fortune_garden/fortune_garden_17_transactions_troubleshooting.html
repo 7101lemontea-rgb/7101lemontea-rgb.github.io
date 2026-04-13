@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>트러블슈팅 기록서 — Fortune Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Troubleshooting</span>
+          <span class="badge badge-status">해결 완료</span>
+        </div>
+        <h1 class="post-title">트러블슈팅 기록서</h1>
+        <p class="post-sub">
+          UI 레이아웃 및 디자인 시스템 적용 과정의 기술적 결함 해결
+        </p>
+        <p class="post-desc">
+          Fortune Garden Hybrid 테마 적용 중 발생한 색상 하드코딩 문제, 데스크탑
+          레이아웃 오버플로우, 그리고 리스트 렌더링 오류를 해결하고 재발 방지
+          원칙을 수립한 기록입니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">최종 업데이트</div>
+            <div class="stat-val">2026.04.13</div>
+          </div>
+          <div>
+            <div class="stat-label">작성자</div>
+            <div class="stat-val">정서영</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#ts-001"
+                ><span class="toc-num">01</span>TS-001 수입 색상 오류</a
+              >
+            </li>
+            <li>
+              <a href="#ts-002"
+                ><span class="toc-num">02</span>TS-002 오버플로우</a
+              >
+            </li>
+            <li>
+              <a href="#ts-003"
+                ><span class="toc-num">03</span>TS-003 RenderFlex 오류</a
+              >
+            </li>
+            <li>
+              <a href="#ts-004"
+                ><span class="toc-num">04</span>TS-004 헤더 분리 문제</a
+              >
+            </li>
+            <li>
+              <a href="#ts-006"
+                ><span class="toc-num">05</span>TS-006~008 구분선 문제</a
+              >
+            </li>
+            <li>
+              <a href="#ts-009"
+                ><span class="toc-num">06</span>TS-009 타입 오류</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="ts-001">
+          <div class="sec-eyebrow">Visual Consistency</div>
+          <h2 class="sec-heading">TS-001 · 수입 색상이 파란색으로 표시됨</h2>
+          <p>
+            <strong>증상:</strong> 거래 내역 및 대시보드에서 수입 금액이 민트
+            대신 파란색(#4ec6de 계열)으로 표시되는 현상이 발생하였습니다.
+          </p>
+          <p>
+            <strong>원인:</strong> <code>dashboard_screen.dart</code>에서
+            <code>AppTheme.incomeLight/incomeDark</code> 상수를 사용하지 않고
+            색상을 직접 하드코딩한 것이 원인이었습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 잘못된 코드: 파란 민트색 직접 지정</span>
+<span class="c-line">final incomeColor = isDark</span>
+<span class="c-line">    ? const Color.fromARGB(255, 78, 193, 222)   // 파란 민트</span>
+<span class="c-line">    : const Color.fromARGB(255, 78, 210, 222);  // 파란 민트</span></pre>
+          </div>
+          <p>
+            <strong>해결:</strong> 해당 코드를 <code>AppTheme</code> 상수로
+            교체하여 테마에 대응하도록 수정하였습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 수정 코드</span>
+<span class="c-line">final incomeColor = isDark ? AppTheme.incomeDark : AppTheme.incomeLight;</span></pre>
+          </div>
+          <p>
+            <strong>영향 파일:</strong>
+            <code
+              >lib/presentation/screens/dashboard/dashboard_screen.dart</code
+            >
+            내 <code>_SummaryCard</code>, <code>_TxnTile</code>, FAB 배경색 등에
+            적용되었습니다.
+          </p>
+        </section>
+
+        <section class="section visible" id="ts-002">
+          <div class="sec-eyebrow">Layout</div>
+          <h2 class="sec-heading">
+            TS-002 · Desktop 레이아웃 좌측 컬럼 오버플로우
+          </h2>
+          <p>
+            <strong>증상:</strong> 데스크탑 화면에서 거래 목록이 우측으로 넘치는
+            현상이 발견되었습니다.
+          </p>
+          <p>
+            <strong>원인:</strong> <code>_DesktopLayout</code>의 좌측 패딩이
+            32px로 과도하게 설정되어 있어, <code>NavigationRail</code>(72px)과
+            합산 시 가용 공간이 부족해졌기 때문입니다.
+          </p>
+          <p>
+            <strong>해결:</strong> 데스크탑 좌우 패딩을 32px에서 20px로 축소하여
+            레이아웃 안정성을 확보하였습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 수정 전: padding: EdgeInsets.fromLTRB(32, 12, 24, 8)</span>
+<span class="c-comment">// 수정 후: padding: EdgeInsets.fromLTRB(20, 12, 16, 8)</span></pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="ts-003">
+          <div class="sec-eyebrow">Rendering</div>
+          <h2 class="sec-heading">
+            TS-003 · RenderFlex overflow — _HeaderBackground Column
+          </h2>
+          <p>
+            <strong>증상:</strong> 하단과 같은 RenderFlex 오버플로우 에러가
+            발생하였습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">RenderFlex#ea268 OVERFLOWING</span>
+<span class="c-comment">creator: Column ← Padding ← ColoredBox ← Container ← _HeaderBackground</span>
+<span class="c-comment">constraints: BoxConstraints(w=784.6, h=32.0)</span></pre>
+          </div>
+          <p>
+            <strong>원인:</strong> <code>SliverAppBar</code>의
+            <code>FlexibleSpaceBar</code> background 내부에서 Column이 제약
+            높이(32px)를 초과하였습니다. 상단 패딩(56px)과 텍스트 콘텐츠가 남은
+            공간(44px)에 맞지 않아 발생한 문제입니다.
+          </p>
+          <p>
+            <strong>해결:</strong> <code>FlexibleSpaceBar</code>와
+            <code>_HeaderBackground</code> 구조를 완전히 제거하고, 헤더를
+            <code>SliverAppBar</code>(고정형)와
+            <code>SliverToBoxAdapter</code>(제목 영역)로 분리하였습니다.
+          </p>
+        </section>
+
+        <section class="section visible" id="ts-004">
+          <div class="sec-eyebrow">Desktop Optimization</div>
+          <h2 class="sec-heading">TS-004~005 · 헤더 구조 개선 및 잔재 제거</h2>
+          <p>
+            <strong>TS-004 증상 및 해결:</strong> 데스크탑에서 녹색 헤더 영역이
+            좌우로 나뉘어 보이던 문제를 해결하기 위해 <code>AppBar</code>를
+            최상위 레벨로 올리고 좌우 컬럼을 그 아래 <code>Row</code>로 배치하는
+            통합 레이아웃으로 변경하였습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 수정 후 구조</span>
+<span class="c-line">Column(</span>
+<span class="c-line">  Container(color: headerBg, height: 56)  // 통합 AppBar</span>
+<span class="c-line">  Row(</span>
+<span class="c-line">    _TxnListColumn(AppBar 없음),          // 좌: 제목 + 목록</span>
+<span class="c-line">    _SummaryPanel(AppBar 없음),           // 우: 요약</span>
+<span class="c-line">  )</span>
+<span class="c-line">)</span></pre>
+          </div>
+          <p>
+            <strong>TS-005:</strong> 수정 과정에서
+            <code>_SummaryPanel</code> 상단에 남아있던 불필요한 짙은 녹색
+            <code>Container</code>와 변수 선언을 모두 제거하였습니다.
+          </p>
+        </section>
+
+        <section class="section visible" id="ts-006">
+          <div class="sec-eyebrow">List Components</div>
+          <h2 class="sec-heading">
+            TS-006~008 · 거래 항목 구분선(Divider) 미표시 해결
+          </h2>
+          <p>
+            구분선이 보이지 않던 문제는 색상 토큰 가시성, 렌더링 조건, 위젯 계층
+            구조의 결함이 원인이었습니다.
+          </p>
+          <ul class="bullet-list">
+            <li>
+              <strong>TS-006:</strong> 다크 모드 배경과 유사한
+              <code>outlineVariant</code>를 시인성이 높은
+              <code>outline</code>으로 교체하였습니다.
+            </li>
+            <li>
+              <strong>TS-007:</strong> <code>showDivider</code> 조건을
+              <code>!isLast && !nextIsHeader</code>로 변경하여 마지막 항목과
+              날짜 헤더 직전 항목을 제외한 모든 곳에 표시되도록 하였으며,
+              구분선을 <code>Dismissible</code> 내부로 이동시켰습니다.
+            </li>
+            <li>
+              <strong>TS-008:</strong> 괄호 구조가 뒤섞여 발생하던 위치 오류를
+              해결하기 위해 <code>_TxnCard</code>의 build 메서드를 처음부터
+              완전히 재작성하였습니다.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="ts-009">
+          <div class="sec-eyebrow">Data Type</div>
+          <h2 class="sec-heading">TS-009 · fold double 반환 타입 오류</h2>
+          <p>
+            <strong>증상:</strong>
+            <code
+              >The returned type 'double' isn't returnable from a 'int'
+              function.</code
+            >
+            에러가 발생하였습니다.
+          </p>
+          <p>
+            <strong>원인:</strong> <code>fold</code>의 초기값 0이 명확한
+            <code>int</code>로 추론되지 않아 타입 불일치가 발생한 것입니다.
+          </p>
+          <p>
+            <strong>해결:</strong> 타입 파라미터를 <code>&lt;int&gt;</code>로
+            명시하여 해결하였습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 수정 후</span>
+<span class="c-line">.fold&lt;int&gt;(0, (s, t) => s + t.amount)</span></pre>
+          </div>
+        </section>
+
+        <section class="section visible">
+          <div class="sec-eyebrow">General Rules</div>
+          <h2 class="sec-heading">재발 방지를 위한 공통 원칙</h2>
+          <ul class="bullet-list">
+            <li>
+              색상은 반드시 <code>AppTheme</code> 상수를 사용하며
+              <code>Color.fromARGB()</code> 하드코딩을 금지합니다.
+            </li>
+            <li>
+              구분선 등 아이템 부속 위젯은 반드시 <code>Dismissible</code>의
+              child 내부에 배치하여 레이어 간섭을 방지합니다.
+            </li>
+            <li>
+              구조가 복잡한 위젯은 부분 수정보다 전체 재작성을 통해 논리적
+              결함을 원천 차단합니다.
+            </li>
+            <li>
+              데스크탑 분할 레이아웃에서는 <code>AppBar</code>를 최상위 레벨에서
+              단일하게 구성합니다.
+            </li>
+          </ul>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
