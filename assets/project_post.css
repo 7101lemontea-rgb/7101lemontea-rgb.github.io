@@ -21,6 +21,7 @@
   --accent2: #4a7a2a;
   --rule: #e2ded9;
   --card-bg: #fffefb;
+  --card-bg2: #faf9f8;
   --tag-green: rgba(116, 155, 65, 0.1);
   --font-serif: "DM Serif Display", Georgia, serif;
   --font-mono: "DM Mono", "Courier New", monospace;
@@ -1261,9 +1262,22 @@ figure.doc-figure figcaption {
     margin: 0 auto;
   }
 }
+/* ── POST NAVIGATION ── */
+.post-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1200px;
+  margin: 1rem auto;
+  gap: 1rem;
+
+  border-top: 1px solid var(--rule);
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+}
+
 /* 카드 공통 */
 .post-nav-card {
-  background: var(--card-bg);
+  background: var(--card-bg2);
   width: 100%;
   max-width: 600px;
 

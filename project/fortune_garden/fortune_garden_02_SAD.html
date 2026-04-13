@@ -34,7 +34,6 @@
           개발팀이 일관된 구조로 구현할 수 있도록 컴포넌트 구성, 계층 간 인터페이스,
           데이터 흐름, 보안 모델, 배포 구조를 명세합니다.
         </p>
-
         <div class="post-stats" id="post-timestamps">
           <div>
             <p class="stat-label">문서 버전</p>
@@ -57,7 +56,7 @@
       </div><!-- /container -->
       <div class="main-wrapper">
         <!-- TOC -->
-                <aside class="toc-sidebar">
+        <aside class="toc-sidebar">
           <div class="toc-sticky">
             <p class="toc-title">목차</p>
             <ul class="toc-list">
@@ -201,7 +200,7 @@
     <span class="c-ext">│   로컬 CSV / XLSX 파일        │</span>
     <span class="c-ext">└──────────────────────────────┘</span>
   </pre>
-</div>
+            </div>
           </section>
 
           <!-- 4 -->
@@ -210,7 +209,6 @@
             <h2 class="sec-heading">계층별 상세 설계</h2>
 
             <p class="sub-heading">4.1 Presentation Layer (L1) — Flutter UI</p>
-            <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--accent2);font-family:var(--font-mono);">4.1.1 상태 관리</p>
             <p>상태 관리 라이브러리로 <strong>Riverpod 2.x</strong>를 사용합니다. 각 화면은 <code>ConsumerWidget</code> 또는 <code>ConsumerStatefulWidget</code>으로 구현하며, Provider를 통해 UseCase 결과를 구독합니다.</p>
             <table class="gen-table">
               <thead><tr><th>Provider 이름</th><th>상태 타입</th><th>역할</th></tr></thead>
@@ -223,7 +221,7 @@
               </tbody>
             </table>
 
-            <p style="margin-top:1.5rem;font-size:0.85rem;color:var(--accent2);font-family:var(--font-mono);">4.1.2 화면 구성 및 네비게이션</p>
+            <p class="sub-heading">4.1.2 화면 구성 및 네비게이션</p>
             <p>Windows Desktop은 <code>NavigationRail</code> 기반 사이드바 레이아웃을, Android는 <code>BottomNavigationBar</code> 레이아웃을 사용합니다. 공통 라우팅은 <code>go_router</code> 패키지로 관리합니다.</p>
             <table class="gen-table">
               <thead><tr><th>화면 ID</th><th>라우트</th><th>화면명</th><th>주요 위젯</th></tr></thead>
@@ -258,7 +256,6 @@
             </table>
 
             <p class="sub-heading">4.3 Data Layer (L3) — Repository + SQLite</p>
-            <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--accent2);font-family:var(--font-mono);">4.3.1 Repository 패턴</p>
             <p>모든 데이터 접근은 추상 Repository 인터페이스를 통해 이루어집니다. UseCase는 인터페이스에만 의존하므로 테스트 시 Mock Repository로 교체 가능합니다.</p>
             <table class="gen-table">
               <thead><tr><th>Repository 인터페이스</th><th>주요 메서드</th></tr></thead>
@@ -273,14 +270,14 @@
               </tbody>
             </table>
 
-            <p style="margin-top:1.5rem;font-size:0.85rem;color:var(--accent2);font-family:var(--font-mono);">4.3.2 SQLite 데이터베이스 상세 스키마</p>
+            <p class="sub-heading">4.3.2 SQLite 데이터베이스 상세 스키마</p>
             <p>drift ORM을 사용하며, DB 파일명은 <code>fortune_garden.db</code>입니다. 저장 경로는 OS별 표준 앱 데이터 디렉터리를 따릅니다.</p>
             <ul class="bullet-list">
               <li>Windows: <code>%APPDATA%\FortuneGarden\fortune_garden.db</code></li>
               <li>Android: <code>/data/data/com.fortunegarden.app/databases/fortune_garden.db</code></li>
             </ul>
 
-            <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">profiles 테이블</p>
+            <p class="sub-heading">profiles 테이블</p>
             <table class="normal-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
@@ -293,7 +290,7 @@
             </table>
             <p>※ v1.2: <code>connected_id_enc</code> 컬럼 제거 (CODEF 방식 폐기)</p>
 
-            <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">accounts 테이블</p>
+            <p class="sub-heading">accounts 테이블</p>
             <table class="normal-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
@@ -307,7 +304,7 @@
               </tbody>
             </table>
 
-            <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">transactions 테이블</p>
+            <p class="sub-heading">transactions 테이블</p>
             <table class="normal-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
@@ -327,7 +324,7 @@
             </table>
             <p>인덱스: <code>(profile_id, txn_date)</code>, <code>(account_id, txn_date)</code>, <code>(category_id)</code>, <code>(txn_hash UNIQUE)</code></p>
 
-            <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">csv_parser_profiles 테이블 [신규]</p>
+            <p class="sub-heading">csv_parser_profiles 테이블 [신규]</p>
             <table class="normal-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
@@ -344,7 +341,7 @@
               </tbody>
             </table>
 
-            <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">import_history 테이블 [신규]</p>
+            <p class="sub-heading">import_history 테이블 [신규]</p>
             <table class="normal-table">
               <thead><tr><th>컬럼명</th><th>타입</th><th>제약</th><th>설명</th></tr></thead>
               <tbody>
@@ -360,7 +357,7 @@
               </tbody>
             </table>
 
-            <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--ink);font-weight:600;">기타 테이블</p>
+            <p class="sub-heading">기타 테이블</p>
             <table class="gen-table">
               <thead><tr><th>테이블명</th><th>주요 컬럼</th><th>설명</th></tr></thead>
               <tbody>
@@ -378,10 +375,10 @@
             <h2 class="sec-heading">주요 데이터 흐름</h2>
 
             <p class="sub-heading">5.1 앱 시작 시퀀스</p>
-            <table class="normal-table" style="width: 100%; table-layout: fixed;">
-              <thead><tr><th style="width: 40px; white-space: nowrap;"> 단계 </th><th style="width: 120px;"> 주체 </th><th> 동작 </th></tr></thead>
+            <table class="normal-table">
+              <thead><tr><th>단계</th><th>주체</th><th>동작</th></tr></thead>
               <tbody>
-                <tr><td> 1 </td><td class="col-name">Flutter App</td><td>앱 프로세스 시작. <code>main()</code> 진입.</td></tr>
+                <tr><td>1</td><td class="col-name">Flutter App</td><td>앱 프로세스 시작. <code>main()</code> 진입.</td></tr>
                 <tr><td>2</td><td class="col-name">Data Layer</td><td>SQLite DB 열기. 미적용 마이그레이션 자동 실행.</td></tr>
                 <tr><td>3</td><td class="col-name">Application</td><td>profiles 테이블 조회. 프로필 0개 → 초기 설정 화면. 1개 이상 → 대시보드.</td></tr>
                 <tr><td>4</td><td class="col-name">Application</td><td>FR-CFG-05에 따라 기본 뷰 모드(개인/통합) 로드 후 <code>viewModeProvider</code> 초기화.</td></tr>
@@ -409,7 +406,7 @@
             </ul>
 
             <p class="sub-heading">5.4 개인 뷰 / 통합 뷰 전환 흐름</p>
-            <p>뷰 모드 전환은 <code>viewModeProvider</code> 값 변경 → <code>transactionListProvider</code> / <code>dashboardSummaryProvider</code> 자동 재계산의 Riverpod 반응형 흐름으로 처리됩니다. DB 재쿼리가 아닌 파라미터 변경만으로 즉시 반영됩니다.</p>
+            <p>뷰 모드 전환은 <code>viewModeProvider</code> 값 변경 → <code>transactionListProvider</code> / <code>dashboardSummaryProvider</code> 자동 재계산의 Riverpod 반응형 흐름으로 처리됩니다.</p>
             <table class="gen-table">
               <thead><tr><th>뷰 모드</th><th>데이터 쿼리 방식</th><th>표시 내용</th></tr></thead>
               <tbody>
@@ -604,35 +601,56 @@
             </div>
           </section>
 
-        </section>
-        <section class="comments-section">
-          <div class="comments-wrap">
-          <div class="sec-eyebrow" style="margin-bottom: 1.2rem;">Comments</div>
-          <script src="https://giscus.app/client.js"
-            data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
-            data-repo-id="R_kgDORgqLUQ"
-            data-category="Announcements"
-            data-category-id="DIC_kwDORgqLUc4C4NNi"
-            data-mapping="pathname"
-            data-strict="0"
-            data-reactions-enabled="0"
-            data-emit-metadata="0"
-            data-input-position="bottom"
-            data-theme="light"
-            data-lang="ko"
-            crossorigin="anonymous"
-            async>
-          </script>
-        </div>
-      </section>
-
-          
+          <section class="comments-section">
+            <div class="comments-wrap">
+              <div class="sec-eyebrow" style="margin-bottom: 1.2rem;">Comments</div>
+              <script src="https://giscus.app/client.js"
+                data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+                data-repo-id="R_kgDORgqLUQ"
+                data-category="Announcements"
+                data-category-id="DIC_kwDORgqLUc4C4NNi"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="0"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="light"
+                data-lang="ko"
+                crossorigin="anonymous"
+                async>
+              </script>
+            </div>
+          </section>
         </article>
+      </div>
+
+      <!-- 이전/다음 -->
+      <div class="post-nav">
+        <a class="post-nav-card prev" href="fortune_garden_01_req_specification.html">
+          <p class="post-nav-label">← 이전 글</p>
+          <p class="post-nav-title">Fortune Garden 01 - 요구사항 정의서</p>
+          <p class="post-nav-meta">
+            <span class="tag">Fortune Garden</span>
+            <span class="tag">#Planning</span>
+            <span class="date">· 2026.03.08</span>
+          </p>
+        </a>
+        <a class="post-nav-card next" href="fortune_garden_03_DB_ERD.html">
+          <p class="post-nav-label">다음 글 →</p>
+          <p class="post-nav-title">Fortune Garden 03 - DB ERD</p>
+          <p class="post-nav-meta">
+            <span class="tag">Fortune Garden</span>
+            <span class="tag">#Design</span>
+            <span class="date">· 2026.03.11</span>
+          </p>
+        </a>
+      </div>
+
+      <div class="post-footer">
+        <a class="footer-back" href="index.html">← 문서 목록</a>
+        <span class="footer-copy">© 2026 정서영</span>
+      </div>
     </div>
-    <div class="post-footer">
-            <a class="footer-back" href="index.html">← 문서 목록</a>
-            <span class="footer-copy">© 2026 정서영</span>
-          </div>
 
     <script src="../../script.js"></script>
   </body>
