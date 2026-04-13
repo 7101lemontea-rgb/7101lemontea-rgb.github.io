@@ -611,45 +611,108 @@ strong {
 .post-nav {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  max-width: 1200px;
+  margin: 1rem auto;
   gap: 1rem;
-  margin-top: 1rem;
+
+  border-top: 1px solid var(--rule);
+  padding-top: 2rem;
+  padding-bottom: 1rem;
 }
 
+/* 카드 공통 */
 .post-nav-card {
   background: var(--card-bg);
+  width: 100%;
+  max-width: 600px;
+
   border: 1px solid var(--rule);
-  border-radius: 4px;
-  padding: 1rem 1.2rem;
+  border-radius: 6px;
+  padding: 1.2rem 1.4rem;
+
   text-decoration: none;
   color: inherit;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-  display: block;
+
+  display: flex;
+  flex-direction: column;
+
+  transition: all 0.2s;
 }
 
+/* 이전글 */
+.post-nav-card:first-child {
+  justify-self: start;
+  align-items: flex-start;
+  text-align: left;
+  padding-left: 2.5rem;
+}
+
+/* 다음글 */
+.post-nav-card.next {
+  justify-self: end;
+  align-items: flex-end;
+  text-align: right;
+  padding-right: 2.5rem;
+}
+
+/* hover */
 .post-nav-card:hover {
   border-color: var(--accent);
-  box-shadow: 0 2px 12px rgba(57, 112, 109, 0.1);
+  box-shadow: 0 4px 20px rgba(57, 112, 109, 0.12);
+  transform: translateY(-2px);
 }
 
+/* 라벨 */
 .post-nav-label {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-muted);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
+  opacity: 0.7;
 }
 
+/* 제목 */
 .post-nav-title {
-  font-size: 1rem;
+  font-size: 1.05rem;
+  font-weight: 500;
   color: var(--ink);
   line-height: 1.4;
 }
 
-.post-nav-card.next {
-  text-align: right;
+/* 메타 */
+.post-nav-meta {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+/* 태그 */
+.post-nav-meta .tag {
+  background: rgba(57, 112, 109, 0.08);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+}
+
+/* 날짜 */
+.post-nav-meta .date {
+  opacity: 0.7;
+}
+
+/* 이전글 메타 */
+.post-nav-card:first-child .post-nav-meta {
+  justify-content: flex-start;
+}
+
+/* 다음글 메타 */
+.post-nav-card.next .post-nav-meta {
+  justify-content: flex-end;
 }
 
 /* ── POST FOOTER ── */

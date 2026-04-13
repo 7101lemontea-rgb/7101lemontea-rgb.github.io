@@ -29,14 +29,18 @@
         <div class="post-meta">
           <span class="post-tag">JavaScript</span>
           <span class="post-date">
-            작성일 <span id="date-created">2026-04-05</span> &nbsp;·&nbsp; 수정일
+            작성일 <span id="date-created">2026-04-05</span> &nbsp;·&nbsp;
+            수정일
             <span id="date-updated">2026-04-05</span>
           </span>
         </div>
-        <h1 class="post-title">JavaScript 9</h1>
+        <h1 class="post-title">
+          JavaScript 09 <br />— 템플릿 리터럴과 삼항 연산자
+        </h1>
         <p class="post-subtitle">
-          최신 자바스크립트에서 문자열을 효율적으로 다루는 <strong>템플릿 리터럴</strong>과, 
-          코드의 길이를 획기적으로 줄여주는 <strong>삼항 연산자</strong>의 활용법을 알아봅니다.
+          최신 자바스크립트에서 문자열을 효율적으로 다루는
+          <strong>템플릿 리터럴</strong>과, 코드의 길이를 획기적으로 줄여주는
+          <strong>삼항 연산자</strong>의 활용법을 알아봅니다.
         </p>
       </header>
     </div>
@@ -51,8 +55,16 @@
                 ><span class="toc-num">1.</span>템플릿 리터럴</a
               >
               <ul class="toc-sub-list">
-                <li><a href="#section-1-1"><span class="toc-num">1.1.</span>백틱(`) 사용법</a></li>
-                <li><a href="#section-1-ex"><span class="toc-num">※</span>연습 문제</a></li>
+                <li>
+                  <a href="#section-1-1"
+                    ><span class="toc-num">1.1.</span>백틱(`) 사용법</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-1-ex"
+                    ><span class="toc-num">※</span>연습 문제</a
+                  >
+                </li>
               </ul>
             </li>
             <li>
@@ -60,9 +72,21 @@
                 ><span class="toc-num">2.</span>삼항 연산자</a
               >
               <ul class="toc-sub-list">
-                <li><a href="#section-2-1"><span class="toc-num">2.1.</span>한 줄 if문</a></li>
-                <li><a href="#section-2-react"><span class="toc-num">※</span>Why React?</a></li>
-                <li><a href="#section-2-ex"><span class="toc-num">※</span>연습 문제</a></li>
+                <li>
+                  <a href="#section-2-1"
+                    ><span class="toc-num">2.1.</span>한 줄 if문</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-react"
+                    ><span class="toc-num">※</span>Why React?</a
+                  >
+                </li>
+                <li>
+                  <a href="#section-2-ex"
+                    ><span class="toc-num">※</span>연습 문제</a
+                  >
+                </li>
               </ul>
             </li>
           </ul>
@@ -70,18 +94,21 @@
       </aside>
 
       <article class="post-body" style="flex: 1; min-width: 0">
-        
         <section class="section visible" id="section-1">
           <p class="sec-eyebrow">01</p>
           <h2 class="sec-heading">템플릿 리터럴</h2>
           <p>
-            템플릿 리터럴은 내장된 표현식을 허용하는 문자열 리터럴입니다. 
-            기존의 따옴표 대신 <strong>백틱(`)</strong>을 사용하여 문자열을 더 직관적으로 다룰 수 있습니다.
+            템플릿 리터럴은 내장된 표현식을 허용하는 문자열 리터럴입니다. 기존의
+            따옴표 대신 <strong>백틱(`)</strong>을 사용하여 문자열을 더
+            직관적으로 다룰 수 있습니다.
           </p>
 
           <div id="section-1-1">
             <h3 class="sub-heading">1.1. 백틱(`) 사용법</h3>
-            <p>백틱을 사용하면 문자열 안에 표현식을 쉽게 삽입할 수 있습니다 (파이썬의 f-string과 유사).</p>
+            <p>
+              백틱을 사용하면 문자열 안에 표현식을 쉽게 삽입할 수 있습니다
+              (파이썬의 f-string과 유사).
+            </p>
             <div class="code-block">
               <div class="code-body">
                 <pre><span class="tn">const</span> <span class="tx">str = </span><span class="av">`이것이 템플릿 리터럴입니다.`</span><span class="tx">;</span></pre>
@@ -89,7 +116,10 @@
             </div>
 
             <p class="sec-eyebrow" style="margin-top: 1.4rem">여러 줄 문자열</p>
-            <p>줄바꿈(엔터)을 별도의 특수문자 없이 그대로 문자열에 포함할 수 있습니다.</p>
+            <p>
+              줄바꿈(엔터)을 별도의 특수문자 없이 그대로 문자열에 포함할 수
+              있습니다.
+            </p>
             <div class="code-block">
               <div class="code-body">
                 <pre><span class="tn">const</span> <span class="tx">text = </span><span class="av">`여러 줄의
@@ -98,7 +128,9 @@
               </div>
             </div>
 
-            <p class="sec-eyebrow" style="margin-top: 1.4rem">변수/표현식 삽입</p>
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">
+              변수/표현식 삽입
+            </p>
             <p><code>${변수명}</code> 형태로 값을 쉽게 삽입합니다.</p>
             <div class="code-block">
               <div class="code-body">
@@ -135,7 +167,8 @@
           <p class="sec-eyebrow">02</p>
           <h2 class="sec-heading">삼항 연산자</h2>
           <p>
-            삼항 연산자는 조건문에 따라 값을 결정하는 간결한 방법입니다. <code>조건 ? 참 : 거짓</code> 형태로 사용합니다.
+            삼항 연산자는 조건문에 따라 값을 결정하는 간결한 방법입니다.
+            <code>조건 ? 참 : 거짓</code> 형태로 사용합니다.
           </p>
 
           <div id="section-2-1">
@@ -147,7 +180,9 @@
               </div>
             </div>
 
-            <p class="sec-eyebrow" style="margin-top: 1.4rem">중첩 사용 (가독성 주의)</p>
+            <p class="sec-eyebrow" style="margin-top: 1.4rem">
+              중첩 사용 (가독성 주의)
+            </p>
             <div class="code-block">
               <div class="code-body">
                 <pre><span class="tn">const</span> <span class="tx">grade = score >= 90 ? </span><span class="av">"A"</span> <span class="tx">: score >= 80 ? </span><span class="av">"B"</span> <span class="tx">: </span><span class="av">"C"</span><span class="tx">;</span></pre>
@@ -157,14 +192,19 @@
 
           <div class="highlight-box" id="section-2-react">
             <p>
-              <strong>[Why React?]</strong> 리액트의 JSX 중괄호<code>{ }</code> 안에서는 <code>if</code>문을 직접 사용할 수 없으므로, 
-              <strong>조건부 렌더링</strong>을 위해 삼항 연산자가 필수적으로 사용됩니다.
+              <strong>[Why React?]</strong> 리액트의 JSX 중괄호<code>{ }</code>
+              안에서는 <code>if</code>문을 직접 사용할 수 없으므로,
+              <strong>조건부 렌더링</strong>을 위해 삼항 연산자가 필수적으로
+              사용됩니다.
             </p>
           </div>
 
           <div class="section visible" id="section-2-ex">
             <h3 class="sub-heading">연습 문제</h3>
-            <p>숫자를 입력받아 0, 짝수, 홀수를 판별하는 화살표 함수를 삼항 연산자로 구현해보세요.</p>
+            <p>
+              숫자를 입력받아 0, 짝수, 홀수를 판별하는 화살표 함수를 삼항
+              연산자로 구현해보세요.
+            </p>
             <div class="code-block">
               <div class="code-header"><span class="code-lang">js</span></div>
               <div class="code-body">
@@ -200,11 +240,38 @@
       </article>
     </div>
 
+    <!-- 이전/다음 -->
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="react_15_javascript_08.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">React 15. JavaScript 08 — DOM</p>
+
+        <p class="post-nav-meta">
+          <span class="tag">#JavaScript</span>
+          <span class="tag">#기초</span>
+          <span class="date">· 2026.03.28</span>
+        </p>
+      </a>
+
+      <a class="post-nav-card next" href="react_17_javascript_10.html">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">
+          React 17. JavaScript 10 — 단축 평가와 배열 메서드
+        </p>
+
+        <p class="post-nav-meta">
+          <span class="tag">#JavaScript</span>
+          <span class="tag">#기초</span>
+          <span class="date">· 2026.04.07</span>
+        </p>
+      </a>
+    </div>
+
     <footer class="post-footer">
       <a href="../blog/index.html" class="footer-back">← 문서 목록</a>
       <span class="footer-copy">© 2026 정서영</span>
     </footer>
 
-    <script src="../assets/script.js"></script>
+    <script src="../script.js"></script>
   </body>
 </html>
