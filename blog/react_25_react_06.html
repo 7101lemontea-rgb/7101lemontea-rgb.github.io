@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React 06 — Styling and Icons</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">React</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-12</span> &nbsp;·&nbsp;
+            수정일
+            <span id="date-updated">2026-04-12</span>
+          </span>
+        </div>
+        <h1 class="post-title">React: Tailwind와 아이콘 라이브러리</h1>
+        <p class="post-subtitle">
+          리액트 프로젝트의 시각적 완성도를 높여주는
+          <strong>Tailwind CSS</strong> 설정과
+          <strong>아이콘 라이브러리</strong> 활용법을 정리합니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>Tailwind CSS 사용하기</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>폰트 및 색상 테마 설정</a
+              >
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>리액트 아이콘 라이브러리</a
+              >
+            </li>
+            <li>
+              <a href="#section-4"
+                ><span class="toc-num">4.</span>라이브러리 선택 가이드</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body" style="flex: 1; min-width: 0">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">React에서 Tailwind CSS 사용하기</h2>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react05_01.png"
+              alt="Tailwind CSS site"
+              style="width: 100%"
+            />
+            <figcaption>Tailwind CSS 공식 사이트</figcaption>
+          </figure>
+          <p>
+            Tailwind CSS는 유틸리티 퍼스트 프레임워크로, 별도의 CSS 파일 작성
+            없이 클래스명만으로 신속한 스타일링이 가능합니다.
+          </p>
+
+          <h3 class="sub-heading">1.1. 설치 및 설정 (Vite 기준)</h3>
+          <div class="highlight-box">
+            <p><strong>① 패키지 설치</strong></p>
+            <pre>npm install tailwindcss @tailwindcss/vite</pre>
+          </div>
+
+          <div class="highlight-box" style="margin-top: 1rem">
+            <p><strong>② vite.config.js 설정</strong></p>
+            <div class="code-block">
+              <div class="code-body">
+                <pre><span class="tn">import</span> <span class="tx">tailwindcss from "@tailwindcss/vite";</span>
+<span class="tn">export default</span> <span class="tx">defineConfig({</span>
+<span class="tx">  plugins: [react(), tailwindcss()],</span>
+<span class="tx">});</span></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box" style="margin-top: 1rem">
+            <p><strong>③ CSS 파일 import (src/index.css)</strong></p>
+            <pre>@import "tailwindcss";</pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">폰트 및 색상 테마 설정</h2>
+          <p>
+            프로젝트의 일관성을 위해 <code>@theme</code> 블록에서 기본 시스템을
+            정의합니다.
+          </p>
+
+          <h3 class="sub-heading">2.1. Pretendard 폰트 및 테마 정의</h3>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react05_02.png"
+              alt="Pretendard 폰트 및 테마 정의"
+              style="width: 100%"
+            />
+            <figcaption>Pretendard 폰트 및 테마 정의</figcaption>
+          </figure>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="cm">/* 폰트 import 후 tailwindcss import */</span>
+<span class="tx">@import url("...pretendard-dynamic-subset.min.css");</span>
+<span class="tx">@import "tailwindcss";</span>
+
+
+<span class="tx">@theme {</span>
+<span class="tx">  --font-sans: "Pretendard", sans-serif;</span>
+<span class="tx">  --color-primary: #4f46e5;</span>
+<span class="tx">  --color-bg: #f8fafc;</span>
+<span class="tx">  --color-text-main: #0f172a;</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">리액트 아이콘 라이브러리</h2>
+          <p>
+            다양한 아이콘을 컴포넌트 형태로 간편하게 사용할 수 있는
+            도구들입니다.
+          </p>
+
+          <h3 class="sub-heading">3.1. react-icons</h3>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react05_03.png"
+              alt="react-icons 사용 예시"
+              style="width: 100%"
+            />
+            <figcaption>react-icons 사용 예시</figcaption>
+          </figure>
+          <p>
+            수많은 아이콘 팩을 통합 제공하며, 특히 브랜드 로고 사용 시
+            유용합니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">import</span> <span class="tx">{ FaGithub } from "react-icons/fa";</span>
+<span class="cm">// 크기 및 색상 조절</span>
+<span class="tx">&lt;FaGithub size={24} color="#333" /&gt;</span>
+<span class="tx">&lt;FaGithub className="text-2xl text-gray-700" /&gt;</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" style="margin-top: 2rem">
+            3.2. Lucide React
+          </h3>
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react05_04.png"
+              alt="Lucide React 사용 예시"
+              style="width: 100%"
+            />
+            <figcaption>Lucide React 사용 예시</figcaption>
+          </figure>
+          <p>
+            미니멀한 선형 스타일을 제공하며, 현대적인 UI 도구들의 표준
+            아이콘으로 채택되고 있습니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">import</span> <span class="tx">{ Search, Heart } from "lucide-react";</span>
+<span class="cm">// 선 굵기 조절 가능</span>
+<span class="tx">&lt;Heart strokeWidth={1.5} /&gt;</span>
+<span class="tx">&lt;Search className="w-5 h-5" /&gt;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <p class="sec-eyebrow">04</p>
+          <h2 class="sec-heading">라이브러리 선택 가이드</h2>
+          <div class="highlight-box">
+            <p><strong>실무 권장 사항:</strong></p>
+            <ul>
+              <li>
+                <strong>Lucide React:</strong> 일반적인 UI 버튼, 메뉴,
+                내비게이션 아이콘 (가볍고 세련됨)
+              </li>
+              <li>
+                <strong>react-icons:</strong> 외부 서비스(Github, Google 등)
+                브랜드 로고 필요 시
+              </li>
+            </ul>
+            <p>
+              보통 두 라이브러리를 모두 설치하여 역할에 맞게 혼합 사용하는
+              방식을 추천합니다.
+            </p>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+  </body>
+</html>
