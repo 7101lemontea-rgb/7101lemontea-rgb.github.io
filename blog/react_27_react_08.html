@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React 08 — Dynamic Web Pages</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">React 27</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-14</span> &nbsp;·&nbsp;
+            수정일
+            <span id="date-updated">2026-04-14</span>
+          </span>
+        </div>
+        <h1 class="post-title">React 08 — React 동적 웹 페이지</h1>
+        <p class="post-subtitle">
+          이벤트 핸들러를 통한 사용자 상호작용과 <strong>useState</strong>,
+          <strong>useRef</strong>를 이용한 상태 관리를 학습합니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>이벤트 핸들러</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"><span class="toc-num">2.</span>useState</a>
+            </li>
+            <li>
+              <a href="#section-3"><span class="toc-num">3.</span>useRef</a>
+            </li>
+            <li>
+              <a href="#section-4"
+                ><span class="toc-num">4.</span>Hook 비교 및 실습</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">이벤트 핸들러 (Event Handler)</h2>
+          <p>
+            사용자의 행동(클릭, 입력, 제출 등)에 반응하여 실행되는 함수를
+            말합니다. React에서는 JSX 속성으로 이벤트 핸들러를 전달하며,
+            <code>onClick</code>, <code>onChange</code> 등
+            <strong>camelCase</strong>로 작성합니다.
+          </p>
+
+          <h3 class="sub-heading">1.1. 이벤트 핸들러 전달 방식</h3>
+          <p>
+            <strong>방법 A: 함수 참조 전달</strong> (로직이 복잡하거나 재사용
+            시)
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">const</span> <span class="tx">handleClick = () => alert("클릭됨!");</span>
+<span class="tn">return</span> <span class="tx">&lt;button onClick={handleClick}&gt;클릭&lt;/button&gt;;</span></pre>
+            </div>
+          </div>
+
+          <p style="margin-top: 1rem">
+            <strong>방법 B: 화살표 함수 전달</strong> (간단한 로직 혹은 인자
+            전달 시)
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="cm">// 인자가 필요한 경우 반드시 화살표 함수 사용</span>
+<span class="tn">return</span> <span class="tx">&lt;button onClick={() => handleClick("홍길동")}&gt;클릭&lt;/button&gt;;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">useState</h2>
+          <p>
+            컴포넌트의 상태(State)를 관리하는 가장 기본적인 Hook입니다. 값이
+            변하면 리액트가 이를 감지하여 UI를 자동으로 갱신(Re-render)합니다.
+          </p>
+
+          <h3 class="sub-heading">2.1. 일반 변수의 한계</h3>
+          <ul>
+            <li>
+              <strong>반응성 부재:</strong> 값이 변해도 렌더링 신호를 보내지
+              않아 UI가 업데이트되지 않습니다.
+            </li>
+            <li>
+              <strong>데이터 휘발성:</strong> 재렌더링 시 함수가 재실행되면서
+              일반 변수는 초기화됩니다.
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">2.2. useState 문법 및 실습</h3>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react08_01.png"
+              alt="useState 실습 : Counter"
+              style="width: 50%"
+            />
+            <figcaption>useState 실습 : Counter</figcaption>
+          </figure>
+
+          <div class="highlight-box">
+            <p><strong>실습 예시:</strong> 클릭 시 숫자가 올라가는 카운터</p>
+          </div>
+
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">import</span> <span class="tx">React, { useState } </span><span class="tn">from</span> <span class="tx">"react";</span>
+
+<span class="tn">function</span> <span class="tx">Example() {</span>
+<span class="tn">  const</span> <span class="tx">[stateCount, setStateCount] = useState(0);</span>
+
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;div&gt;</span>
+<span class="cm">      {/* State 카운트 카드 */}</span>
+<span class="tx">      &lt;div&gt;</span>
+<span class="tx">        &lt;h1&gt;{stateCount}&lt;/h1&gt;</span>
+<span class="tx">      &lt;/div&gt;</span>
+
+<span class="cm">      {/* 버튼 액션 영역 */}</span>
+<span class="tx">      &lt;div&gt;</span>
+<span class="tx">        &lt;button</span>
+<span class="tn">          onClick</span><span class="tx">={() => {</span>
+<span class="tx">            setStateCount(stateCount + 1);</span>
+<span class="tx">          }}</span>
+<span class="tx">        &gt;</span>
+<span class="tx">          Click Me</span>
+<span class="tx">        &lt;/button&gt;</span>
+<span class="tx">      &lt;/div&gt;</span>
+<span class="tx">    &lt;/div&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span>
+
+<span class="tn">export default</span> <span class="tx">Example;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">useRef</h2>
+          <p>
+            렌더링에 영향을 주지 않으면서 값을 기억하거나,
+            <strong>DOM 요소에 직접 접근</strong>할 때 사용합니다.
+          </p>
+          <ul>
+            <li>
+              <strong>비반응성:</strong> <code>.current</code> 값이 변해도
+              재렌더링이 발생하지 않습니다.
+            </li>
+            <li>
+              <strong>지속성:</strong> 재렌더링 후에도 데이터가 초기화되지 않고
+              유지됩니다.
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">3.1. DOM 접근 예시</h3>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">const</span> <span class="tx">inputEl = useRef(null);</span>
+<span class="tn">const</span> <span class="tx">onButtonClick = () => inputEl.current.focus();</span>
+<span class="tn">return</span> <span class="tx">&lt;input ref={inputEl} type="text" /&gt;;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <p class="sec-eyebrow">04</p>
+          <h2 class="sec-heading">Hook 비교 및 실습</h2>
+
+          <table class="gen-table" style="width: 100%; margin-bottom: 2rem">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>일반 변수 (let)</th>
+                <th>useState</th>
+                <th>useRef</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>렌더링 유발</strong></td>
+                <td>X</td>
+                <td>O</td>
+                <td>X</td>
+              </tr>
+              <tr>
+                <td><strong>데이터 유지</strong></td>
+                <td>초기화됨</td>
+                <td>유지됨</td>
+                <td>유지됨</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box">
+            <p><strong>실습 : 좋아요 토글</strong></p>
+            <p>
+              상태 변화가 필요한 <code>likeCnt</code>를
+              <strong>useState</strong>를 사용해 구현하며, UI 테마나 조건부
+              스타일링(Tailwind)을 적용해 동적인 웹 페이지를 완성합니다.
+            </p>
+          </div>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react08_02.png"
+              alt="실습 : 좋아요 토글"
+              style="width: 50%"
+            />
+            <figcaption>useState 실습 : 좋아요 토글</figcaption>
+          </figure>
+
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">import</span> <span class="tx">React, { useState } </span><span class="tn">from</span> <span class="tx">"react";</span>
+<span class="tn">import</span> <span class="tx">{ ThumbsUp } </span><span class="tn">from</span> <span class="tx">"lucide-react";</span>
+
+<span class="tn">function</span> <span class="tx">ExampleLike() {</span>
+<span class="tn">  const</span> <span class="tx">[isLike, setIsLike] = useState(false);</span>
+<span class="tn">  const</span> <span class="tx">[likeCnt, setLikeCnt] = useState(10);</span>
+
+<span class="tn">  const</span> <span class="tx">nextLikeStatus = !isLike;</span>
+
+<span class="tn">  const</span> <span class="tx">handleLikeToggle = () => {</span>
+<span class="tx">    setIsLike(nextLikeStatus);</span>
+<span class="tx">    setLikeCnt(nextLikeStatus ? likeCnt + 1 : likeCnt - 1);</span>
+<span class="tx">    console.log("좋아요 토글");</span>
+<span class="tx">  };</span>
+
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;div className="flex flex-col items-center p-10"&gt;</span>
+<span class="tx">      &lt;div className={isLike ? "text-[#BB7070]" : "text-gray-500"}&gt;</span>
+<span class="tx">        &lt;ThumbsUp</span>
+<span class="tn">          size</span><span class="tx">={100}</span>
+<span class="tn">          onClick</span><span class="tx">={handleLikeToggle}</span>
+<span class="tn">          color</span><span class="tx">={isLike ? "#a65f5f" : "gray"}</span>
+<span class="tn">          fill</span><span class="tx">={isLike ? "#F27777" : "lightgray"}</span>
+<span class="tx">        /&gt;</span>
+<span class="tx">      &lt;/div&gt;</span>
+<span class="tx">      &lt;div className={`text-[64px] ${isLike ? "text-[#F27777]" : "text-gray-500"}`}&gt;</span>
+<span class="tx">        {likeCnt}</span>
+<span class="tx">      &lt;/div&gt;</span>
+<span class="tx">    &lt;/div&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span>
+
+<span class="tn">export default</span> <span class="tx">ExampleLike;</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="react_26_react_07.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">React 07 — 컴포넌트와 Props의 이해</p>
+        <p class="post-nav-meta">
+          <span class="tag">React 26</span>
+          <span class="date">· 2026.04.13</span>
+        </p>
+      </a>
+      <a class="post-nav-card next" href="#">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">준비 중입니다</p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 블로그 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
