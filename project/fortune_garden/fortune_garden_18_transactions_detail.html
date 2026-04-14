@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 — Fortune Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Update</span>
+          <span class="badge badge-status">진행 완료</span>
+        </div>
+        <h1 class="post-title">개발 작업 문서</h1>
+        <p class="post-sub">
+          거래 상세 관리 및 수동 입력 기능 고도화와 현지화 적용
+        </p>
+        <p class="post-desc">
+          SCR-004, SCR-005 화면의 UI/UX를 개선하고, 데이터 도메인 확장 및 다국어
+          지원(Localization)을 위한 기반 설정을 완료하였습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">주요 기술</div>
+            <div class="stat-val">Riverpod · Clean Architecture</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val">2026-04-14</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val">2026-04-14</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#scr-004"
+                ><span class="toc-num">01</span>SCR-004 거래 상세/수정</a
+              >
+            </li>
+            <li>
+              <a href="#scr-005"
+                ><span class="toc-num">02</span>SCR-005 수동 거래 입력</a
+              >
+            </li>
+            <li>
+              <a href="#domain-logic"
+                ><span class="toc-num">03</span>도메인 및 로직 변경</a
+              >
+            </li>
+            <li>
+              <a href="#localization"
+                ><span class="toc-num">04</span>Localization 및 환경 설정</a
+              >
+            </li>
+            <li>
+              <a href="#file-list"
+                ><span class="toc-num">05</span>수정된 파일 목록</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="scr-004">
+          <div class="sec-eyebrow">Screen Update</div>
+          <h2 class="sec-heading">SCR-004 · 거래 상세/수정</h2>
+
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_transactions_detail_03.png"
+              alt="Fortune Garden — 거래 내역 상세 페이지"
+              width="70%"
+            />
+            <figcaption>Fortune Garden — 거래 내역 상세 페이지</figcaption>
+          </figure>
+
+          <p>
+            수동 거래와 CSV 거래의 수정 범위를 현실화하고, 카테고리 선택 UX를
+            계층 구조로 개선하였습니다.
+          </p>
+
+          <h3>기능 변경 내역</h3>
+          <section class="section visible" id="s5">
+            <div class="sec-eyebrow">Part D — Session Worklog</div>
+            <h2 class="sec-heading">세션 작업 내역 요약</h2>
+            <table class="gen-table">
+              <thead>
+                <tr>
+                  <th>작업 구분</th>
+                  <th>대상 파일</th>
+                  <th>변경 내용</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>UI 리뉴얼</strong></td>
+                  <td><code>transaction_detail_screen.dart</code></td>
+                  <td>
+                    SCR-004 거래 상세 화면 전체 재작성 및 계층형 카테고리 UI
+                    적용
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>기능 고도화</strong></td>
+                  <td><code>transaction_new_screen.dart</code></td>
+                  <td>
+                    SCR-005 수동 입력 화면 유효성 검사 강화 및 헤더 저장 로직
+                    구현
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>도메인 확장</strong></td>
+                  <td><code>transaction_use_case.dart</code></td>
+                  <td>
+                    CSV 거래처명 수정을 위한 updateMeta 메서드 파라미터 추가
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>라우팅 수정</strong></td>
+                  <td><code>app_router.dart</code></td>
+                  <td>
+                    정적/동적 경로 선언 순서 조정을 통한 경로 탐색 버그 해결
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>버그 수정</strong></td>
+                  <td><code>transactions_screen.dart</code></td>
+                  <td>화면 전환 시 context.push 경로 문자열 보간 오류 수정</td>
+                </tr>
+                <tr>
+                  <td><strong>현지화 적용</strong></td>
+                  <td><code>app.dart</code></td>
+                  <td>
+                    flutter_localizations 설정 및 한국어(ko_KR) 로케일 전역 적용
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <h3>주요 구현 상세: _CategorySelector</h3>
+          <div class="code-block">
+            <pre><span class="c-comment">// parentId 기준 트리 빌드 로직</span>
+<span class="c-line">Map&lt;int?, List&lt;Category&gt;&gt; _buildCategoryTree() {</span>
+<span class="c-line">  final map = &lt;int?, List&lt;Category&gt;&gt;{};</span>
+<span class="c-line">  for (final c in _categories) {</span>
+<span class="c-line">    map.putIfAbsent(c.parentId, () => []).add(c);</span>
+<span class="c-line">  }</span>
+<span class="c-line">  return map;</span>
+<span class="c-line">}</span></pre>
+          </div>
+          <ul class="bullet-list">
+            <li>
+              <strong>최상위(Parent):</strong> 색상 도트(8px)와 기본 폰트(13px)
+              적용
+            </li>
+            <li>
+              <strong>하위(Child):</strong> 작은 점(3px)과 작은 폰트(12px) 적용
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="scr-005">
+          <div class="sec-eyebrow">Screen Update</div>
+          <h2 class="sec-heading">SCR-005 · 수동 거래 입력</h2>
+
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/fg_transactions_detail_02.png"
+              alt="Fortune Garden — 거래 내역 입력 페이지"
+              width="70%"
+            />
+            <figcaption>Fortune Garden — 거래 내역 상세 페이지</figcaption>
+          </figure>
+
+          <p>
+            입력 유효성 검사를 강화하고, 저장 버튼의 위치를 헤더로 이동하여 입력
+            접근성을 높였습니다.
+          </p>
+
+          <ul class="bullet-list">
+            <li>
+              <strong>유효성 검사:</strong> 거래처명 미입력 및 금액 0 이하 시
+              필드 하단 에러 메시지 즉시 표시.
+            </li>
+            <li>
+              <strong>계좌 예외 처리:</strong> 등록된 계좌가 없을 경우 드롭다운
+              대신 안내 문구("계좌 관리에서 먼저 추가해 주세요")를 출력합니다.
+            </li>
+            <li>
+              <strong>디자인 통일:</strong> SCR-004와 동일하게
+              <code>_SectionCard</code> 및 <code>_FieldLabel</code> 패턴을
+              적용하여 시각적 일관성을 확보했습니다.
+            </li>
+            <li>
+              <strong>Material3 대응:</strong>
+              <code>surfaceVariant</code>(deprecated)를
+              <code>surfaceContainerHighest</code>로 교체하였습니다.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="domain-logic">
+          <div class="sec-eyebrow">Logic & Routing</div>
+          <h2 class="sec-heading">도메인 및 로직 변경 사항</h2>
+
+          <h3>transaction_use_case.dart</h3>
+          <p>
+            CSV 거래에서도 거래처명(Merchant)을 수정할 수 있도록
+            <code>updateMeta</code> 파라미터를 확장하였습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 변경 후 인터페이스</span>
+<span class="c-line">Future&lt;void&gt; updateMeta({</span>
+<span class="c-line">  required int id,</span>
+<span class="c-line">  String? merchant,   <span class="c-comment">// 추가됨</span></span>
+<span class="c-line">  int? categoryId,</span>
+<span class="c-line">  String? memo,</span>
+<span class="c-line">})</span></pre>
+          </div>
+
+          <h3>app_router.dart</h3>
+          <p>
+            정적 경로(new)가 동적 경로(:id)보다 먼저 평가되도록 선언 순서를
+            수정하여 라우팅 버그를 해결하였습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 정상적인 라우트 배치</span>
+<span class="c-line">routes: [</span>
+<span class="c-line">  GoRoute(path: 'new', ...),   <span class="c-comment">// 1순위: 정적 경로</span></span>
+<span class="c-line">  GoRoute(path: ':id', ...),   <span class="c-comment">// 2순위: 동적 파라미터</span></span>
+<span class="c-line">]</span></pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="localization">
+          <div class="sec-eyebrow">Environment</div>
+          <h2 class="sec-heading">Localization 및 환경 설정</h2>
+          <p>사용자 편의를 위해 앱 전반에 한국어 로케일을 적용하였습니다.</p>
+          <ul class="bullet-list">
+            <li>
+              <strong>Locale 설정:</strong> <code>Locale('ko', 'KR')</code>를
+              기본 지원하며, DatePicker 등에 한국어 요일/달력이 표시됩니다.
+            </li>
+            <li>
+              <strong>App.dart 수정:</strong> 로딩, PIN 잠금, 메인 앱 세 곳의
+              <code>MaterialApp</code>에 <code>localizationsDelegates</code>를
+              동일하게 적용했습니다.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="file-list">
+          <div class="sec-eyebrow">Modified Files</div>
+          <h2 class="sec-heading">수정된 파일 목록</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파일 경로</th>
+                <th>작업 구분</th>
+                <th>변경 유형 및 상세</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <code
+                    >presentation/screens/transactions/transaction_detail_screen.dart</code
+                  >
+                </td>
+                <td><strong>Refactoring</strong></td>
+                <td>화면 전체 재작성 및 수동/CSV 수정 로직 분리</td>
+              </tr>
+              <tr>
+                <td>
+                  <code
+                    >presentation/screens/transactions/transaction_new_screen.dart</code
+                  >
+                </td>
+                <td><strong>Refactoring</strong></td>
+                <td>화면 전체 재작성 및 입력 유효성 검사 추가</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>application/transaction/transaction_use_case.dart</code>
+                </td>
+                <td><strong>Logic</strong></td>
+                <td>updateMeta 파라미터 추가 (merchant 필드 지원)</td>
+              </tr>
+              <tr>
+                <td><code>presentation/router/app_router.dart</code></td>
+                <td><strong>Routing</strong></td>
+                <td>라우트 선언 순서 수정 (정적 경로 우선 순위 적용)</td>
+              </tr>
+              <tr>
+                <td>
+                  <code
+                    >presentation/screens/transactions/transactions_screen.dart</code
+                  >
+                </td>
+                <td><strong>Bug Fix</strong></td>
+                <td>context.push 경로 문자열 보간 버그 수정</td>
+              </tr>
+              <tr>
+                <td><code>app.dart</code></td>
+                <td><strong>Config</strong></td>
+                <td>Localization 설정 및 다국어 지원 델리게이트 추가</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- 이전/다음 -->
+    <div class="post-nav">
+      <a
+        class="post-nav-card prev"
+        href="fortune_garden_17_transactions_troubleshooting.html"
+      >
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">
+          Fortune Garden 17 — 거래 내역 관련 트러블슈팅
+        </p>
+
+        <p class="post-nav-meta">
+          <span class="tag">Fortune Garden</span>
+          <span class="tag">#Troubleshooting</span>
+          <span class="date">· 2026.04.13</span>
+        </p>
+      </a>
+
+      <a
+        class="post-nav-card next"
+        href="fortune_garden_18_transactions_detail.html"
+      >
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">Fortune Garden 18 — 거래 내역 상세 구현</p>
+
+        <p class="post-nav-meta">
+          <span class="tag">Fortune Garden</span>
+          <span class="tag">#Dev</span>
+          <span class="date">· 2026.04.14</span>
+        </p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
