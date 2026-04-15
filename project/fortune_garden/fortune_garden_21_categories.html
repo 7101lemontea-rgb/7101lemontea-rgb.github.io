@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 — Fortune Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Update</span>
+          <span class="badge badge-status">진행 완료</span>
+        </div>
+        <h1 class="post-title">개발 작업 문서</h1>
+        <p class="post-sub">SCR-009 카테고리 설정 화면 고도화 및 데이터 시딩</p>
+        <p class="post-desc">
+          디자인 시스템 v1.1을 적용하여 카테고리 관리 UX를 개선하고, 2인 가구
+          라이프스타일에 맞춘 기본 카테고리 4종을 추가했습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val" id="date-created">불러오는 중...</p>
+          </div>
+          <div>
+            <p class="stat-label">최종 수정일</p>
+            <p class="stat-val" id="date-updated">불러오는 중...</p>
+          </div>
+          <div>
+            <div class="stat-label">대상 파일</div>
+            <div class="stat-val">categories_screen.dart 외 1개 파일</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">01</span>작업 개요 및 점검</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">02</span>디자인 시스템 적용</a
+              >
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">03</span>기본 카테고리 추가</a
+              >
+            </li>
+            <li>
+              <a href="#section-4"
+                ><span class="toc-num">04</span>Provider 및 의존성</a
+              >
+            </li>
+            <li>
+              <a href="#section-5"
+                ><span class="toc-num">05</span>미해결 사항</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="section-1">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">01. 작업 개요 및 점검</h2>
+          <p>
+            Fortune Garden 하이브리드 디자인 가이드를 바탕으로 카테고리 및 자동
+            분류 규칙 관리 화면을 재설계했습니다.
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>상태</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>카테고리 CRUD & 규칙 관리</td>
+                <td>✅ 완료</td>
+                <td>Dismissible 스와이프 삭제 포함</td>
+              </tr>
+              <tr>
+                <td>헤더 배경색 & GrainOverlay</td>
+                <td>✅ 완료</td>
+                <td>디자인 시스템 v1.1 기준 적용</td>
+              </tr>
+              <tr>
+                <td>목록 섹션 분리</td>
+                <td>✅ 완료</td>
+                <td>기본 / 커스텀 섹션 구분</td>
+              </tr>
+              <tr>
+                <td>규칙 목록 스타일 변경</td>
+                <td>✅ 완료</td>
+                <td>ListTile → Card 기반 전환</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <div class="sec-eyebrow">Design System</div>
+          <h2 class="sec-heading">02. 디자인 시스템 적용 상세</h2>
+
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/categories_01.png"
+              alt="Fortune Garden — 카테고리 설정 화면"
+              width="90%"
+            />
+            <figcaption>Fortune Garden — 카테고리 설정 화면</figcaption>
+          </figure>
+
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/categories_03.png"
+              alt="Fortune Garden — 카테고리 추가 화면"
+              width="90%"
+            />
+            <figcaption>Fortune Garden — 카테고리 추가 화면</figcaption>
+          </figure>
+
+          <h3 class="sub-heading">2.1. SliverAppBar 및 TabBar 구성</h3>
+          <p>
+            헤더 배경색을 로컬 상수로 정의하고, TabBar를 AppBar 하단에 배치하여
+            스크롤 시에도 접근성을 유지하도록 했습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 헤더 배경색 정의</span>
+<span class="c-line">const _headerBgLight = Color(0xFF2D4A22);</span>
+<span class="c-line">const _headerBgDark  = Color(0xFF051A0F);</span>
+
+<span class="c-comment">// TabBar 스타일 적용</span>
+<span class="c-line">TabBar(</span>
+<span class="c-line">  labelColor: Colors.white,</span>
+<span class="c-line">  indicatorColor: Colors.white,</span>
+<span class="c-line">  ...</span>
+<span class="c-line">)</span></pre>
+          </div>
+
+          <h3 class="sub-heading">2.2. 섹션 및 바텀시트 개선</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>섹션 분리:</strong> <code>isCustom</code> 필드를 기준으로
+              기본/커스텀 그룹핑 후 <code>_SectionHeader</code> 적용.
+            </li>
+            <li>
+              <strong>바텀시트:</strong> 상단에 핸들 바(Handle Bar)를 추가하고
+              <code>borderRadius</code>를 20으로 상향 조정.
+            </li>
+            <li>
+              <strong>헬퍼 함수:</strong> 중복되던 Hex ↔ Color 변환 로직을 전역
+              함수 <code>_hexToColor</code>, <code>_colorToHex</code>로 통합.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <div class="sec-eyebrow">Database</div>
+          <h2 class="sec-heading">03. 기본 카테고리 추가 및 반영</h2>
+
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/categories_04.png"
+              alt="Fortune Garden — 카테고리 항목 추가"
+              width="100%"
+            />
+            <figcaption>Fortune Garden — 카테고리 항목 추가</figcaption>
+          </figure>
+
+          <p>
+            2인 가구의 지출 비중이 높은 항목을 세분화하여 데이터 분석의 정밀도를
+            높였습니다.
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>이름</th>
+                <th>색상</th>
+                <th>추가 사유</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>외식</td>
+                <td>#FF8C69</td>
+                <td>집밥(식비)과 별개로 외식 비용 집계</td>
+              </tr>
+              <tr>
+                <td>카페/간식</td>
+                <td>#C8A882</td>
+                <td>식비에 포함되던 기호식품 지출 분리</td>
+              </tr>
+              <tr>
+                <td>주거</td>
+                <td>#7EB5A6</td>
+                <td>공과금과 구분되는 월세 및 관리비 항목</td>
+              </tr>
+              <tr>
+                <td>잡화</td>
+                <td>#B5A8D5</td>
+                <td>마트 및 생활용품 구매 항목 분류</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">데이터 반영 방식 (beforeOpen)</h3>
+          <p>
+            기존 설치 기기에서도 데이터가 반영될 수 있도록
+            <code>beforeOpen</code> 콜백 내에서 <code>_seedCategories()</code>를
+            호출하도록 수정했습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-line">beforeOpen: (details) async {</span>
+<span class="c-line">  await customStatement('PRAGMA foreign_keys=ON');</span>
+<span class="c-line">  await _seedCategories(); // insertAllOnConflictUpdate로 중복 방지</span>
+<span class="c-line">},</span></pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <div class="sec-eyebrow">Architecture</div>
+          <h2 class="sec-heading">04. Provider 의존 관계</h2>
+          <p>
+            상태 변화에 따른 데이터 무결성 유지를 위해
+            <code>ref.invalidate</code>를 적절히 배치했습니다.
+          </p>
+          <ul class="bullet-list">
+            <li>
+              <strong>CategoriesScreen:</strong>
+              <code>allCategoriesProvider</code>,
+              <code>categoryRulesProvider</code> 구독.
+            </li>
+            <li>
+              <strong>상태 갱신:</strong> 카테고리/규칙 저장 및 삭제 시 관련
+              프로바이더를 무효화하여 즉각적인 UI 반영.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="section-5">
+          <div class="sec-eyebrow">Pending</div>
+          <h2 class="sec-heading">05. 미해결 및 추후 검토 사항</h2>
+          <ul class="bullet-list">
+            <li>
+              <strong>아이콘 선택 UI:</strong> 현재는 시딩된 고정값 사용 중.
+              사용자 커스텀 아이콘 선택 기능 필요.
+            </li>
+            <li>
+              <strong>규칙 정렬:</strong> 현재 숫자 직접 입력 방식인 우선순위
+              설정을 드래그 앤 드롭 정렬로 고도화 검토.
+            </li>
+          </ul>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a
+        class="post-nav-card prev"
+        href="fortune_garden_19_transactions_detail_troubleshooting.html"
+      >
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">
+          Fortune Garden 19 — 계좌 상세 관련 트러블슈팅
+        </p>
+        <p class="post-nav-meta">
+          <span class="tag">Fortune Garden</span>
+          <span class="tag">#Troubleshooting</span>
+          <span class="date">· 2026.04.14</span>
+        </p>
+      </a>
+
+      <a class="post-nav-card next" href="#">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">준비 중입니다</p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../index.html" class="footer-back">← 프로젝트 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
