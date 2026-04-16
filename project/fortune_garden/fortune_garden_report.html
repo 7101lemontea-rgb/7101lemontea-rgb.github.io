@@ -1,0 +1,1654 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fortune Garden — 프로젝트 보고서</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Pretendard:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ── CSS Variables ── */
+      :root {
+        --bg: #081c10;
+        --bg-2: #0d2617;
+        --bg-3: #122e1e;
+        --surface: #163522;
+        --surface-2: #1c4029;
+        --border: #2a5c38;
+        --border-2: #3a7a4a;
+        --accent: #025939;
+        --accent-2: #03784d;
+        --accent-lit: #04a862;
+        --accent-glow: #05d47a;
+        --text: #e4ede7;
+        --text-2: #a8c4b0;
+        --text-3: #6a9476;
+        --danger: #e05252;
+        --warn: #d4a426;
+        --font-disp: "Bebas Neue", sans-serif;
+        --font-serif: "DM Serif Display", serif;
+        --font-mono: "DM Mono", monospace;
+        --font-body: "Pretendard", sans-serif;
+        --radius: 8px;
+        --radius-lg: 14px;
+        --transition: 0.22s ease;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 15px;
+        line-height: 1.75;
+        overflow-x: hidden;
+      }
+
+      /* ── Scrollbar ── */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg-2);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--accent-2);
+        border-radius: 4px;
+      }
+
+      /* ── Selection ── */
+      ::selection {
+        background: var(--accent-lit);
+        color: var(--bg);
+      }
+
+      /* ══════════════════════════════════════════
+       NAV
+    ══════════════════════════════════════════ */
+      .site-nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 32px;
+        height: 54px;
+        background: rgba(8, 28, 16, 0.85);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-logo {
+        font-family: var(--font-disp);
+        font-size: 22px;
+        letter-spacing: 0.04em;
+        color: var(--accent-glow);
+        text-decoration: none;
+      }
+      .nav-logo span {
+        color: var(--text-3);
+        font-size: 14px;
+        font-family: var(--font-mono);
+        margin-left: 8px;
+      }
+      .nav-back {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-3);
+        text-decoration: none;
+        transition: color var(--transition);
+      }
+      .nav-back:hover {
+        color: var(--accent-glow);
+      }
+
+      /* ══════════════════════════════════════════
+       POST HEADER (HERO)
+    ══════════════════════════════════════════ */
+      .post-header {
+        position: relative;
+        overflow: hidden;
+        padding: 80px 32px 60px;
+        background: linear-gradient(160deg, var(--bg-3) 0%, var(--bg) 60%);
+        border-bottom: 1px solid var(--border);
+      }
+      /* Decorative grid lines */
+      .post-header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px);
+        background-size: 48px 48px;
+        opacity: 0.18;
+        pointer-events: none;
+      }
+      /* Glow blob */
+      .post-header::after {
+        content: "";
+        position: absolute;
+        top: -80px;
+        right: -80px;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(4, 168, 98, 0.18) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .post-header-inner {
+        position: relative;
+        z-index: 1;
+        max-width: 860px;
+        margin: 0 auto;
+      }
+      .badge-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+      }
+      .badge {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        padding: 3px 10px;
+        border-radius: 20px;
+        border: 1px solid var(--border-2);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .badge-type {
+        background: rgba(2, 89, 57, 0.4);
+        color: var(--accent-glow);
+        border-color: var(--accent-2);
+      }
+      .badge-ver {
+        background: rgba(212, 164, 38, 0.15);
+        color: var(--warn);
+        border-color: rgba(212, 164, 38, 0.4);
+      }
+      .badge-status {
+        background: rgba(5, 212, 122, 0.1);
+        color: var(--accent-glow);
+        border-color: rgba(5, 212, 122, 0.3);
+      }
+
+      .post-title {
+        font-family: var(--font-disp);
+        font-size: clamp(48px, 8vw, 82px);
+        line-height: 0.95;
+        letter-spacing: 0.02em;
+        color: var(--text);
+        margin-bottom: 20px;
+      }
+      .post-title .accent {
+        color: var(--accent-glow);
+      }
+
+      .post-desc {
+        font-size: 16px;
+        color: var(--text-2);
+        max-width: 640px;
+        line-height: 1.8;
+      }
+      .post-desc strong {
+        color: var(--accent-glow);
+        font-weight: 600;
+      }
+
+      .post-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        margin-top: 36px;
+        padding-top: 28px;
+        border-top: 1px solid var(--border);
+      }
+      .stat-item {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .stat-lbl {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-3);
+      }
+      .stat-val {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      /* ══════════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════════ */
+      .main-wrapper {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 0;
+        max-width: 1160px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* ── TOC Sidebar ── */
+      .toc-sidebar {
+        position: sticky;
+        top: 54px;
+        height: calc(100vh - 54px);
+        padding: 40px 20px 40px 0;
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+        align-self: start;
+      }
+      .toc-title {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--text-3);
+        margin-bottom: 16px;
+        padding-left: 14px;
+      }
+      .toc-list {
+        list-style: none;
+      }
+      .toc-list li a {
+        display: block;
+        padding: 6px 14px;
+        font-size: 12.5px;
+        color: var(--text-3);
+        text-decoration: none;
+        border-left: 2px solid transparent;
+        transition:
+          color var(--transition),
+          border-color var(--transition),
+          background var(--transition);
+        border-radius: 0 4px 4px 0;
+        line-height: 1.4;
+      }
+      .toc-list li a:hover {
+        color: var(--text-2);
+        background: rgba(5, 212, 122, 0.05);
+      }
+      .toc-list li a.active {
+        color: var(--accent-glow);
+        border-left-color: var(--accent-glow);
+        background: rgba(5, 212, 122, 0.08);
+        font-weight: 500;
+      }
+
+      /* ── Post Body ── */
+      .post-body {
+        padding: 48px 0 80px 52px;
+        min-width: 0;
+      }
+
+      /* ── Sections ── */
+      .section {
+        margin-bottom: 72px;
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.55s ease,
+          transform 0.55s ease;
+      }
+      .section.visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* ── Section Header Pattern ── */
+      .sec-eyebrow {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--accent-lit);
+        margin-bottom: 8px;
+      }
+      .sec-heading {
+        font-family: var(--font-disp);
+        font-size: clamp(28px, 4vw, 40px);
+        letter-spacing: 0.03em;
+        color: var(--text);
+        margin-bottom: 28px;
+        line-height: 1.05;
+      }
+      .sub-heading {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 20px;
+        color: var(--text-2);
+        margin: 32px 0 14px;
+      }
+
+      /* ── Divider ── */
+      .sec-divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 0 0 40px;
+      }
+
+      /* ════ COMPONENTS ════ */
+
+      /* KPI Row */
+      .kpi-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        margin-bottom: 36px;
+      }
+      .kpi-cell {
+        background: var(--bg-2);
+        padding: 28px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .kpi-num {
+        font-family: var(--font-disp);
+        font-size: 44px;
+        color: var(--accent-glow);
+        line-height: 1;
+      }
+      .kpi-label {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-3);
+      }
+      .kpi-sub {
+        font-size: 13px;
+        color: var(--text-2);
+      }
+
+      /* Value Grid */
+      .value-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .value-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        transition:
+          border-color var(--transition),
+          background var(--transition);
+      }
+      .value-card:hover {
+        border-color: var(--accent-lit);
+        background: var(--surface-2);
+      }
+      .value-card-icon {
+        font-size: 28px;
+        margin-bottom: 12px;
+      }
+      .value-card-title {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+      .value-card-desc {
+        font-size: 13.5px;
+        color: var(--text-2);
+        line-height: 1.65;
+      }
+
+      /* Problem Grid */
+      .problem-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .prob-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+        transition:
+          border-color var(--transition),
+          background var(--transition);
+      }
+      .prob-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--accent-2);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+      }
+      .prob-card:hover::before {
+        transform: scaleX(1);
+      }
+      .prob-card:hover {
+        border-color: var(--accent-lit);
+        background: var(--surface-2);
+      }
+      .prob-card-num {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--accent-lit);
+        margin-bottom: 10px;
+        letter-spacing: 0.1em;
+      }
+      .prob-card-title {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+      .prob-card-desc {
+        font-size: 13.5px;
+        color: var(--text-2);
+        line-height: 1.65;
+      }
+
+      /* Feature List */
+      .feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-bottom: 32px;
+      }
+      .feat-row {
+        display: grid;
+        grid-template-columns: 48px 1fr auto;
+        align-items: start;
+        gap: 16px;
+        padding: 18px 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        transition:
+          border-color var(--transition),
+          background var(--transition);
+      }
+      .feat-row:hover {
+        border-color: var(--accent-lit);
+        background: var(--surface-2);
+      }
+      .feat-num {
+        font-family: var(--font-disp);
+        font-size: 26px;
+        color: var(--accent-2);
+        line-height: 1;
+      }
+      .feat-title {
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .feat-desc {
+        font-size: 13px;
+        color: var(--text-2);
+      }
+      .feat-tag {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        background: rgba(3, 120, 77, 0.25);
+        color: var(--accent-glow);
+        border: 1px solid rgba(4, 168, 98, 0.3);
+        white-space: nowrap;
+        align-self: start;
+        margin-top: 2px;
+      }
+
+      /* Gen Table */
+      .gen-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        margin-bottom: 32px;
+      }
+      .gen-table thead tr {
+        background: var(--surface-2);
+      }
+      .gen-table thead th {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-3);
+        padding: 12px 18px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      .gen-table tbody td {
+        padding: 13px 18px;
+        font-size: 14px;
+        color: var(--text-2);
+        border-bottom: 1px solid var(--border);
+      }
+      .gen-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .gen-table tbody tr:hover td {
+        background: rgba(5, 212, 122, 0.04);
+        color: var(--text);
+      }
+
+      /* Team Table */
+      .team-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        margin-bottom: 32px;
+      }
+      .team-table thead tr {
+        background: var(--surface-2);
+      }
+      .team-table thead th {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-3);
+        padding: 12px 18px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      .team-table tbody td {
+        padding: 16px 18px;
+        font-size: 14px;
+        color: var(--text-2);
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      .team-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .team-name {
+        font-weight: 600;
+        color: var(--text);
+        font-size: 15px;
+      }
+      .team-role-badge {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: rgba(2, 89, 57, 0.4);
+        color: var(--accent-glow);
+        border: 1px solid var(--accent-2);
+        margin-top: 4px;
+      }
+
+      /* Timeline */
+      .timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-bottom: 32px;
+      }
+      .tl-item {
+        display: grid;
+        grid-template-columns: 130px 1fr;
+        gap: 24px;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--border);
+        position: relative;
+      }
+      .tl-item:last-child {
+        border-bottom: none;
+      }
+      .tl-item::before {
+        content: "";
+        position: absolute;
+        left: 130px;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: var(--border);
+      }
+      .tl-date {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-3);
+        padding-right: 20px;
+        line-height: 1.5;
+      }
+      .tl-date strong {
+        display: block;
+        color: var(--accent-lit);
+        font-size: 13px;
+        margin-bottom: 2px;
+      }
+      .tl-content {
+        padding-left: 24px;
+      }
+      .tl-content h4 {
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      .tl-content p {
+        font-size: 13.5px;
+        color: var(--text-2);
+      }
+      .tl-phase {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        background: rgba(3, 120, 77, 0.2);
+        color: var(--accent-glow);
+        border: 1px solid rgba(4, 168, 98, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .tl-phase.crisis {
+        background: rgba(224, 82, 82, 0.15);
+        color: var(--danger);
+        border-color: rgba(224, 82, 82, 0.3);
+      }
+
+      /* Arch Table */
+      .arch-table {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-bottom: 32px;
+      }
+      .arch-row {
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      .arch-layer {
+        padding: 18px 20px;
+        background: var(--surface-2);
+        border-right: 1px solid var(--border);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--accent-lit);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .arch-desc {
+        padding: 18px 20px;
+        font-size: 14px;
+        color: var(--text-2);
+      }
+      .arch-desc strong {
+        color: var(--text);
+      }
+
+      /* Issue Grid */
+      .issue-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .issue-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        transition: border-color var(--transition);
+      }
+      .issue-card:hover {
+        border-color: var(--accent-lit);
+      }
+      .issue-card-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .issue-icon {
+        font-size: 22px;
+      }
+      .issue-title {
+        font-weight: 600;
+        color: var(--text);
+        font-size: 15px;
+      }
+      .issue-card p {
+        font-size: 13.5px;
+        color: var(--text-2);
+        line-height: 1.65;
+      }
+
+      /* Highlight Box */
+      .highlight-box {
+        border-left: 3px solid var(--accent-glow);
+        background: rgba(5, 212, 122, 0.06);
+        padding: 20px 24px;
+        border-radius: 0 var(--radius) var(--radius) 0;
+        margin-bottom: 24px;
+      }
+      .highlight-box p {
+        font-size: 15px;
+        color: var(--text-2);
+      }
+      .highlight-box strong {
+        color: var(--accent-glow);
+      }
+
+      /* Bullet List */
+      .bullet-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 24px;
+      }
+      .bullet-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+        color: var(--text-2);
+      }
+      .bullet-list li::before {
+        content: "—";
+        color: var(--accent-lit);
+        font-family: var(--font-mono);
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      /* Comment Card (Retrospective) */
+      .comment-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        margin-bottom: 16px;
+      }
+      .comment-row {
+        display: grid;
+        grid-template-columns: 90px 1fr auto;
+        gap: 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .comment-row:last-child {
+        border-bottom: none;
+      }
+      .retro-lbl {
+        padding: 16px 18px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        border-right: 1px solid var(--border);
+        background: var(--surface-2);
+      }
+      .lbl-role {
+        color: var(--text-3);
+      }
+      .lbl-prob {
+        color: var(--danger);
+        background: rgba(224, 82, 82, 0.08);
+      }
+      .lbl-act {
+        color: var(--warn);
+        background: rgba(212, 164, 38, 0.08);
+      }
+      .lbl-ins {
+        color: var(--accent-glow);
+        background: rgba(5, 212, 122, 0.06);
+      }
+      .retro-txt {
+        padding: 16px 20px;
+        font-size: 14px;
+        color: var(--text-2);
+        line-height: 1.7;
+      }
+      .retro-tag {
+        padding: 16px 18px;
+        display: flex;
+        align-items: flex-start;
+        padding-top: 18px;
+      }
+      .retro-tag span {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        background: rgba(2, 89, 57, 0.3);
+        color: var(--accent-glow);
+        border: 1px solid rgba(4, 168, 98, 0.3);
+        white-space: nowrap;
+      }
+
+      /* Score Display */
+      .score-display {
+        display: flex;
+        align-items: flex-end;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .score-num {
+        font-family: var(--font-disp);
+        font-size: 96px;
+        color: var(--accent-glow);
+        line-height: 0.9;
+      }
+      .score-denom {
+        font-family: var(--font-disp);
+        font-size: 40px;
+        color: var(--text-3);
+        line-height: 1;
+        padding-bottom: 8px;
+      }
+      .score-label {
+        font-size: 14px;
+        color: var(--text-2);
+        max-width: 200px;
+        padding-bottom: 10px;
+      }
+
+      /* Biz Grid */
+      .biz-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .biz-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        transition:
+          border-color var(--transition),
+          background var(--transition);
+      }
+      .biz-card:hover {
+        border-color: var(--accent-lit);
+        background: var(--surface-2);
+      }
+      .biz-icon {
+        font-size: 28px;
+        margin-bottom: 12px;
+      }
+      .biz-title {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+      .biz-desc {
+        font-size: 13px;
+        color: var(--text-2);
+        line-height: 1.65;
+      }
+
+      /* ══════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════ */
+      .site-footer {
+        border-top: 1px solid var(--border);
+        padding: 36px 32px;
+        text-align: center;
+        color: var(--text-3);
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+      .site-footer a {
+        color: var(--accent-lit);
+        text-decoration: none;
+      }
+      .site-footer a:hover {
+        color: var(--accent-glow);
+      }
+
+      /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+      @media (max-width: 860px) {
+        .main-wrapper {
+          grid-template-columns: 1fr;
+          padding: 0 16px;
+        }
+        .toc-sidebar {
+          display: none;
+        }
+        .post-body {
+          padding: 36px 0 60px;
+        }
+        .post-header {
+          padding: 48px 20px 40px;
+        }
+        .kpi-row {
+          grid-template-columns: 1fr;
+        }
+        .value-grid,
+        .problem-grid,
+        .issue-grid {
+          grid-template-columns: 1fr;
+        }
+        .biz-grid {
+          grid-template-columns: 1fr;
+        }
+        .tl-item {
+          grid-template-columns: 1fr;
+        }
+        .tl-item::before {
+          display: none;
+        }
+        .arch-row {
+          grid-template-columns: 1fr;
+        }
+        .arch-layer {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        .comment-row {
+          grid-template-columns: 80px 1fr;
+        }
+        .retro-tag {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══ NAV ══ -->
+    <nav class="site-nav">
+      <a class="nav-logo" href="#">
+        Fortune Garden
+        <span>/ devlog</span>
+      </a>
+      <a class="nav-back" href="#">← 목록으로</a>
+    </nav>
+
+    <!-- ══ POST HEADER ══ -->
+    <header class="post-header">
+      <div class="post-header-inner">
+        <div class="badge-row">
+          <span class="badge badge-type">Personal Project</span>
+          <span class="badge badge-ver">Flutter</span>
+          <span class="badge badge-status">✦ 개발 완료</span>
+        </div>
+        <h1 class="post-title">
+          FORTUNE<br /><span class="accent">GARDEN</span>
+        </h1>
+        <p class="post-desc">
+          엑셀로 관리하던 가계부를 앱으로 전환한 개인 프로젝트입니다.
+          <strong>2인 뷰 분리</strong>로 개인/통합 지출을 필터 없이 바로
+          확인하고, 월별 차트가 데이터와 연동되어 자동으로 그려집니다.<br />
+          Windows · Android 크로스플랫폼으로 월별 리포트와 카테고리 자동 분류를
+          지원합니다.
+        </p>
+        <div class="post-stats">
+          <div class="stat-item">
+            <span class="stat-lbl">작성일</span>
+            <span class="stat-val">2025. 04. 17</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-lbl">개발 기간</span>
+            <span class="stat-val">03/08 — 04/17</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-lbl">기간</span>
+            <span class="stat-val">약 6주</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-lbl">팀원</span>
+            <span class="stat-val">1인 (개인)</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-lbl">완료율</span>
+            <span class="stat-val">100%</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ══ MAIN ══ -->
+    <div class="main-wrapper">
+      <!-- TOC Sidebar -->
+      <aside class="toc-sidebar">
+        <p class="toc-title">Table of Contents</p>
+        <ul class="toc-list">
+          <li><a href="#overview">01 · 개요 및 핵심 가치</a></li>
+          <li><a href="#problem">02 · 문제 인식 및 배경</a></li>
+          <li><a href="#solution">03 · 해결책 소개</a></li>
+          <li><a href="#features">04 · 핵심 기능</a></li>
+          <li><a href="#team">05 · 팀 구성</a></li>
+          <li><a href="#schedule">06 · 개발 일정</a></li>
+          <li><a href="#stack">07 · 기술 스택</a></li>
+          <li><a href="#result">08 · 구현 결과</a></li>
+          <li><a href="#trouble">09 · 트러블슈팅</a></li>
+          <li><a href="#retro">10 · 회고</a></li>
+        </ul>
+      </aside>
+
+      <!-- Post Body -->
+      <article class="post-body">
+        <!-- ① 개요 및 핵심 가치 -->
+        <section class="section" id="overview">
+          <p class="sec-eyebrow">01 · Overview</p>
+          <h2 class="sec-heading">개요 및 핵심 가치</h2>
+          <hr class="sec-divider" />
+
+          <div class="kpi-row">
+            <div class="kpi-cell">
+              <span class="kpi-num">2</span>
+              <span class="kpi-label">인 뷰 분리</span>
+              <span class="kpi-sub">필터 없이 개인/통합 전환</span>
+            </div>
+            <div class="kpi-cell">
+              <span class="kpi-num">4+</span>
+              <span class="kpi-label">핵심 기능</span>
+              <span class="kpi-sub">차트·리포트·자동분류·CSV</span>
+            </div>
+            <div class="kpi-cell">
+              <span class="kpi-num">2</span>
+              <span class="kpi-label">플랫폼</span>
+              <span class="kpi-sub">Windows &amp; Android</span>
+            </div>
+          </div>
+
+          <p class="sub-heading">2인 가구 전용 가계부</p>
+          <div class="value-grid">
+            <div class="value-card">
+              <div class="value-card-icon">👤</div>
+              <div class="value-card-title">개인 뷰 & 통합 뷰</div>
+              <div class="value-card-desc">
+                두 사람의 지출을 각자 또는 합산해서 탭 하나로 확인합니다. 필터를
+                찾아다닐 필요 없이 즉시 전환됩니다.
+              </div>
+            </div>
+            <div class="value-card">
+              <div class="value-card-icon">📊</div>
+              <div class="value-card-title">월별 차트 자동 생성</div>
+              <div class="value-card-desc">
+                입력된 데이터와 실시간 연동되어 월별 지출 현황을 차트로 자동
+                시각화합니다.
+              </div>
+            </div>
+            <div class="value-card">
+              <div class="value-card-icon">🏷️</div>
+              <div class="value-card-title">카테고리 자동 분류</div>
+              <div class="value-card-desc">
+                CSV 파일 가져오기 시 기관별 파싱 프로파일을 적용해 카테고리를
+                자동으로 분류합니다.
+              </div>
+            </div>
+            <div class="value-card">
+              <div class="value-card-icon">📑</div>
+              <div class="value-card-title">월별 리포트</div>
+              <div class="value-card-desc">
+                한 달치 지출 요약 리포트를 생성해 소비 패턴을 한눈에 파악할 수
+                있습니다.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ② 문제 인식 및 배경 -->
+        <section class="section" id="problem">
+          <p class="sec-eyebrow">02 · Problem</p>
+          <h2 class="sec-heading">문제 인식 및 배경</h2>
+          <hr class="sec-divider" />
+
+          <div class="highlight-box">
+            <p>
+              2인 가구의 가계부는
+              <strong>개인 지출과 공동 지출을 동시에 추적</strong>해야 합니다.
+              엑셀은 이 구조에 맞게 설계되지 않아 관리가 점점 번거로워졌습니다.
+            </p>
+          </div>
+
+          <div class="problem-grid">
+            <div class="prob-card">
+              <div class="prob-card-num">PROB.01</div>
+              <div class="prob-card-title">낮은 접근성</div>
+              <div class="prob-card-desc">
+                엑셀 파일을 열고 수식을 유지하며 입력하는 과정이 번거롭고,
+                모바일에서는 사실상 사용 불가능했습니다.
+              </div>
+            </div>
+            <div class="prob-card">
+              <div class="prob-card-num">PROB.02</div>
+              <div class="prob-card-title">2인 구조 미지원</div>
+              <div class="prob-card-desc">
+                엑셀 시트는 개인 지출과 통합 지출을 한 화면에서 구분하기 어려워
+                매번 필터링이 필요했습니다.
+              </div>
+            </div>
+            <div class="prob-card">
+              <div class="prob-card-num">PROB.03</div>
+              <div class="prob-card-title">시각화 부재</div>
+              <div class="prob-card-desc">
+                수동으로 차트를 업데이트해야 했고, 셀 데이터가 바뀌면 차트도
+                깨지는 경우가 잦았습니다.
+              </div>
+            </div>
+            <div class="prob-card">
+              <div class="prob-card-num">PROB.04</div>
+              <div class="prob-card-title">디자인 불만족</div>
+              <div class="prob-card-desc">
+                기능에 집중하다 보니 UI가 조잡해지고, 데이터를 보는 경험 자체가
+                즐겁지 않았습니다.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ③ 해결책 소개 -->
+        <section class="section" id="solution">
+          <p class="sec-eyebrow">03 · Solution</p>
+          <h2 class="sec-heading">해결책 소개</h2>
+          <hr class="sec-divider" />
+
+          <div class="highlight-box">
+            <p>
+              기존 앱을 찾는 대신 <strong>직접 가계부 앱을 개발</strong>하는
+              것을 선택했습니다. 우리에게 딱 맞는 2인 뷰 구조와 자동화 기능을
+              온전히 구현하기 위해서입니다.
+            </p>
+          </div>
+
+          <p class="sub-heading">핵심 전략</p>
+          <ul class="bullet-list">
+            <li>
+              Flutter 단일 코드베이스로 Windows와 Android 동시 지원 — 어디서든
+              같은 UX
+            </li>
+            <li>
+              2인 뷰 분리를 앱 최상위 구조로 설계 — 화면 전환 없이 탭으로 전환
+            </li>
+            <li>Drift ORM + SQLite로 로컬 DB 운용 — 인터넷 없이도 완전 동작</li>
+            <li>
+              은행 앱 CSV 가져오기로 수동 입력 최소화 — 기관별 파싱 프로파일
+              적용
+            </li>
+            <li>
+              Riverpod으로 상태 관리 — 차트와 리스트가 동일 데이터 소스에서 자동
+              갱신
+            </li>
+          </ul>
+        </section>
+
+        <!-- ④ 핵심 기능 -->
+        <section class="section" id="features">
+          <p class="sec-eyebrow">04 · Features</p>
+          <h2 class="sec-heading">핵심 기능</h2>
+          <hr class="sec-divider" />
+
+          <div class="feature-list">
+            <div class="feat-row">
+              <div class="feat-num">01</div>
+              <div>
+                <div class="feat-title">2인 뷰 분리</div>
+                <div class="feat-desc">
+                  개인 뷰와 통합 뷰를 탭으로 즉시 전환. 각자의 지출 또는 합산
+                  지출을 필터 없이 확인합니다.
+                </div>
+              </div>
+              <div class="feat-tag">Core</div>
+            </div>
+            <div class="feat-row">
+              <div class="feat-num">02</div>
+              <div>
+                <div class="feat-title">월별 차트 자동 연동</div>
+                <div class="feat-desc">
+                  Riverpod 상태 관리를 통해 입력 데이터가 바뀌면 차트가 즉시
+                  갱신됩니다. 수동 업데이트 불필요.
+                </div>
+              </div>
+              <div class="feat-tag">UX</div>
+            </div>
+            <div class="feat-row">
+              <div class="feat-num">03</div>
+              <div>
+                <div class="feat-title">월별 리포트</div>
+                <div class="feat-desc">
+                  한 달 지출을 카테고리별로 요약한 리포트를 자동 생성합니다.
+                </div>
+              </div>
+              <div class="feat-tag">Report</div>
+            </div>
+            <div class="feat-row">
+              <div class="feat-num">04</div>
+              <div>
+                <div class="feat-title">카테고리 자동 분류 + CSV 가져오기</div>
+                <div class="feat-desc">
+                  은행 앱 CSV 내보내기 파일을 가져오면 기관별 파싱 프로파일과
+                  분류 규칙을 적용해 카테고리를 자동 지정합니다.
+                </div>
+              </div>
+              <div class="feat-tag">Auto</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ⑤ 팀 구성 -->
+        <section class="section" id="team">
+          <p class="sec-eyebrow">05 · Team</p>
+          <h2 class="sec-heading">팀 구성 및 역할</h2>
+          <hr class="sec-divider" />
+
+          <table class="team-table">
+            <thead>
+              <tr>
+                <th>이름</th>
+                <th>역할</th>
+                <th>담당 영역</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="team-name">정서영</div>
+                  <span class="team-role-badge">Full Stack</span>
+                </td>
+                <td>개인 개발자</td>
+                <td>
+                  기획 · UI 디자인 · Flutter 개발 · DB 설계 · 배포 전 과정
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box">
+            <p>
+              1인 개발 프로젝트로, 아이디어 발굴부터 기획, 디자인, 개발,
+              테스트까지 <strong>전 과정을 단독으로 수행</strong>했습니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ⑥ 개발 일정 -->
+        <section class="section" id="schedule">
+          <p class="sec-eyebrow">06 · Schedule</p>
+          <h2 class="sec-heading">개발 일정</h2>
+          <hr class="sec-divider" />
+
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-date"><strong>Week 1</strong>03/08 — 03/14</div>
+              <div class="tl-content">
+                <span class="tl-phase">Planning</span>
+                <h4>기획 및 환경 설정</h4>
+                <p>
+                  프로젝트 요구사항 정의, 화면 설계(와이어프레임), Flutter
+                  프로젝트 초기화, Drift + Riverpod + go_router 환경 구성
+                </p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-date"><strong>Week 2–3</strong>03/15 — 03/28</div>
+              <div class="tl-content">
+                <span class="tl-phase">Core Dev</span>
+                <h4>핵심 기능 개발</h4>
+                <p>
+                  2인 뷰 분리 구조 구현, SQLite DB 스키마 설계, 지출 CRUD 및
+                  카테고리 관리 기능 개발
+                </p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-date"><strong>Week 4</strong>03/29 — 04/04</div>
+              <div class="tl-content">
+                <span class="tl-phase">Feature</span>
+                <h4>차트 & 리포트</h4>
+                <p>
+                  월별 차트 데이터 연동, 리포트 화면 구현, CSV 파싱 프로파일 및
+                  카테고리 자동 분류 로직 개발
+                </p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-date"><strong>Week 5</strong>04/05 — 04/11</div>
+              <div class="tl-content">
+                <span class="tl-phase crisis">Trouble</span>
+                <h4>트러블슈팅 — CODEF API 대안 전환</h4>
+                <p>
+                  CODEF API 인증 요건 확인 후 CSV 가져오기 방식으로 전환. 기관별
+                  파싱 로직 구현 및 안정화
+                </p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-date"><strong>Week 6</strong>04/12 — 04/17</div>
+              <div class="tl-content">
+                <span class="tl-phase">Finish</span>
+                <h4>UI 정리 및 최종 검수</h4>
+                <p>
+                  크로스플랫폼(Windows/Android) 빌드 확인, UI 폴리싱, 최종 QA 및
+                  개발 완료
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ⑦ 기술 스택 -->
+        <section class="section" id="stack">
+          <p class="sec-eyebrow">07 · Stack</p>
+          <h2 class="sec-heading">기술 스택</h2>
+          <hr class="sec-divider" />
+
+          <div class="arch-table">
+            <div class="arch-row">
+              <div class="arch-layer">UI / App</div>
+              <div class="arch-desc">
+                <strong>Flutter</strong> — Windows &amp; Android 크로스플랫폼 UI
+                프레임워크
+              </div>
+            </div>
+            <div class="arch-row">
+              <div class="arch-layer">Language</div>
+              <div class="arch-desc">
+                <strong>Dart</strong> — Flutter의 기본 언어, 강타입·비동기 처리
+              </div>
+            </div>
+            <div class="arch-row">
+              <div class="arch-layer">State</div>
+              <div class="arch-desc">
+                <strong>Riverpod</strong> — 선언형 상태 관리. 차트·리스트 동일
+                Provider에서 자동 갱신
+              </div>
+            </div>
+            <div class="arch-row">
+              <div class="arch-layer">Routing</div>
+              <div class="arch-desc">
+                <strong>go_router</strong> — 선언적 라우팅. 딥링크 및 탭
+                네비게이션 관리
+              </div>
+            </div>
+            <div class="arch-row">
+              <div class="arch-layer">Database</div>
+              <div class="arch-desc">
+                <strong>SQLite</strong> + <strong>Drift ORM</strong> — 로컬 DB.
+                타입 안전 쿼리 및 마이그레이션 관리
+              </div>
+            </div>
+          </div>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>패키지</th>
+                <th>용도</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>flutter</td>
+                <td>크로스플랫폼 UI 프레임워크</td>
+                <td>Windows / Android</td>
+              </tr>
+              <tr>
+                <td>drift</td>
+                <td>SQLite ORM — 타입 안전 쿼리</td>
+                <td>로컬 DB</td>
+              </tr>
+              <tr>
+                <td>riverpod</td>
+                <td>선언형 상태 관리</td>
+                <td>차트 자동 갱신</td>
+              </tr>
+              <tr>
+                <td>go_router</td>
+                <td>선언적 라우팅</td>
+                <td>탭 네비게이션</td>
+              </tr>
+              <tr>
+                <td>sqlite3</td>
+                <td>로컬 영구 저장소</td>
+                <td>오프라인 동작</td>
+              </tr>
+              <tr>
+                <td>dart</td>
+                <td>프로그래밍 언어</td>
+                <td>강타입·비동기</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ⑧ 구현 결과 -->
+        <section class="section" id="result">
+          <p class="sec-eyebrow">08 · Result</p>
+          <h2 class="sec-heading">구현 결과</h2>
+          <hr class="sec-divider" />
+
+          <div class="kpi-row">
+            <div class="kpi-cell">
+              <span class="kpi-num">100%</span>
+              <span class="kpi-label">완료율</span>
+              <span class="kpi-sub">기획한 모든 기능 구현 완료</span>
+            </div>
+            <div class="kpi-cell">
+              <span class="kpi-num">2</span>
+              <span class="kpi-label">플랫폼 빌드</span>
+              <span class="kpi-sub">Windows &amp; Android 모두 동작</span>
+            </div>
+            <div class="kpi-cell">
+              <span class="kpi-num">6W</span>
+              <span class="kpi-label">개발 기간</span>
+              <span class="kpi-sub">1인 / 03.08 — 04.17</span>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              엑셀 가계부를 대체하는
+              <strong>2인 전용 크로스플랫폼 가계부 앱</strong>을 계획한 기간
+              내에 단독 개발 완료했습니다. 2인 뷰, 월별 차트, CSV 가져오기,
+              카테고리 자동 분류, 월별 리포트 등 핵심 기능이 모두 정상
+              동작합니다.
+            </p>
+          </div>
+
+          <ul class="bullet-list">
+            <li>2인 뷰 분리 — 탭 전환으로 개인/통합 지출 즉시 확인</li>
+            <li>월별 차트 — 데이터 입력 시 자동 갱신, 별도 업데이트 불필요</li>
+            <li>
+              CSV 가져오기 — 기관별 파싱 프로파일 적용, 카테고리 자동 분류
+            </li>
+            <li>월별 리포트 — 카테고리별 소비 요약 자동 생성</li>
+            <li>오프라인 완전 동작 — 로컬 SQLite 기반, 인터넷 불필요</li>
+          </ul>
+        </section>
+
+        <!-- ⑨ 트러블슈팅 -->
+        <section class="section" id="trouble">
+          <p class="sec-eyebrow">09 · Troubleshooting</p>
+          <h2 class="sec-heading">트러블슈팅</h2>
+          <hr class="sec-divider" />
+
+          <div class="issue-grid">
+            <div class="issue-card">
+              <div class="issue-card-head">
+                <span class="issue-icon">🔒</span>
+                <span class="issue-title">CODEF API 인증 요건 미충족</span>
+              </div>
+              <p>
+                실제 계좌 연동을 위해 CODEF API를 검토했으나, 개인
+                프로젝트에서는 사업자 등록 및 정식 허가가 필요해 적용이
+                불가능했습니다.
+              </p>
+            </div>
+            <div class="issue-card">
+              <div class="issue-card-head">
+                <span class="issue-icon">📂</span>
+                <span class="issue-title">CSV 파싱 — 기관별 포맷 상이</span>
+              </div>
+              <p>
+                은행마다 CSV 컬럼 구조와 날짜·금액 포맷이 달라, 단일 파서로
+                처리할 수 없었습니다. 기관별 파싱 프로파일을 별도 구현하여
+                해결했습니다.
+              </p>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <strong>교훈:</strong> 외부 API 도입 전 인증/허가 요건을 먼저
+              검토하는 것이 중요합니다. 제약이 발생했을 때
+              <strong>대안 설계로 빠르게 전환</strong>하는 능력이 프로젝트
+              완수의 핵심이었습니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ⑩ 회고 -->
+        <section class="section" id="retro">
+          <p class="sec-eyebrow">10 · Retrospective</p>
+          <h2 class="sec-heading">회고</h2>
+          <hr class="sec-divider" />
+
+          <div class="comment-card">
+            <div class="comment-row">
+              <div class="retro-lbl lbl-role">Problem</div>
+              <div class="retro-txt">
+                CODEF API로 실제 계좌를 연동하려 했으나, 사용하려면 사업자 등록
+                및 정식 허가가 필요해 개인 프로젝트에서는 적용이 불가능했습니다.
+              </div>
+              <div class="retro-tag"><span>API 제약</span></div>
+            </div>
+            <div class="comment-row">
+              <div class="retro-lbl lbl-act">Action</div>
+              <div class="retro-txt">
+                계좌 직접 연동 대신 은행 앱에서 내보낸 CSV 파일을 가져오는
+                방식으로 전환하고, 기관별 CSV 파싱 프로파일과 카테고리 자동 분류
+                규칙을 구현했습니다.
+              </div>
+              <div class="retro-tag"><span>대안 설계</span></div>
+            </div>
+            <div class="comment-row">
+              <div class="retro-lbl lbl-ins">Insight</div>
+              <div class="retro-txt">
+                외부 API 도입 전 인증/허가 요건을 먼저 검토해야 한다는 것을
+                깨달았습니다. 그리고 제약이 생겼을 때 대안 설계로 빠르게
+                전환하는 것도 중요하다는 것을 경험했습니다.
+              </div>
+              <div class="retro-tag"><span>리스크 관리</span></div>
+            </div>
+          </div>
+
+          <p class="sub-heading">결론</p>
+          <div class="highlight-box">
+            <p>
+              엑셀 가계부의 불편함을 직접 해결하기 위해 시작한 이 프로젝트는,
+              <strong>1인 풀스택 개발의 전 과정</strong>을 경험하게 해준 의미
+              있는 작업이었습니다. Flutter의 크로스플랫폼 강점을 체감했고,
+              Riverpod 기반의 반응형 상태 관리가 UI 자동 갱신에 얼마나
+              효과적인지도 직접 확인했습니다.
+            </p>
+          </div>
+          <ul class="bullet-list">
+            <li>Flutter + Drift + Riverpod 조합의 실전 경험 축적</li>
+            <li>외부 API 도입 전 사전 검토의 중요성 내재화</li>
+            <li>제약 상황에서의 빠른 대안 설계 역량 향상</li>
+            <li>1인 개발에서의 기획–개발–QA 사이클 전체 경험</li>
+          </ul>
+        </section>
+      </article>
+    </div>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="site-footer">
+      <p>Fortune Garden · 개인 프로젝트 보고서 · 정서영</p>
+      <p style="margin-top: 6px; color: var(--text-3)">03/08 — 04/17, 2025</p>
+    </footer>
+
+    <!-- ══ JS ══ -->
+    <script>
+      /* TOC Active via IntersectionObserver */
+      const sections = document.querySelectorAll(".section[id]");
+      const tocLinks = document.querySelectorAll(".toc-list li a");
+
+      const tocObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              tocLinks.forEach((a) => a.classList.remove("active"));
+              const active = document.querySelector(
+                `.toc-list li a[href="#${entry.target.id}"]`,
+              );
+              if (active) active.classList.add("active");
+            }
+          });
+        },
+        { rootMargin: "-20% 0px -70% 0px" },
+      );
+
+      sections.forEach((s) => tocObserver.observe(s));
+
+      /* Section Scroll Reveal */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.08 },
+      );
+
+      sections.forEach((s) => revealObserver.observe(s));
+    </script>
+  </body>
+</html>
