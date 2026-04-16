@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React 09 — Controlled Components</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">React 28</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-16</span> &nbsp;·&nbsp;
+            수정일
+            <span id="date-updated">2026-04-16</span>
+          </span>
+        </div>
+        <h1 class="post-title">React 09 — 제어 컴포넌트</h1>
+        <p class="post-subtitle">
+          폼 입력값을 React의 State로 관리하여 데이터의 무결성을 유지하는 방법을
+          학습합니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>제어 컴포넌트의 이해</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>e.target 속성</a
+              >
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>입력값 State 관리</a
+              >
+            </li>
+            <li>
+              <a href="#section-4"
+                ><span class="toc-num">4.</span>실습: 입력 폼 제어</a
+              >
+            </li>
+            <li>
+              <a href="#section-5"
+                ><span class="toc-num">5.</span>여러 개의 Input 관리</a
+              >
+            </li>
+
+            <li>
+              <a href="#section-6"
+                ><span class="toc-num">6.</span>실습: 사용자 프로필 카드</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">제어 컴포넌트 (Controlled Components)</h2>
+          <p>
+            제어 컴포넌트는 폼 입력값을 <strong>React state</strong>로 관리하는
+            컴포넌트입니다. 일반 HTML에서는 입력값을 DOM이 직접 관리하지만,
+            React에서는 state가 입력값을 관리하도록 만들 수 있습니다.
+          </p>
+          <div class="highlight-box">
+            <p><strong>핵심 구조:</strong></p>
+            <p
+              style="
+                font-family: &quot;DM Mono&quot;, monospace;
+                font-size: 0.9rem;
+              "
+            >
+              User Input ➔ onChange(e) ➔ setState(e.target.value) ➔ State Update
+              ➔ Re-render ➔ Input Value Update
+            </p>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">e.target</h2>
+          <p>
+            <code>e.target</code>은 이벤트가 실제로 발생한
+            <strong>DOM 요소 자체</strong>를 가리키며, 이 요소에 달려 있는 HTML
+            속성들에 바로 접근할 수 있습니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tx">onChange={(e) => {</span>
+<span class="tx">  console.log(e.target);</span>
+<span class="cm">  // → &lt;input name="name" id="name" /&gt; (이 input 요소 자체)</span>
+<span class="tx">}}</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">※ e.target에서 자주 꺼내 쓰는 속성</h3>
+          <table class="gen-table" style="width: 100%">
+            <thead>
+              <tr>
+                <th>속성</th>
+                <th>설명</th>
+                <th>예시 값</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>e.target.value</code></td>
+                <td>사용자가 입력한 값</td>
+                <td>"홍길동"</td>
+              </tr>
+              <tr>
+                <td><code>e.target.name</code></td>
+                <td>input의 name 속성</td>
+                <td>"name"</td>
+              </tr>
+              <tr>
+                <td><code>e.target.id</code></td>
+                <td>input의 id 속성</td>
+                <td>"name"</td>
+              </tr>
+              <tr>
+                <td><code>e.target.type</code></td>
+                <td>input의 type 속성</td>
+                <td>"text", "checkbox"</td>
+              </tr>
+              <tr>
+                <td><code>e.target.checked</code></td>
+                <td>체크박스의 체크 여부</td>
+                <td>true / false</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">입력값 State 관리</h2>
+          <p>
+            입력창의 <code>value</code> 속성에 state 값을 연결해야 React가 해당
+            요소를 완전히 제어할 수 있습니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">import</span> <span class="tx">React, { useState } </span><span class="tn">from</span> <span class="tx">"react";</span>
+
+<span class="tn">function</span> <span class="tx">InputControl() {</span>
+<span class="tn">  const</span> <span class="tx">[name, setName] = useState("");</span>
+
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;div&gt;</span>
+<span class="tx">      &lt;label htmlFor="name"&gt;이름:&lt;/label&gt;</span>
+<span class="tx">      &lt;input</span>
+<span class="tn">        name</span><span class="tx">="name"</span>
+<span class="tn">        id</span><span class="tx">="name"</span>
+<span class="tn">        value</span><span class="tx">={name}</span>
+<span class="tn">        onChange</span><span class="tx">={(e) => setName(e.target.value)}</span>
+<span class="tx">      /&gt;</span>
+<span class="tx">    &lt;/div&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <p class="sec-eyebrow">04</p>
+          <h2 class="sec-heading">실습: 입력 폼 제어</h2>
+          <p>
+            텍스트 미러링, 대문자 변환기, 글자수 출력, 그리고 초기화 기능을
+            포함한 예제입니다.
+          </p>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react_09_01.png"
+              alt="실습 : 입력 폼 제어"
+              style="width: 80%"
+            />
+            <figcaption>실습 : 입력 폼 제어</figcaption>
+          </figure>
+
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">function</span> <span class="tx">ExampleInput() {</span>
+<span class="tn">  const</span> <span class="tx">[userId, setUserId] = useState("");</span>
+
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;div className="m-16 g-8"&gt;</span>
+<span class="tx">      &lt;div&gt;</span>
+<span class="tx">        &lt;label htmlFor="userId" className="m-4 text-2xl"&gt;ID&lt;/label&gt;</span>
+<span class="tx">        &lt;input</span>
+<span class="tn">          type</span><span class="tx">="text"</span>
+<span class="tn">          value</span><span class="tx">={userId}</span>
+<span class="tn">          onChange</span><span class="tx">={(e) => setUserId(e.target.value.toUpperCase())}</span>
+<span class="tx">        /&gt;</span>
+<span class="tx">        &lt;button onClick</span><span class="tx">={() => setUserId("")}&gt;초기화&lt;/button&gt;</span>
+<span class="tx">      &lt;/div&gt;</span>
+<span class="tx">      &lt;h3&gt;{userId}&lt;/h3&gt;</span>
+<span class="tx">      &lt;h3&gt;글자 수 : {userId.length}&lt;/h3&gt;</span>
+<span class="tx">    &lt;/div&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">유효성 검사 실습</h3>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react_09_02.png"
+              alt="실습 : 유효성 검사"
+              style="width: 80%"
+            />
+            <figcaption>실습 : 유효성 검사</figcaption>
+          </figure>
+
+          <p>
+            비밀번호가 8자리 이상이며 영문, 숫자, 특수문자를 포함하는지
+            실시간으로 검사합니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">const</span> <span class="tx">validatePassword = (password) => {</span>
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    password.length >= 8 &&</span>
+<span class="tx">    /[a-zA-Z]/.test(password) &&</span>
+<span class="tx">    /[0-9]/.test(password) &&</span>
+<span class="tx">    /[!@#$%^&*()]/.test(password)</span>
+<span class="tx">  );</span>
+<span class="tx">};</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-5">
+          <p class="sec-eyebrow">05</p>
+          <h2 class="sec-heading">여러 개의 Input 다루기</h2>
+          <p>
+            input이 많아지면 개별 <code>useState</code> 대신
+            <strong>객체</strong>로 관리하는 것이 깔끔합니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">const</span> <span class="tx">[form, setForm] = useState({ name: "", email: "" });</span>
+
+<span class="tn">const</span> <span class="tx">handleChange = (e) => {</span>
+<span class="tn">  const</span> <span class="tx">{ name, value } = e.target;</span>
+<span class="tx">  setForm({</span>
+<span class="tx">    ...form, </span><span class="cm">// 기존 값 복사 (Spread Operator)</span>
+<span class="tx">    [name]: value </span><span class="cm">// computed property name 사용</span>
+<span class="tx">  });</span>
+<span class="tx">};</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-6">
+          <p class="sec-eyebrow">06</p>
+          <h2 class="sec-heading">실습: 사용자 프로필 카드</h2>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react_09_03.png"
+              alt="실습 : 사용자 프로필 카드"
+              style="width: 30%"
+            />
+            <figcaption>실습 : 사용자 프로필 카드</figcaption>
+          </figure>
+
+          <p>
+            이름, 전화번호, 이메일을 입력받아 실시간으로 프로필 카드를
+            업데이트합니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">import</span> <span class="tx">React, { useState } </span><span class="tn">from</span> <span class="tx">"react";</span>
+
+<span class="tn">function</span> <span class="tx">ProfileCard() {</span>
+<span class="cm">  // 1. 객체 형태의 state 초기화</span>
+<span class="tn">  const</span> <span class="tx">[userInfo, setUserInfo] = useState({</span>
+<span class="tx">    username: "",</span>
+<span class="tx">    phone: "",</span>
+<span class="tx">    email: "",</span>
+<span class="tx">  });</span>
+
+<span class="cm">  // 2. 통합 이벤트 핸들러</span>
+<span class="tn">  const</span> <span class="tx">handleChange = (e) => {</span>
+<span class="tn">    const</span> <span class="tx">{ name, value } = e.target;</span>
+<span class="cm">    // 기존 정보를 복사(...userInfo)하고 변경된 name 키값만 업데이트</span>
+<span class="tx">    setUserInfo({ ...userInfo, [name]: value });</span>
+<span class="tx">  };</span>
+
+<span class="cm">  // 3. 구조 분해 할당으로 값 추출</span>
+<span class="tn">  const</span> <span class="tx">{ username, phone, email } = userInfo;</span>
+
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;div className="max-w-md mx-auto mt-10 p-6"&gt;</span>
+<span class="tx">      &lt;h3 className="mb-5 text-gray-800 text-2xl font-semibold"&gt;</span>
+<span class="tx">        사용자 프로필</span>
+<span class="tx">      &lt;/h3&gt;</span>
+<span class="tx">      </span>
+<span class="tx">      &lt;div className="mb-4"&gt;</span>
+<span class="tx">        &lt;label className="block mb-1.5 font-semibold text-gray-600"&gt;이름&lt;/label&gt;</span>
+<span class="tx">        &lt;input</span>
+<span class="tn">          name</span><span class="tx">="username"</span>
+<span class="tn">          value</span><span class="tx">={username}</span>
+<span class="tn">          onChange</span><span class="tx">={handleChange}</span>
+<span class="tn">          className</span><span class="tx">="w-full border p-2.5 rounded focus:outline-none"</span>
+<span class="tx">        /&gt;</span>
+<span class="tx">      &lt;/div&gt;</span>
+
+<span class="tx">      &lt;div className="mb-4"&gt;</span>
+<span class="tx">        &lt;label className="block mb-1.5 font-semibold text-gray-600"&gt;전화번호&lt;/label&gt;</span>
+<span class="tx">        &lt;input</span>
+<span class="tn">          name</span><span class="tx">="phone"</span>
+<span class="tn">          type</span><span class="tx">="tel"</span>
+<span class="tn">          value</span><span class="tx">={phone}</span>
+<span class="tn">          onChange</span><span class="tx">={handleChange}</span>
+<span class="tn">          className</span><span class="tx">="w-full border p-2.5 rounded focus:outline-none"</span>
+<span class="tx">        /&gt;</span>
+<span class="tx">      &lt;/div&gt;</span>
+
+<span class="cm">      {/* 실시간 프로필 카드 출력 */}</span>
+<span class="tx">      &lt;div className="mt-8 shadow-lg bg-white rounded-xl overflow-hidden"&gt;</span>
+<span class="tx">        &lt;div className="h-20 bg-gradient-to-br from-purple-200 </span>
+<span class="tx">             via-rose-200 to-yellow-300" /&gt;</span>
+<span class="tx">        &lt;div className="p-5"&gt;</span>
+<span class="tx">          &lt;p className="text-2xl font-bold text-slate-800"&gt;</span>
+<span class="tx">            {username || "이름 없음"}</span>
+<span class="tx">          &lt;/p&gt;</span>
+<span class="tx">          &lt;p className="text-gray-500 text-sm"&gt;📞 {phone}&lt;/p&gt;</span>
+<span class="tx">          &lt;p className="text-gray-500 text-sm"&gt;✉️ {email}&lt;/p&gt;</span>
+<span class="tx">        &lt;/div&gt;</span>
+<span class="tx">      &lt;/div&gt;</span>
+<span class="tx">    &lt;/div&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="react_27_react_08.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">React 08 — React 동적 웹 페이지</p>
+        <p class="post-nav-meta">
+          <span class="tag">React 27</span>
+          <span class="date">· 2026.04.14</span>
+        </p>
+      </a>
+      <a class="post-nav-card next" href="#">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">준비 중입니다</p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 블로그 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
