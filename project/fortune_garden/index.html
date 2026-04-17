@@ -602,6 +602,97 @@
             "거래 내역과 관련된 다양한 문제를 해결하고, 사용자 경험을 향상시키기 위한 트러블슈팅 작업 기록입니다.",
           date: "2026.04.13",
         },
+
+        {
+          href: "fortune_garden_18_transactions_detail.html",
+          tag: "구현",
+          title: "18. 거래 상세 관리 및 수동 입력 기능 고도화",
+          excerpt:
+            "SCR-004, SCR-005 화면의 UI/UX를 개선하고, 데이터 도메인 확장 및 다국어 지원(Localization)을 위한 기반 설정을 완료하였습니다.",
+          date: "2026.04.14",
+        },
+
+        {
+          href: "fortune_garden_19_transactions_detail_troubleshooting.html",
+          tag: "트러블슈팅",
+          title: "19. 거래 상세 관련 트러블슈팅",
+          excerpt:
+            "SCR-004, SCR-005 개발 과정에서 발생한 테마 참조 오류, 라우팅 파싱 실패, 그리고 현지화 설정 누락 문제를 분석하고 해결책을 기록하였습니다.",
+          date: "2026.04.14",
+        },
+
+        {
+          href: "fortune_garden_20_accounts.html",
+          tag: "구현",
+          title: "20. 계좌 관리 및 CSV 가져오기 기능 고도화",
+          excerpt:
+            "계좌 도메인의 CRUD 안정성을 확보하고, CSV 대량 데이터 임포트 프로세스의 UI/UX를 디자인 가이드라인에 맞춰 전면 개편하였습니다.",
+          date: "2026.04.15",
+        },
+
+        {
+          href: "fortune_garden_21_categories.html",
+          tag: "구현",
+          title: "21. 카테고리 설정 화면 고도화 및 데이터 시딩",
+          excerpt:
+            "디자인 시스템 v1.1을 적용하여 카테고리 관리 UX를 개선하고, 2인 가구 라이프스타일에 맞춘 기본 카테고리 4종을 추가했습니다.",
+          date: "2026.04.15",
+        },
+
+        {
+          href: "fortune_garden_22_categories_troubleshooting.html",
+          tag: "트러블슈팅",
+          title: "22. 카테고리 설정 화면 관련 트러블슈팅",
+          excerpt:
+            "SCR-009 개발 과정에서 발생한 기존 기기 데이터 미반영 문제와 SQLite UNIQUE 제약 조건 위반 에러를 분석하고 최적의 데이터 삽입 전략을 적용했습니다.",
+          date: "2026.04.15",
+        },
+
+        {
+          href: "fortune_garden_23_profile.html",
+          tag: "구현",
+          title: "23. 프로필 관리 화면 구현 및 디자인 시스템 적용",
+          excerpt:
+            "디자인 시스템 v1.1을 적용하여 프로필 관리 UI를 개편하고, 활성 프로필 전환 기능 및 컬러 피커 연동을 통해 사용자 경험을 고도화했습니다.",
+          date: "2026.04.15",
+        },
+
+        {
+          href: "fortune_garden_24_setting.html",
+          tag: "구현",
+          title: "24. 앱 설정 화면 고도화 및 백업 시스템 설계",
+          excerpt:
+            "디자인 시스템 v1.1 기준의 UI 전면 재작성과 함께, SQLite DB 내보내기/가져오기를 통한 백업 기능을 실제 동작 가능한 로직으로 구현하였습니다.",
+          date: "2026.04.16",
+        },
+
+        {
+          href: "fortune_garden_25_setup.html",
+          tag: "구현",
+          title: "25. 초기 설정 화면 개발 및 온보딩 UX 고도화",
+          excerpt:
+            "디자인 시스템 v1.1을 적용하여 앱 최초 실행 시의 사용자 경험을 개선하고, 프로필 생성 및 초기 활성화 로직을 구현했습니다.",
+          date: "2026.04.16",
+        },
+
+        {
+          href: "fortune_garden_26_1.html",
+          tag: "구현",
+          title: "26. 데이터 무결성 확보 및 카테고리 아이콘 선택 UI 구현",
+          excerpt:
+            "ProfileUseCase의 데이터 덮어쓰기 버그를 수정하고, 앱 버전 정보를 동적 전환하도록 변경했으며, 그동안 미구현 상태였던 카테고리 아이콘 선택 UI를 디자인 시스템에 맞춰 전면 구현했습니다.",
+          date: "2026.04.17",
+        },
+
+        {
+          href: "fortune_garden_27_1.html",
+          tag: "구현",
+          title:
+            "27. 분류 규칙 UX 구현, 라우트 시스템 수정 및 보안 시스템 고도화",
+          excerpt:
+            "자동 분류 규칙의 우선순위 관리 방식을 드래그 정렬로 교체하고, 라우트 시스템의 유지보수성 향상 및 계좌번호 AES-256 암호화 저장을 구현했습니다.",
+          date: "2026.04.17",
+        },
       ];
 
       // ── 설정 ───────────────────────────────────────────────────
@@ -617,11 +708,25 @@
         return new Date(y, m - 1, d);
       }
 
-      // ── 필터링 + 최신순 정렬 ───────────────────────────────────
+      // ── 필터링 + 번호 및 날짜순 정렬 ───────────────────────────────────
       function getFiltered() {
         return POSTS.filter(
           (p) => currentFilter === "all" || p.tag === currentFilter,
-        ).sort((a, b) => parseDate(b.date) - parseDate(a.date));
+        ).sort((a, b) => {
+          const dateA = parseDate(a.date);
+          const dateB = parseDate(b.date);
+
+          // 1. 먼저 날짜를 비교합니다 (최신순)
+          if (dateB - dateA !== 0) {
+            return dateB - dateA;
+          }
+
+          // 2. 날짜가 같다면 제목 앞의 숫자(번호)를 추출하여 비교합니다 (큰 번호 우선)
+          const numA = parseInt(a.title.match(/^\d+/)?.[0] || 0);
+          const numB = parseInt(b.title.match(/^\d+/)?.[0] || 0);
+
+          return numB - numA;
+        });
       }
 
       // ── 포스트 항목 DOM 생성 ───────────────────────────────────

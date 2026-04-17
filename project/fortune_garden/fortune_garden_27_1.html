@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 일지 — Fortune Garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Log</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">개발 작업 일지</h1>
+        <p class="post-sub">
+          우선순위 드래그 UX 도입, 라우트 시스템 수정 및 보안 시스템 고도화
+        </p>
+        <p class="post-desc">
+          자동 분류 규칙의 우선순위 관리 방식을 드래그 정렬로 교체하고, 라우트
+          시스템의 유지보수성 향상 및 계좌번호 AES-256 암호화 저장을
+          구현했습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val" id="date-created">불러오는 중...</p>
+          </div>
+          <div>
+            <p class="stat-label">최종 수정일</p>
+            <p class="stat-val" id="date-updated">불러오는 중...</p>
+          </div>
+          <div>
+            <div class="stat-label">대상 파일</div>
+            <div class="stat-val">categories_screen.dart 외 10개 파일</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">01</span>규칙 우선순위 UI 개선</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">02</span>라우트 경로 상수화</a
+              >
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">03</span>계좌번호 암호화 구현</a
+              >
+            </li>
+            <li>
+              <a href="#section-4"
+                ><span class="toc-num">04</span>최종 작업 현황</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="section-1">
+          <div class="sec-eyebrow">UX Improvement</div>
+          <h2 class="sec-heading">01. 규칙 우선순위 UI 개선</h2>
+
+          <figure class="doc-figure">
+            <img
+              src="../../assets/fortune_garden/drag_01.png"
+              alt="Fortune Garden — 규칙 우선순위 화면"
+              width="100%"
+            />
+            <figcaption>Fortune Garden — 규칙 우선순위 화면</figcaption>
+          </figure>
+
+          <p>
+            자동 분류 규칙의 우선순위를 숫자로 직접 입력하던 기존 방식을
+            직관적인 <strong>드래그 앤 드롭(Drag & Drop)</strong> 정렬 방식으로
+            전면 교체했습니다.
+          </p>
+
+          <h3 class="sub-heading">주요 변경 사항</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>ReorderableListView 도입:</strong>
+              <code>categories_screen.dart</code>에 적용하여 드래그 중 즉각적인
+              UI 반응 처리.
+            </li>
+            <li>
+              <strong>Repository 로직 확장:</strong>
+              <code>reorderRules()</code> 메서드를 추가하여 변경된 순서에 따라
+              DB Priority 값을 트랜잭션으로 일괄 업데이트.
+            </li>
+            <li>
+              <strong>UI 컴포넌트 최적화:</strong> 드래그 핸들 아이콘 추가 및
+              순위 배지 표시, 중복 제스처 방지를 위해
+              <code>Dismissible</code> 제거.
+            </li>
+          </ul>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// ReorderableListView 드래그 핸들러 예시</span>
+<span class="c-line">onReorder: (oldIndex, newIndex) {</span>
+<span class="c-line">  setState(() {</span>
+<span class="c-line">    if (oldIndex < newIndex) newIndex -= 1;</span>
+<span class="c-line">    final item = _localRules.removeAt(oldIndex);</span>
+<span class="c-line">    _localRules.insert(newIndex, item);</span>
+<span class="c-line">  });</span>
+<span class="c-line">  _savePriorityToDb();</span>
+<span class="c-line">}</span></pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <div class="sec-eyebrow">Architecture</div>
+          <h2 class="sec-heading">
+            02. 라우트 경로 하드코딩 → 경로 상수 일괄 교체
+          </h2>
+          <p>
+            여러 화면에 분산되어 있던 경로 문자열을 중앙 관리 방식으로 변경하여
+            오타 위험을 방지하고 유지보수성을 높였습니다.
+          </p>
+
+          <h3 class="sub-heading">AppRoutes 클래스 정의</h3>
+          <p>
+            <code>lib/presentation/router/app_routes.dart</code>를 신규 생성하여
+            모든 절대 경로와 하위 세그먼트를 관리합니다.
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>대상 파일</th>
+                <th>교체 수</th>
+                <th>비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>app_router.dart</code></td>
+                <td>11곳</td>
+                <td>핵심 라우팅 로직 연동</td>
+              </tr>
+              <tr>
+                <td><code>dashboard_screen.dart</code></td>
+                <td>5곳</td>
+                <td>메인 대시보드 내 이동</td>
+              </tr>
+              <tr>
+                <td><code>transactions_screen.dart</code></td>
+                <td>6곳</td>
+                <td>거래 내역 진입 및 상세</td>
+              </tr>
+              <tr>
+                <td>기타 화면</td>
+                <td>8곳</td>
+                <td>설정, 계좌, 초기설정 등</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <div class="sec-eyebrow">Security</div>
+          <h2 class="sec-heading">03. 계좌번호 암호화 저장 구현</h2>
+          <p>
+            그동안 DEV placeholder로 관리되던 계좌번호를 실제
+            <strong>AES-256-CBC</strong> 알고리즘을 사용하여 암호화 저장하도록
+            구현했습니다.
+          </p>
+
+          <h3 class="sub-heading">보안 메커니즘</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>키 관리:</strong> 256비트 랜덤 키를 자동 생성하여
+              <code>flutter_secure_storage</code>에 안전하게 보관.
+            </li>
+            <li>
+              <strong>저장 형식:</strong>
+              <code>[IV(16B) | 암호문(nB)]</code> 형태의 Uint8List로 DB
+              BlobColumn에 저장.
+            </li>
+            <li>
+              <strong>사용자 인터페이스:</strong> 계좌 등록 폼에 입력 필드 및
+              마스킹 토글(visibility) 버튼 추가.
+            </li>
+          </ul>
+
+          <div class="code-block">
+            <pre><span class="c-comment">// AccountEncryptionService 암호화 로직</span>
+<span class="c-line">final encrypter = Encrypter(AES(key, mode: AESMode.cbc));</span>
+<span class="c-line">final encrypted = encrypter.encrypt(plainText, iv: iv);</span>
+<span class="c-line">return Uint8List.fromList(iv.bytes + encrypted.bytes);</span></pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <div class="sec-eyebrow">Final Status</div>
+          <h2 class="sec-heading">04. 미해결 항목 최종 현황</h2>
+          <p>
+            오늘 작업을 통해 주요 중간/낮음 우선순위 항목들이 대부분
+            해소되었습니다.
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th style="width: 100px">우선순위</th>
+                <th>항목</th>
+                <th style="width: 100px">상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span
+                    class="badge badge-type"
+                    style="background: #fcc419; color: white"
+                    >중간</span
+                  >
+                </td>
+                <td>규칙 우선순위 UI 개선</td>
+                <td><strong>✅ 완료</strong></td>
+              </tr>
+              <tr>
+                <td>
+                  <span
+                    class="badge badge-type"
+                    style="background: #51cf66; color: white"
+                    >낮음</span
+                  >
+                </td>
+                <td>계좌번호 암호화 실구현</td>
+                <td><strong>✅ 완료</strong></td>
+              </tr>
+              <tr>
+                <td>
+                  <span
+                    class="badge badge-type"
+                    style="background: #51cf66; color: white"
+                    >낮음</span
+                  >
+                </td>
+                <td>라우트 경로 하드코딩 제거</td>
+                <td><strong>✅ 완료</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="fortune_garden_26_1.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">Fortune Garden 26 — 미해결 항목 1 구현</p>
+        <p class="post-nav-meta">
+          <span class="tag">Fortune Garden</span>
+          <span class="tag">#Dev</span>
+          <span class="date">· 2026.04.17</span>
+        </p>
+      </a>
+
+      <a class="post-nav-card next" href="#">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">준비 중입니다</p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../index.html" class="footer-back">← 프로젝트 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
