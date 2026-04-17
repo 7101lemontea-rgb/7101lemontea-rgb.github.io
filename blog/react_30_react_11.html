@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React 11 — React Router & SPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Pretendard:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">React 30</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-18</span> &nbsp;·&nbsp;
+            수정일 <span id="date-updated">2026-04-18</span>
+          </span>
+        </div>
+        <h1 class="post-title">React 11 — React Router와 SPA</h1>
+        <p class="post-subtitle">
+          Single Page Application의 개념을 이해하고 React Router로 페이지 전환을
+          구현합니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>라우팅과 SPA</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>설치 및 기본 설정</a
+              >
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>핵심 컴포넌트 구조</a
+              >
+            </li>
+            <li>
+              <a href="#section-4"
+                ><span class="toc-num">4.</span>Link와 NavLink</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">라우팅(Routing)과 SPA</h2>
+          <p>
+            웹사이트에서 URL 주소에 따라 서로 다른 화면을 보여주는 것을
+            <strong>라우팅</strong>이라고 합니다.
+          </p>
+
+          <h3 class="sub-heading">SPA(Single Page Application)란?</h3>
+          <p>
+            전통적인 방식은 페이지 이동 시 서버에서 새 HTML을 받아 화면 전체를
+            새로고침(깜빡임)하지만, <strong>SPA</strong>는 처음 한 번만 HTML을
+            받고 이후에는 JavaScript가 필요한 부분만 교체하여 부드럽게
+            전환됩니다.
+          </p>
+
+          <div class="highlight-box">
+            <p><strong>React Router의 역할:</strong></p>
+            <p>
+              React는 자체 라우팅 기능이 없기에 외부 라이브러리인 React Router를
+              사용하여 URL 변경을 감지하고 매칭되는 컴포넌트를 렌더링합니다.
+            </p>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">설치 및 기본 설정</h2>
+          <p>프로젝트 터미널에서 아래 명령어를 통해 라이브러리를 설치합니다.</p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tx">npm install react-router-dom</span></pre>
+            </div>
+          </div>
+          <p style="margin-top: 1.5rem">
+            앱 최상위에서 <code>BrowserRouter</code>로 감싸 라우팅 기능을
+            활성화합니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="cm">// main.jsx</span>
+<span class="tn">import</span> <span class="tx">{ BrowserRouter } </span><span class="tn">from</span> <span class="tx">"react-router-dom";</span>
+
+
+<span class="tx">createRoot(document.getElementById("root")).render(</span>
+<span class="tx">  &lt;StrictMode&gt;</span>
+<span class="tx">    &lt;BrowserRouter&gt;</span>
+<span class="tx">      &lt;App /&gt;</span>
+<span class="tx">    &lt;/BrowserRouter&gt;</span>
+<span class="tx">  &lt;/StrictMode&gt;</span>
+<span class="tx">);</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">핵심 컴포넌트 구조</h2>
+          <p>
+            <code>Routes</code>는 경로들의 울타리 역할을 하며,
+            <code>Route</code>는 주소(path)와 컴포넌트(element)를 연결합니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="cm">// App.jsx</span>
+<span class="tn">function</span> <span class="tx">App() {</span>
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;div&gt;</span>
+<span class="tx">      &lt;h1&gt;My App&lt;/h1&gt;</span>
+<span class="tx">      &lt;Routes&gt;</span>
+<span class="tx">        &lt;Route </span><span class="tn">path</span><span class="tx">="/" </span><span class="tn">element</span><span class="tx">={&lt;Home /&gt;} /&gt;</span>
+<span class="tx">        &lt;Route </span><span class="tn">path</span><span class="tx">="/about" </span><span class="tn">element</span><span class="tx">={&lt;About /&gt;} /&gt;</span>
+<span class="cm">        {/* 404 페이지 처리 */}</span>
+<span class="tx">        &lt;Route </span><span class="tn">path</span><span class="tx">="/*" </span><span class="tn">element</span><span class="tx">={&lt;NotFound /&gt;} /&gt;</span>
+<span class="tx">      &lt;/Routes&gt;</span>
+<span class="tx">    &lt;/div&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <p class="sec-eyebrow">04</p>
+          <h2 class="sec-heading">Link와 NavLink</h2>
+          <p>
+            <code>&lt;a&gt;</code> 태그 대신 <code>Link</code>나
+            <code>NavLink</code>를 사용해야 새로고침 없이 페이지가 전환됩니다.
+          </p>
+
+          <table class="gen-table" style="width: 100%">
+            <thead>
+              <tr>
+                <th>컴포넌트</th>
+                <th>특징</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Link</code></td>
+                <td>새로고침 없이 URL만 변경</td>
+              </tr>
+              <tr>
+                <td><code>NavLink</code></td>
+                <td>
+                  현재 경로와 일치할 때 자동으로 <code>.active</code> 클래스
+                  추가
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="code-block" style="margin-top: 1.5rem">
+            <div class="code-body">
+              <pre><span class="tn">function</span> <span class="tx">Navigation() {</span>
+<span class="tn">  return</span> <span class="tx">(</span>
+<span class="tx">    &lt;nav&gt;</span>
+<span class="tx">      &lt;NavLink </span><span class="tn">to</span><span class="tx">="/"&gt;Home&lt;/NavLink&gt;</span>
+<span class="tx">      &lt;NavLink </span><span class="tn">to</span><span class="tx">="/about"&gt;About&lt;/NavLink&gt;</span>
+<span class="cm">      {/* 외부 링크는 기존 a 태그 사용 */}</span>
+<span class="tx">      &lt;a </span><span class="tn">href</span><span class="tx">="http://naver.com" </span><span class="tn">target</span><span class="tx">="_blank"&gt;Naver&lt;/a&gt;</span>
+<span class="tx">    &lt;/nav&gt;</span>
+<span class="tx">  );</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="react_29_react_10.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">React 10 — 배열 State와 할 일 목록</p>
+        <p class="post-nav-meta">
+          <span class="tag">React 29</span>
+          <span class="date">· 2026.04.17</span>
+        </p>
+      </a>
+      <a class="post-nav-card next" href="#">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">준비 중입니다</p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 블로그 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
