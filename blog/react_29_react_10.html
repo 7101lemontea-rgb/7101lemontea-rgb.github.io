@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React 10 — Array State & Todo List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Pretendard:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">React 29</span>
+          <span class="post-date">2026-04-17</span>
+        </div>
+        <h1 class="post-title">React 10 — 배열 State 활용하기</h1>
+        <p class="post-subtitle">
+          useState를 활용한 Todo List 구현 및 UX 개선 실습
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>Todo List 기본 기능</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>불변성과 배열 메서드</a
+              >
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>기능 추가 및 UX 개선</a
+              >
+            </li>
+            <li>
+              <a href="#section-4"
+                ><span class="toc-num">4.</span>핵심 포인트 요약</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">Todo List의 기본 기능 구현</h2>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react10_01.png"
+              alt="실습 : Todo List 기본 기능 구현"
+              style="width: 30%"
+            />
+            <figcaption>실습 : Todo List 기본 기능 구현</figcaption>
+          </figure>
+
+          <p>
+            단순히 데이터를 넣고 빼는 것을 넘어, 사용자 경험(UX)을 고려한
+            CRUD(생성, 조회, 수정, 삭제) 로직을 단계별로 구현해 보았습니다.
+          </p>
+
+          <div class="highlight-box">
+            <ul>
+              <li>
+                <strong>불변성 유지:</strong> <code>push</code> 대신 전개
+                연산자(<code>[...]</code>)를 사용하여 새로운 배열 생성
+              </li>
+              <li>
+                <strong>배열 메서드:</strong> 리스트 렌더링에는
+                <code>map()</code>, 삭제에는 <code>filter()</code> 활용
+              </li>
+            </ul>
+          </div>
+
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tn">function</span> <span class="tx">TodoList() {</span>
+<span class="tn">  const</span> <span class="tx">[todos, setTodos] = useState([</span>
+<span class="tx">    { id: 1, text: "첫 번째 할 일", completed: false }</span>
+<span class="tx">  ]);</span>
+<span class="tn">  const</span> <span class="tx">[todoInput, setTodoInput] = useState("");</span>
+
+<span class="cm">  // 추가: 기존 배열에 새 객체를 병합하여 업데이트</span>
+<span class="tn">  const</span> <span class="tx">handleInsertTodo = () => {</span>
+<span class="tn">    if</span> <span class="tx">(!todoInput.trim()) </span><span class="tn">return</span><span class="tx">;</span>
+<span class="tx">    setTodos([...todos, { </span>
+<span class="tx">      id: Date.now(), text: todoInput, completed: false </span>
+<span class="tx">    }]);</span>
+<span class="tx">    setTodoInput("");</span>
+<span class="tx">  };</span>
+
+<span class="cm">  // 삭제: filter를 사용하여 해당 ID 제외</span>
+<span class="tn">  const</span> <span class="tx">handleDeleteTodo = (id) => {</span>
+<span class="tx">    setTodos(todos.filter((todo) => todo.id !== id));</span>
+<span class="tx">  };</span>
+
+<span class="cm">  // 토글: map을 사용하여 특정 항목의 상태만 변경</span>
+<span class="tn">  const</span> <span class="tx">handleCompleteTogle = (id) => {</span>
+<span class="tx">    setTodos(todos.map((t) =></span>
+<span class="tx">      t.id === id ? { ...t, completed: !t.completed } : t</span>
+<span class="tx">    ));</span>
+<span class="tx">  };</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">기능 추가 및 UX 개선</h2>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react10_02.png"
+              alt="실습 : Todo List 기능 추가 및 UX 개선"
+              style="width: 30%"
+            />
+            <figcaption>실습 : Todo List 기능 추가 및 UX 개선</figcaption>
+          </figure>
+
+          <p>
+            실제 서비스처럼 정렬 기능, 삭제 확인 모달, 일괄 삭제 기능을 추가하여
+            완성도를 높였습니다.
+          </p>
+
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="cm">// 정렬 로직: 원본은 유지하고 정렬된 사본을 렌더링</span>
+<span class="tn">const</span> <span class="tx">getSortedTodos = () => {</span>
+<span class="tn">  const</span> <span class="tx">copy = [...todos];</span>
+<span class="tn">  if</span> <span class="tx">(sortType === "abc") </span>
+<span class="tn">    return</span> <span class="tx">copy.sort((a, b) => a.text.localeCompare(b.text));</span>
+<span class="tn">  if</span> <span class="tx">(sortType === "status") </span>
+<span class="tn">    return</span> <span class="tx">copy.sort((a, b) => a.completed - b.completed);</span>
+<span class="tn">  return</span> <span class="tx">copy;</span>
+<span class="tx">};</span>
+
+<span class="cm">// 삭제 모달 연동 및 다중 삭제 지원</span>
+<span class="tn">const</span> <span class="tx">confirmDelete = () => {</span>
+<span class="tn">  if</span> <span class="tx">(deleteMode === "single") </span>
+<span class="tx">    setTodos(todos.filter(t => t.id !== targetId));</span>
+<span class="tn">  else if</span> <span class="tx">(deleteMode === "completed") </span>
+<span class="tx">    setTodos(todos.filter(t => !t.completed));</span>
+<span class="tn">  else</span> <span class="tx">setTodos([]);</span>
+<span class="tx">  setIsModalOpen(</span><span class="tn">false</span><span class="tx">);</span>
+<span class="tx">};</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">핵심 포인트 설명</h2>
+          <div class="highlight-box">
+            <ul>
+              <li>
+                <strong>렌더링 제어:</strong> 원본 데이터(<code>todos</code>)는
+                보존하고, 가공된 데이터(<code>sortedTodos</code>)를 출력하는
+                패턴을 익혔습니다.
+              </li>
+              <li>
+                <strong>상태 기반 UI:</strong> Boolean State를 사용하여 외부
+                라이브러리 없이 커스텀 모달 팝업을 구현했습니다.
+              </li>
+              <li>
+                <strong>UX 디테일:</strong> 엔터키 지원(<code>onKeyDown</code>),
+                배경 클릭 시 닫기, 삭제 전 확인 절차 등을 적용했습니다.
+              </li>
+            </ul>
+          </div>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="react_28_react_09.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">React 09 — 제어 컴포넌트</p>
+        <p class="post-nav-meta">
+          <span class="tag">React 28</span>
+          <span class="date">· 2026.04.16</span>
+        </p>
+      </a>
+      <a class="post-nav-card next" href="#">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">준비 중입니다</p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 블로그 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
