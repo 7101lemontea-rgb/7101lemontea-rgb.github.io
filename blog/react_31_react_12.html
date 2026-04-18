@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React 12 — Vercel 배포</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/blog_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../index.html" class="nav-logo">lemontea.dev</a>
+        <a href="../blog/index.html" class="nav-back">← 블로그 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-tag">React 29</span>
+          <span class="post-date">
+            작성일 <span id="date-created">2026-04-17</span> &nbsp;·&nbsp;
+            수정일
+            <span id="date-updated">2026-04-17</span>
+          </span>
+        </div>
+        <h1 class="post-title">React 10 — Vercel 배포</h1>
+        <p class="post-subtitle">
+          React 앱을 실제 인터넷에 배포하여 누구나 접속할 수 있게 만드는 방법을
+          학습합니다.
+        </p>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <p class="toc-title">목차</p>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">1.</span>배포 플랫폼 선택</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">2.</span>배포 준비: 빌드(Build)</a
+              >
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">3.</span>GitHub에 소스코드 올리기</a
+              >
+            </li>
+            <li>
+              <a href="#section-4"
+                ><span class="toc-num">4.</span>접근권한 부여 및 가입</a
+              >
+            </li>
+            <li>
+              <a href="#section-5"
+                ><span class="toc-num">5.</span>Vercel 프로젝트 배포</a
+              >
+            </li>
+            <li>
+              <a href="#section-6"
+                ><span class="toc-num">6.</span>자동 배포 및 트러블슈팅</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="section-1">
+          <p class="sec-eyebrow">01</p>
+          <h2 class="sec-heading">배포 플랫폼 선택</h2>
+          <p>
+            React 앱을 호스팅할 수 있는 다양한 플랫폼이 있으며, 프로젝트의
+            목적에 따라 선택할 수 있습니다.
+          </p>
+
+          <table class="gen-table" style="width: 100%">
+            <thead>
+              <tr>
+                <th>플랫폼</th>
+                <th>난이도</th>
+                <th>무료 범위</th>
+                <th>특징</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Vercel</strong></td>
+                <td>⭐</td>
+                <td>무제한</td>
+                <td>Next.js 제작사, React 최적화, 가장 쉬움</td>
+              </tr>
+              <tr>
+                <td>Netlify</td>
+                <td>⭐</td>
+                <td>월 100GB</td>
+                <td>다양한 기능, 직관적 UI</td>
+              </tr>
+              <tr>
+                <td>GitHub Pages</td>
+                <td>⭐⭐</td>
+                <td>무제한</td>
+                <td>간단한 포트폴리오 적합</td>
+              </tr>
+              <tr>
+                <td>Firebase</td>
+                <td>⭐⭐</td>
+                <td>월 10GB</td>
+                <td>Google 서비스 연동 용이</td>
+              </tr>
+              <tr>
+                <td>AWS S3</td>
+                <td>⭐⭐⭐</td>
+                <td>1년 무료</td>
+                <td>기업용, 세부 설정 가능</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <p class="sec-eyebrow">02</p>
+          <h2 class="sec-heading">배포 준비: 빌드(Build)</h2>
+          <p>
+            작성한 소스코드를 압축 및 최적화하여 브라우저가 읽을 수 있는 순수
+            HTML, CSS, JS 파일로 변환하는 과정이 필요합니다.
+          </p>
+
+          <h3 class="sub-heading">① 빌드 명령어 실행</h3>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tx">npm run build</span></pre>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">② 빌드 결과 (dist 폴더)</h3>
+          <div class="highlight-box">
+            <pre
+              style="
+                font-family: &quot;DM Mono&quot;, monospace;
+                font-size: 0.85rem;
+              "
+            >
+├── dist/  👈 번들링 및 최적화된 결과물
+│   ├── assets/
+│   │   ├── index-abc123.js
+│   │   └── index-def456.css
+│   ├── index.html
+│   └── vite.svg</pre
+            >
+          </div>
+
+          <h3 class="sub-heading">③ 로컬 테스트</h3>
+          <p>
+            배포 전 <code>serve</code> 패키지를 사용하여 빌드된 결과물을 미리
+            확인할 수 있습니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="cm"># 패키지 설치</span>
+<span class="tx">npm install -g serve</span>
+
+
+<span class="cm"># dist 폴더 실행</span>
+<span class="tx">serve -s dist</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <p class="sec-eyebrow">03</p>
+          <h2 class="sec-heading">GitHub에 소스코드 올리기</h2>
+          <p>
+            Vercel은 GitHub와 연동되어 코드를 push하면 자동으로 사이트가
+            업데이트됩니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="cm"># 1. Git 초기화</span>
+<span class="tx">git init</span>
+<span class="cm"># 2. 브랜치 설정</span>
+<span class="tx">git branch -M main</span>
+<span class="cm"># 3. 파일 추가 및 커밋</span>
+<span class="tx">git add .</span>
+<span class="tx">git commit -m "첫 번째 배포"</span>
+<span class="cm"># 4. GitHub 저장소 연결 및 업로드</span>
+<span class="tx">git remote add origin https://github.com/사용자명/저장소명.git</span>
+<span class="tx">git push -u origin main</span></pre>
+            </div>
+          </div>
+
+          <blockquote
+            style="
+              background: #f9f9f9;
+              padding: 1rem;
+              border-left: 4px solid #ffb6c1;
+              margin-top: 1rem;
+            "
+          >
+            <strong>※ 주의사항:</strong> <code>node_modules</code>와
+            <code>dist</code> 폴더는 <code>.gitignore</code>를 통해 업로드에서
+            제외해야 합니다.
+          </blockquote>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <p class="sec-eyebrow">04</p>
+          <h2 class="sec-heading">접근권한 부여 및 가입</h2>
+          <p>
+            Vercel 서비스를 이용하기 위해 GitHub 계정으로 가입하고 권한을
+            설정합니다.
+          </p>
+          <ul class="toc-list" style="margin-left: 20px">
+            <li>
+              <strong>Vercel 가입:</strong>
+              <a href="https://vercel.com" target="_blank">vercel.com</a> 접속
+              후 "Continue with GitHub" 선택
+            </li>
+            <li>
+              <strong>권한 설정:</strong> GitHub Settings → Applications →
+              Installed Github Apps → Vercel 구성 확인
+            </li>
+
+            <figure class="post-figure">
+              <img
+                src="../assets/blog_image/react12_03.png"
+                alt="Installed Github Apps"
+                style="width: 100%"
+              />
+              <figcaption>Installed Github Apps</figcaption>
+            </figure>
+
+            <p>
+              Vercel 앱이 <strong>Github</strong>에 설치되어 있는 상태에서, 실제
+              배포 운영을 위해 세부 규칙을 정합니다.
+            </p>
+
+            <figure class="post-figure">
+              <img
+                src="../assets/blog_image/react12_04.png"
+                alt="Confirm access"
+                style="width: 40%"
+              />
+              <figcaption>Confirm access</figcaption>
+            </figure>
+
+            <p>
+              Github에서 발송한 인증 메일의 <strong>인증 번호</strong>를
+              입력합니다.
+            </p>
+
+            <figure class="post-figure">
+              <img
+                src="../assets/blog_image/react12_05.png"
+                alt="Repository access"
+                style="width: 100%"
+              />
+              <figcaption>Repository access</figcaption>
+            </figure>
+
+            <p>
+              <strong>Repository access</strong> 설정에서 배포할 프로젝트의
+              저장소를 선택합니다. 보안을 위해
+              <code>Select repositories</code>를 권장하며, 설정을 마친 후
+              <strong>Save</strong> 버튼을 클릭합니다.
+            </p>
+          </ul>
+        </section>
+
+        <section class="section visible" id="section-5">
+          <p class="sec-eyebrow">05</p>
+          <h2 class="sec-heading">Vercel 프로젝트 배포</h2>
+
+          <figure class="post-figure">
+            <img
+              src="../assets/blog_image/react12_02.png"
+              alt="루트 디렉토리 설정"
+              style="width: 70%"
+            />
+            <figcaption>루트 디렉토리 설정</figcaption>
+          </figure>
+
+          <p>대시보드에서 새로운 프로젝트를 가져와 설정을 마무리합니다.</p>
+          <div class="highlight-box">
+            <p><strong>주요 설정 값:</strong></p>
+            <ul style="list-style: none; padding-left: 0">
+              <li>✅ <strong>Framework Preset:</strong> Vite (자동 감지)</li>
+              <li>
+                ✅ <strong>Build Command:</strong> <code>npm run build</code>
+              </li>
+              <li>✅ <strong>Output Directory:</strong> <code>dist</code></li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-6">
+          <p class="sec-eyebrow">06</p>
+          <h2 class="sec-heading">자동 배포 및 트러블슈팅</h2>
+          <p>
+            수정사항 반영 시 <code>git push</code>만으로 자동 배포가
+            이루어집니다.
+          </p>
+
+          <h3 class="sub-heading">404 에러 해결 (SPA 라우팅)</h3>
+          <p>
+            새로고침 시 404 에러가 발생한다면 프로젝트 루트에
+            <code>vercel.json</code> 파일을 추가합니다.
+          </p>
+          <div class="code-block">
+            <div class="code-body">
+              <pre><span class="tx">{</span>
+<span class="tx">  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]</span>
+<span class="tx">}</span></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="react_28_react_09.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">React 09 — 제어 컴포넌트</p>
+        <p class="post-nav-meta">
+          <span class="tag">React 28</span>
+          <span class="date">· 2026.04.16</span>
+        </p>
+      </a>
+      <a class="post-nav-card next" href="#">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">준비 중입니다</p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog/index.html" class="footer-back">← 블로그 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
