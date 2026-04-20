@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>아이디어 정의 및 가설 설정 — 이중언어 AI 학습 튜터</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">기획</span>
+          <span class="badge badge-ver">01</span>
+          <span class="badge badge-status">초안</span>
+        </div>
+        <h1 class="post-title">아이디어 정의 및 가설 설정</h1>
+        <p class="post-sub">이중언어 AI 학습 튜터를 통한 교육 격차 해소</p>
+        <p class="post-desc">
+          다문화 가정 초등학생의 한국어 장벽으로 인한 학습 결손 문제를 정의하고,
+          RAG 기반 이중언어 AI 튜터를 통한 해결 가설을 수립합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">프로젝트명</div>
+            <div class="stat-val">이중언어 AI 학습 튜터</div>
+          </div>
+          <div>
+            <div class="stat-label">팀명</div>
+            <div class="stat-val">2팀 에듀 프렌드</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">2026년 4월 20일</div>
+          </div>
+          <div>
+            <div class="stat-label">작성자</div>
+            <div class="stat-val">정서영 외 3명</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#problem"
+                ><span class="toc-num">01</span>문제 영역 정의</a
+              >
+            </li>
+            <li>
+              <a href="#user"><span class="toc-num">02</span>사용자 분석</a>
+            </li>
+            <li>
+              <a href="#behavior"
+                ><span class="toc-num">03</span>행동 및 페인 포인트</a
+              >
+            </li>
+            <li>
+              <a href="#hypothesis"
+                ><span class="toc-num">04</span>가설 설정 및 해결 방향</a
+              >
+            </li>
+            <li>
+              <a href="#conclusion"
+                ><span class="toc-num">05</span>최종 선택 및 결론</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="problem">
+          <div class="sec-eyebrow">01 — Problem Domain</div>
+          <h2 class="sec-heading">우리가 주목한 문제 영역</h2>
+
+          <div class="highlight-box">
+            <p>
+              <strong>핵심 관찰:</strong> 다문화 가정 학생이 수학 문제를 "읽지
+              못해 틀리는 경우"와 개념을 "이해하지 못해 틀리는 경우"가 혼재되어
+              학습 격차가 심화되고 있습니다.
+            </p>
+          </div>
+
+          <h3 class="sub-heading">1.1 문제 영역 설명</h3>
+          <p>
+            교육/학습 영역 내에서 다문화 가정 초등학생이 한국 교과과정을 학습할
+            때 언어 장벽과 개념 이해 부족으로 인해 발생하는 격차에 주목합니다.
+          </p>
+
+          <h3 class="sub-heading">1.2 주목 배경</h3>
+          <ul class="bullet-list">
+            <li>
+              국내 다문화 가정 아동 수의 매년 증가세 대비 맞춤형 학습 지원 부족
+            </li>
+            <li>사교육 접근성 저하 및 보호자의 한국어 교과 지도 한계</li>
+            <li>팀원들의 실제 교육 환경 접점 경험을 통한 문제 심각성 공감</li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="user">
+          <div class="sec-eyebrow">02 — User Definition</div>
+          <h2 class="sec-heading">사용자 정의</h2>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">주요 사용자</span>
+                <span class="white-column-layer-tech">Target User</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>베트남어 사용 가정의 초등 1~6학년 학생</li>
+                  <li>한국어 교과 설명에 어려움을 겪는 다문화 가정 부모님</li>
+                  <li>방과 후 혼자 학습하며 언어적 도움을 받기 어려운 아동</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">사용자 상황</span>
+                <span class="white-column-layer-tech">Situation</span>
+              </div>
+              <div class="white-column-content">
+                <p>
+                  저녁 시간 가정에서 수학 숙제를 하던 중, 지문의 뜻을 몰라
+                  막히는 상황입니다. 부모님 또한 개념을 한국어로 설명해주기
+                  어려워 외부 도움 없이 방치됩니다.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="behavior">
+          <div class="sec-eyebrow">03 — Action & Pain Point</div>
+          <h2 class="sec-heading">사용자의 행동과 불편</h2>
+
+          <div class="layer-diagram">
+            <div class="layer-row">
+              <div class="layer-num">01</div>
+              <div class="layer-label">
+                <span class="layer-name">현재 행동</span>
+                <span class="layer-tech">Current Action</span>
+              </div>
+              <div class="layer-desc">
+                단어의 뜻을 학부모에게 물어보나, 이해가 불가능할 경우 학습을
+                포기하거나 답안을 그대로 베끼는 방식으로 대처합니다.
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">02</div>
+              <div class="layer-label">
+                <span class="layer-name">불편함</span>
+                <span class="layer-tech">Pain Point</span>
+              </div>
+              <div class="layer-desc">
+                부모가 개념은 인지하되 한국어 표현법을 몰라 교육하지 못하며,
+                이는 아이의 학습 격차 누적으로 직결됩니다.
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">03</div>
+              <div class="layer-label">
+                <span class="layer-name">사용자 기대</span>
+                <span class="layer-tech">Expectation</span>
+              </div>
+              <div class="layer-desc">
+                한국어와 모국어(베트남어) 동시 설명을 통해 긴 검색 없이
+                즉각적으로 개념을 이해하고 스스로 문제를 풀 수 있는 상태를
+                희망합니다.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="hypothesis">
+          <div class="sec-eyebrow">04 — Hypothesis</div>
+          <h2 class="sec-heading">문제 가설 및 해결 방향</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>가설 및 아이디어 내용</th>
+                <th>해결 방향</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>문제 가설</strong></td>
+                <td>부모의 언어 장벽으로 인한 가정 내 학습 도움 부재</td>
+                <td class="txt-accent">개념의 즉시 해결 불가 해소</td>
+              </tr>
+              <tr>
+                <td><strong>해결 가설</strong></td>
+                <td>이중언어 기반 개념 설명 및 실시간 챗봇 보조</td>
+                <td class="txt-accent">수준별 개인화 설명 제공</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">아이디어 후보군</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>아이디어 1:</strong> 부모 튜터 역할 대행을 위한 이중언어
+              대화형 AI
+            </li>
+            <li>
+              <strong>아이디어 2:</strong> 학년·수준별 개인화된 쉬운 개념 설명
+            </li>
+            <li>
+              <strong>아이디어 3:</strong> 오답 원인 분석 및 데이터 기반 재설명
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="conclusion">
+          <div class="sec-eyebrow">05 — Conclusion</div>
+          <h2 class="sec-heading">최종 선택 아이디어</h2>
+
+          <div class="highlight-box">
+            <p>
+              <strong>결정:</strong> 아이디어 1, 2, 3을 통합한
+              <strong>"이중언어 대화형 AI 튜터"</strong>를 최종 선정하였습니다.
+            </p>
+          </div>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Check 01</span>
+                <span class="white-title">실현 가능성</span>
+              </div>
+              <div class="white-body">
+                <p>
+                  RAG(Retrieval-Augmented Generation)와 GPT 기반으로 MVP 구현이
+                  가능합니다.
+                </p>
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Check 02</span>
+                <span class="white-title">사회적 가치</span>
+              </div>
+              <div class="white-body">
+                <p>
+                  다문화 학생 수 증가에 따른 높은 공감대와 교육적 의미를
+                  확보합니다.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p style="margin-top: 2rem">
+            <strong>다음 단계:</strong> 현황 분석 및 요구사항 정의서를 통해
+            가설을 검증하고, 초등 수학 특정 단원을 선정하여 MVP 범위를 확정할
+            예정입니다.
+          </p>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">이전 글이 없습니다.</p>
+      </a>
+
+      <a class="post-nav-card next" href="#">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">Edu-Friend 02 - 현황 분석 및 SRS</p>
+        <p class="post-nav-meta">
+          <span class="tag">Edu-Friend</span>
+          <span class="tag">#Planning</span>
+          <span class="date">· 2026.04.20</span>
+        </p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 2팀 에듀 프렌드 (Edu-Friend)</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>
