@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>데일리 리포트 2026.04.22 — 진실 방범대</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">REPORT</span>
+          <span class="badge badge-ver">DAY 03</span>
+          <span class="badge badge-status">진행중</span>
+        </div>
+        <h1 class="post-title">데일리 리포트: 아이디어 확정 및 설계</h1>
+        <p class="post-sub">진실의 입 — AI 기반 맛집 광고 리뷰 필터 서비스</p>
+        <p class="post-desc">
+          아이디어 준거 평정을 통해 최종 프로젝트를 확정하고, 사용자 경험(UX)
+          개선을 위한 지도 API 도입 논의와 기술 설계서 작성을 완료하였습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">날짜</div>
+            <div class="stat-val">2026. 04. 22. (수)</div>
+          </div>
+          <div>
+            <div class="stat-label">작성자</div>
+            <div class="stat-val">진실 방범대 팀 전체</div>
+          </div>
+          <div>
+            <div class="stat-label">단계</div>
+            <div class="stat-val">기획 (Planning)</div>
+          </div>
+          <div>
+            <div class="stat-label">상태</div>
+            <div class="stat-val">아이디어 확정</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#summary"><span class="toc-num">01</span>오늘 한 일</a>
+            </li>
+            <li>
+              <a href="#selection"
+                ><span class="toc-num">02</span>아이디어 선정 결과</a
+              >
+            </li>
+            <li>
+              <a href="#work-details"
+                ><span class="toc-num">03</span>주요 작업 내용</a
+              >
+            </li>
+            <li>
+              <a href="#discussion"
+                ><span class="toc-num">04</span>주요 논의 및 이슈</a
+              >
+            </li>
+            <li>
+              <a href="#next-step"><span class="toc-num">05</span>내일 할 일</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="summary">
+          <div class="sec-eyebrow">01 — Today's Summary</div>
+          <h2 class="sec-heading">오늘 한 일</h2>
+          <div class="highlight-box">
+            <p>
+              아이디어 후보 5개에 대한
+              <strong>준거 평정법(Criteria Rating)</strong> 평가를 통해 프로젝트
+              아이디어를 최종 선정하고, 선정된 아이디어를 바탕으로 요구사항,
+              기능, 화면, 기술 설계서 초안 작성을 완료하였습니다.
+            </p>
+          </div>
+          <ul class="bullet-list">
+            <li>준거 평정법 평가 및 최종 아이디어 선정</li>
+            <li>요구사항 정의서 및 기획서 초안 작성</li>
+            <li>기능·화면·기술 설계서(Architecture) 작성</li>
+            <li>사용자 편의를 위한 화면 흐름 개선(지도 API 방식 전환) 논의</li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="selection">
+          <div class="sec-eyebrow">02 — Selection Result</div>
+          <h2 class="sec-heading">아이디어 선정 결과</h2>
+
+          <h3 class="sub-heading">준거 평정법 (5점 척도 평가)</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>순위</th>
+                <th>아이디어명</th>
+                <th>최종 점수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="txt-accent">
+                <td>🥇 1위</td>
+                <td><strong>광고 탐지 (진실의 입)</strong></td>
+                <td><strong>74점</strong></td>
+              </tr>
+              <tr>
+                <td>2위</td>
+                <td>캐릭터와 대화 (아동 타겟)</td>
+                <td>72점</td>
+              </tr>
+              <tr>
+                <td>3위</td>
+                <td>엄마와의 편지</td>
+                <td>70점</td>
+              </tr>
+              <tr>
+                <td>4위</td>
+                <td>코모리</td>
+                <td>68점</td>
+              </tr>
+              <tr>
+                <td>5위</td>
+                <td>일정 등록 캘린더</td>
+                <td>62점</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box" style="margin-top: 1.5rem">
+            <p>
+              <strong>🏆 최종 선정:</strong> "진실의 입 — AI 기반 맛집 광고 리뷰
+              필터"
+            </p>
+          </div>
+        </section>
+
+        <section class="section visible" id="work-details">
+          <div class="sec-eyebrow">03 — Work Details</div>
+          <h2 class="sec-heading">주요 작업 상세</h2>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">요구사항 정의</span>
+                <span class="white-column-layer-tech">SRS</span>
+              </div>
+              <div class="white-column-content">
+                As-Is 행동 흐름 분석을 통한 Pain Point 도출 및 MoSCoW 기반
+                우선순위 설정 완료
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">기획 및 기술 스택</span>
+                <span class="white-column-layer-tech">Architecture</span>
+              </div>
+              <div class="white-column-content">
+                Selenium/BS4(크롤링), FastAPI(백엔드), React(프론트), GPT
+                API(광고 분석) 확정
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">정의서 작성</span>
+                <span class="white-column-layer-tech">Technical Docs</span>
+              </div>
+              <div class="white-column-content">
+                기능(크롤링/탐지/필터), 화면(Screen Flow), 기술(API 목록/모델
+                설계) 정의서 초안 완성
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="discussion">
+          <div class="sec-eyebrow">04 — Key Discussion</div>
+          <h2 class="sec-heading">주요 논의 및 이슈</h2>
+
+          <h3 class="sub-heading">논의 1: 화면 흐름 개선 (UX 최적화)</h3>
+          <p>
+            사용자 피로도를 줄이기 위해 링크 입력 방식에서 지도 기반 검색
+            방식으로 전환을 결정했습니다.
+          </p>
+          <div class="layer-diagram">
+            <div class="layer-row">
+              <div class="layer-label">
+                <span class="layer-name">기존 방식</span>
+              </div>
+              <div class="layer-desc">
+                네이버 지도 링크 직접 복사/붙여넣기 (UX 마찰 발생)
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-label">
+                <span class="layer-name">개선 방식</span>
+              </div>
+              <div class="layer-desc">
+                카카오맵 API 연동 → 지도 내 마커 클릭 → 즉시 분석 시작 (직관성
+                강화)
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" style="margin-top: 2rem">
+            논의 2: 유사 서비스 차별화 분석
+          </h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>AD Finder:</strong> 블로그 광고 탐지 연구이나 상용화 사례
+              미비
+            </li>
+            <li>
+              <strong>AWOL:</strong> 인증된 리뷰만 허용하는 방식으로 서비스
+              성격이 다름
+            </li>
+            <li>
+              <strong>차별점:</strong> 네이버 블로그 리뷰를 실시간 필터링하는
+              일반 소비자용 B2C 서비스 공백 확인
+            </li>
+          </ul>
+
+          <h3 class="sub-heading" style="margin-top: 2rem">이슈 / 특이사항</h3>
+          <div class="stakeholder-grid">
+            <div class="stakeholder-card">
+              <div class="stakeholder-role">Crawl-Block</div>
+              <p class="stakeholder-concern">
+                네이버 크롤링 차단 가능성 대비 딜레이 로직 및 우회 방안 검토
+                필요
+              </p>
+            </div>
+            <div class="stakeholder-card">
+              <div class="stakeholder-role">Detection Accuracy</div>
+              <p class="stakeholder-concern">
+                협찬 문구 없는 지능형 광고 탐지를 위한 문체 분석 가중치 설계
+                필요
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="next-step">
+          <div class="sec-eyebrow">05 — Next Step</div>
+          <h2 class="sec-heading">내일 할 일</h2>
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-body">
+                <ul class="bullet-list">
+                  <li>네이버 블로그 크롤링 환경 분석 및 정책 준수 확인</li>
+                  <li>광고 탐지 키워드 사전(Dictionary) 초안 구축</li>
+                  <li>네이버 지도/카카오맵 API 연동 한도 검토</li>
+                  <li>와이어프레임(Lo-fi) 초안 작성</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 진실 방범대 | 작성일 2026.04.22</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>
