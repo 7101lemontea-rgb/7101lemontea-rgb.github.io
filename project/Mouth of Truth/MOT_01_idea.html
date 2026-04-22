@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>아이디어 회의 02 — 진실 방범대</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">아이디어 회의</span>
+          <span class="badge badge-ver">02</span>
+          <span class="badge badge-status">아이디어 확정</span>
+        </div>
+        <h1 class="post-title">진실의 입: AI 광고 리뷰 필터</h1>
+        <p class="post-sub">
+          준거 평정법을 통한 최종 아이디어 선정 및 문제 정의
+        </p>
+        <p class="post-desc">
+          정보의 홍수 속에서 '진짜 후기'를 찾기 위한 사용자의 피로도를 분석하고,
+          AI 기술을 활용해 광고성 리뷰를 투명하게 걸러내는 서비스의 방향성을
+          수립합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">날짜</div>
+            <div class="stat-val">2026. 04. 22.</div>
+          </div>
+          <div>
+            <div class="stat-label">팀명</div>
+            <div class="stat-val">진실 방범대 (Truth Guard)</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 점수</div>
+            <div class="stat-val">74점 (1위)</div>
+          </div>
+          <div>
+            <div class="stat-label">참여인원</div>
+            <div class="stat-val">(팀원 성함 입력)</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#evaluation"
+                ><span class="toc-num">01</span>아이디어 평가 및 선정</a
+              >
+            </li>
+            <li>
+              <a href="#problem"
+                ><span class="toc-num">02</span>주목한 문제 영역</a
+              >
+            </li>
+            <li>
+              <a href="#user-analysis"
+                ><span class="toc-num">03</span>사용자 정의 및 상황</a
+              >
+            </li>
+            <li>
+              <a href="#hypothesis"
+                ><span class="toc-num">04</span>가설 수립 및 해결 방향</a
+              >
+            </li>
+            <li>
+              <a href="#final-selection"
+                ><span class="toc-num">§</span>최종 선택 및 다음 단계</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="evaluation">
+          <div class="sec-eyebrow">01 — Criteria Rating</div>
+          <h2 class="sec-heading">준거 평정법 평가 결과</h2>
+          <p>
+            5점 척도 평가를 통해 실현 가능성과 사회적 공감도가 가장 높은
+            아이디어를 객관적으로 선정했습니다.
+          </p>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>순위</th>
+                <th>아이디어 후보</th>
+                <th>최종 점수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="txt-accent">
+                <td>🥇 1위</td>
+                <td><strong>광고 탐지 (진실의 입)</strong></td>
+                <td><strong>74점</strong></td>
+              </tr>
+              <tr>
+                <td>2위</td>
+                <td>캐릭터와 대화 (아동 설정)</td>
+                <td>72점</td>
+              </tr>
+              <tr>
+                <td>3위</td>
+                <td>엄마와의 편지</td>
+                <td>70점</td>
+              </tr>
+              <tr>
+                <td>4위</td>
+                <td>코모리</td>
+                <td>68점</td>
+              </tr>
+              <tr>
+                <td>5위</td>
+                <td>일정 등록 캘린더</td>
+                <td>62점</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box" style="margin-top: 1.5rem">
+            🏆 <strong>최종 선정 아이디어:</strong> 진실의 입 (The
+            Truth-Filtering Engine)
+          </div>
+        </section>
+
+        <section class="section visible" id="problem">
+          <div class="sec-eyebrow">02 — Problem Domain</div>
+          <h2 class="sec-heading">우리가 주목한 문제 영역</h2>
+          <h3 class="sub-heading">신뢰를 잃은 리뷰 데이터</h3>
+          <p>
+            최근 맛집 소비 결정의 핵심 정보원인 네이버 지도 리뷰가 '바이럴
+            마케팅'과 '대가성 리뷰'로 인해 신뢰도를 잃고 있으며, 사용자는 극심한
+            <strong>'리뷰 피로도'</strong>를 겪고 있습니다.
+          </p>
+          <ul class="bullet-list">
+            <li>
+              <strong>정보 과부하:</strong> 진짜 후기를 찾기 위해 광고 표기
+              여부를 일일이 확인해야 하는 수고로움 발생
+            </li>
+            <li>
+              <strong>박탈감 유발:</strong> 광고에 속아 시간과 비용을 낭비했을
+              때 느끼는 사용자 경험 저하
+            </li>
+            <li>
+              <strong>공통 경험:</strong> 팀원 모두가 식당 탐색 시 광고를
+              걸러내기 위해 과도한 시간을 소요하는 페인 포인트를 공유
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="user-analysis">
+          <div class="sec-eyebrow">03 — User Analysis</div>
+          <h2 class="sec-heading">사용자 정의 및 페인 포인트</h2>
+
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">User 1</span>
+                <span class="white-title">신중한 맛집 탐색러</span>
+              </div>
+              <div class="white-body">
+                중요한 데이트나 모임 장소를 위해
+                <strong>냉정한 실제 평가</strong>를 원하는 2030 사회초년생
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">User 2</span>
+                <span class="white-title">여행자 및 로컬 탐방객</span>
+              </div>
+              <div class="white-body">
+                홍보용 블로그가 아닌 <strong>진짜 현지인 맛집</strong> 정보를
+                빠르게 식별하고 싶은 방문자
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading" style="margin-top: 2rem">
+            현재 사용자의 불편 (Pain Point)
+          </h3>
+          <div class="layer-diagram">
+            <div class="layer-row">
+              <div class="layer-num">01</div>
+              <div class="layer-label">
+                <span class="layer-name">정보의 불균형</span>
+              </div>
+              <div class="layer-desc">
+                광고 자본을 많이 쓴 가게만 검색 상단에 노출되어 찐 맛집이 가려짐
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">02</div>
+              <div class="layer-label">
+                <span class="layer-name">높은 검색 비용</span>
+              </div>
+              <div class="layer-desc">
+                식당 한 곳의 진실 여부를 판단하기 위해 5개 이상의 블로그를 교차
+                검증
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">03</div>
+              <div class="layer-label">
+                <span class="layer-name">진화하는 가짜 후기</span>
+              </div>
+              <div class="layer-desc">
+                이미지로 처리된 대가성 문구 등 교묘하게 검색 엔진을 교란하는
+                사례 증가
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="hypothesis">
+          <div class="sec-eyebrow">04 — Hypothesis & Solution</div>
+          <h2 class="sec-heading">가설 및 해결 방향</h2>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">문제 가설</span>
+                <span class="white-column-layer-tech">Problem</span>
+              </div>
+              <div class="white-column-content">
+                넘쳐나는 바이럴 마케팅 광고 리뷰는 사용자에게 막대한 시간 낭비와
+                스트레스를 주며, 이는 잘못된 선택과 서비스 불신으로 이어진다.
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">해결 가설</span>
+                <span class="white-column-layer-tech">Solution</span>
+              </div>
+              <div class="white-column-content">
+                문체 분석과 대가성 표기 위치를 통해
+                <strong>'광고 농도'</strong>를 산출하고, 필터링을 통과한 진짜
+                리뷰만 요약 제공함으로써 신뢰 기반의 미식 생활을 지원한다.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="final-selection">
+          <div class="sec-eyebrow">Conclusion</div>
+          <h2 class="sec-heading">최종 선택 근거 및 다음 단계</h2>
+          <div class="highlight-box">
+            <p>
+              <strong>공감도 및 수요:</strong> 광고 맛집이 아닌 진짜 맛집을
+              찾고자 하는 대중적 수요가 매우 높습니다.<br />
+              <strong>실현 가능성:</strong> 크롤링 기술과 NLP 모델링을 활용하여
+              MVP 단계에서 구현 가능한 범위임을 확인하였습니다.<br />
+              <strong>학습 가치:</strong> 자연어 처리(NLP), 데이터 시각화 기술을
+              조화롭게 사용하며 실제 페인 포인트를 해결하는 경험을 얻을 수
+              있습니다.
+            </p>
+          </div>
+          <h3 class="sub-heading" style="margin-top: 1.5rem">Next Step</h3>
+          <ul class="bullet-list">
+            <li>광고 리뷰 특유의 단어 선택 및 패턴 데이터 수집</li>
+            <li>네이버 블로그 크롤링 환경 분석 및 데이터 확보 안정성 테스트</li>
+            <li>'맛집/카페' 카테고리를 타깃으로 한 MVP 핵심 기능 구체화</li>
+          </ul>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>

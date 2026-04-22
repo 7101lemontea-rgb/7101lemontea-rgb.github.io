@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>기획서 초안 — 진실의 입</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">PROJECT PLAN</span>
+          <span class="badge badge-ver">v1.0</span>
+          <span class="badge badge-status">Draft</span>
+        </div>
+        <h1 class="post-title">진실의 입 (The Truth-Filtering Engine)</h1>
+        <p class="post-sub">AI 필터링 기술 기반 맛집 광고 리뷰 식별 서비스</p>
+        <p class="post-desc">
+          무분별한 광고성 리뷰 속에서 인공지능을 통해 '진짜 후기'만을 선별하고,
+          정보 신뢰도를 회복하여 사용자의 효율적인 의사결정을 돕는 미식 가이드를
+          제안합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val">2024. 05. 22.</div>
+          </div>
+          <div>
+            <div class="stat-label">팀명</div>
+            <div class="stat-val">진실 방범대 (Truth Guard)</div>
+          </div>
+          <div>
+            <div class="stat-label">기간</div>
+            <div class="stat-val">25 Days</div>
+          </div>
+          <div>
+            <div class="stat-label">분야</div>
+            <div class="stat-val">AI / NLP / Web</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#overview"
+                ><span class="toc-num">01</span>프로젝트 개요</a
+              >
+            </li>
+            <li>
+              <a href="#differentiation"
+                ><span class="toc-num">02</span>특화 포인트 및 차별성</a
+              >
+            </li>
+            <li>
+              <a href="#goals"><span class="toc-num">03</span>프로젝트 목표</a>
+            </li>
+            <li>
+              <a href="#features"
+                ><span class="toc-num">04</span>핵심 기능 (MVP)</a
+              >
+            </li>
+            <li>
+              <a href="#tech-stack"
+                ><span class="toc-num">05</span>기술 스택 및 일정</a
+              >
+            </li>
+            <li>
+              <a href="#roles"><span class="toc-num">06</span>팀 구성 및 R&R</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="overview">
+          <div class="sec-eyebrow">01 — Overview</div>
+          <h2 class="sec-heading">프로젝트 개요</h2>
+          <p>
+            네이버 지도 리뷰의 광고 확률을 AI로 분석하여 사용자에게 투명한
+            정보를 제공하고, 광고가 제거된 진짜 리뷰만을 빠르게 요약해 주는
+            서비스입니다.
+          </p>
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">What</span
+                ><span class="white-title">문제 인식</span>
+              </div>
+              <div class="white-body">
+                마케팅 업체의 바이럴 공세로 인한 '대가성 후기' 범람 및 신뢰도
+                상실
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">Why</span
+                ><span class="white-title">발생 원인</span>
+              </div>
+              <div class="white-body">
+                정교화된 바이럴 기법(이미지 배너 숨기기), 정보 불균형 및 필터링
+                기능 부재
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="differentiation">
+          <div class="sec-eyebrow">02 — Differentiation</div>
+          <h2 class="sec-heading">서비스 특화 포인트</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>기존 서비스 (네이버 지도 등)</th>
+                <th>본 프로젝트 (진실의 입)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>정보 정렬</td>
+                <td>최신순, 관련도순 중심</td>
+                <td class="txt-accent">
+                  <strong>신뢰도 및 광고 비율 중심</strong>
+                </td>
+              </tr>
+              <tr>
+                <td>검증 방식</td>
+                <td>사용자가 수동으로 확인</td>
+                <td class="txt-accent">
+                  <strong>AI가 진실 여부 % 고지</strong>
+                </td>
+              </tr>
+              <tr>
+                <td>검색 시간</td>
+                <td>평균 15~20분 소요</td>
+                <td class="txt-accent"><strong>5분 이내 요약 완료</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="goals">
+          <div class="sec-eyebrow">03 — Goals</div>
+          <h2 class="sec-heading">프로젝트 목표</h2>
+          <div class="layer-diagram">
+            <div class="layer-row">
+              <div class="layer-num">01</div>
+              <div class="layer-label">
+                <span class="layer-name">정확도</span>
+              </div>
+              <div class="layer-desc">
+                광고 탐지 정확도 70% 이상 달성 (테스트 셋 기준)
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">02</div>
+              <div class="layer-label">
+                <span class="layer-name">속도</span>
+              </div>
+              <div class="layer-desc">
+                링크 입력 후 결과 출력까지 3분 이내 완료
+              </div>
+            </div>
+            <div class="layer-row">
+              <div class="layer-num">03</div>
+              <div class="layer-label">
+                <span class="layer-name">가치</span>
+              </div>
+              <div class="layer-desc">
+                유의미한 가비지 데이터 제거를 통한 의사결정 피로도 해소
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="features">
+          <div class="sec-eyebrow">04 — Core Features</div>
+          <h2 class="sec-heading">핵심 기능 정의 (MVP)</h2>
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">리뷰 데이터 추출</span>
+                <span class="white-column-layer-tech">Must</span>
+              </div>
+              <div class="white-column-content">
+                네이버 지도 링크 입력 시 관련 포스팅 텍스트 및 메타데이터 자동
+                크롤링
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">광고 농도 분석</span>
+                <span class="white-column-layer-tech">Must</span>
+              </div>
+              <div class="white-column-content">
+                AI 문맥 분석을 통해 해당 식당의 전체 리뷰 중 광고 비중을 수치화
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">클린 리뷰 요약</span>
+                <span class="white-column-layer-tech">Must</span>
+              </div>
+              <div class="white-column-content">
+                광고를 제외한 '찐 후기'들만 모아 핵심 장/단점을 AI로 자동 추출
+                및 요약
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible" id="tech-stack">
+          <div class="sec-eyebrow">05 — Technology</div>
+          <h2 class="sec-heading">기술 스택 활용 계획</h2>
+          <ul class="bullet-list">
+            <li>
+              <strong>AI/ML:</strong> GPT API / BERT — 문맥 분석 및 광고성 말투
+              탐색
+            </li>
+            <li>
+              <strong>Scraping:</strong> Selenium / BeautifulSoup — 데이터 수집
+            </li>
+            <li>
+              <strong>Backend:</strong> Python / FastAPI — 분석 알고리즘 처리
+            </li>
+            <li>
+              <strong>Frontend:</strong> React — 분석 대시보드 및 리포트 시각화
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="roles">
+          <div class="sec-eyebrow">06 — Team Roles</div>
+          <h2 class="sec-heading">팀 구성 및 역할 (R&R)</h2>
+          <div class="white-card-list">
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">PM</span
+                ><span class="white-title">홍길동 (오거나이저)</span>
+              </div>
+              <div class="white-body">기획 총괄, 지표 설계, 발표 자료 작성</div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">AI</span
+                ><span class="white-title">김진실 (로컬라이저)</span>
+              </div>
+              <div class="white-body">
+                광고 패턴 추출, NLP 프롬프트 엔지니어링
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">BE</span
+                ><span class="white-title">이개발 (스태빌라이저)</span>
+              </div>
+              <div class="white-body">
+                크롤링 모듈 개발, API 서버 및 DB 구축
+              </div>
+            </div>
+            <div class="white-card">
+              <div class="white-header">
+                <span class="white-num">FE</span
+                ><span class="white-title">박화면 (비주얼라이저)</span>
+              </div>
+              <div class="white-body">반응형 대시보드 및 인포그래픽 구현</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section visible">
+          <div class="sec-eyebrow">Summary</div>
+          <h2 class="sec-heading">종합 요약</h2>
+          <div class="highlight-box">
+            <p>
+              본 프로젝트는 정보 과부하와 무분별한 광고성 리뷰로 발생하는 사용자
+              피로도를 해결하기 위한 <strong>"신뢰 필터링 엔진"</strong>입니다.
+              소비자가 광고에 속지 않는 건전한 외식 환경을 조성하고, 데이터
+              기반의 객관적 지표를 통해 신뢰도 높은 미식 생활을 지원하는 것을
+              최종 목표로 합니다.
+            </p>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2024 진실 방범대 (Truth Guard)</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>
