@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>데일리 개발 리포트 — Truth Guard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">truth_guard.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Daily Report</span>
+          <span class="badge badge-status">04. 27. 완료</span>
+        </div>
+        <h1 class="post-title">데일리 개발 리포트</h1>
+        <p class="post-sub">진실의 입 (The Truth-Filtering Engine)</p>
+        <p class="post-desc">
+          현재 위치 기반 식당 검색 엔진 구축, 데이터 정제 파이프라인 고도화,
+          그리고 ELECTRA 모델의 백엔드 통합을 통해 광고 판별 시스템의 초석을
+          다졌습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val">2026. 04. 27.</p>
+          </div>
+          <div>
+            <p class="stat-label">팀명</p>
+            <p class="stat-val">진실 방범대 (Truth Guard)</p>
+          </div>
+          <div>
+            <div class="stat-label">주요 기술</div>
+            <div class="stat-val">FastAPI, ELECTRA, Naver Maps API</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">01</span>작업 요약 및 결과</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"
+                ><span class="toc-num">02</span>네이버 지도 API 및 식당 검색</a
+              >
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">03</span>데이터 정제 및 ELECTRA 통합</a
+              >
+            </li>
+            <li>
+              <a href="#section-4"
+                ><span class="toc-num">04</span>트러블슈팅 및 향후 과제</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="section-1">
+          <div class="sec-eyebrow">Summary</div>
+          <h2 class="sec-heading">01. 오늘의 작업 요약</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>작업 항목</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>네이버 지도 API 연동 및 현재 위치 기반 검색 구현</td>
+                <td><span class="badge badge-status">✅ 완료</span></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>
+                  FastAPI <code>/places/nearby-restaurants</code> 엔드포인트
+                  구축
+                </td>
+                <td><span class="badge badge-status">✅ 완료</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>리뷰 데이터 HTML 태그/엔티티 정제 로직 적용</td>
+                <td><span class="badge badge-status">✅ 완료</span></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>ELECTRA 모델 백엔드 통합 및 실시간 판별 연동</td>
+                <td><span class="badge badge-status">✅ 완료</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <div class="sec-eyebrow">Location Engine</div>
+          <h2 class="sec-heading">02. 네이버 지도 API 및 식당 검색</h2>
+
+          <h3 class="sub-heading">2.1. 시스템 아키텍처 (Proxy Structure)</h3>
+          <p>
+            보안 및 일관성을 위해 Flutter가 직접 API를 호출하지 않고 FastAPI를
+            경유하는 프록시 구조를 채택했습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 요청 흐름</span>
+<span class="c-line">Flutter (geolocator) → GPS 획득</span>
+<span class="c-line">   ↓ HTTP GET (lat, lng)</span>
+<span class="c-line">FastAPI (Reverse Geocoding) → 행정동 추출</span>
+<span class="c-line">   ↓ asyncio.gather (병렬 키워드 검색)</span>
+<span class="c-line">Naver Local API → 식당 리스트 (최대 200개)</span></pre>
+          </div>
+
+          <h3 class="sub-heading">2.2. 설계 결정 사항</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>엔진 교체:</strong> Web 미지원
+              <code>flutter_naver_map</code> 대신 <code>flutter_map</code> 도입.
+            </li>
+            <li>
+              <strong>검색 일관성:</strong> 블로그 검색 키워드와의 정합성을 위해
+              카카오 API 대신 네이버 로컬 API 사용.
+            </li>
+            <li>
+              <strong>좌표 변환:</strong> 네이버 특유의 카텍 좌표를
+              WGS84(위경도)로 변환하는 로직 구현.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <div class="sec-eyebrow">AI & Data Pipeline</div>
+          <h2 class="sec-heading">03. 데이터 정제 및 ELECTRA 통합</h2>
+
+          <h3 class="sub-heading">3.1. HTML 태그 정제 (_clean)</h3>
+          <p>
+            검색 결과에 포함된 <code>&lt;b&gt;</code> 태그와 HTML 엔티티를
+            제거하여 사용자 가독성을 확보했습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-keyword">def</span> <span class="c-function">_clean</span>(text: str) -> str:
+    <span class="c-line">text = re.sub(<span class="c-string">r"&lt;[^&gt;]+&gt;"</span>, <span class="c-string">""</span>, text) <span class="c-comment"># 태그 제거</span></span>
+    <span class="c-line">text = unescape(text)                <span class="c-comment"># 엔티티 디코딩</span></span>
+    <span class="c-line"><span class="c-keyword">return</span> text.strip()</span></pre>
+          </div>
+
+          <h3 class="sub-heading">3.2. ELECTRA 모델 백엔드 통합</h3>
+          <p>
+            GPT 기반 판별에서 파인튜닝된 <code>koelectra-base-v3</code> 모델을
+            병행 사용할 수 있도록 개편했습니다.
+          </p>
+          <ul class="bullet-list">
+            <li>
+              <strong>Lifespan:</strong> 서버 시작 시 모델을 메모리에 1회
+              로드하여 추론 속도 최적화.
+            </li>
+            <li>
+              <strong>Labeling:</strong> 0(비광고), 1(광고)로 분류하며
+              확률값(adProbability)을 함께 반환.
+            </li>
+            <li>
+              <strong>Dependency:</strong>
+              <code>numpy&lt;2.0</code> 다운그레이드로 torch와의 충돌 방지.
+            </li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <div class="sec-eyebrow">Review & Roadmap</div>
+          <h2 class="sec-heading">04. 트러블슈팅 및 향후 과제</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Hot Reload 이슈</strong></td>
+                <td>
+                  백엔드 코드 수정 후 수동 재시작 미흡으로 기존 태그 노출 →
+                  <code>--reload</code> 옵션 생활화
+                </td>
+              </tr>
+              <tr>
+                <td><strong>환경 변수</strong></td>
+                <td>
+                  .env 로드 시점 불일치 해결 → FastAPI 인스턴스 생성 전 로드
+                  강제
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">Upcoming Milestones</h3>
+          <ul class="bullet-list">
+            <li>
+              [ ] <strong>진짜 리뷰 보기:</strong> FastAPI 요약 엔드포인트와
+              Flutter UI 연동.
+            </li>
+            <li>
+              [ ] <strong>앙상블 전략:</strong> LLM과 ELECTRA 결과 불일치 시
+              <code>suspicious</code> 처리 로직 확정.
+            </li>
+            <li>
+              [ ] <strong>UI 반영:</strong> 현재 파싱하지 않는 AI 요약(summary)
+              필드를 Flutter 화면에 구현.
+            </li>
+          </ul>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="truth_guard_dev_log_0424.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">진실의 입 — 개발 작업 문서 (04.24)</p>
+        <p class="post-nav-meta">
+          <span class="tag">Truth Guard</span>
+          <span class="date">· 2026.04.24</span>
+        </p>
+      </a>
+
+      <a class="post-nav-card next" href="#">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">앙상블 전략을 통한 판별 정확도 개선</p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../index.html" class="footer-back">← 프로젝트 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
