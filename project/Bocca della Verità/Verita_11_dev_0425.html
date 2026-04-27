@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 — Truth Guard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">truth_guard.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Documentation</span>
+          <span class="badge badge-status">v1.0 완료</span>
+        </div>
+        <h1 class="post-title">진실의 입 (The Truth-Filtering Engine) — 개발 작업 문서</h1>
+        <p class="post-sub">AI 기반 네이버 지도 광고 리뷰 필터링 시스템 설계</p>
+        <p class="post-desc">
+          네이버 지도 블로그 리뷰의 광고 여부를 AI로 분석하고, 
+          허위·대가성 리뷰가 제거된 진짜 정보를 요약하여 제공하는 시스템의 핵심 아키텍처와 구현 명세를 기술합니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val">2026. 04. 27.</p>
+          </div>
+          <div>
+            <p class="stat-label">팀명</p>
+            <p class="stat-val">진실 방범대 (Truth Guard)</p>
+          </div>
+          <div>
+            <div class="stat-label">기술 스택</div>
+            <div class="stat-val">FastAPI, Flutter, LLM</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li><a href="#section-1"><span class="toc-num">01</span>프로젝트 개요 및 기술 스택</a></li>
+            <li><a href="#section-2"><span class="toc-num">02</span>시스템 아키텍처 및 구조</a></li>
+            <li><a href="#section-3"><span class="toc-num">03</span>데이터베이스 설계 (DB Schema)</a></li>
+            <li><a href="#section-4"><span class="toc-num">04</span>주요 모듈 및 로직 설명</a></li>
+            <li><a href="#section-5"><span class="toc-num">05</span>향후 추진 계획 (TODO)</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="section-1">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">01. 프로젝트 개요 및 기술 스택</h2>
+          <p>사용자에게 광고성 리뷰를 배제한 순수 방문 후기만을 제공하기 위해 최신 AI 기술과 크롤링 파이프라인을 결합했습니다.</p>
+          
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>영역</th>
+                <th>적용 기술</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>데이터 수집</strong></td>
+                <td>Python, Playwright, 네이버 검색 API</td>
+              </tr>
+              <tr>
+                <td><strong>서버/AI</strong></td>
+                <td>FastAPI, OpenAI API (GPT-4o)</td>
+              </tr>
+              <tr>
+                <td><strong>모바일 앱</strong></td>
+                <td>Flutter, flutter_map, Riverpod</td>
+              </tr>
+              <tr>
+                <td><strong>인프라/DB</strong></td>
+                <td>Supabase (PostgreSQL)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <div class="sec-eyebrow">Architecture</div>
+          <h2 class="sec-heading">02. 시스템 아키텍처 및 구조</h2>
+          
+          <h3 class="sub-heading">2.1. 데이터 처리 워크플로우</h3>
+          <div class="code-block">
+            <pre><span class="c-comment">// Flutter → FastAPI → Supabase → LLM</span>
+<span class="c-line">1. Supabase 캐시 확인 (기존 검색어 존재 시 즉시 반환)</span>
+<span class="c-line">2. 캐시 부재 시 Naver 검색 API 호출 및 블로그 수집</span>
+<span class="c-line">3. 수집된 Raw 데이터를 Supabase에 저장</span>
+<span class="c-line">4. LLM API(GPT-4o)를 통한 광고 분석 및 필드 업데이트</span>
+<span class="c-line">5. 최종 필터링된 결과를 Flutter로 반환</span></pre>
+          </div>
+
+          <h3 class="sub-heading">2.2. 디렉토리 구조 명세</h3>
+          <ul class="bullet-list">
+            <li><strong>Backend:</strong> <code>routers/</code>(엔드포인트), <code>services/</code>(핵심 로직), <code>models/</code>(스키마)로 구성된 레이어드 아키텍처.</li>
+            <li><strong>Frontend:</strong> <code>features/</code> 단위로 지도(map)와 상세페이지(detail) 기능을 모듈화.</li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <div class="sec-eyebrow">Database</div>
+          <h2 class="sec-heading">03. 데이터베이스 설계 (DB Schema)</h2>
+          <p>수집된 리뷰 데이터와 AI 분석 결과를 효율적으로 관리하기 위한 <code>reviews</code> 테이블 구조입니다.</p>
+          
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>컬럼명</th>
+                <th>타입</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>name</strong></td>
+                <td>TEXT</td>
+                <td>사용자 검색어 (인덱싱)</td>
+              </tr>
+              <tr>
+                <td><strong>review_url</strong></td>
+                <td>TEXT</td>
+                <td>블로그 포스트 원문 주소</td>
+              </tr>
+              <tr>
+                <td><strong>is_ad_llm_pred</strong></td>
+                <td>INTEGER</td>
+                <td>LLM 분석 결과 (0: 일반, 1: 광고)</td>
+              </tr>
+              <tr>
+                <td><strong>created_at</strong></td>
+                <td>TIMESTAMP</td>
+                <td>데이터 저장 시각 (인덱싱)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <div class="sec-eyebrow">Modules</div>
+          <h2 class="sec-heading">04. 주요 모듈 및 로직 설명</h2>
+          
+          <h3 class="sub-heading">4.1. LLM Service (광고 판별 및 요약)</h3>
+          <p>GPT-4o 모델을 활용하여 광고 여부를 판별합니다. 판별 기준은 다음과 같습니다.</p>
+          <ul class="bullet-list">
+            <li>협찬·제공·무료체험 등 대가성 문구 포함 여부</li>
+            <li>과도한 긍정 표현 및 핵심 정보(가격 등) 결여 여부</li>
+            <li>과도한 해시태그 나열 패턴 분석</li>
+          </ul>
+
+          <h3 class="sub-heading">4.2. Supabase Service (캐싱 전략)</h3>
+          <p>동일한 검색어에 대해 불필요한 API 호출을 방지하기 위해 <code>get_cached_reviews()</code>를 통해 응답 속도를 최적화했습니다.</p>
+        </section>
+
+        <section class="section visible" id="section-5">
+          <div class="sec-eyebrow">Roadmap</div>
+          <h2 class="sec-heading">05. 향후 추진 계획 (TODO)</h2>
+          <ul class="bullet-list">
+            <li><strong>BERT 모델 연동:</strong> LLM의 높은 비용과 속도를 개선하기 위해 로컬 BERT 모델(is_ad_bert_pred) 추가.</li>
+            <li><strong>데이터 라벨링:</strong> 판별 정확도 향상을 위한 대규모 수동 라벨링 및 검증 작업 수행.</li>
+          </ul>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">Comments</div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="truth_guard_daily_0424.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">진실의 입 — 데일리 리포트 (04.24)</p>
+        <p class="post-nav-meta">
+          <span class="tag">Truth Guard</span>
+          <span class="date">· 2026.04.24</span>
+        </p>
+      </a>
+
+      <a class="post-nav-card next" href="#">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">KoELECTRA 모델 성능 최적화 리포트</p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../index.html" class="footer-back">← 프로젝트 목록</a>
+      <span class="footer-copy">© 2026 진실 방범대 (Truth Guard)</span>
+    </footer>
+  </body>
+</html>
