@@ -1,0 +1,1075 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bocca della Verità — 시연 영상</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #fdfaf8;
+        --bg2: #f5f3ed;
+        --bg3: #fef9ed;
+        --surface: #faf3d0;
+        --border: rgba(180, 158, 70, 0.1);
+        --border2: rgba(180, 149, 70, 0.2);
+        --accent: #584f34;
+        --accent2: #8c7c4f;
+        --red: #d63b3b;
+        --blue: #4080c0;
+        --purple: #8060c0;
+        --muted: #a08c84;
+        --body: #5c4840;
+        --heading: #2a1a14;
+        --font-display: "Bebas Neue", sans-serif;
+        --font-serif: "DM Serif Display", serif;
+        --font-mono: "DM Mono", monospace;
+        --font-body: "Pretendard", sans-serif;
+        --radius-sm: 8px;
+        --radius: 14px;
+        --radius-lg: 20px;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--body);
+        font-family: var(--font-body);
+        font-size: 15px;
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+      }
+      ::selection {
+        background: var(--accent);
+        color: #fff;
+      }
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--surface);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--muted);
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(253, 250, 248, 0.9);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+      }
+      nav .inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav-logo {
+        font-family: var(--font-display);
+        font-size: 1.4rem;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .nav-back {
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .nav-back:hover {
+        color: var(--heading);
+      }
+
+      /* ── HERO ── */
+      .hero {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 4.5rem 2rem 3rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-grid-bg {
+        position: absolute;
+        inset: 0;
+        opacity: 0.4;
+        pointer-events: none;
+        background-image:
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+      .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 1.8rem;
+        position: relative;
+        z-index: 1;
+      }
+      .badge {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        padding: 4px 12px;
+        border-radius: 100px;
+        text-transform: uppercase;
+      }
+      .badge-type {
+        background: var(--accent);
+        color: #fff;
+        font-weight: 700;
+      }
+      .badge-ver {
+        background: transparent;
+        border: 1px solid var(--border2);
+        color: var(--muted);
+      }
+      .badge-status {
+        background: rgba(201, 79, 124, 0.08);
+        color: var(--accent2);
+        border: 1px solid rgba(201, 79, 124, 0.2);
+      }
+      .hero-title {
+        font-family: var(--font-display);
+        font-size: clamp(3rem, 7vw, 6rem);
+        line-height: 0.92;
+        letter-spacing: 0.03em;
+        color: var(--heading);
+        margin-bottom: 0.9rem;
+        position: relative;
+        z-index: 1;
+      }
+      .hero-title .hl {
+        color: var(--accent);
+      }
+      .hero-sub {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+        color: var(--muted);
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ── MAIN LAYOUT ── */
+      .main-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2.5rem 2rem 6rem;
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 0 3.5rem;
+        align-items: start;
+      }
+
+      /* ── LEFT COL: video only, sticky ── */
+      .left-col {
+        position: sticky;
+        top: 72px;
+      }
+
+      /* ── VIDEO BLOCK ── */
+      .video-block {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+      }
+      .video-topbar {
+        padding: 0.7rem 1rem;
+        background: var(--bg3);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .vbar-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .vbar-dot {
+        width: 7px;
+        height: 7px;
+        background: var(--red);
+        border-radius: 50%;
+        animation: blink 1.5s infinite;
+      }
+      .vbar-title {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: var(--heading);
+      }
+      .vbar-badge {
+        font-family: var(--font-mono);
+        font-size: 0.58rem;
+        padding: 2px 8px;
+        border-radius: 100px;
+        background: rgba(233, 99, 119, 0.1);
+        border: 1px solid rgba(233, 99, 119, 0.22);
+        color: var(--accent);
+        letter-spacing: 0.05em;
+      }
+
+      /* portrait video */
+      .video-screen {
+        background: #1a0e14;
+        padding: 0.8rem;
+        display: flex;
+        justify-content: center;
+      }
+      .video-screen video {
+        width: 100%;
+        /* portrait: constrain height so it doesn't overflow viewport */
+        max-height: 62vh;
+        object-fit: contain;
+        border-radius: 8px;
+        display: block;
+      }
+      /* fallback placeholder (shown when no video file) */
+      .video-placeholder {
+        width: 100%;
+        aspect-ratio: 9 / 16;
+        max-height: 62vh;
+        background: var(--bg3);
+        border-radius: 8px;
+        border: 1px solid var(--border2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+      .video-placeholder::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          160deg,
+          rgba(233, 99, 119, 0.05) 0%,
+          rgba(201, 79, 124, 0.05) 100%
+        );
+      }
+      .play-btn-static {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: rgba(233, 99, 119, 0.12);
+        border: 1.5px solid rgba(233, 99, 119, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+      }
+      .play-icon {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 7px 0 7px 13px;
+        border-color: transparent transparent transparent var(--accent);
+        margin-left: 2px;
+      }
+      .no-video-label {
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        color: var(--muted);
+        text-align: center;
+        line-height: 1.6;
+        position: relative;
+        z-index: 1;
+        padding: 0 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      /* progress bar */
+      .video-progress-wrap {
+        padding: 0 0.8rem 0;
+        background: #1a0e14;
+      }
+      .video-progress {
+        width: 100%;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        cursor: pointer;
+        position: relative;
+      }
+      .video-progress-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 2px;
+        width: 0%;
+        transition: width 0.1s linear;
+        pointer-events: none;
+      }
+      /* chapter markers on progress bar */
+      .chapter-marker {
+        position: absolute;
+        top: -2px;
+        width: 2px;
+        height: 7px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 1px;
+        pointer-events: none;
+        transform: translateX(-50%);
+      }
+
+      .video-footbar {
+        padding: 0.7rem 1rem;
+        background: var(--bg3);
+        border-top: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px 10px;
+      }
+      .vmeta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .vmeta-label {
+        font-family: var(--font-mono);
+        font-size: 0.55rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .vmeta-val {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--heading);
+      }
+
+      /* ── RIGHT COL ── */
+      .right-col {
+        min-width: 0;
+      }
+
+      .post-stats {
+        display: flex;
+        flex-wrap: wrap;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        background: var(--bg2);
+        margin-bottom: 2rem;
+      }
+      .post-stats > div {
+        flex: 1;
+        min-width: 100px;
+        padding: 0.4rem 0.8rem;
+        border-right: 1px solid var(--border);
+      }
+      .post-stats > div:last-child {
+        border-right: none;
+      }
+      .stat-label {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 4px;
+      }
+      .stat-val {
+        font-size: 0.85rem;
+        color: var(--heading);
+        font-weight: 600;
+      }
+
+      /* ── SECTION ── */
+      .section {
+        padding: 0 0 2.4rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2.4rem;
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.55s ease,
+          transform 0.55s ease;
+      }
+      .section.visible {
+        opacity: 1;
+        transform: none;
+      }
+      .section:last-of-type {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+
+      .sec-eyebrow {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+      }
+      .sec-heading {
+        font-family: var(--font-display);
+        font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+        letter-spacing: 0.04em;
+        color: var(--heading);
+        margin-bottom: 1.2rem;
+        line-height: 1.1;
+      }
+
+      /* ── SCENE LIST (with timestamp jump) ── */
+      .scene-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        background: var(--border);
+
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        /* ---------------------- */
+      }
+      .scene-row {
+        display: grid;
+        grid-template-columns: 54px 1fr auto;
+        background: #fcfbfa;
+        transition: background 0.18s;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .scene-row::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--accent), transparent);
+        opacity: 0;
+        transition: opacity 0.18s;
+      }
+      .scene-row:hover {
+        background: var(--surface);
+      }
+      .scene-row:hover::before {
+        opacity: 1;
+      }
+      .scene-row.active-scene {
+        background: var(--surface);
+      }
+      .scene-row.active-scene::before {
+        opacity: 1;
+      }
+
+      .scene-num {
+        font-family: var(--font-display);
+        font-size: 1.9rem;
+        color: var(--border2);
+        padding: 0.4rem;
+        border-right: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          color 0.18s,
+          background 0.18s;
+        background: #faf6f3;
+      }
+      .scene-row:hover .scene-num,
+      .scene-row.active-scene .scene-num {
+        color: var(--accent);
+      }
+
+      .scene-row:hover .scene-num {
+        background: #fcefe9; /* 호버 시 숫자 칸만 살짝 더 어둡게 */
+      }
+
+      .scene-content {
+        padding: 0.8rem 0.8rem;
+      }
+      .scene-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--heading);
+        margin-bottom: 0.4rem 0.8rem;
+      }
+      .scene-desc {
+        font-size: 0.77rem;
+        color: var(--muted);
+        line-height: 1.6;
+        margin-bottom: 0.4rem 0.8rem;
+      }
+      .scene-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .scene-tag {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: 0.58rem;
+        padding: 2px 7px;
+        border-radius: 4px;
+        background: rgba(233, 99, 119, 0.08);
+        border: 1px solid rgba(233, 99, 119, 0.18);
+        color: var(--accent);
+      }
+      .scene-tag.blue {
+        background: rgba(64, 128, 192, 0.08);
+        border-color: rgba(64, 128, 192, 0.2);
+        color: var(--blue);
+      }
+      .scene-tag.purple {
+        background: rgba(128, 96, 192, 0.08);
+        border-color: rgba(128, 96, 192, 0.2);
+        color: var(--purple);
+      }
+
+      /* timestamp jump button */
+      .scene-ts {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 1rem;
+        flex-shrink: 0;
+      }
+      .ts-btn {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        color: var(--muted);
+        background: var(--bg2);
+        border: 1px solid var(--border2);
+        border-radius: 6px;
+        padding: 3px 8px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition:
+          color 0.18s,
+          background 0.18s,
+          border-color 0.18s;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      .ts-btn::before {
+        content: "▶";
+        font-size: 0.5rem;
+        color: var(--accent);
+        opacity: 0.7;
+      }
+      .scene-row:hover .ts-btn {
+        color: var(--accent);
+        background: rgba(233, 99, 119, 0.08);
+        border-color: rgba(233, 99, 119, 0.3);
+      }
+      .scene-row.active-scene .ts-btn {
+        color: var(--accent);
+        background: rgba(233, 99, 119, 0.12);
+        border-color: rgba(233, 99, 119, 0.35);
+      }
+
+      /* ── HIGHLIGHT BOX ── */
+      .highlight-box {
+        background: rgba(233, 99, 119, 0.05);
+        border: 1px solid rgba(233, 99, 119, 0.18);
+        border-left: 3px solid var(--accent);
+        border-radius: var(--radius-sm);
+        padding: 1rem 1.2rem;
+        margin: 1rem 0;
+        font-size: 0.83rem;
+        color: var(--body);
+        line-height: 1.8;
+      }
+      .highlight-box strong {
+        color: var(--accent);
+      }
+
+      /* ── TECH TAGS ── */
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 0.6rem;
+      }
+      .tech-tag {
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        padding: 3px 9px;
+        border-radius: 100px;
+        border: 0.5px solid var(--border2);
+        color: var(--muted);
+        background: var(--bg2);
+        cursor: default;
+        transition:
+          color 0.18s,
+          background 0.18s,
+          border-color 0.18s;
+      }
+      .tech-tag:hover {
+        background: rgba(64, 128, 192, 0.08);
+        border-color: rgba(64, 128, 192, 0.3);
+        color: var(--blue);
+      }
+      .tech-tag.hi {
+        background: rgba(233, 99, 119, 0.08);
+        border-color: rgba(233, 99, 119, 0.25);
+        color: var(--accent2);
+      }
+      .tech-tag.hi:hover {
+        background: rgba(233, 99, 119, 0.16);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      /* ── FOOTER ── */
+      .post-footer {
+        border-top: 1px solid var(--border);
+        padding: 1.3rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .footer-back {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-back:hover {
+        color: var(--accent);
+      }
+      .footer-copy {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: var(--muted);
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.25;
+        }
+      }
+
+      @media (max-width: 860px) {
+        .main-wrapper {
+          grid-template-columns: 1fr;
+        }
+        .left-col {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a class="nav-logo" href="#">Bocca della Verità</a>
+        <a class="nav-back" href="mongle_28_portfolio.html"
+          >← 목차로 돌아가기</a
+        >
+      </div>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-grid-bg"></div>
+      <div class="hero-meta">
+        <span class="badge badge-type">Demo</span>
+        <span class="badge badge-ver">2026.04.30</span>
+        <span class="badge badge-status">Bocca della Verità</span>
+      </div>
+      <h1 class="hero-title">시연 <span class="hl">영상</span></h1>
+      <p class="hero-sub">AI 광고 판별 — 진실의 입</p>
+    </div>
+
+    <div class="main-wrapper">
+      <!-- LEFT: portrait video, sticky -->
+      <div class="left-col">
+        <div class="video-block">
+          <div class="video-topbar">
+            <div class="vbar-left">
+              <div class="vbar-dot"></div>
+              <span class="vbar-title">진실의 입 시연 영상.mp4</span>
+            </div>
+            <span class="vbar-badge">LIVE</span>
+          </div>
+
+          <div class="video-screen">
+            <!--
+              영상 파일을 같은 폴더에 두고 src를 아래처럼 지정하세요.
+              src="Mongle 시연 영상.mp4"
+            -->
+            <video
+              id="demoVideo"
+              controls
+              playsinline
+              src="진실의 입 시연영상.mp4"
+              onerror="
+                this.style.display = 'none';
+                document.getElementById('videoFallback').style.display = 'flex';
+              "
+            ></video>
+            <!-- fallback if file not found -->
+            <div
+              id="videoFallback"
+              class="video-placeholder"
+              style="display: none"
+            >
+              <div class="play-btn-static"><div class="play-icon"></div></div>
+              <span class="no-video-label"
+                >영상 파일을<br />같은 폴더에 넣어주세요<br />(Mongle 시연
+                영상.mp4)</span
+              >
+            </div>
+          </div>
+
+          <!-- progress bar with chapter markers -->
+          <div class="video-progress-wrap">
+            <div class="video-progress" id="progressBar">
+              <div class="video-progress-fill" id="progressFill"></div>
+              <!-- chapter markers injected by JS -->
+            </div>
+          </div>
+
+          <div class="video-footbar">
+            <div class="vmeta-item">
+              <span class="vmeta-label">프로젝트</span>
+              <span class="vmeta-val">Mongle</span>
+            </div>
+            <div class="vmeta-item">
+              <span class="vmeta-label">팀</span>
+              <span class="vmeta-val">4인</span>
+            </div>
+            <div class="vmeta-item">
+              <span class="vmeta-label">기간</span>
+              <span class="vmeta-val">03.23 – 04.02 (11일)</span>
+            </div>
+            <div class="vmeta-item">
+              <span class="vmeta-label">완성도</span>
+              <span class="vmeta-val">98%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: info -->
+      <div class="right-col">
+        <!-- SCENES with timestamp jump -->
+        <div class="section">
+          <div class="sec-eyebrow">Scenes</div>
+          <h2 class="sec-heading">시연 구성</h2>
+          <p
+            style="font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem"
+          >
+            각 항목을 클릭하면 영상의 해당 장면으로 이동합니다.
+          </p>
+
+          <div class="scene-list">
+            <!--
+              data-time = 이동할 초(seconds).
+              영상을 실제로 확인한 뒤 각 장면의 시작 시간(초)으로 교체해 주세요.
+              예시: 0초, 30초, 75초, 120초, 165초
+            -->
+            <div class="scene-row" data-time="0">
+              <div class="scene-num">01</div>
+              <div class="scene-content">
+                <div class="scene-title">온보딩 & 회원가입</div>
+                <div class="scene-desc">
+                  커플 / 플래너 역할 선택 후 Supabase Auth 기반 회원가입 및
+                  로그인 흐름
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">0:00</span></div>
+            </div>
+
+            <div class="scene-row" data-time="10">
+              <div class="scene-num">02</div>
+              <div class="scene-content">
+                <div class="scene-title">알림 기능</div>
+                <div class="scene-desc">
+                  Supabase Edge Function에서 FastAPI로 푸시 알림 전송, Expo
+                  앱에서 수신
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">0:10</span></div>
+            </div>
+
+            <div class="scene-row" data-time="20">
+              <div class="scene-num">03</div>
+              <div class="scene-content">
+                <div class="scene-title">업체 및 플래너 리스트</div>
+                <div class="scene-desc">
+                  카테고리별 업체 탐색 및 전화 연동, 플래너 상담 신청
+                  기능(Supabase 연동)
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">0:20</span></div>
+            </div>
+
+            <div class="scene-row" data-time="75">
+              <div class="scene-num">04</div>
+              <div class="scene-content">
+                <div class="scene-title">커플 / 플래너 실시간 채팅</div>
+                <div class="scene-desc">
+                  Supabase Realtime 기반 그룹 채팅. 메시지 즉시 동기화 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">1:15</span></div>
+            </div>
+
+            <div class="scene-row" data-time="100">
+              <div class="scene-num">05</div>
+              <div class="scene-content">
+                <div class="scene-title">채팅 AI</div>
+                <div class="scene-desc">
+                  채팅 AI 응답 생성 과정 시연: FastAPI → GPT-4 mini→ FastAPI →
+                  Expo 앱
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">1:40</span></div>
+            </div>
+            <div class="scene-row" data-time="125">
+              <div class="scene-num">06</div>
+              <div class="scene-content">
+                <div class="scene-title">비용 관리 UI</div>
+                <div class="scene-desc">
+                  비용 관리 UI, Supabase에서 비용 데이터 불러와 화면에 렌더링
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">2:05</span></div>
+            </div>
+            <div class="scene-row" data-time="150">
+              <div class="scene-num">07</div>
+              <div class="scene-content">
+                <div class="scene-title">비용 AI</div>
+                <div class="scene-desc">
+                  비용 견적 최적화 AI 과정 시연: FastAPI → GPT-4 → FastAPI →
+                  Expo 앱
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">2:30</span></div>
+            </div>
+            <div class="scene-row" data-time="178">
+              <div class="scene-num">08</div>
+              <div class="scene-content">
+                <div class="scene-title">마이페이지 및 로그아웃</div>
+                <div class="scene-desc">
+                  마이페이지 및 로그아웃 흐름 시연, Supabase Auth 세션 삭제 로직
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">2:58</span></div>
+            </div>
+            <div class="scene-row" data-time="186">
+              <div class="scene-num">09</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 UI</div>
+                <div class="scene-desc">
+                  플래너 UI 시연, 플래너 계정 로그인 및 Supabase에서 관련 데이터
+                  렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">3:06</span></div>
+            </div>
+            <div class="scene-row" data-time="216">
+              <div class="scene-num">10</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 할 일 목록 UI</div>
+                <div class="scene-desc">
+                  플래너 할 일 목록 UI 시연, Supabase에서 관련 데이터 불러오기
+                  및 렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">3:36</span></div>
+            </div>
+            <div class="scene-row" data-time="240">
+              <div class="scene-num">11</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 커플 목록 UI</div>
+                <div class="scene-desc">
+                  플래너 커플 목록 UI 시연, Supabase에서 관련 데이터 불러오기 및
+                  렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">4:00</span></div>
+            </div>
+            <div class="scene-row" data-time="270">
+              <div class="scene-num">12</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 업체 목록 UI</div>
+                <div class="scene-desc">
+                  플래너 업체 목록 UI 시연, Supabase에서 관련 데이터 불러오기 및
+                  렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">4:30</span></div>
+            </div>
+            <div class="scene-row" data-time="300">
+              <div class="scene-num">13</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 비용 현황 UI</div>
+                <div class="scene-desc">
+                  플래너 비용 현황 UI 시연, Supabase에서 관련 데이터 불러오기 및
+                  렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">5:00</span></div>
+            </div>
+            <div class="scene-row" data-time="334">
+              <div class="scene-num">14</div>
+              <div class="scene-content">
+                <div class="scene-title">플래너 UI 내비게이션</div>
+                <div class="scene-desc">
+                  플래너 UI 내비게이션 시연, 화면 간 이동 및 데이터 렌더링 확인
+                </div>
+              </div>
+              <div class="scene-ts"><span class="ts-btn">5:34</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TECH -->
+        <div class="section">
+          <div class="sec-eyebrow">Tech Stack</div>
+          <h2 class="sec-heading">사용 기술</h2>
+          <div class="highlight-box">
+            React Native(Expo) 앱 / Vite 웹 대시보드를
+            <strong>단일 Supabase 프로젝트</strong>에 연결, RLS 정책으로
+            커플·플래너 권한을 분리했습니다.
+          </div>
+          <div class="tag-row">
+            <span class="tech-tag hi">React Native</span>
+            <span class="tech-tag hi">Expo Router</span>
+            <span class="tech-tag hi">Supabase</span>
+            <span class="tech-tag">FastAPI</span>
+            <span class="tech-tag">GPT-4</span>
+            <span class="tech-tag">PostgreSQL</span>
+            <span class="tech-tag">Figma</span>
+            <span class="tech-tag">Vite</span>
+            <span class="tech-tag">KakaoMap</span>
+            <span class="tech-tag">GitHub</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="post-footer">
+      <a class="footer-back" href="mongle_28_portfolio.html"
+        >← 포트폴리오로 돌아가기</a
+      >
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script>
+      /* ── scroll reveal ── */
+      const revealObs = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("visible");
+          }),
+        { threshold: 0.08 },
+      );
+      document
+        .querySelectorAll(".section")
+        .forEach((s) => revealObs.observe(s));
+
+      /* ── video + scene logic ── */
+      const video = document.getElementById("demoVideo");
+      const progressBar = document.getElementById("progressBar");
+      const fill = document.getElementById("progressFill");
+      const sceneRows = document.querySelectorAll(".scene-row");
+
+      /* collect timestamps for chapter markers */
+      const times = Array.from(sceneRows).map((r) => +r.dataset.time);
+
+      /* inject chapter markers onto progress bar once duration is known */
+      video.addEventListener("loadedmetadata", () => {
+        const dur = video.duration;
+        times.forEach((t) => {
+          if (!dur) return;
+          const pct = (t / dur) * 100;
+          const m = document.createElement("div");
+          m.className = "chapter-marker";
+          m.style.left = pct + "%";
+          progressBar.appendChild(m);
+        });
+      });
+
+      /* update progress fill & highlight active scene */
+      video.addEventListener("timeupdate", () => {
+        if (!video.duration) return;
+        const pct = (video.currentTime / video.duration) * 100;
+        fill.style.width = pct + "%";
+
+        /* find active scene */
+        let active = 0;
+        times.forEach((t, i) => {
+          if (video.currentTime >= t) active = i;
+        });
+        sceneRows.forEach((r, i) => {
+          r.classList.toggle("active-scene", i === active);
+        });
+      });
+
+      /* click on progress bar to seek */
+      progressBar.addEventListener("click", (e) => {
+        if (!video.duration) return;
+        const rect = progressBar.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        video.currentTime = pct * video.duration;
+        video.play();
+      });
+
+      /* click scene row → seek + play */
+      sceneRows.forEach((row) => {
+        row.addEventListener("click", () => {
+          const t = +row.dataset.time;
+          video.currentTime = t;
+          video.play();
+          /* smooth scroll video into view on mobile */
+          video.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+      });
+    </script>
+  </body>
+</html>
