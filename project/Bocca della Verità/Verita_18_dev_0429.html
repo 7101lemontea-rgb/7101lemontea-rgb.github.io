@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 — Truth Guard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">truth_guard.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Document</span>
+          <span class="badge badge-status">Final Update</span>
+        </div>
+        <h1 class="post-title">
+          진실의 입 (The Truth-Filtering Engine) — 개발 작업 문서
+        </h1>
+        <p class="post-sub">AI 분석 고도화 및 UX 레이아웃 전면 개편</p>
+        <p class="post-desc">
+          맛집 블로그 리뷰의 광고성 여부를 판별하는 엔진의 프롬프트 고도화와
+          Flutter Web 환경에서의 스크롤 최적화 및 워드클라우드 시각화 개선
+          내역입니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val">2026-04-29</p>
+          </div>
+          <div>
+            <p class="stat-label">기술 스택</p>
+            <p class="stat-val">Flutter Web / FastAPI / Supabase / GPT-4o</p>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-intro"
+                ><span class="toc-num">00</span>프로젝트 개요</a
+              >
+            </li>
+            <li>
+              <a href="#work-1"
+                ><span class="toc-num">01</span>워드클라우드 개선</a
+              >
+            </li>
+            <li>
+              <a href="#work-2"
+                ><span class="toc-num">02</span>상세 페이지 레이아웃</a
+              >
+            </li>
+            <li>
+              <a href="#work-3"
+                ><span class="toc-num">03</span>리뷰 리스트 스크롤</a
+              >
+            </li>
+            <li>
+              <a href="#work-5"
+                ><span class="toc-num">05</span>광고 판별 프롬프트</a
+              >
+            </li>
+            <li>
+              <a href="#work-6"
+                ><span class="toc-num">06</span>상세보기 진입 UX (자동 분석)</a
+              >
+            </li>
+            <li>
+              <a href="#work-8"
+                ><span class="toc-num">08</span>기술 트레이드오프</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <!-- 프로젝트 개요 -->
+        <section class="section visible" id="section-intro">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">00. 프로젝트 개요</h2>
+          <table class="gen-table">
+            <tbody>
+              <tr>
+                <th>프로젝트명</th>
+                <td>진실의 입 (The Truth-Filtering Engine)</td>
+              </tr>
+              <tr>
+                <th>기술 스택</th>
+                <td>Flutter Web / FastAPI / Supabase / OpenAI GPT-4o</td>
+              </tr>
+              <tr>
+                <th>목적</th>
+                <td>
+                  맛집 블로그 리뷰의 광고성 여부를 AI로 판별하고 실제 방문자
+                  기반 신뢰도 제공
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 작업 #1 -->
+        <section class="section visible" id="work-1">
+          <div class="sec-eyebrow">Work #1</div>
+          <h2 class="sec-heading">01. 워드클라우드 개선</h2>
+          <p class="file-path">
+            파일: <code>lib/.../widgets/word_cloud_card.dart</code>
+          </p>
+          <ul class="bullet-list">
+            <li>
+              <strong>문제:</strong> 키워드 과다(30개)로 인한 가독성 저하 및
+              텍스트 치우침 버그
+            </li>
+            <li>
+              <strong>변경 사항:</strong> 빈도 2회 이상 단어 추출 및 상위 8개
+              제한, 말풍선 모양(BubbleWordCloudPainter) 적용
+            </li>
+          </ul>
+          <div class="code-block">
+            <pre><span class="c-comment">// 키워드 필터링 로직 수정</span>
+<span class="keyword">return</span> sorted
+  .where((e) => e.value >= <span class="number">2</span>)
+  .take(<span class="number">8</span>)
+  .map((e) => WordFreq(e.key, e.value))
+  .toList();</pre>
+          </div>
+        </section>
+
+        <!-- 작업 #2 & #3 통합 레이아웃 -->
+        <section class="section visible" id="work-2">
+          <div class="sec-eyebrow">Work #2 & #3</div>
+          <h2 class="sec-heading">02. 상세 페이지 & 스크롤 구조 개선</h2>
+          <p class="file-path">
+            파일: <code>restaurant_detail_screen.dart</code> /
+            <code>review_list_section.dart</code>
+          </p>
+          <ul class="bullet-list">
+            <li>
+              <strong>구조 변경:</strong> SingleChildScrollView에서
+              <strong>CustomScrollView (Sliver)</strong>로 전환
+            </li>
+            <li>
+              <strong>레이아웃:</strong> AiAnalysisCard(flex:4)와
+              WordCloudCard(flex:6)를 Row로 병렬 배치 (높이 200px 고정)
+            </li>
+            <li>
+              <strong>스크롤 최적화:</strong> ListView에
+              <code>shrinkWrap: true</code> 및
+              <code>NeverScrollableScrollPhysics</code> 적용으로 외부 스크롤과
+              통합
+            </li>
+          </ul>
+        </section>
+
+        <!-- 작업 #4 & #5 -->
+        <section class="section visible" id="work-5">
+          <div class="sec-eyebrow">Work #4 & #5</div>
+          <h2 class="sec-heading">05. 광고 판별 프롬프트 고도화</h2>
+          <p class="file-path">
+            파일: <code>app/services/classify_ad.py</code>
+          </p>
+          <p>
+            가중치 기반 점수 시스템 도입 (기본 점수 0.3에서 시작하여 신호별 누적
+            합산)
+          </p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>신호 (Signal)</th>
+                <th>가중치</th>
+                <th>신호 (Signal)</th>
+                <th>가중치</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>협찬/제공 명시</td>
+                <td>+0.7</td>
+                <td>단점·불만 언급</td>
+                <td>-0.4</td>
+              </tr>
+              <tr>
+                <td>일방적 칭찬</td>
+                <td>+0.2</td>
+                <td>부정적 감정</td>
+                <td>-0.2</td>
+              </tr>
+              <tr>
+                <td>해시태그 10개+</td>
+                <td>+0.1</td>
+                <td>개인 경험 묘사</td>
+                <td>-0.1</td>
+              </tr>
+            </tbody>
+          </table>
+          <ul class="bullet-list">
+            <li>
+              <strong>일관성:</strong> <code>temperature=0</code> 설정을 통한
+              결과 고정
+            </li>
+            <li>
+              <strong>안정성:</strong> JSON 파싱 실패 시 중립값(0.5) 반환
+              예외처리 추가
+            </li>
+          </ul>
+        </section>
+
+        <!-- 작업 #6 -->
+        <section class="section visible" id="work-6">
+          <div class="sec-eyebrow">Work #6</div>
+          <h2 class="sec-heading">06. 상세보기 진입 UX 개선 (자동 분석)</h2>
+          <p>
+            사용자가 "데이터 없음" 화면을 거치지 않고 로딩 스피너(checking)
+            상태에서 즉시 분석 결과로 진입하도록 개선했습니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-comment">// 변경 후 핵심 로직: 캐시 없을 시 즉시 신규 크롤링 실행</span>
+<span class="keyword">if</span> (cached.isEmpty) {
+  <span class="keyword">try</span> {
+    <span class="keyword">final</span> fresh = <span class="keyword">await</span> _fetchFreshReviews(_r.name, mode);
+    _applyReviews(fresh);
+  } <span class="keyword">catch</span> (e) {
+    setState(() => _state = _ScreenState.noData); <span class="c-comment">// 실패 시에만 fallback</span>
+  }
+}</pre>
+          </div>
+          <p>
+            <strong>변경 후 플로우:</strong> [마커 탭] → [상세 보기] → [Checking
+            스피너] → [결과 표시(Loaded)]
+          </p>
+        </section>
+
+        <!-- 작업 #8 -->
+        <section class="section visible" id="work-8">
+          <div class="sec-eyebrow">Work #8</div>
+          <h2 class="sec-heading">08. 기술 트레이드오프 정리</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>현재 스택 (Flutter/FastAPI)</th>
+                <th>React 생태계 비교</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>AI/ML 통합</td>
+                <td>Python 서버 직접 연동으로 우수</td>
+                <td>별도 Python 서버 구축 필수</td>
+              </tr>
+              <tr>
+                <td>SEO</td>
+                <td>불리 (Canvas 기반 렌더링 한계)</td>
+                <td>SSR/SSG 활용으로 우수</td>
+              </tr>
+              <tr>
+                <td>타입 안전성</td>
+                <td>컴파일 타임 보장 (Dart/Pydantic)</td>
+                <td>TypeScript + Zod 조합 필요</td>
+              </tr>
+              <tr>
+                <td>번들 로딩</td>
+                <td>초기 엔진 로딩 다소 무거움</td>
+                <td>Vite 등으로 최적화 유리</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 수정 파일 목록 -->
+        <section class="section visible">
+          <div class="sec-eyebrow">File Manifest</div>
+          <h2 class="sec-heading">수정 파일 목록</h2>
+          <ul class="bullet-list">
+            <li>
+              <code>word_cloud_card.dart</code>: 말풍선 모양 및 8개 제한 로직
+              적용
+            </li>
+            <li>
+              <code>restaurant_detail_screen.dart</code>: Sliver 전환 및 자동
+              분석 UX 구현
+            </li>
+            <li>
+              <code>classify_ad.py</code>: 가중치 프롬프트 및 에러 핸들링 보완
+            </li>
+            <li><code>ai_analysis_card.dart</code>: AI 한계 고지 문구 추가</li>
+          </ul>
+        </section>
+
+        <section class="section visible">
+          <div class="sec-eyebrow">Future Works</div>
+          <h2 class="sec-heading">미결 사항 / 추후 개선</h2>
+          <ul class="bullet-list">
+            <li>[ ] 분석 중 진행률 표시 (크롤링 → 분석 단계별 피드백)</li>
+            <li>[ ] 분석 결과 캐시 만료 기간 설정 및 갱신 로직</li>
+          </ul>
+        </section>
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="truth_guard_dev_log_0424.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">진실의 입 — 개발 작업 문서 (04.24)</p>
+        <p class="post-nav-meta">
+          <span class="tag">Truth Guard</span>
+          <span class="date">· 2026.04.24</span>
+        </p>
+      </a>
+
+      <a class="post-nav-card next" href="#">
+        <p class="post-nav-label">다음 글 →</p>
+        <p class="post-nav-title">앙상블 전략을 통한 판별 정확도 개선</p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../index.html" class="footer-back">← 프로젝트 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
