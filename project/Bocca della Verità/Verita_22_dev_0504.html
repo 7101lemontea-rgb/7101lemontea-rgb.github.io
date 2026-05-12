@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>광고 리뷰 탐지 모델 개발 작업 문서 — Truth Guard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Update</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+
+        <h1 class="post-title">광고 리뷰 탐지 모델 개발 작업 문서</h1>
+
+        <p class="post-sub">
+          네이버 블로그 리뷰 광고 탐지 및 상/중/하 등급 분류 모델 구축
+        </p>
+
+        <p class="post-desc">
+          네이버 블로그 리뷰 데이터의 광고 여부를 자동 탐지하고, 광고 가능성
+          기반 상/중/하 등급 분류를 수행하는 KcBERT 기반 모델을 개발했습니다.
+          OpenVINO 경량화를 통해 CPU 추론 성능을 개선하고, Supabase 저장 및 전체
+          리뷰 자동 추론 파이프라인 구축을 목표로 합니다.
+        </p>
+
+        <div class="post-stats">
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val">2026. 05. 04.</p>
+          </div>
+
+          <div>
+            <p class="stat-label">팀명</p>
+            <p class="stat-val">진실 방범대 (Truth Guard)</p>
+          </div>
+
+          <div>
+            <div class="stat-label">대상 플랫폼</div>
+            <div class="stat-val">Python, OpenVINO, Supabase</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1">
+                <span class="toc-num">01</span>
+                프로젝트 개요
+              </a>
+            </li>
+
+            <li>
+              <a href="#section-2">
+                <span class="toc-num">02</span>
+                데이터
+              </a>
+            </li>
+
+            <li>
+              <a href="#section-3">
+                <span class="toc-num">03</span>
+                모델 선정
+              </a>
+            </li>
+
+            <li>
+              <a href="#section-4">
+                <span class="toc-num">04</span>
+                모델 학습
+              </a>
+            </li>
+
+            <li>
+              <a href="#section-5">
+                <span class="toc-num">05</span>
+                OpenVINO 변환
+              </a>
+            </li>
+
+            <li>
+              <a href="#section-6">
+                <span class="toc-num">06</span>
+                성능 비교
+              </a>
+            </li>
+
+            <li>
+              <a href="#section-7">
+                <span class="toc-num">07</span>
+                임계값 및 등급 분류
+              </a>
+            </li>
+
+            <li>
+              <a href="#section-8">
+                <span class="toc-num">08</span>
+                트러블슈팅
+              </a>
+            </li>
+
+            <li>
+              <a href="#section-9">
+                <span class="toc-num">09</span>
+                환경 설정
+              </a>
+            </li>
+
+            <li>
+              <a href="#section-10">
+                <span class="toc-num">10</span>
+                OpenVINO 벤치마크
+              </a>
+            </li>
+
+            <li>
+              <a href="#section-11">
+                <span class="toc-num">11</span>
+                작업 현황
+              </a>
+            </li>
+
+            <li>
+              <a href="#section-12">
+                <span class="toc-num">12</span>
+                내일 할 일
+              </a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <!-- 1 -->
+        <section class="section visible" id="section-1">
+          <div class="sec-eyebrow">Project Overview</div>
+          <h2 class="sec-heading">01. 프로젝트 개요</h2>
+
+          <h3 class="sub-heading">1.1 목표</h3>
+
+          <ul class="bullet-list">
+            <li>네이버 블로그 리뷰 데이터에서 광고성 리뷰 자동 탐지</li>
+            <li>광고 가능성 기반 상 / 중 / 하 3단계 등급 분류</li>
+            <li>OpenVINO 기반 경량화 추론 환경 구축</li>
+          </ul>
+
+          <h3 class="sub-heading">1.2 기술 스택</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>내용</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><strong>언어</strong></td>
+                <td>Python 3.12</td>
+              </tr>
+
+              <tr>
+                <td><strong>모델</strong></td>
+                <td>KcBERT (beomi/kcbert-base)</td>
+              </tr>
+
+              <tr>
+                <td><strong>추론 엔진</strong></td>
+                <td>OpenVINO 2026.1.0</td>
+              </tr>
+
+              <tr>
+                <td><strong>데이터베이스</strong></td>
+                <td>Supabase</td>
+              </tr>
+
+              <tr>
+                <td><strong>실험 환경</strong></td>
+                <td>Google Colab (T4 GPU)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 2 -->
+        <section class="section visible" id="section-2">
+          <div class="sec-eyebrow">Dataset</div>
+          <h2 class="sec-heading">02. 데이터</h2>
+
+          <h3 class="sub-heading">2.1 데이터 구조</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>컬럼명</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>id</td>
+                <td>고유 식별자</td>
+              </tr>
+              <tr>
+                <td>name</td>
+                <td>가게명</td>
+              </tr>
+              <tr>
+                <td>review_url</td>
+                <td>리뷰 URL</td>
+              </tr>
+              <tr>
+                <td>review_title</td>
+                <td>리뷰 제목</td>
+              </tr>
+              <tr>
+                <td>review_description</td>
+                <td>리뷰 본문</td>
+              </tr>
+              <tr>
+                <td>review_bloggername</td>
+                <td>블로거명</td>
+              </tr>
+              <tr>
+                <td>review_postdate</td>
+                <td>작성일</td>
+              </tr>
+              <tr>
+                <td>is_ad</td>
+                <td>광고 여부 (0/1)</td>
+              </tr>
+              <tr>
+                <td>is_ad_bert_pred</td>
+                <td>BERT 예측값</td>
+              </tr>
+              <tr>
+                <td>is_ad_electra_pred</td>
+                <td>ELECTRA 예측값</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">2.2 데이터 현황</h3>
+
+          <ul class="bullet-list">
+            <li><strong>전체 데이터:</strong> 1,281개</li>
+            <li><strong>광고(1):</strong> 513개 (40%)</li>
+            <li><strong>비광고(0):</strong> 768개 (60%)</li>
+            <li><strong>레이블 없음:</strong> 0개</li>
+          </ul>
+
+          <h3 class="sub-heading">2.3 데이터 수집</h3>
+
+          <div class="code-block">
+            <pre>
+import pandas as pd
+
+df1 = pd.read_csv("data_1_500.csv")
+df2 = pd.read_csv("data_501_1000.csv")
+df3 = pd.read_csv("data_1001_1300.csv")
+
+df_full = pd.concat([df1, df2, df3], ignore_index=True)
+df_full.to_csv("full_data.csv", index=False)
+</pre
+            >
+          </div>
+        </section>
+
+        <!-- 3 -->
+        <section class="section visible" id="section-3">
+          <div class="sec-eyebrow">Model Selection</div>
+
+          <h2 class="sec-heading">03. 모델 선정</h2>
+
+          <h3 class="sub-heading">3.1 초기 모델 (KoBERT)</h3>
+
+          <ul class="bullet-list">
+            <li><strong>모델:</strong> skt/kobert-base-v1</li>
+            <li><strong>입력:</strong> review_description</li>
+          </ul>
+
+          <h4 class="sub-heading">문제점</h4>
+
+          <ul class="bullet-list">
+            <li>AUC: 0.785 (낮음)</li>
+            <li>y_prob 범위: 0.993 ~ 0.997 (분포 붕괴)</li>
+            <li>토크나이저 충돌 발생</li>
+          </ul>
+
+          <h3 class="sub-heading">3.2 개선 모델 (KcBERT)</h3>
+
+          <ul class="bullet-list">
+            <li><strong>모델:</strong> beomi/kcbert-base</li>
+            <li><strong>입력:</strong> title + [SEP] + description</li>
+          </ul>
+          <h4 class="sub-heading">개선 효과</h4>
+
+          <ul class="bullet-list">
+            <li>AUC: 0.949</li>
+            <li>y_prob 범위: 0.002 ~ 0.994</li>
+            <li>HuggingFace 호환성 확보</li>
+          </ul>
+
+          <h3 class="sub-heading">3.3 성능 비교</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>KoBERT</th>
+                <th>KcBERT</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><strong>AUC</strong></td>
+                <td>0.785</td>
+                <td>0.949</td>
+              </tr>
+
+              <tr>
+                <td><strong>입력</strong></td>
+                <td>description</td>
+                <td>title + description</td>
+              </tr>
+
+              <tr>
+                <td><strong>확률 범위</strong></td>
+                <td>좁음</td>
+                <td>넓음</td>
+              </tr>
+
+              <tr>
+                <td><strong>등급 분류</strong></td>
+                <td>불가</td>
+                <td>가능</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 4 -->
+        <section class="section visible" id="section-4">
+          <div class="sec-eyebrow">Model Training</div>
+
+          <h2 class="sec-heading">04. 모델 학습</h2>
+
+          <h3 class="sub-heading">4.1 데이터 전처리</h3>
+
+          <div class="code-block">
+            <pre>
+df["text"] = df["review_title"].fillna("") + " [SEP] " + df["review_description"].fillna("")
+df["label"] = df["is_ad"].astype(int)
+</pre
+            >
+          </div>
+
+          <h3 class="sub-heading">4.2 데이터 분리</h3>
+
+          <ul class="bullet-list">
+            <li><strong>Train:</strong> 1,024</li>
+            <li><strong>Validation:</strong> 257</li>
+          </ul>
+
+          <div class="code-block">
+            <pre>
+train_df, val_df = train_test_split(
+   df,
+   test_size=0.2,
+   random_state=42,
+   stratify=df["label"]
+)
+</pre
+            >
+          </div>
+
+          <h3 class="sub-heading">4.3 하이퍼파라미터 탐색</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>값</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><strong>Batch</strong></td>
+                <td>16, 32</td>
+              </tr>
+
+              <tr>
+                <td><strong>LR</strong></td>
+                <td>1e-5, 3e-5, 5e-5</td>
+              </tr>
+
+              <tr>
+                <td><strong>Scheduler</strong></td>
+                <td>cosine, linear</td>
+              </tr>
+
+              <tr>
+                <td><strong>Dropout</strong></td>
+                <td>0.1, 0.2, 0.3</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="post-desc">총 54개 조합 실험</p>
+
+          <h3 class="sub-heading">4.4 클래스 불균형 처리</h3>
+
+          <div class="code-block">
+            <pre>
+class_weights = torch.tensor([1.0, 768/513]).to(device)
+criterion = torch.nn.CrossEntropyLoss(weight=class_weights)
+</pre
+            >
+          </div>
+
+          <h3 class="sub-heading">4.5 최적 결과</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>실험</th>
+                <th>Batch</th>
+                <th>LR</th>
+                <th>Scheduler</th>
+                <th>Dropout</th>
+                <th>AUC</th>
+                <th>Recall</th>
+                <th>F1</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>11</td>
+                <td>16</td>
+                <td>3e-5</td>
+                <td>cosine</td>
+                <td>0.2</td>
+                <td>0.9491</td>
+                <td>0.9709</td>
+                <td>0.8734</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">4.6 선정 기준</h3>
+
+          <ul class="bullet-list">
+            <li>F1 ≥ 0.8</li>
+            <li>Recall 최대 (광고 놓치지 않는 것 우선)</li>
+          </ul>
+        </section>
+
+        <!-- 5 -->
+        <section class="section visible" id="section-5">
+          <div class="sec-eyebrow">OpenVINO Conversion</div>
+
+          <h2 class="sec-heading">05. OpenVINO 변환</h2>
+
+          <h3 class="sub-heading">5.1 변환 구조</h3>
+
+          <div class="code-block">
+            <pre>
+PyTorch (.pt)
+├─ ONNX (FP32)
+│   ├─ OpenVINO FP16
+│   └─ OpenVINO INT8 (권장)
+
+⚠️ FP16 → INT8 금지
+</pre
+            >
+          </div>
+
+          <h3 class="sub-heading">5.2 PyTorch → ONNX</h3>
+
+          <div class="code-block">
+            <pre>
+torch.onnx.export(
+   model,
+   (
+      dummy["input_ids"],
+      dummy["attention_mask"],
+      dummy["token_type_ids"]
+   ),
+   "kcbert_final.onnx",
+   opset_version=14,
+   do_constant_folding=True
+)
+</pre
+            >
+          </div>
+
+          <h3 class="sub-heading">5.3 ONNX → FP16</h3>
+
+          <div class="code-block">
+            <pre>
+ovc kcbert_final.onnx \
+   --output_model ./kcbert_openvino/kcbert_final \
+   --compress_to_fp16 True
+</pre
+            >
+          </div>
+
+          <h3 class="sub-heading">5.4 ONNX → INT8</h3>
+
+          <div class="code-block">
+            <pre>
+quantized_model = nncf.quantize(
+   model,
+   nncf.Dataset(list(get_calibration_dataset()))
+)
+</pre
+            >
+          </div>
+
+          <h3 class="sub-heading">5.5 결과 파일</h3>
+
+          <h4 class="sub-heading">FP16</h4>
+
+          <ul class="bullet-list">
+            <li>kcbert_final.xml</li>
+            <li>kcbert_final.bin (207.8MB)</li>
+          </ul>
+
+          <h4 class="sub-heading">INT8</h4>
+
+          <ul class="bullet-list">
+            <li>kcbert_final_int8.xml</li>
+            <li>kcbert_final_int8.bin (104.4MB)</li>
+          </ul>
+        </section>
+
+        <!-- 6 -->
+        <section class="section visible" id="section-6">
+          <div class="sec-eyebrow">Performance Comparison</div>
+
+          <h2 class="sec-heading">06. 성능 비교</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>PT</th>
+                <th>FP16</th>
+                <th>INT8</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><strong>크기</strong></td>
+                <td>415MB</td>
+                <td>207MB</td>
+                <td>104MB</td>
+              </tr>
+
+              <tr>
+                <td><strong>AUC</strong></td>
+                <td>0.9702</td>
+                <td>0.9491</td>
+                <td>0.9531</td>
+              </tr>
+
+              <tr>
+                <td><strong>Recall</strong></td>
+                <td>0.9320</td>
+                <td>0.9612</td>
+                <td>0.9320</td>
+              </tr>
+
+              <tr>
+                <td><strong>F1</strong></td>
+                <td>0.8807</td>
+                <td>0.8800</td>
+                <td>0.8807</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">6.1 핵심 인사이트</h3>
+
+          <ul class="bullet-list">
+            <li>✅ FP32 → INT8: 성능 유지 + 용량 75% 감소</li>
+            <li>❌ FP16 → INT8: Recall 감소</li>
+          </ul>
+
+          <h3 class="sub-heading">6.2 임계값 문제</h3>
+
+          <ul class="bullet-list">
+            <li>모델마다 확률 분포 다름</li>
+            <li>임계값 재설정 필수</li>
+          </ul>
+        </section>
+
+        <!-- 7 -->
+        <section class="section visible" id="section-7">
+          <div class="sec-eyebrow">Threshold</div>
+
+          <h2 class="sec-heading">07. 임계값 및 등급 분류</h2>
+
+          <h3 class="sub-heading">7.1 기준 (FP16)</h3>
+
+          <ul class="bullet-list">
+            <li><strong>Upper:</strong> 0.0074</li>
+            <li><strong>Lower:</strong> 0.5979</li>
+          </ul>
+
+          <h3 class="sub-heading">7.2 등급 정의</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>등급</th>
+                <th>조건</th>
+                <th>의미</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><strong>상</strong></td>
+                <td>≤ 0.0074</td>
+                <td>비광고 확실</td>
+              </tr>
+
+              <tr>
+                <td><strong>중</strong></td>
+                <td>≤ 0.5979</td>
+                <td>애매</td>
+              </tr>
+
+              <tr>
+                <td><strong>하</strong></td>
+                <td>&gt; 0.5979</td>
+                <td>광고 의심</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">7.3 코드</h3>
+
+          <div class="code-block">
+            <pre>
+def classify_grade(prob, upper=0.0074, lower=0.5979):
+   if prob <= upper:
+       return "상"
+   elif prob <= lower:
+       return "중"
+   else:
+       return "하"
+</pre
+            >
+          </div>
+        </section>
+
+        <!-- 8 -->
+        <section class="section visible" id="section-8">
+          <div class="sec-eyebrow">Troubleshooting</div>
+
+          <h2 class="sec-heading">08. 트러블슈팅</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>문제</th>
+                <th>원인</th>
+                <th>해결</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>openvino.runtime 오류</td>
+                <td>버전 변경</td>
+                <td>Core 사용</td>
+              </tr>
+
+              <tr>
+                <td>mo import 오류</td>
+                <td>deprecated</td>
+                <td>ovc 사용</td>
+              </tr>
+
+              <tr>
+                <td>AdamW 오류</td>
+                <td>위치 변경</td>
+                <td>torch.optim 사용</td>
+              </tr>
+
+              <tr>
+                <td>label 오류</td>
+                <td>컬럼 불일치</td>
+                <td>df.columns 확인</td>
+              </tr>
+
+              <tr>
+                <td>KoBERT 문제</td>
+                <td>tokenizer 충돌</td>
+                <td>KcBERT 전환</td>
+              </tr>
+
+              <tr>
+                <td>ONNX 분리 저장</td>
+                <td>external data</td>
+                <td>단일 파일 변환</td>
+              </tr>
+
+              <tr>
+                <td>FP16→INT8 성능 저하</td>
+                <td>이중 압축</td>
+                <td>FP32 기준 변환</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 9 -->
+        <section class="section visible" id="section-9">
+          <div class="sec-eyebrow">Environment Setup</div>
+
+          <h2 class="sec-heading">09. 환경 설정</h2>
+
+          <div class="code-block">
+            <pre>
+pip install openvino transformers torch sentencepiece
+pip install scikit-learn pandas numpy matplotlib scipy
+pip install onnx onnxscript safetensors nncf supabase
+</pre
+            >
+          </div>
+
+          <div class="code-block">
+            <pre>
+from transformers import AutoTokenizer
+
+tokenizer = AutoTokenizer.from_pretrained(
+   "beomi/kcbert-base"
+)
+</pre
+            >
+          </div>
+        </section>
+
+        <!-- 10 -->
+        <section class="section visible" id="section-10">
+          <div class="sec-eyebrow">Benchmark</div>
+
+          <h2 class="sec-heading">10. OpenVINO 벤치마크</h2>
+
+          <h3 class="sub-heading">10.1 실행</h3>
+
+          <div class="code-block">
+            <pre>
+benchmark_app.exe -m kcbert_final.xml -t 10 -d CPU \
+-data_shape "input_ids[1,128],attention_mask[1,128],token_type_ids[1,128]"
+</pre
+            >
+          </div>
+
+          <h3 class="sub-heading">10.2 성능</h3>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>IR</th>
+                <th>ONNX</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><strong>FPS</strong></td>
+                <td>10.82</td>
+                <td>9.33</td>
+              </tr>
+
+              <tr>
+                <td><strong>Latency</strong></td>
+                <td>546ms</td>
+                <td>627ms</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="post-desc">👉 IR 모델이 약 13~16% 빠름</p>
+        </section>
+
+        <!-- 11 -->
+        <section class="section visible" id="section-11">
+          <div class="sec-eyebrow">Progress</div>
+
+          <h2 class="sec-heading">11. 작업 현황</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>단계</th>
+                <th>내용</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>데이터 수집</td>
+                <td>완료</td>
+                <td>✅</td>
+              </tr>
+
+              <tr>
+                <td>모델 학습</td>
+                <td>완료</td>
+                <td>✅</td>
+              </tr>
+
+              <tr>
+                <td>OpenVINO 변환</td>
+                <td>완료</td>
+                <td>✅</td>
+              </tr>
+
+              <tr>
+                <td>임계값 설정</td>
+                <td>완료</td>
+                <td>✅</td>
+              </tr>
+
+              <tr>
+                <td>Safetensors 변환</td>
+                <td>진행 예정</td>
+                <td>⏳</td>
+              </tr>
+
+              <tr>
+                <td>전체 추론</td>
+                <td>예정</td>
+                <td>⏳</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 12 -->
+        <section class="section visible" id="section-12">
+          <div class="sec-eyebrow">Next Steps</div>
+
+          <h2 class="sec-heading">12. 내일 할 일</h2>
+
+          <ul class="bullet-list">
+            <li>PT → Safetensors → INT8 변환</li>
+            <li>INT8 임계값 재설정</li>
+            <li>모델 성능 비교</li>
+            <li>최종 모델 확정</li>
+            <li>전체 데이터 추론</li>
+            <li>Supabase 저장</li>
+          </ul>
+        </section>
+
+        <!-- comments -->
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="Verita_04_daily_report_0503.html">
+        <p class="post-nav-label">← 이전 글</p>
+
+        <p class="post-nav-title">광고 리뷰 분류 모델 성능 평가</p>
+
+        <p class="post-nav-meta">
+          <span class="tag"> Truth Guard </span>
+
+          <span class="tag"> #Daily Report </span>
+
+          <span class="date"> · 2026.05.03 </span>
+        </p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../index.html" class="footer-back"> ← 프로젝트 목록 </a>
+
+      <span class="footer-copy"> © 2026 진실 방범대 (Truth Guard) </span>
+    </footer>
+  </body>
+</html>
