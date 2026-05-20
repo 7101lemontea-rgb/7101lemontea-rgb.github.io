@@ -1,0 +1,1448 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 — Truth Guard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Update</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">개발 작업 문서</h1>
+        <p class="post-sub">
+          KcBERT 광고 탐지 모델 데이터 편향 진단 및 재학습 실험 — 가게명 마스킹·데이터 재구성·OpenVINO INT8 최적화
+        </p>
+        <p class="post-desc">
+          학습 데이터의 가게명 편향(Data Leakage)을 원인으로 진단하고, 데이터 재구성 및 가게명 마스킹을 적용해 외부 테스트셋 AUC를 0.58 → 0.84로 개선했습니다.
+          SHAP 분석으로 광고 판단 근거를 시각화하고, OpenVINO INT8 로컬 변환으로 3배 추론 속도 향상을 달성했습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val">2026. 05. 11.</p>
+          </div>
+          <div>
+            <p class="stat-label">팀명</p>
+            <p class="stat-val">진실 방범대 (Truth Guard)</p>
+          </div>
+          <div>
+            <div class="stat-label">대상 플랫폼</div>
+            <div class="stat-val">Python, HuggingFace, OpenVINO</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"><span class="toc-num">01</span>문제 진단: 성능 급락</a>
+            </li>
+            <li>
+              <a href="#section-2"><span class="toc-num">02</span>원인 심층 분석</a>
+            </li>
+            <li>
+              <a href="#section-3"><span class="toc-num">03</span>개선 조치: 데이터 재구성</a>
+            </li>
+            <li>
+              <a href="#section-4"><span class="toc-num">04</span>재학습 실험 결과</a>
+            </li>
+            <li>
+              <a href="#section-5"><span class="toc-num">05</span>임계값 분석</a>
+            </li>
+            <li>
+              <a href="#section-6"><span class="toc-num">06</span>FP32 vs INT8 성능 비교</a>
+            </li>
+            <li>
+              <a href="#section-7"><span class="toc-num">07</span>OpenVINO 벤치마크</a>
+            </li>
+            <li>
+              <a href="#section-8"><span class="toc-num">08</span>기존 모델 vs 재학습 모델</a>
+            </li>
+            <li>
+              <a href="#section-9"><span class="toc-num">09</span>OpenVINO 변환 가이드</a>
+            </li>
+            <li>
+              <a href="#section-10"><span class="toc-num">10</span>하드웨어 환경</a>
+            </li>
+            <li>
+              <a href="#section-11"><span class="toc-num">11</span>최종 권장 설정</a>
+            </li>
+            <li>
+              <a href="#section-12"><span class="toc-num">12</span>향후 과제</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+
+        <section class="section visible" id="section-1">
+          <div class="sec-eyebrow">Problem Analysis</div>
+          <h2 class="sec-heading">01. 문제 진단: 신규 테스트 데이터 성능 급락</h2>
+
+          <h3 class="sub-heading">1.1. 성능 지표 비교</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>AUC</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>학습 데이터 검증 (val)</td>
+                <td>~0.95</td>
+                <td>0.9588</td>
+                <td>0.9800</td>
+                <td>0.9693</td>
+              </tr>
+              <tr>
+                <td>신규 테스트 데이터</td>
+                <td>0.58</td>
+                <td>0.5655</td>
+                <td>0.6560</td>
+                <td>0.6074</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            검증 데이터에서 AUC 0.95의 높은 성능을 보였으나, 신규 테스트 데이터에서 AUC 0.58로 급락.
+            단순한 과적합이 아닌 구조적 문제로 판단.
+          </p>
+
+          <h3 class="sub-heading">1.2. 근본 원인: 학습 데이터의 가게명 편향 (Data Leakage)</h3>
+          <p><strong>광고 데이터 (513건)</strong></p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>가게명</th>
+                <th>건수</th>
+                <th>비중</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>부마보쌈족발 광교본점</td><td>49건</td><td>9.6%</td></tr>
+              <tr><td>세광양대창 수원광교점</td><td>49건</td><td>9.6%</td></tr>
+              <tr><td>선비칼국수 광교중앙역본점</td><td>47건</td><td>9.2%</td></tr>
+              <tr><td>까몬 광교중앙역점</td><td>45건</td><td>8.8%</td></tr>
+              <tr><td><strong>상위 3개 합산</strong></td><td><strong>145건</strong></td><td><strong>28.3%</strong></td></tr>
+            </tbody>
+          </table>
+
+          <p><strong>비광고 데이터 (768건)</strong></p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>가게명</th>
+                <th>건수</th>
+                <th>비중</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>심야식당 후라후라</td><td>50건</td><td>6.5%</td></tr>
+              <tr><td>이춘복참치 광교점</td><td>50건</td><td>6.5%</td></tr>
+              <tr><td>잭슨피자 광교점</td><td>50건</td><td>6.5%</td></tr>
+              <tr><td>고양이부엌 광교점</td><td>49건</td><td>6.4%</td></tr>
+              <tr><td><strong>상위 3개 합산</strong></td><td><strong>150건</strong></td><td><strong>19.5%</strong></td></tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">1.3. 레이블 설계 문제 사례</h3>
+          <p>레이블 기준 불명확으로 인해 아래 두 유형의 비광고 리뷰가 광고로 잘못 분류됨.</p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>유형</th>
+                <th>예시</th>
+                <th>문제</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>매장정보 나열형</td>
+                <td>영업시간, 전화번호, 주차정보 등 나열</td>
+                <td>광고성 패턴과 유사하여 광고로 분류</td>
+              </tr>
+              <tr>
+                <td>해시태그 나열형</td>
+                <td><code>#수원행궁동카페 #수원행궁동디저트카페 ...</code></td>
+                <td>광고성 패턴과 유사하여 광고로 분류</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <div class="sec-eyebrow">Cause Analysis</div>
+          <h2 class="sec-heading">02. 원인 심층 분석</h2>
+
+          <h3 class="sub-heading">2.1. 실험 A/B: 가게명 마스킹 전/후 AUC 비교</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>실험</th>
+                <th>조건</th>
+                <th>샘플 수</th>
+                <th>마스킹 전 AUC</th>
+                <th>마스킹 후 AUC</th>
+                <th>변화량</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>실험 A</td>
+                <td>학습 데이터 70/30 분할 (같은 가게)</td>
+                <td>385건</td>
+                <td>0.9793</td>
+                <td>0.9727</td>
+                <td>-0.0065</td>
+              </tr>
+              <tr>
+                <td>실험 B</td>
+                <td>별도 테스트셋 (새로운 가게)</td>
+                <td>249건</td>
+                <td>0.5844</td>
+                <td>0.6312</td>
+                <td><strong>+0.0469</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            실험 A에서는 마스킹 전/후 변화가 미미했으나, 실험 B에서는 마스킹 후 AUC가 오히려 상승.
+            가게명이 새로운 환경에서 노이즈로 작용하고 있음을 확인.
+          </p>
+
+          <h3 class="sub-heading">2.2. 실험 C: SHAP 토큰 기여도 분석</h3>
+          <p>
+            광고/비광고 각 5개 샘플(총 10개)을 대상으로 PartitionExplainer 분석 실시.
+            <strong>가게명 토큰은 기여도 Top 20에 포함되지 않음</strong> → 가게명 직접 의존 아님을 확인.
+          </p>
+
+          <p><strong>광고 판단 주요 기여 토큰 Top 20</strong></p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>방향</th>
+                <th>주요 토큰</th>
+                <th>해석</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>광고↑</td>
+                <td>해보세요, 으신, 드려요, 모이는, 주셔서</td>
+                <td>독자에게 말 거는 홍보·권유성 표현</td>
+              </tr>
+              <tr>
+                <td>광고↑</td>
+                <td>가성비, 최고, 같아요, 좋을</td>
+                <td>과도한 긍정 평가어</td>
+              </tr>
+              <tr>
+                <td>광고↑</td>
+                <td>♥, 즐, 재밌, 띄</td>
+                <td>분위기를 띄우는 감성 표현</td>
+              </tr>
+              <tr>
+                <td>광고↑</td>
+                <td>세트, 들어가, 하고있는</td>
+                <td>메뉴 구성 상세 소개 서술 방식</td>
+              </tr>
+              <tr>
+                <td>광고↓</td>
+                <td>멜, 조만간, 우리는, 솔직, 혹시</td>
+                <td>개인적 일상 서술 문체</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">2.3. 원인 분석 종합</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>결론</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>가게명 직접 의존</td>
+                <td>❌ SHAP상 가게명 토큰의 직접적 영향 없음</td>
+              </tr>
+              <tr>
+                <td>가게명이 노이즈로 작용</td>
+                <td>✅ 마스킹 후 실험 B AUC 상승으로 확인</td>
+              </tr>
+              <tr>
+                <td>특정 가게 문체에 과적합</td>
+                <td>✅ 홍보·권유성 표현이 주요 판단 근거로 작동</td>
+              </tr>
+              <tr>
+                <td>새로운 가게 일반화 실패</td>
+                <td>✅ 실험 B AUC 0.58로 낮음</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <div class="sec-eyebrow">Data Restructuring</div>
+          <h2 class="sec-heading">03. 개선 조치: 학습 데이터 재구성</h2>
+
+          <h3 class="sub-heading">3-1. 가게 편향 제거</h3>
+          <p>
+            특정 가게에 집중된 샘플 구성을 해소하고, 다양한 가게의 리뷰가 고르게 포함되도록 재구성.
+            모델이 특정 가게 문체가 아닌 광고 리뷰의 본질적인 표현 패턴을 학습할 수 있는 환경 마련.
+          </p>
+
+          <h3 class="sub-heading">3-2. 가게명 마스킹 적용</h3>
+          <p>
+            학습 및 추론 과정에서 텍스트 내 가게명을 마스킹 처리.
+            가게명이 모델 판단에 노이즈로 작용하지 않도록 구조적으로 차단.
+          </p>
+          <p><strong>마스킹 설계 기준</strong></p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>브랜드명 추출</td>
+                <td>업종어(베이커리, 스테이크 등)와 지점명(광교점, 강남본점 등) 제거 후 브랜드명만 사용</td>
+              </tr>
+              <tr>
+                <td>2글자 미만 제외</td>
+                <td>봄, 강 같은 일반 명사와의 오탐 방지</td>
+              </tr>
+              <tr>
+                <td>공백 유연 매칭</td>
+                <td><code>키유스테이크</code> / <code>키유 스테이크</code> 모두 처리</td>
+              </tr>
+              <tr>
+                <td>마스킹 토큰</td>
+                <td><code>[STORE]</code> 대신 <code>식당</code> 사용 (KcBERT 학습 어휘 활용)</td>
+              </tr>
+              <tr>
+                <td>테스트 마스킹</td>
+                <td>테스트 데이터는 <code>name</code> 컬럼 기준으로 별도 브랜드명 세트 구성</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">3-3. 전처리 파이프라인 (순서 중요)</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>순서</th>
+                <th>단계</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>①</td>
+                <td>HTML 엔티티 디코딩</td>
+                <td><code>&amp;amp;</code> → <code>&amp;</code>, <code>&amp;lt;</code> → <code>&lt;</code></td>
+              </tr>
+              <tr>
+                <td>②</td>
+                <td>HTML 태그 제거</td>
+                <td><code>&lt;b&gt;텍스트&lt;/b&gt;</code> → <code>텍스트</code></td>
+              </tr>
+              <tr>
+                <td>③</td>
+                <td><strong>가게명 → <code>식당</code> 치환</strong></td>
+                <td><strong>특수문자 정리 전에 반드시 먼저 실행</strong></td>
+              </tr>
+              <tr>
+                <td>④</td>
+                <td>해시태그 <code>#</code> 제거</td>
+                <td><code>#맛집추천</code> → <code>맛집추천</code> (단어 보존)</td>
+              </tr>
+              <tr>
+                <td>⑤</td>
+                <td>말줄임 제거</td>
+                <td><code>...</code> / <code>…</code> → 공백</td>
+              </tr>
+              <tr>
+                <td>⑥</td>
+                <td>과도한 공백 정리</td>
+                <td>연속 공백 → 단일 공백, 앞뒤 제거</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="post-desc" style="font-size: 0.9rem; color: #666">
+            ※ 특수문자 정리 전에 가게명 마스킹을 먼저 실행해야 함. 정규화 과정에서 가게명이 변형되면 매칭 실패.
+          </p>
+
+          <h3 class="sub-heading">3-4. 레이블 설계 전략: 의도적 보수적 분류</h3>
+          <p>광고 리뷰를 놓치지 않는 것(Recall 극대화)을 최우선 목표로 설정.</p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>리뷰 유형</th>
+                <th>실제 레이블</th>
+                <th>분류 결과</th>
+                <th>설계 의도</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>매장정보 나열형 (영업시간, 전화번호 등)</td>
+                <td>비광고</td>
+                <td>광고로 분류</td>
+                <td>광고성 패턴과 유사하므로 누락 방지 우선</td>
+              </tr>
+              <tr>
+                <td>해시태그 나열형</td>
+                <td>비광고</td>
+                <td>광고로 분류</td>
+                <td>광고성 패턴과 유사하므로 누락 방지 우선</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            Precision 일부를 희생하되, 실제 광고 리뷰를 놓치지 않는 Recall을 확보하는 트레이드오프를 의도적으로 선택.
+          </p>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <div class="sec-eyebrow">Experiment Results</div>
+          <h2 class="sec-heading">04. 재학습 실험 결과</h2>
+
+          <h3 class="sub-heading">4.1. 하이퍼파라미터 그리드 (총 54가지)</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파라미터</th>
+                <th>탐색 범위</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>batch_size</td><td>16, 32</td></tr>
+              <tr><td>lr</td><td>1e-5, 3e-5, 5e-5</td></tr>
+              <tr><td>scheduler</td><td>linear, cosine, constant_with_warmup</td></tr>
+              <tr><td>dropout</td><td>0.1, 0.2, 0.3</td></tr>
+            </tbody>
+          </table>
+          <p class="post-desc" style="font-size: 0.9rem; color: #666">
+            epochs: 5 / warmup_ratio: 0.1 / weight_decay: 0.01 / 체크포인트 저장 기준: <code>eval_f1_recall</code> 최대값
+          </p>
+
+          <h3 class="sub-heading">4.2. f1_recall 상위 10개 (재구성 전 학습)</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>실험번호</th>
+                <th>batch</th>
+                <th>lr</th>
+                <th>scheduler</th>
+                <th>dropout</th>
+                <th>AUC</th>
+                <th>Recall</th>
+                <th>F1</th>
+                <th>f1_recall</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>21</strong></td>
+                <td>16</td>
+                <td>5e-5</td>
+                <td>linear</td>
+                <td>0.3</td>
+                <td>0.8911</td>
+                <td>0.9770</td>
+                <td>0.8354</td>
+                <td><strong>0.9450</strong></td>
+              </tr>
+              <tr>
+                <td>17</td>
+                <td>16</td>
+                <td>3e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.2</td>
+                <td>0.8897</td>
+                <td>0.9770</td>
+                <td>0.8252</td>
+                <td>0.9424</td>
+              </tr>
+              <tr>
+                <td>25</td>
+                <td>16</td>
+                <td>5e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.1</td>
+                <td>0.8837</td>
+                <td>0.9713</td>
+                <td>0.8264</td>
+                <td>0.9384</td>
+              </tr>
+              <tr>
+                <td>50</td>
+                <td>32</td>
+                <td>5e-5</td>
+                <td>cosine</td>
+                <td>0.2</td>
+                <td>0.8621</td>
+                <td>0.9655</td>
+                <td>0.8116</td>
+                <td>0.9302</td>
+              </tr>
+              <tr>
+                <td>51</td>
+                <td>32</td>
+                <td>5e-5</td>
+                <td>cosine</td>
+                <td>0.3</td>
+                <td>0.8927</td>
+                <td>0.9483</td>
+                <td>0.8594</td>
+                <td>0.9291</td>
+              </tr>
+              <tr>
+                <td>20</td>
+                <td>16</td>
+                <td>5e-5</td>
+                <td>linear</td>
+                <td>0.2</td>
+                <td>0.8607</td>
+                <td>0.9655</td>
+                <td>0.8058</td>
+                <td>0.9287</td>
+              </tr>
+              <tr>
+                <td>45</td>
+                <td>32</td>
+                <td>3e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.3</td>
+                <td>0.8842</td>
+                <td>0.9540</td>
+                <td>0.8363</td>
+                <td>0.9279</td>
+              </tr>
+              <tr>
+                <td>23</td>
+                <td>16</td>
+                <td>5e-5</td>
+                <td>cosine</td>
+                <td>0.2</td>
+                <td>0.8607</td>
+                <td>0.9655</td>
+                <td>0.8000</td>
+                <td>0.9272</td>
+              </tr>
+              <tr>
+                <td>18</td>
+                <td>16</td>
+                <td>3e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.3</td>
+                <td>0.8881</td>
+                <td>0.9540</td>
+                <td>0.8279</td>
+                <td>0.9258</td>
+              </tr>
+              <tr>
+                <td>53</td>
+                <td>32</td>
+                <td>5e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.2</td>
+                <td>0.8681</td>
+                <td>0.9598</td>
+                <td>0.8107</td>
+                <td>0.9257</td>
+              </tr>
+            </tbody>
+          </table>
+          <p><strong>최적 조합 (실험 #21)</strong></p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>Batch</th>
+                <th>LR</th>
+                <th>Scheduler</th>
+                <th>Dropout</th>
+                <th>AUC</th>
+                <th>F1</th>
+                <th>Recall</th>
+                <th>f1_recall</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>16</td>
+                <td>5e-5</td>
+                <td>linear</td>
+                <td>0.3</td>
+                <td>0.8911</td>
+                <td>0.8354</td>
+                <td>0.9770</td>
+                <td>0.9450</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">4.3. f1_recall 상위 10개 (데이터 재구성 후 학습)</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>실험번호</th>
+                <th>batch</th>
+                <th>lr</th>
+                <th>scheduler</th>
+                <th>dropout</th>
+                <th>AUC</th>
+                <th>Recall</th>
+                <th>F1</th>
+                <th>f1_recall</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>45</strong></td>
+                <td>32</td>
+                <td>3e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.3</td>
+                <td>0.8614</td>
+                <td>0.9842</td>
+                <td>0.8356</td>
+                <td><strong>0.9504</strong></td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>16</td>
+                <td>1e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.3</td>
+                <td>0.8527</td>
+                <td>0.9921</td>
+                <td>0.8084</td>
+                <td>0.9490</td>
+              </tr>
+              <tr>
+                <td>18</td>
+                <td>16</td>
+                <td>3e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.3</td>
+                <td>0.8643</td>
+                <td>0.9644</td>
+                <td>0.8299</td>
+                <td>0.9342</td>
+              </tr>
+              <tr>
+                <td>26</td>
+                <td>16</td>
+                <td>5e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.2</td>
+                <td>0.8519</td>
+                <td>0.9407</td>
+                <td>0.8410</td>
+                <td>0.9189</td>
+              </tr>
+              <tr>
+                <td>52</td>
+                <td>32</td>
+                <td>5e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.1</td>
+                <td>0.8545</td>
+                <td>0.9407</td>
+                <td>0.8278</td>
+                <td>0.9157</td>
+              </tr>
+              <tr>
+                <td>49</td>
+                <td>32</td>
+                <td>5e-5</td>
+                <td>cosine</td>
+                <td>0.1</td>
+                <td>0.8545</td>
+                <td>0.9407</td>
+                <td>0.8278</td>
+                <td>0.9157</td>
+              </tr>
+              <tr>
+                <td>15</td>
+                <td>16</td>
+                <td>3e-5</td>
+                <td>cosine</td>
+                <td>0.3</td>
+                <td>0.8653</td>
+                <td>0.9289</td>
+                <td>0.8656</td>
+                <td>0.9155</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>16</td>
+                <td>1e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.2</td>
+                <td>0.8646</td>
+                <td>0.9289</td>
+                <td>0.8484</td>
+                <td>0.9116</td>
+              </tr>
+              <tr>
+                <td>46</td>
+                <td>32</td>
+                <td>5e-5</td>
+                <td>linear</td>
+                <td>0.1</td>
+                <td>0.8532</td>
+                <td>0.9328</td>
+                <td>0.8325</td>
+                <td>0.9108</td>
+              </tr>
+              <tr>
+                <td>54</td>
+                <td>32</td>
+                <td>5e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.3</td>
+                <td>0.8427</td>
+                <td>0.9368</td>
+                <td>0.8187</td>
+                <td>0.9105</td>
+              </tr>
+            </tbody>
+          </table>
+          <p><strong>최적 조합 (실험 #45)</strong></p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>Batch</th>
+                <th>LR</th>
+                <th>Scheduler</th>
+                <th>Dropout</th>
+                <th>AUC</th>
+                <th>F1</th>
+                <th>Recall</th>
+                <th>f1_recall</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>32</td>
+                <td>3e-5</td>
+                <td>constant_with_warmup</td>
+                <td>0.3</td>
+                <td>0.8614</td>
+                <td>0.8356</td>
+                <td>0.9842</td>
+                <td>0.9504</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">4.4. 외부 테스트셋 결과 (f1_recall 순, 임계값 0.5)</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>실험번호</th>
+                <th>AUC</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1</th>
+                <th>f1_recall</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>52</strong></td>
+                <td><strong>0.8397</strong></td>
+                <td>0.7149</td>
+                <td>0.6545</td>
+                <td>0.9615</td>
+                <td>0.7788</td>
+                <td><strong>0.9184</strong></td>
+              </tr>
+              <tr>
+                <td>45</td>
+                <td>0.8239</td>
+                <td>0.6707</td>
+                <td>0.6188</td>
+                <td>0.9615</td>
+                <td>0.7530</td>
+                <td>0.9111</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>0.8036</td>
+                <td>0.6265</td>
+                <td>0.5860</td>
+                <td>0.9692</td>
+                <td>0.7304</td>
+                <td>0.9097</td>
+              </tr>
+              <tr>
+                <td>18</td>
+                <td>0.8122</td>
+                <td>0.6948</td>
+                <td>0.6452</td>
+                <td>0.9231</td>
+                <td>0.7595</td>
+                <td>0.8850</td>
+              </tr>
+              <tr>
+                <td>26</td>
+                <td>0.8190</td>
+                <td>0.7390</td>
+                <td>0.6923</td>
+                <td>0.9000</td>
+                <td>0.7826</td>
+                <td>0.8738</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-5">
+          <div class="sec-eyebrow">Threshold Analysis</div>
+          <h2 class="sec-heading">05. 임계값 분석 (exp_52 기준)</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>임계값</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1</th>
+                <th>f1_recall</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>0.30</td><td>0.5981</td><td>0.9846</td><td>0.7442</td><td>0.9249</td></tr>
+              <tr>
+                <td><strong>0.40</strong></td>
+                <td>0.6195</td>
+                <td>0.9769</td>
+                <td>0.7582</td>
+                <td><strong>0.9236</strong></td>
+              </tr>
+              <tr><td>0.50</td><td>0.6545</td><td>0.9615</td><td>0.7788</td><td>0.9184</td></tr>
+              <tr><td>0.60</td><td>0.7076</td><td>0.9308</td><td>0.8040</td><td>0.9023</td></tr>
+            </tbody>
+          </table>
+          <p>
+            임계값을 낮추면 Recall이 올라가지만 Precision이 떨어짐.
+            광고 탐지 목적상 <strong>임계값 0.40이 f1_recall 기준 최적</strong>.
+          </p>
+
+          <p><strong>권장 설정</strong></p>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>목적</th>
+                <th>임계값</th>
+                <th>Recall</th>
+                <th>f1_recall</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Recall 최우선</td>
+                <td>0.40</td>
+                <td>0.9769</td>
+                <td>0.9236</td>
+              </tr>
+              <tr>
+                <td>Precision/Recall 균형</td>
+                <td>0.50</td>
+                <td>0.9615</td>
+                <td>0.9184</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-6">
+          <div class="sec-eyebrow">Benchmark</div>
+          <h2 class="sec-heading">06. PyTorch FP32 vs OpenVINO INT8 성능 비교 (외부 테스트셋)</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>실험</th>
+                <th>Type</th>
+                <th>AUC</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1</th>
+                <th>f1_recall</th>
+                <th>추론 시간</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>exp_9</td>
+                <td>PyTorch FP32</td>
+                <td>0.8035</td>
+                <td>0.6265</td>
+                <td>0.5860</td>
+                <td>0.9692</td>
+                <td>0.7304</td>
+                <td>0.9097</td>
+                <td>3.86초</td>
+              </tr>
+              <tr>
+                <td>exp_9</td>
+                <td>OpenVINO INT8</td>
+                <td>0.8029</td>
+                <td>0.6305</td>
+                <td>0.5880</td>
+                <td>0.9769</td>
+                <td>0.7341</td>
+                <td>0.9163</td>
+                <td>88.06초</td>
+              </tr>
+              <tr>
+                <td>exp_18</td>
+                <td>PyTorch FP32</td>
+                <td>0.8122</td>
+                <td>0.6948</td>
+                <td>0.6452</td>
+                <td>0.9231</td>
+                <td>0.7595</td>
+                <td>0.8850</td>
+                <td>4.23초</td>
+              </tr>
+              <tr>
+                <td>exp_18</td>
+                <td>OpenVINO INT8</td>
+                <td>0.8127</td>
+                <td>0.6988</td>
+                <td>0.6486</td>
+                <td>0.9231</td>
+                <td>0.7619</td>
+                <td>0.8856</td>
+                <td>87.20초</td>
+              </tr>
+              <tr>
+                <td>exp_26</td>
+                <td>PyTorch FP32</td>
+                <td>0.8189</td>
+                <td>0.7390</td>
+                <td>0.6923</td>
+                <td>0.9000</td>
+                <td>0.7826</td>
+                <td>0.8738</td>
+                <td>4.38초</td>
+              </tr>
+              <tr>
+                <td>exp_26</td>
+                <td>OpenVINO INT8</td>
+                <td>0.8190</td>
+                <td>0.7349</td>
+                <td>0.6882</td>
+                <td>0.9000</td>
+                <td>0.7800</td>
+                <td>0.8731</td>
+                <td>127.16초</td>
+              </tr>
+              <tr>
+                <td>exp_45</td>
+                <td>PyTorch FP32</td>
+                <td>0.8240</td>
+                <td>0.6707</td>
+                <td>0.6188</td>
+                <td>0.9615</td>
+                <td>0.7530</td>
+                <td>0.9111</td>
+                <td>4.38초</td>
+              </tr>
+              <tr>
+                <td>exp_45</td>
+                <td>OpenVINO INT8</td>
+                <td>0.8235</td>
+                <td>0.6707</td>
+                <td>0.6188</td>
+                <td>0.9615</td>
+                <td>0.7530</td>
+                <td>0.9111</td>
+                <td>88.41초</td>
+              </tr>
+              <tr>
+                <td><strong>exp_52</strong></td>
+                <td>PyTorch FP32</td>
+                <td>0.8397</td>
+                <td>0.7149</td>
+                <td>0.6545</td>
+                <td>0.9615</td>
+                <td>0.7788</td>
+                <td>0.9184</td>
+                <td>4.42초</td>
+              </tr>
+              <tr>
+                <td><strong>exp_52</strong></td>
+                <td>OpenVINO INT8</td>
+                <td><strong>0.8411</strong></td>
+                <td><strong>0.7189</strong></td>
+                <td>0.6562</td>
+                <td><strong>0.9692</strong></td>
+                <td><strong>0.7826</strong></td>
+                <td><strong>0.9251</strong></td>
+                <td>117.87초</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="post-desc" style="font-size: 0.9rem; color: #666">
+            ※ Colab 환경에서는 OpenVINO INT8이 PyTorch보다 느림. Intel CPU 서버 배포 환경에서는 2~4배 빠른 것이 정상.
+          </p>
+        </section>
+
+        <section class="section visible" id="section-7">
+          <div class="sec-eyebrow">OpenVINO Benchmark</div>
+          <h2 class="sec-heading">07. OpenVINO 벤치마크 (Windows / Intel i7-7700K)</h2>
+
+          <h3 class="sub-heading">7.1. benchmark_app 실행 명령어</h3>
+          <div class="code-block">
+            <pre><span class="c-line">benchmark_app.exe -m exp_9_openvino\openvino_model.xml -t 10 -d CPU `</span>
+<span class="c-line">  -data_shape "input_ids[1,128],attention_mask[1,128],token_type_ids[1,128]"</span></pre>
+          </div>
+
+          <h3 class="sub-heading">7.2. 벤치마크 결과 요약</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>모델</th>
+                <th>Avg Latency (ms) ↓</th>
+                <th>Median Latency (ms)</th>
+                <th>Throughput (FPS) ↑</th>
+                <th>Compile Time (ms)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>exp_9_openvino (INT8, Colab 변환)</td>
+                <td>551.21</td>
+                <td>540.69</td>
+                <td>10.78</td>
+                <td>1187.92</td>
+              </tr>
+              <tr>
+                <td>exp_52_openvino (INT8, Colab 변환)</td>
+                <td>563.28</td>
+                <td>585.36</td>
+                <td>10.48</td>
+                <td>611.08</td>
+              </tr>
+              <tr>
+                <td><strong>openvino_9 (INT8, 로컬 변환)</strong></td>
+                <td><strong>175.80</strong></td>
+                <td>212.02</td>
+                <td><strong>34.05</strong></td>
+                <td>1360.71</td>
+              </tr>
+              <tr>
+                <td><strong>openvino_52 (INT8, 로컬 변환)</strong></td>
+                <td><strong>187.15</strong></td>
+                <td>207.27</td>
+                <td><strong>31.73</strong></td>
+                <td>1390.85</td>
+              </tr>
+              <tr>
+                <td>transformer_fp32 (FP32)</td>
+                <td>676.79</td>
+                <td>715.72</td>
+                <td>8.76</td>
+                <td>1257.37</td>
+              </tr>
+              <tr>
+                <td>openvino2 (INT8)</td>
+                <td>307.85</td>
+                <td>346.37</td>
+                <td>19.43</td>
+                <td>576.85</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>로컬 변환 INT8 모델(openvino_9, openvino_52)이 Colab 변환 대비 약 3배 빠른 처리량 달성.</p>
+        </section>
+
+        <section class="section visible" id="section-8">
+          <div class="sec-eyebrow">Model Comparison</div>
+          <h2 class="sec-heading">08. 기존 모델 vs 재학습 모델 종합 비교</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>지표</th>
+                <th>기존 BERT (FP32)</th>
+                <th>기존 BERT (INT8)</th>
+                <th>재학습 모델 (FP32)</th>
+                <th>재학습 모델 (INT8)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>F1-score</td>
+                <td>0.6074</td>
+                <td>0.6074</td>
+                <td>0.7788</td>
+                <td><strong>0.7826</strong></td>
+              </tr>
+              <tr>
+                <td>Recall</td>
+                <td>0.6560</td>
+                <td>0.6560</td>
+                <td>0.9615</td>
+                <td><strong>0.9692</strong></td>
+              </tr>
+              <tr>
+                <td>AUC</td>
+                <td>0.6199</td>
+                <td>0.6199</td>
+                <td>0.8397</td>
+                <td><strong>0.8411</strong></td>
+              </tr>
+              <tr>
+                <td>Latency (평균)</td>
+                <td>676.79ms</td>
+                <td>307.85ms</td>
+                <td>563.28ms</td>
+                <td><strong>187.15ms</strong></td>
+              </tr>
+              <tr>
+                <td>Throughput</td>
+                <td>8.76 RPS</td>
+                <td>19.43 RPS</td>
+                <td>10.48 RPS</td>
+                <td><strong>31.73 RPS</strong></td>
+              </tr>
+              <tr>
+                <td>Model Size</td>
+                <td>415.52MB</td>
+                <td>104.32MB</td>
+                <td>415.49MB</td>
+                <td><strong>104.10MB</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">8.1. INT8 양자화 개선율</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>지표</th>
+                <th>기존 BERT (FP32→INT8)</th>
+                <th>재학습 모델 (FP32→INT8)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Latency 개선율</td>
+                <td>2.20배</td>
+                <td><strong>3.01배</strong></td>
+              </tr>
+              <tr>
+                <td>Throughput 개선율</td>
+                <td>2.22배</td>
+                <td><strong>3.03배</strong></td>
+              </tr>
+              <tr>
+                <td>모델 크기 감소</td>
+                <td>75% ↓ (415MB→104MB)</td>
+                <td>75% ↓ (415MB→104MB)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-9">
+          <div class="sec-eyebrow">Conversion Guide</div>
+          <h2 class="sec-heading">09. OpenVINO 변환 가이드</h2>
+
+          <h3 class="sub-heading">9.1. 지원 포맷</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>포맷</th>
+                <th>지원 여부</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>.xml + .bin</code> (OpenVINO IR)</td><td>✅</td></tr>
+              <tr><td><code>.onnx</code></td><td>✅</td></tr>
+              <tr><td><code>.safetensors</code></td><td>❌</td></tr>
+              <tr><td><code>.pt / .pth</code></td><td>❌</td></tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">9.2. 변환 스크립트</h3>
+          <div class="code-block">
+            <pre><span class="c-key">from</span> optimum.intel <span class="c-key">import</span> OVModelForSequenceClassification
+<span class="c-key">import</span> os
+
+model_dir  = os.path.abspath(<span class="c-str">"."</span>)
+output_dir = os.path.abspath(<span class="c-str">"../exp_9_openvino"</span>)
+
+model = OVModelForSequenceClassification.from_pretrained(
+    model_dir,
+    export=True,
+    local_files_only=True    <span class="c-comment"># HuggingFace Hub 접근 차단</span>
+)
+
+os.makedirs(output_dir, exist_ok=True)
+model.save_pretrained(output_dir)
+print(<span class="c-str">f"변환 완료! → {output_dir}"</span>)</pre>
+          </div>
+
+          <h3 class="sub-heading">9.3. 주요 트러블슈팅</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>오류</th>
+                <th>원인</th>
+                <th>해결</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>--output unrecognized</code></td>
+                <td>PowerShell에서 <code>\</code> 줄바꿈 미지원</td>
+                <td>한 줄로 입력하거나 <code>`</code> 백틱 사용</td>
+              </tr>
+              <tr>
+                <td><code>model.xml not found</code></td>
+                <td>변환 전에 benchmark_app 실행</td>
+                <td>변환 스크립트 먼저 실행</td>
+              </tr>
+              <tr>
+                <td>NumPy 2.x 충돌</td>
+                <td>numexpr 등이 NumPy 1.x용으로 컴파일됨</td>
+                <td><code>pip install "numpy&lt;2"</code></td>
+              </tr>
+              <tr>
+                <td><code>RepositoryNotFoundError</code></td>
+                <td>로컬 경로를 HuggingFace Hub로 인식</td>
+                <td><code>local_files_only=True</code> + 절대경로 지정</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-10">
+          <div class="sec-eyebrow">Hardware Spec</div>
+          <h2 class="sec-heading">10. 하드웨어 환경 및 추론 성능</h2>
+
+          <h3 class="sub-heading">10.1. 테스트 환경</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>사양</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>CPU</td><td>Intel i7-7700K (7세대 Kaby Lake, 4코어/8스레드)</td></tr>
+              <tr><td>GPU</td><td>NVIDIA RTX 2060 (Turing, VRAM 6GB)</td></tr>
+              <tr><td>OpenVINO</td><td>2026.1.0</td></tr>
+              <tr><td>optimum-intel</td><td>1.27.0</td></tr>
+              <tr><td>OS</td><td>Windows (Anaconda base)</td></tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">10.2. i7-7700K INT8 최적화 제한 사항</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>i7-7700K</th>
+                <th>최신 i7 (13~14세대)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>AVX 지원</td><td>AVX2 ✅</td><td>AVX-512 ✅</td></tr>
+              <tr><td>VNNI 명령어</td><td>❌ 없음</td><td>✅ 있음</td></tr>
+              <tr><td>코어/스레드</td><td>4코어/8스레드</td><td>16~24코어</td></tr>
+            </tbody>
+          </table>
+          <p class="post-desc" style="font-size: 0.9rem; color: #666">
+            ※ VNNI(Vector Neural Network Instructions): INT8 딥러닝 연산 가속의 핵심 명령어. i7-7700K에 없어 INT8 최적화 효과가 제한적.
+          </p>
+
+          <h3 class="sub-heading">10.3. 환경별 추론 성능 비교 (BERT-base, seq=128, batch=1)</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>환경</th>
+                <th>예상 Latency</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>OpenVINO + i7-7700K (FP32)</td><td>~25~40ms</td></tr>
+              <tr><td>OpenVINO + i7-7700K (INT8)</td><td>~15~25ms</td></tr>
+              <tr><td>RTX 2060 (FP16)</td><td>~6~10ms</td></tr>
+              <tr><td>RTX 2060 + TensorRT (INT8)</td><td>~3~6ms</td></tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">10.4. 용도별 추론 장치 권장</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>사용 목적</th>
+                <th>추천</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>실시간 단일 요청 (batch=1)</td>
+                <td>RTX 2060 (FP16 또는 INT8)</td>
+              </tr>
+              <tr>
+                <td>대용량 배치 처리</td>
+                <td>RTX 2060 + TensorRT INT8</td>
+              </tr>
+              <tr>
+                <td>CPU만 사용 가능한 환경</td>
+                <td>OpenVINO INT8 (충분히 실용적)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-11">
+          <div class="sec-eyebrow">Final Config</div>
+          <h2 class="sec-heading">11. 최종 권장 설정</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>결정 내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>최적 모델</strong></td>
+                <td><code>exp_52_ov_int8</code> (OpenVINO INT8)</td>
+              </tr>
+              <tr>
+                <td><strong>권장 임계값 (Recall 우선)</strong></td>
+                <td>0.40 → Recall 0.9769, f1_recall 0.9236</td>
+              </tr>
+              <tr>
+                <td><strong>권장 임계값 (균형)</strong></td>
+                <td>0.50 → Recall 0.9692, f1_recall 0.9251</td>
+              </tr>
+              <tr>
+                <td>저장 기준 지표</td>
+                <td><code>f1_recall</code> (F-beta β=2, recall 2배 가중)</td>
+              </tr>
+              <tr>
+                <td>마스킹 토큰</td>
+                <td><code>[STORE]</code> 대신 <code>식당</code> 사용</td>
+              </tr>
+              <tr>
+                <td>클래스 불균형 처리</td>
+                <td><code>compute_class_weight("balanced")</code> + WeightedTrainer</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-12">
+          <div class="sec-eyebrow">Future Work</div>
+          <h2 class="sec-heading">12. 향후 과제</h2>
+
+          <h3 class="sub-heading">단기</h3>
+          <ul class="bullet-list">
+            <li>Precision 하락 수치를 정량화하고 서비스 운영 관점에서 허용 가능한 범위 검토</li>
+            <li>현재 테스트셋 구성이 실제 서비스 환경을 충분히 반영하는지 점검</li>
+          </ul>
+
+          <h3 class="sub-heading">중장기</h3>
+          <ul class="bullet-list">
+            <li>다양한 가게·지역·업종으로 테스트셋을 확장하여 일반화 성능 지속 검증</li>
+            <li>SHAP 분석에서 확인된 홍보·권유성 표현 외 추가 판단 근거 발굴</li>
+            <li>매장정보 나열형·해시태그형 리뷰에 대한 세분화된 분류 기준 또는 후처리 로직 검토</li>
+            <li>RTX 2060 + TensorRT INT8 환경에서의 추론 속도 실측</li>
+          </ul>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="Verita_24_dev_0507.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">Bocca della Verità 24 — KcBERT 광고 탐지 모델 개발 작업 문서</p>
+        <p class="post-nav-meta">
+          <span class="tag">Bocca della Verità</span>
+          <span class="tag">#Dev Update</span>
+          <span class="date">· 2026.05.07</span>
+        </p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../index.html" class="footer-back">← 프로젝트 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
