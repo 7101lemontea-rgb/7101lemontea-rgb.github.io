@@ -1,0 +1,993 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개발 작업 문서 — Truth Guard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">Dev Update</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">개발 작업 문서</h1>
+        <p class="post-sub">
+          beomi/kcbert-base 기반 네이버 블로그 리뷰 광고/비광고 이진 분류 — 54종
+          하이퍼파라미터 탐색 및 OpenVINO INT8 경량화
+        </p>
+        <p class="post-desc">
+          약 1,281건의 학습 데이터로 54종 하이퍼파라미터 조합을 전수 탐색하고,
+          상위 모델을 OpenVINO INT8로 경량화했습니다. 신규 테스트 데이터에서
+          AUC가 0.95 → 0.61로 급락하는 이슈를 발견하고, 학습 데이터의 가게명
+          편향을 원인으로 분석했습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <p class="stat-label">작성일</p>
+            <p class="stat-val">2026. 05. 07.</p>
+          </div>
+          <div>
+            <p class="stat-label">팀명</p>
+            <p class="stat-val">진실 방범대 (Truth Guard)</p>
+          </div>
+          <div>
+            <div class="stat-label">대상 플랫폼</div>
+            <div class="stat-val">Python, HuggingFace, OpenVINO</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="main-wrapper">
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#section-1"
+                ><span class="toc-num">01</span>오늘 한 일 요약</a
+              >
+            </li>
+            <li>
+              <a href="#section-2"><span class="toc-num">02</span>실험 환경</a>
+            </li>
+            <li>
+              <a href="#section-3"
+                ><span class="toc-num">03</span>모델 학습 구성</a
+              >
+            </li>
+            <li>
+              <a href="#section-4"><span class="toc-num">04</span>실험 결과</a>
+            </li>
+            <li>
+              <a href="#section-5"><span class="toc-num">05</span>모델 저장</a>
+            </li>
+            <li>
+              <a href="#section-6"
+                ><span class="toc-num">06</span>OpenVINO INT8 경량화</a
+              >
+            </li>
+            <li>
+              <a href="#section-7"
+                ><span class="toc-num">07</span>성능 벤치마크</a
+              >
+            </li>
+            <li>
+              <a href="#section-8"
+                ><span class="toc-num">08</span>이슈: 성능 저하 분석</a
+              >
+            </li>
+            <li>
+              <a href="#section-9"
+                ><span class="toc-num">09</span>Supabase 업로드 가이드</a
+              >
+            </li>
+            <li>
+              <a href="#section-10"><span class="toc-num">10</span>다음 단계</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <article class="post-body">
+        <section class="section visible" id="section-1">
+          <div class="sec-eyebrow">Summary</div>
+          <h2 class="sec-heading">01. 오늘 한 일 요약</h2>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>작업</th>
+                <th>내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>하이퍼파라미터 탐색</td>
+                <td>title 포함 약 1,000건 데이터로 54종 조합 재학습</td>
+              </tr>
+              <tr>
+                <td>모델 경량화</td>
+                <td>최종 5개 모델 선정 → OpenVINO INT8 변환</td>
+              </tr>
+              <tr>
+                <td>성능 벤치마크</td>
+                <td>safetensors 모델 vs OpenVINO INT8 모델 비교</td>
+              </tr>
+              <tr>
+                <td>이슈 발견</td>
+                <td>신규 테스트 데이터 성능이 기존 대비 큰 폭으로 저하</td>
+              </tr>
+              <tr>
+                <td>테스트 데이터 수집</td>
+                <td>네이버 API로 광고 150건 + 비광고 150건 라벨링</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-2">
+          <div class="sec-eyebrow">Environment</div>
+          <h2 class="sec-heading">02. 실험 환경</h2>
+
+          <h3 class="sub-heading">2.1. 데이터셋</h3>
+          <ul class="bullet-list">
+            <li>
+              <strong>학습 데이터:</strong> <code>data.csv</code> — 총 1,281건
+              (광고 513건 40% / 비광고 768건 60%)
+            </li>
+            <li>
+              <strong>입력 형식:</strong>
+              <code>review_title + " [SEP] " + review_description</code>
+            </li>
+            <li><strong>MAX_LEN:</strong> 256</li>
+          </ul>
+
+          <h3 class="sub-heading">2.2. 환경 라이브러리</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>라이브러리</th>
+                <th>버전</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>numpy</td>
+                <td>2.0.2</td>
+              </tr>
+              <tr>
+                <td>pandas</td>
+                <td>2.2.2</td>
+              </tr>
+              <tr>
+                <td>torch</td>
+                <td>2.10.0+cpu</td>
+              </tr>
+              <tr>
+                <td>transformers</td>
+                <td>4.57.6</td>
+              </tr>
+              <tr>
+                <td>openvino</td>
+                <td>2026.1.0</td>
+              </tr>
+              <tr>
+                <td>optimum</td>
+                <td>2.1.0</td>
+              </tr>
+              <tr>
+                <td>optimum-intel</td>
+                <td>1.27.0</td>
+              </tr>
+              <tr>
+                <td>nncf</td>
+                <td>3.1.0</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-3">
+          <div class="sec-eyebrow">Model Training</div>
+          <h2 class="sec-heading">03. 모델 학습 구성</h2>
+
+          <h3 class="sub-heading">3.1. 핵심 설계</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>프레임워크</td>
+                <td>HuggingFace Trainer API + WeightedTrainer 커스터마이징</td>
+              </tr>
+              <tr>
+                <td>토크나이징</td>
+                <td><code>Dataset.__init__</code>에서 일괄 처리</td>
+              </tr>
+              <tr>
+                <td>클래스 가중치</td>
+                <td>
+                  <code>sklearn compute_class_weight("balanced")</code> 자동
+                  계산
+                </td>
+              </tr>
+              <tr>
+                <td>시드 고정</td>
+                <td>
+                  <code>random</code>, <code>numpy</code>, <code>torch</code>,
+                  <code>PYTHONHASHSEED</code> 모두 고정
+                </td>
+              </tr>
+              <tr>
+                <td>Epoch</td>
+                <td>5 epoch 고정 (Early Stopping 없음)</td>
+              </tr>
+              <tr>
+                <td>저장 기준</td>
+                <td>
+                  <code>eval_f1_recall</code> (F-beta score β=2, recall 2배
+                  가중)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">3.2. 전처리 함수</h3>
+          <div class="code-block">
+            <pre><span class="c-key">def</span> preprocess(text: str) -> str:
+    text = unescape(text)                                          <span class="c-comment"># HTML 엔티티 디코딩</span>
+    text = re.sub(<span class="c-str">r"&lt;[^&gt;]+&gt;"</span>, <span class="c-str">""</span>, text)                           <span class="c-comment"># HTML 태그 제거</span>
+    text = re.sub(<span class="c-str">r"#(\w+)"</span>, <span class="c-str">r"\1 "</span>, text)                        <span class="c-comment"># 해시태그 단어 추출</span>
+    text = re.sub(<span class="c-str">r"\.{2,}"</span>, <span class="c-str">" "</span>, text)                           <span class="c-comment"># 말줄임 제거</span>
+    text = re.sub(<span class="c-str">r"[^\w\s가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9.,!?~]"</span>, <span class="c-str">" "</span>, text)  <span class="c-comment"># 특수문자 정리</span>
+    text = re.sub(<span class="c-str">r"\s+"</span>, <span class="c-str">" "</span>, text).strip()
+    <span class="c-key">return</span> text</pre>
+          </div>
+
+          <h3 class="sub-heading">3.3. 하이퍼파라미터 그리드 (총 54개 조합)</h3>
+          <div class="code-block">
+            <pre>param_grid = {
+    <span class="c-str">"batch_size"</span>: [16, 32],
+    <span class="c-str">"lr"</span>:         [1e-5, 3e-5, 5e-5],
+    <span class="c-str">"scheduler"</span>:  [<span class="c-str">"linear"</span>, <span class="c-str">"cosine"</span>, <span class="c-str">"cosine_with_warmup"</span>],
+    <span class="c-str">"dropout"</span>:    [0.1, 0.2, 0.3],
+}</pre>
+          </div>
+
+          <h3 class="sub-heading">3.4. WeightedTrainer (가중 손실 함수)</h3>
+          <div class="code-block">
+            <pre><span class="c-key">class</span> WeightedTrainer(Trainer):
+    <span class="c-key">def</span> compute_loss(self, model, inputs, return_outputs=False, **kwargs):
+        labels  = inputs.pop(<span class="c-str">"labels"</span>)
+        outputs = model(**inputs)
+        loss_fn = CrossEntropyLoss(weight=self.class_weights_tensor.to(model.device))
+        loss    = loss_fn(outputs.logits, labels)
+        <span class="c-key">return</span> (loss, outputs) <span class="c-key">if</span> return_outputs <span class="c-key">else</span> loss</pre>
+          </div>
+
+          <h3 class="sub-heading">3.5. 저장 기준 지표 (F-beta, β=2)</h3>
+          <div class="code-block">
+            <pre><span class="c-key">def</span> compute_metrics(eval_pred):
+    ...
+    <span class="c-key">if</span> f1 + recall == 0:
+        f1_recall = 0.0
+    <span class="c-key">else</span>:
+        f1_recall = (1 + 2**2) * f1 * recall / (2**2 * f1 + recall)
+    <span class="c-key">return</span> {
+        <span class="c-str">"auc"</span>: ..., <span class="c-str">"accuracy"</span>: ..., <span class="c-str">"precision"</span>: ...,
+        <span class="c-str">"recall"</span>: ..., <span class="c-str">"f1"</span>: ..., <span class="c-str">"f1_recall"</span>: round(f1_recall, 4),
+    }</pre>
+          </div>
+
+          <h3 class="sub-heading">3.6. 실험 실행 구조 (3회 분할)</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>회차</th>
+                <th>실험 범위</th>
+                <th>예상 소요 시간 (T4)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1회차</td>
+                <td>1 ~ 18</td>
+                <td>7 ~ 10시간</td>
+              </tr>
+              <tr>
+                <td>2회차</td>
+                <td>19 ~ 36</td>
+                <td>7 ~ 10시간</td>
+              </tr>
+              <tr>
+                <td>3회차</td>
+                <td>37 ~ 54</td>
+                <td>7 ~ 10시간</td>
+              </tr>
+            </tbody>
+          </table>
+          <ul class="bullet-list">
+            <li>매 실험마다 Google Drive에 JSON 자동 저장</li>
+            <li>세션 중단 시 완료 실험 자동 스킵 후 재개</li>
+          </ul>
+          <div class="code-block">
+            <pre>run_experiments(start=1, end=18, save_dir=<span class="c-str">"kcbert_v2_results"</span>)</pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-4">
+          <div class="sec-eyebrow">Experiment Results</div>
+          <h2 class="sec-heading">04. 실험 결과</h2>
+
+          <h3 class="sub-heading">4.1. 전체 실험 — AUC 상위 10개</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>실험번호</th>
+                <th>batch_size</th>
+                <th>lr</th>
+                <th>scheduler</th>
+                <th>dropout</th>
+                <th>best_auc</th>
+                <th>best_acc</th>
+                <th>precision</th>
+                <th>recall</th>
+                <th>f1</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>54</strong></td>
+                <td>32</td>
+                <td>0.00005</td>
+                <td>constant_with_warmup</td>
+                <td>0.3</td>
+                <td><strong>0.9549</strong></td>
+                <td>0.8171</td>
+                <td>0.6918</td>
+                <td>0.9806</td>
+                <td>0.8112</td>
+              </tr>
+              <tr>
+                <td>44</td>
+                <td>32</td>
+                <td>0.00003</td>
+                <td>constant_with_warmup</td>
+                <td>0.2</td>
+                <td>0.9537</td>
+                <td>0.8560</td>
+                <td>0.7463</td>
+                <td>0.9709</td>
+                <td>0.8439</td>
+              </tr>
+              <tr>
+                <td>27</td>
+                <td>16</td>
+                <td>0.00005</td>
+                <td>constant_with_warmup</td>
+                <td>0.3</td>
+                <td>0.9532</td>
+                <td>0.8638</td>
+                <td>0.7576</td>
+                <td>0.9709</td>
+                <td>0.8511</td>
+              </tr>
+              <tr>
+                <td>34</td>
+                <td>32</td>
+                <td>0.00001</td>
+                <td>constant_with_warmup</td>
+                <td>0.1</td>
+                <td>0.9523</td>
+                <td>0.8638</td>
+                <td>0.7698</td>
+                <td>0.9417</td>
+                <td>0.8472</td>
+              </tr>
+              <tr>
+                <td>38</td>
+                <td>32</td>
+                <td>0.00003</td>
+                <td>linear</td>
+                <td>0.2</td>
+                <td>0.9513</td>
+                <td>0.8560</td>
+                <td>0.7619</td>
+                <td>0.9320</td>
+                <td>0.8384</td>
+              </tr>
+              <tr>
+                <td>51</td>
+                <td>32</td>
+                <td>0.00005</td>
+                <td>cosine</td>
+                <td>0.3</td>
+                <td>0.9498</td>
+                <td>0.8482</td>
+                <td>0.7424</td>
+                <td>0.9515</td>
+                <td>0.8340</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>16</td>
+                <td>0.00001</td>
+                <td>linear</td>
+                <td>0.2</td>
+                <td>0.9492</td>
+                <td>0.8599</td>
+                <td>0.7863</td>
+                <td>0.8932</td>
+                <td>0.8364</td>
+              </tr>
+              <tr>
+                <td>15</td>
+                <td>16</td>
+                <td>0.00003</td>
+                <td>cosine</td>
+                <td>0.3</td>
+                <td>0.9487</td>
+                <td>0.8560</td>
+                <td>0.7463</td>
+                <td>0.9709</td>
+                <td>0.8439</td>
+              </tr>
+              <tr>
+                <td>16</td>
+                <td>16</td>
+                <td>0.00003</td>
+                <td>constant_with_warmup</td>
+                <td>0.1</td>
+                <td>0.9484</td>
+                <td>0.8716</td>
+                <td>0.7692</td>
+                <td>0.9709</td>
+                <td>0.8584</td>
+              </tr>
+              <tr>
+                <td>41</td>
+                <td>32</td>
+                <td>0.00003</td>
+                <td>cosine</td>
+                <td>0.2</td>
+                <td>0.9484</td>
+                <td>0.8677</td>
+                <td>0.7805</td>
+                <td>0.9320</td>
+                <td>0.8496</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">4.2. 최적 조합 (실험 #54)</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>값</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Batch Size</td>
+                <td>32</td>
+              </tr>
+              <tr>
+                <td>Learning Rate</td>
+                <td>5e-05</td>
+              </tr>
+              <tr>
+                <td>Scheduler</td>
+                <td>constant_with_warmup</td>
+              </tr>
+              <tr>
+                <td>Dropout</td>
+                <td>0.3</td>
+              </tr>
+              <tr>
+                <td><strong>AUC</strong></td>
+                <td><strong>0.9549</strong></td>
+              </tr>
+              <tr>
+                <td>F1</td>
+                <td>0.8112</td>
+              </tr>
+              <tr>
+                <td>Recall</td>
+                <td>0.9806</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">
+            4.3. 1차 실험 파라미터별 경향 (상위 5개 기준)
+          </h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>파라미터</th>
+                <th>경향</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>스케줄러</td>
+                <td>
+                  <code>cosine_with_warmup</code> &gt; <code>linear</code> &gt;
+                  <code>cosine</code>
+                </td>
+              </tr>
+              <tr>
+                <td>LR</td>
+                <td>
+                  <code>1e-5</code>는 낮음, <code>3e-5</code>와
+                  <code>5e-5</code>는 비슷
+                </td>
+              </tr>
+              <tr>
+                <td>Dropout</td>
+                <td><code>0.1</code>이 평균 AUC 가장 높음</td>
+              </tr>
+              <tr>
+                <td>Batch</td>
+                <td>큰 차이 없음, F1 균형은 batch 32가 유리</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-5">
+          <div class="sec-eyebrow">Model Saving</div>
+          <h2 class="sec-heading">05. 모델 저장</h2>
+          <p>
+            선택한 실험번호를 Google Drive에 직접 저장하는 방식을 사용합니다.
+          </p>
+
+          <div class="code-block">
+            <pre><span class="c-key">import</span> shutil
+
+SAVE_DIR        = <span class="c-str">"kcbert_v2_results"</span>
+DRIVE_SAVE_PATH = <span class="c-str">f"/content/drive/MyDrive/{SAVE_DIR}"</span>
+os.makedirs(DRIVE_SAVE_PATH, exist_ok=True)
+
+save_exp_ids = [14, 40, 46]
+<span class="c-key">for</span> exp_no <span class="c-key">in</span> save_exp_ids:
+    src = <span class="c-str">f"./runs/exp_{exp_no}"</span>
+    dst = <span class="c-str">f"{DRIVE_SAVE_PATH}/exp_{exp_no}"</span>
+    <span class="c-key">if</span> os.path.exists(src):
+        shutil.copytree(src, dst, dirs_exist_ok=True)
+        print(<span class="c-str">f"  실험 {exp_no} 저장 완료 → {dst}"</span>)</pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-6">
+          <div class="sec-eyebrow">Model Optimization</div>
+          <h2 class="sec-heading">06. OpenVINO INT8 경량화</h2>
+
+          <h3 class="sub-heading">6.1. 설치</h3>
+          <div class="code-block">
+            <pre><span class="c-line">pip install transformers optimum optimum-intel openvino nncf scikit-learn -q</span></pre>
+          </div>
+
+          <h3 class="sub-heading">6.2. 변환 흐름</h3>
+          <div class="code-block">
+            <pre><span class="c-line">safetensors → OVModelForSequenceClassification(export=True) → NNCF INT8 양자화</span></pre>
+          </div>
+
+          <h3 class="sub-heading">6.3. Calibration 데이터 구성</h3>
+          <ul class="bullet-list">
+            <li>
+              <code>data.csv</code>에서 광고/비광고 각 150건씩 균등 샘플링 (총
+              300건)
+            </li>
+            <li>
+              HuggingFace Dataset 형식으로 변환 후 <code>OVQuantizer</code>에
+              전달
+            </li>
+          </ul>
+
+          <h3 class="sub-heading">6.4. 변환 코드</h3>
+          <div class="code-block">
+            <pre>ov_model = OVModelForSequenceClassification.from_pretrained(
+    MODEL_DIR,
+    export=True,
+    compile=False,
+    library=<span class="c-str">"transformers"</span>,
+    config=pt_model.config,
+)
+quantizer = OVQuantizer(ov_model)
+quantizer.quantize(
+    calibration_dataset=calib_hf,
+    save_directory=OV_SAVE_DIR,
+)</pre>
+          </div>
+
+          <h3 class="sub-heading">6.5. 발생한 주요 오류 및 해결</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>오류</th>
+                <th>원인</th>
+                <th>해결</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>openvino.runtime not found</code></td>
+                <td>API 경로 변경</td>
+                <td><code>from openvino import Core</code></td>
+              </tr>
+              <tr>
+                <td><code>cosine_with_warmup invalid</code></td>
+                <td>잘못된 스케줄러 이름</td>
+                <td>
+                  <code>cosine_with_restarts</code> 또는
+                  <code>constant_with_warmup</code> 사용
+                </td>
+              </tr>
+              <tr>
+                <td><code>evaluation_strategy error</code></td>
+                <td>transformers 버전 업데이트</td>
+                <td><code>eval_strategy</code>로 변경</td>
+              </tr>
+              <tr>
+                <td><code>numpy.rec error</code></td>
+                <td>numpy 2.x 충돌</td>
+                <td>numpy 버전 고정 또는 런타임 초기화</td>
+              </tr>
+              <tr>
+                <td><code>library</code> 추론 실패</td>
+                <td><code>config.json</code> 인식 오류</td>
+                <td><code>library="transformers"</code> 명시</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section visible" id="section-7">
+          <div class="sec-eyebrow">Benchmark</div>
+          <h2 class="sec-heading">
+            07. 성능 벤치마크 (PyTorch FP32 vs OpenVINO INT8)
+          </h2>
+
+          <h3 class="sub-heading">7.1. original 모델</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>type</th>
+                <th>AUC</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1</th>
+                <th>추론 시간</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>OpenVINO INT8</td>
+                <td>0.6093</td>
+                <td>0.548</td>
+                <td>0.5566</td>
+                <td>0.472</td>
+                <td>0.5108</td>
+                <td>296.71초</td>
+              </tr>
+              <tr>
+                <td>PyTorch FP32</td>
+                <td>0.6086</td>
+                <td>0.548</td>
+                <td>0.5566</td>
+                <td>0.472</td>
+                <td>0.5108</td>
+                <td>211.04초</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">7.2. exp_15 모델</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>type</th>
+                <th>AUC</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1</th>
+                <th>추론 시간</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>OpenVINO INT8</td>
+                <td>0.5889</td>
+                <td>0.576</td>
+                <td>0.5655</td>
+                <td>0.656</td>
+                <td>0.6074</td>
+                <td>341.28초</td>
+              </tr>
+              <tr>
+                <td>PyTorch FP32</td>
+                <td>0.5895</td>
+                <td>0.576</td>
+                <td>0.5655</td>
+                <td>0.656</td>
+                <td>0.6074</td>
+                <td>205.61초</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="post-desc" style="font-size: 0.9rem; color: #666">
+            ※ OpenVINO INT8 변환 후 성능 저하 없이 PyTorch FP32와 동등한 수준
+            유지. 단, CPU 환경에서는 OpenVINO가 PyTorch 대비 추론 속도 이점
+            없음.
+          </p>
+        </section>
+
+        <section class="section visible" id="section-8">
+          <div class="sec-eyebrow">Issue Analysis</div>
+          <h2 class="sec-heading">08. 이슈: 신규 테스트 데이터 성능 저하</h2>
+
+          <h3 class="sub-heading">8.1. 문제 현상</h3>
+          <ul class="bullet-list">
+            <li>
+              학습 데이터(val) AUC <strong>~0.95</strong> → 신규 테스트 AUC
+              <strong>0.61</strong>로 급락
+            </li>
+            <li>예측 분포 자체는 정상 (비광고 105건, 광고 145건)</li>
+          </ul>
+
+          <h3 class="sub-heading">
+            8.2. 원인 분석 — 학습 데이터의 가게명 편향
+          </h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>패턴</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>광고 샘플</td>
+                <td>"까몬" 관련 글에 집중</td>
+              </tr>
+              <tr>
+                <td>비광고 샘플</td>
+                <td>"고양이부엌" 관련 글에 집중</td>
+              </tr>
+              <tr>
+                <td>결과</td>
+                <td>
+                  모델이 <strong>문체/패턴이 아닌 가게명</strong>을 판단
+                  기준으로 학습
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">8.3. 개선 방향</h3>
+          <p><strong>방향 1 — 학습 데이터 다양화</strong></p>
+          <ul class="bullet-list">
+            <li>더 다양한 가게의 광고/비광고 샘플 추가</li>
+            <li>편향된 가게 샘플은 마스킹 버전으로 증강</li>
+          </ul>
+
+          <p><strong>방향 2 — 가게명 마스킹</strong></p>
+          <p>
+            가게명을 <code>[STORE]</code> 토큰으로 치환하여 모델의 가게명
+            의존도를 제거합니다.
+          </p>
+          <div class="code-block">
+            <pre><span class="c-key">def</span> mask_store_names(text: str, store_vocab: set) -> str:
+    words = text.split()
+    masked = []
+    <span class="c-key">for</span> word <span class="c-key">in</span> words:
+        clean = re.sub(<span class="c-str">r"[.,!?~]"</span>, <span class="c-str">""</span>, word)
+        <span class="c-key">if</span> clean <span class="c-key">in</span> store_vocab:
+            masked.append(<span class="c-str">"[STORE]"</span>)
+        <span class="c-key">else</span>:
+            masked.append(word)
+    <span class="c-key">return</span> <span class="c-str">" "</span>.join(masked)</pre>
+          </div>
+        </section>
+
+        <section class="section visible" id="section-9">
+          <div class="sec-eyebrow">Data Pipeline</div>
+          <h2 class="sec-heading">09. Supabase 테스트 데이터 업로드 가이드</h2>
+          <p>
+            네이버 API로 수집한 광고 150건 + 비광고 150건을 Supabase에
+            업로드하는 절차입니다.
+          </p>
+
+          <h3 class="sub-heading">
+            Step 1. 테이블 생성 (소문자 테이블명 사용)
+          </h3>
+          <div class="code-block">
+            <pre><span class="c-key">CREATE TABLE</span> public.naverapitest (
+  id bigint <span class="c-key">GENERATED BY DEFAULT AS IDENTITY NOT NULL</span>,
+  name text <span class="c-key">NULL</span>,
+  review_url text <span class="c-key">NULL</span>,
+  review_title text <span class="c-key">NULL</span>,
+  review_description text <span class="c-key">NULL</span>,
+  review_bloggername text <span class="c-key">NULL</span>,
+  review_postdate text <span class="c-key">NULL</span>,
+  created_at timestamp with time zone <span class="c-key">NULL DEFAULT</span> now(),
+  is_ad bigint <span class="c-key">NULL</span>,
+  is_ad_bert_pred double precision <span class="c-key">NULL</span>,
+  <span class="c-key">CONSTRAINT</span> naverapitest_pkey <span class="c-key">PRIMARY KEY</span> (id)
+) <span class="c-key">TABLESPACE</span> pg_default;</pre>
+          </div>
+          <p class="post-desc" style="font-size: 0.9rem; color: #666">
+            ※ PostgreSQL은 따옴표 없이 테이블명을 참조하면 자동으로 소문자
+            변환하므로, 처음부터 소문자로 생성할 것.
+          </p>
+
+          <h3 class="sub-heading">
+            Step 2. 여러 JSON 파일을 하나의 CSV로 병합
+          </h3>
+          <div class="code-block">
+            <pre><span class="c-key">import</span> json, csv, glob
+
+json_files = glob.glob(<span class="c-str">'*.json'</span>)
+all_data = []
+
+<span class="c-key">for</span> file <span class="c-key">in</span> json_files:
+    <span class="c-key">with</span> open(file, <span class="c-str">'r'</span>, encoding=<span class="c-str">'utf-8'</span>) <span class="c-key">as</span> f:
+        json_data = json.load(f)
+    <span class="c-key">if</span> isinstance(json_data, dict):
+        json_data = [json_data]
+    all_data.extend(json_data)
+    print(<span class="c-str">f"{file} → {len(json_data)}건 추가"</span>)
+
+<span class="c-key">with</span> open(<span class="c-str">'merged.csv'</span>, <span class="c-str">'w'</span>, newline=<span class="c-str">''</span>, encoding=<span class="c-str">'utf-8-sig'</span>) <span class="c-key">as</span> f:
+    writer = csv.DictWriter(f, fieldnames=all_data[0].keys())
+    writer.writeheader()
+    writer.writerows(all_data)
+
+print(<span class="c-str">f"\n변환 완료: merged.csv ({len(all_data)}건 총합)"</span>)</pre>
+          </div>
+
+          <h3 class="sub-heading">
+            Step 3. 컬럼명을 테이블 스키마에 맞게 변경
+          </h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>CSV 컬럼명</th>
+                <th>테이블 컬럼명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>url</td>
+                <td>review_url</td>
+              </tr>
+              <tr>
+                <td>title</td>
+                <td>review_title</td>
+              </tr>
+              <tr>
+                <td>description</td>
+                <td>review_description</td>
+              </tr>
+              <tr>
+                <td>bloggername</td>
+                <td>review_bloggername</td>
+              </tr>
+              <tr>
+                <td>postdate</td>
+                <td>review_postdate</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="code-block">
+            <pre><span class="c-key">import</span> pandas <span class="c-key">as</span> pd
+
+df = pd.read_csv(<span class="c-str">'merged.csv'</span>)
+df = df.rename(columns={
+    <span class="c-str">'url'</span>: <span class="c-str">'review_url'</span>,
+    <span class="c-str">'title'</span>: <span class="c-str">'review_title'</span>,
+    <span class="c-str">'description'</span>: <span class="c-str">'review_description'</span>,
+    <span class="c-str">'bloggername'</span>: <span class="c-str">'review_bloggername'</span>,
+    <span class="c-str">'postdate'</span>: <span class="c-str">'review_postdate'</span>
+})
+df.to_csv(<span class="c-str">'merged_fixed.csv'</span>, index=False, encoding=<span class="c-str">'utf-8-sig'</span>)
+print(<span class="c-str">"완료:"</span>, df.columns.tolist())</pre>
+          </div>
+
+          <h3 class="sub-heading">Step 4. Supabase 대시보드에서 CSV 업로드</h3>
+          <ul class="bullet-list">
+            <li>JSON → <code>merged.csv</code> 생성</li>
+            <li>컬럼명 변경 → <code>merged_fixed.csv</code> 생성</li>
+            <li>SQL Editor에서 테이블 생성 (소문자 테이블명)</li>
+            <li>
+              Table Editor → Insert → <strong>Import data from CSV</strong>
+            </li>
+            <li><code>merged_fixed.csv</code> 업로드</li>
+          </ul>
+        </section>
+
+        <section class="section visible" id="section-10">
+          <div class="sec-eyebrow">Next Steps</div>
+          <h2 class="sec-heading">10. 다음 단계</h2>
+
+          <ul class="bullet-list">
+            <li>가게명 마스킹 적용 후 재학습 실험</li>
+            <li>학습 데이터 다양화 (다양한 가게 샘플 추가)</li>
+            <li>신규 250건 테스트셋 기준 성능 재측정</li>
+            <li>OpenVINO GPU 환경에서 추론 속도 재검증</li>
+          </ul>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="Verita_23_dev_0506.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">Bocca della Verità 23 — 개발 작업 문서</p>
+        <p class="post-nav-meta">
+          <span class="tag">Bocca della Verità</span>
+          <span class="tag">#Technical Report</span>
+          <span class="date">· 2026.05.06</span>
+        </p>
+      </a>
+    </div>
+
+    <footer class="post-footer">
+      <a href="../index.html" class="footer-back">← 프로젝트 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+  </body>
+</html>
