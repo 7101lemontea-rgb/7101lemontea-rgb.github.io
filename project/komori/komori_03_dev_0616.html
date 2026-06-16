@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>작업 문서 2026.06.16 — Komori</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">작업 문서</span>
+          <span class="badge badge-ver">2026.06.16</span>
+          <span class="badge badge-status">완료</span>
+        </div>
+        <h1 class="post-title">Unity 프로토타입 구현 — SY 개발일지</h1>
+        <p class="post-sub">
+          Komori — 스프라이트 · WASD 이동 · 대화 UI · Gemini AI 연동
+        </p>
+        <p class="post-desc">
+          Unity 프로토타입 SY 브랜치 작업 기록. 히키 스프라이트 Import 및
+          슬라이스, WASD 이동·카메라 추적 스크립트, Komori 대화 트리거 UI,
+          Python Flask로 Gemini AI 연동, 한국어 폰트 문제 해결까지 전체 구현
+          과정을 담습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 6월 16일</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+          <div>
+            <div class="stat-label">브랜치</div>
+            <div class="stat-val">SY ← HS</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#overview"><span class="toc-num">§</span>최종 결과</a>
+            </li>
+            <li>
+              <a href="#part1"
+                ><span class="toc-num">P1</span>스프라이트 · Unity 적용</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#sprite-gen">스프라이트 생성</a></li>
+                <li><a href="#sprite-import">Import · 슬라이스 · 배치</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#part2"
+                ><span class="toc-num">P2</span>이동 · 카메라 스크립트</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#player-move">PlayerMovement.cs</a></li>
+                <li><a href="#input-trouble">트러블슈팅: Input System</a></li>
+                <li><a href="#camera-follow">CameraFollow.cs</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#part3"><span class="toc-num">P3</span>대화 트리거 · UI</a>
+              <ul class="toc-sub-list">
+                <li><a href="#dialogue-scripts">스크립트 생성</a></li>
+                <li><a href="#dialogue-ui">Unity UI 구성</a></li>
+                <li><a href="#dialogue-connect">스크립트 연결</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#part4"
+                ><span class="toc-num">P4</span>AI 연동 · 폰트 트러블슈팅</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#flask">Python Flask 서버</a></li>
+                <li><a href="#font-trouble">한국어 폰트 문제</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── 최종 결과 ── -->
+        <section class="section visible" id="overview">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">최종 결과</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>기능</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>WASD로 Hiki 이동</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>카메라가 Hiki 추적</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Komori에게 가까이 가면 대화창 열림</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>대화창에 입력 후 Enter → AI(Gemini)가 코모리로 응답</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>한국어 텍스트 정상 표시</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">SY 브랜치 생성</h3>
+          <p>HS 브랜치를 기반으로 SY 브랜치를 새로 생성하여 작업을 시작합니다.</p>
+          <div class="code-block">
+            <pre><span class="c-line">git checkout -t origin/HS</span>
+<span class="c-line">git checkout -b SY</span></pre>
+          </div>
+        </section>
+
+        <!-- ════════ PART 1 : 스프라이트 · Unity 적용 ════════ -->
+        <section class="section visible" id="part1">
+          <div class="sec-eyebrow">Part 1 — 히키 스프라이트</div>
+          <h2 class="sec-heading">스프라이트 생성 · Unity 적용</h2>
+
+          <!-- 스프라이트 생성 -->
+          <h3 class="sub-heading" id="sprite-gen">1. 스프라이트 생성</h3>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">생성 도구</div>
+              <div class="info-val">Gemini (이미지 생성 AI)</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">스타일</div>
+              <div class="info-val">2D 쯔꾸르 스타일, 1행 8프레임 (1×8), 걷는 모션</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">배경 제거</div>
+              <div class="info-val">
+                AI가 흰색 배경으로 생성 →
+                <a href="https://www.remove.bg" target="_blank">remove.bg</a>에서
+                배경 제거 후 투명 PNG로 저장
+              </div>
+            </div>
+          </div>
+
+          <!-- Import · 슬라이스 · 배치 -->
+          <h3 class="sub-heading" id="sprite-import">2. Unity Import · 슬라이스 · 씬 배치</h3>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">Import</span>
+                <span class="white-column-layer-tech">Inspector 설정</span>
+              </div>
+              <div class="white-column-content">
+                Project 창 → Assets 폴더로 PNG 드래그 후 Inspector 설정:
+                <ul class="bullet-list">
+                  <li>Sprite Mode: <strong>Multiple</strong></li>
+                  <li>Filter Mode: <strong>Point (no filter)</strong></li>
+                  <li>Compression: <strong>None</strong></li>
+                  <li>Apply 클릭</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">슬라이스</span>
+                <span class="white-column-layer-tech">Sprite Editor</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>Sprite Editor 열기</li>
+                  <li>
+                    Automatic 슬라이스 실패 — 캐릭터 간격 불균일
+                  </li>
+                  <li><strong>Grid By Cell Count</strong> 방식 사용</li>
+                  <li>Column C: <strong>8</strong>, Row R: <strong>1</strong></li>
+                  <li>Slice → Apply</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">씬 배치</span>
+                <span class="white-column-layer-tech">Hierarchy</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>
+                    Project 창에서 HikiSprite ▶ 클릭 → 8개 조각 전체 선택 →
+                    Scene 뷰로 드래그
+                  </li>
+                  <li>
+                    저장 창: 이름 <strong>HikiWalk</strong> (걷는 모션이므로
+                    Idle 아닌 Walk)
+                  </li>
+                  <li>Hierarchy 오브젝트 이름: <strong>Hiki</strong></li>
+                  <li>
+                    Inspector → Sprite Renderer → Order in Layer:
+                    <strong>1</strong>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ════════ PART 2 : 이동 · 카메라 스크립트 ════════ -->
+        <section class="section visible" id="part2">
+          <div class="sec-eyebrow">Part 2 — 이동 · 카메라</div>
+          <h2 class="sec-heading">플레이어 이동 · 카메라 추적 스크립트</h2>
+
+          <!-- PlayerMovement -->
+          <h3 class="sub-heading" id="player-move">PlayerMovement.cs</h3>
+          <p><code>Assets/Scripts/PlayerMovement.cs</code> 생성</p>
+          <div class="code-block">
+            <pre><span class="c-key">using</span> <span class="c-line">UnityEngine;</span>
+<span class="c-key">using</span> <span class="c-line">UnityEngine.EventSystems;</span>
+
+<span class="c-key">public class</span> <span class="c-line">PlayerMovement : MonoBehaviour</span>
+<span class="c-line">{</span>
+    <span class="c-key">public float</span> <span class="c-line">moveSpeed = 3f;</span>
+
+    <span class="c-key">void</span> <span class="c-line">Update()</span>
+    <span class="c-line">{</span>
+        <span class="c-comment">// InputField에 포커스가 있으면 이동 불가</span>
+        <span class="c-key">if</span> <span class="c-line">(EventSystem.current != </span><span class="c-key">null</span> <span class="c-line">&amp;&amp; EventSystem.current.currentSelectedGameObject != </span><span class="c-key">null</span><span class="c-line">)</span>
+            <span class="c-key">return</span><span class="c-line">;</span>
+
+        <span class="c-key">float</span> <span class="c-line">h = Input.GetAxisRaw(</span><span class="c-white">"Horizontal"</span><span class="c-line">);</span>
+        <span class="c-key">float</span> <span class="c-line">v = Input.GetAxisRaw(</span><span class="c-white">"Vertical"</span><span class="c-line">);</span>
+        <span class="c-line">Vector3 move = </span><span class="c-key">new</span> <span class="c-line">Vector3(h, v, 0).normalized * moveSpeed * Time.deltaTime;</span>
+        <span class="c-line">transform.Translate(move);</span>
+    <span class="c-line">}</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <!-- Input System 트러블슈팅 -->
+          <h3 class="sub-heading" id="input-trouble">트러블슈팅: Input System 오류</h3>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">오류</div>
+              <div class="info-val">
+                <code
+                  >InvalidOperationException: You are trying to read Input using
+                  the UnityEngine.Input class, but you have switched active
+                  Input handling to Input System package</code
+                >
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">원인</div>
+              <div class="info-val">
+                프로젝트가 새 Input System만 사용하도록 설정되어 있었음
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결</div>
+              <div class="info-val">
+                <strong
+                  >Edit → Project Settings → Player → Other Settings → Active
+                  Input Handling → Both</strong
+                >
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">팀 공유</div>
+              <div class="info-val">
+                이 설정은
+                <code>ProjectSettings/ProjectSettings.asset</code>에 저장되어
+                Git으로 공유되므로 팀원들은 별도 설정 불필요
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              Hiki 선택 → Add Component →
+              <strong>Player Movement</strong>. Rigidbody 2D는 불필요
+              (Transform.Translate 방식 사용).
+            </p>
+          </div>
+
+          <!-- CameraFollow -->
+          <h3 class="sub-heading" id="camera-follow">CameraFollow.cs</h3>
+          <p><code>Assets/Scripts/CameraFollow.cs</code> 생성</p>
+          <div class="code-block">
+            <pre><span class="c-key">using</span> <span class="c-line">UnityEngine;</span>
+
+<span class="c-key">public class</span> <span class="c-line">CameraFollow : MonoBehaviour</span>
+<span class="c-line">{</span>
+    <span class="c-key">public</span> <span class="c-line">Transform target;</span>
+    <span class="c-key">public float</span> <span class="c-line">smoothSpeed = 5f;</span>
+
+    <span class="c-key">void</span> <span class="c-line">LateUpdate()</span>
+    <span class="c-line">{</span>
+        <span class="c-key">if</span> <span class="c-line">(target == </span><span class="c-key">null</span><span class="c-line">) </span><span class="c-key">return</span><span class="c-line">;</span>
+        <span class="c-line">Vector3 targetPos = </span><span class="c-key">new</span> <span class="c-line">Vector3(target.position.x, target.position.y, transform.position.z);</span>
+        <span class="c-line">transform.position = Vector3.Lerp(transform.position, targetPos, smoothSpeed * Time.deltaTime);</span>
+    <span class="c-line">}</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              Main Camera → Add Component → <strong>Camera Follow</strong>.
+              Target 항목에 <strong>Hiki</strong> 드래그.
+            </p>
+          </div>
+        </section>
+
+        <!-- ════════ PART 3 : 대화 트리거 · UI ════════ -->
+        <section class="section visible" id="part3">
+          <div class="sec-eyebrow">Part 3 — 대화 트리거 · UI</div>
+          <h2 class="sec-heading">대화 트리거 · UI 구성</h2>
+
+          <!-- 스크립트 생성 -->
+          <h3 class="sub-heading" id="dialogue-scripts">스크립트 생성</h3>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">DialogueTrigger.cs</div>
+              <div class="info-val">
+                <code>Assets/Scripts/DialogueTrigger.cs</code> — Hiki가 Komori에게
+                가까이 가면 대화창 활성화
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">DialogueUI.cs</div>
+              <div class="info-val">
+                <code>Assets/Scripts/DialogueUI.cs</code> — HTTP 통신으로 AI 응답
+                수신 및 표시
+              </div>
+            </div>
+          </div>
+
+          <!-- Unity UI 구성 -->
+          <h3 class="sub-heading" id="dialogue-ui">Unity UI 구성</h3>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">① Canvas</span>
+              </div>
+              <div class="white-column-content">
+                Hierarchy → <strong>UI → Canvas</strong> 생성
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">② Panel</span>
+                <span class="white-column-layer-tech">대화창 컨테이너</span>
+              </div>
+              <div class="white-column-content">
+                Canvas → <strong>UI → Panel</strong> 생성
+                <ul class="bullet-list">
+                  <li>앵커: Bottom-Stretch</li>
+                  <li>Height: <strong>100</strong>, Pos Y: <strong>60</strong></li>
+                  <li>Add Component → <strong>Vertical Layout Group</strong></li>
+                  <li>
+                    Padding: Left 10 / Right 10 / Top 5 / Bottom 5, Spacing: 5
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">③ DialogueText</span>
+              </div>
+              <div class="white-column-content">
+                Panel → <strong>UI → Text - TextMeshPro</strong> 생성 → 이름:
+                <code>DialogueText</code>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">④ InputField</span>
+              </div>
+              <div class="white-column-content">
+                Panel → <strong>UI → Input Field - TextMeshPro</strong> 생성
+              </div>
+            </div>
+          </div>
+
+          <!-- 스크립트 연결 -->
+          <h3 class="sub-heading" id="dialogue-connect">스크립트 연결</h3>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">Dialogue UI</div>
+              <div class="info-val">
+                Panel → Add Component → <strong>Dialogue UI</strong><br />
+                Dialogue Text: <code>DialogueText</code> 드래그 · Input Field:
+                <code>InputField</code> 드래그
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">Dialogue Trigger</div>
+              <div class="info-val">
+                Komori → Add Component → <strong>Dialogue Trigger</strong><br />
+                Player: <strong>Hiki</strong> 드래그 · Dialogue Panel:
+                <strong>Panel</strong> 드래그 · Trigger Distance:
+                <strong>1.5</strong>
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">초기 상태</div>
+              <div class="info-val">Panel 비활성화 (Inspector에서 체크 해제)</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ════════ PART 4 : AI 연동 · 폰트 트러블슈팅 ════════ -->
+        <section class="section visible" id="part4">
+          <div class="sec-eyebrow">Part 4 — AI 연동 · 트러블슈팅</div>
+          <h2 class="sec-heading">AI 연동 · 한국어 폰트 트러블슈팅</h2>
+
+          <!-- Python Flask 서버 -->
+          <h3 class="sub-heading" id="flask">Python Flask 서버 (Python ↔ Unity)</h3>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">패키지 설치</div>
+              <div class="info-val"><code>pip install flask</code></div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">파일</div>
+              <div class="info-val">
+                <code>komori_server.py</code> —
+                <code>komori_test.py</code>의 게임 로직을 Flask API로 래핑
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">POST /chat</div>
+              <div class="info-val">메시지 수신 → Gemini AI 응답 반환</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">GET /state</div>
+              <div class="info-val">
+                현재 게임 상태 (의심 게이지, 챕터, 단서) 반환
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">실행 순서</h3>
+          <div class="code-block">
+            <pre><span class="c-comment"># 1. Python 서버 먼저 실행</span>
+<span class="c-line">cd c:\workplace\komori\demo-repository</span>
+<span class="c-line">python komori_server.py</span>
+
+<span class="c-comment"># 2. Unity 재생 (▶)</span>
+<span class="c-comment"># 3. Hiki를 Komori에게 이동 → 대화창에 입력 후 Enter</span></pre>
+          </div>
+
+          <!-- 한국어 폰트 트러블슈팅 -->
+          <h3 class="sub-heading" id="font-trouble">트러블슈팅: 한국어 폰트 문제</h3>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">증상</div>
+              <div class="info-val">
+                <code
+                  >The character with Unicode value \uXXXX was not found in the
+                  [LiberationSans SDF] font asset</code
+                ><br />
+                한국어 텍스트가 □로 표시됨
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">해결: 맑은 고딕 폰트 에셋 생성</h3>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">① 폰트 Import</span>
+              </div>
+              <div class="white-column-content">
+                <code>C:\Windows\Fonts\malgun.ttf</code> → Unity Assets 폴더로
+                드래그
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">② Font Asset Creator</span>
+                <span class="white-column-layer-tech"
+                  >Window → TextMeshPro</span
+                >
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>Source Font: <strong>MALGUN</strong></li>
+                  <li>
+                    Atlas Resolution: <strong>4096 × 4096</strong> (512는
+                    한글 전체를 담기 부족)
+                  </li>
+                  <li>Character Set: <strong>Custom Range</strong></li>
+                  <li>
+                    Character Sequence:
+                    <code>32-255,12593-12686,44032-55203</code>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">③ 적용</span>
+              </div>
+              <div class="white-column-content">
+                Generate Font Atlas → Save 후, <code>DialogueText</code> ·
+                <code>InputField</code>의 모든 Text 컴포넌트에
+                <strong>MALGUN SDF</strong> 적용
+              </div>
+            </div>
+          </div>
+
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>Character Sequence</th>
+                <th>범위</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>32-255</code></td>
+                <td>기본 라틴</td>
+                <td>영문자, 숫자, 기본 기호</td>
+              </tr>
+              <tr>
+                <td><code>12593-12686</code></td>
+                <td>한글 자모</td>
+                <td>ㄱ, ㄴ … ㅏ, ㅑ</td>
+              </tr>
+              <tr>
+                <td><code>44032-55203</code></td>
+                <td>한글 음절</td>
+                <td>가, 나, 다 …</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box-yellow">
+            <p>
+              <strong>주의</strong> — Character Sequence는
+              <strong>10진수(Decimal)</strong> 형식. 16진수(0020-00FF) 입력 시
+              <code>FormatException</code> 오류 발생.
+            </p>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- 이전/다음 -->
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="komori_02_dev_0610.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">Komori 02 - LLM 채팅 프로토타입 작업 노트</p>
+        <p class="post-nav-meta">
+          <span class="tag">Komori</span>
+          <span class="tag">#작업문서</span>
+          <span class="date">· 2026.06.10</span>
+        </p>
+      </a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>
