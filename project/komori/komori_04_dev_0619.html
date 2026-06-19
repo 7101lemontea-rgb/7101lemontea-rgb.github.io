@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>작업 문서 2026.06.19 — Komori</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../assets/project_post.css" />
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <div class="inner">
+        <a href="../../index.html" class="nav-logo">lemon.dev</a>
+        <a href="../index.html" class="nav-back">← 프로젝트 목록</a>
+      </div>
+    </nav>
+
+    <!-- POST HEADER -->
+    <div class="container">
+      <header class="post-header">
+        <div class="header-meta">
+          <span class="badge badge-type">작업 문서</span>
+          <span class="badge badge-ver">2026.06.19</span>
+          <span class="badge badge-status">진행 중</span>
+        </div>
+        <h1 class="post-title">KomoriHouseScene 구성 — 집 외부 씬 개발일지</h1>
+        <p class="post-sub">
+          Komori — GameManager 싱글톤 · 상호작용 오브젝트 · 씬 전환 · 고정 카메라
+        </p>
+        <p class="post-desc">
+          코모리 집 외부 씬(KomoriHouseScene) 구성 작업 기록. GameManager 싱글톤,
+          InteractableObject · SceneTransition 신규 스크립트 4개 작성, 배경 이미지
+          배치, 벨·쓰레기통·창문 상호작용 구현, 그리고 카메라 줌·Bell 위치·
+          BellPrompt 렌더링 트러블슈팅까지 담습니다.
+        </p>
+        <div class="post-stats">
+          <div>
+            <div class="stat-label">작업 일자</div>
+            <div class="stat-val">2026년 6월 19일</div>
+          </div>
+          <div>
+            <div class="stat-label">작성일</div>
+            <div class="stat-val" id="date-created">—</div>
+          </div>
+          <div>
+            <div class="stat-label">최종 수정</div>
+            <div class="stat-val" id="date-updated">—</div>
+          </div>
+          <div>
+            <div class="stat-label">씬</div>
+            <div class="stat-val">KomoriHouseScene</div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOC -->
+      <aside class="toc-sidebar">
+        <div class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li>
+              <a href="#overview"><span class="toc-num">§</span>완료 상태</a>
+            </li>
+            <li>
+              <a href="#part1"
+                ><span class="toc-num">P1</span>신규 스크립트 4개</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#game-manager">GameManager.cs</a></li>
+                <li><a href="#interactable">InteractableObject.cs</a></li>
+                <li><a href="#scene-transition">SceneTransition.cs</a></li>
+                <li><a href="#player-movement">PlayerMovement.cs 수정</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#part2"
+                ><span class="toc-num">P2</span>KomoriHouseScene 구성</a
+              >
+              <ul class="toc-sub-list">
+                <li><a href="#background">배경 이미지</a></li>
+                <li><a href="#scene-setup">씬 구성</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#part3"><span class="toc-num">P3</span>트러블슈팅</a>
+              <ul class="toc-sub-list">
+                <li><a href="#camera-zoom">카메라 줌 문제</a></li>
+                <li><a href="#bell-position">Bell 위치 문제</a></li>
+                <li><a href="#bell-prompt">BellPrompt 렌더링 문제</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- POST BODY -->
+      <article class="post-body">
+        <!-- ── 완료 상태 ── -->
+        <section class="section visible" id="overview">
+          <div class="sec-eyebrow">Overview</div>
+          <h2 class="sec-heading">완료 상태</h2>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>기능</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>KomoriHouseScene 배경 배치</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>히키 이동 + 범위 제한</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>고정 카메라</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>GameManager 싱글톤</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>NarratorPanel UI</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Bell 상호작용 (F키 → 텍스트 표시)</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>BellPrompt 근접 표시</td>
+                <td style="color: var(--accent-yellow, #c9a227)">△ 부분 작동</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>TrashCan 상호작용</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Window 상호작용</td>
+                <td class="txt-accent">✓ 완료</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="sub-heading">다음 작업</h3>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">①</div>
+              <div class="info-val">ExitToSuper (SceneTransition) 배치</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">②</div>
+              <div class="info-val">SupermarketScene 구성 시작</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ════════ PART 1 : 신규 스크립트 ════════ -->
+        <section class="section visible" id="part1">
+          <div class="sec-eyebrow">Part 1 — 스크립트</div>
+          <h2 class="sec-heading">신규 스크립트 4개 작성</h2>
+
+          <!-- GameManager -->
+          <h3 class="sub-heading" id="game-manager">GameManager.cs</h3>
+          <p><code>Assets/Scripts/GameManager.cs</code> — 씬 간 게임 상태 유지 싱글톤</p>
+          <div class="code-block">
+            <pre><span class="c-key">using</span> <span class="c-line">UnityEngine;</span>
+<span class="c-key">using</span> <span class="c-line">System.Collections.Generic;</span>
+
+<span class="c-key">public class</span> <span class="c-line">GameManager : MonoBehaviour</span>
+<span class="c-line">{</span>
+    <span class="c-key">public static</span> <span class="c-line">GameManager Instance;</span>
+
+    <span class="c-key">public int</span>  <span class="c-line">chapter = 1;</span>
+    <span class="c-key">public int</span>  <span class="c-line">suspicionGauge = 0;</span>
+    <span class="c-key">public bool</span> <span class="c-line">hasDiary = false;</span>
+    <span class="c-key">public</span> <span class="c-line">List&lt;string&gt; clues = </span><span class="c-key">new</span> <span class="c-line">List&lt;string&gt;();</span>
+
+    <span class="c-key">void</span> <span class="c-line">Awake()</span>
+    <span class="c-line">{</span>
+        <span class="c-key">if</span> <span class="c-line">(Instance == </span><span class="c-key">null</span><span class="c-line">)</span>
+        <span class="c-line">{</span>
+            <span class="c-line">Instance = </span><span class="c-key">this</span><span class="c-line">;</span>
+            <span class="c-line">DontDestroyOnLoad(gameObject);</span>
+        <span class="c-line">}</span>
+        <span class="c-key">else</span>
+        <span class="c-line">{</span>
+            <span class="c-line">Destroy(gameObject);</span>
+        <span class="c-line">}</span>
+    <span class="c-line">}</span>
+
+    <span class="c-key">public void</span> <span class="c-line">AddClue(</span><span class="c-key">string</span> <span class="c-line">clueId)</span>
+    <span class="c-line">{</span>
+        <span class="c-key">if</span> <span class="c-line">(!clues.Contains(clueId)) clues.Add(clueId);</span>
+    <span class="c-line">}</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">DontDestroyOnLoad</div>
+              <div class="info-val">씬 전환 시에도 오브젝트가 파괴되지 않고 유지됨</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">싱글톤 패턴</div>
+              <div class="info-val">
+                두 번째 인스턴스가 생성될 경우 즉시 파괴 — 씬 이동 후 중복 생성 방지
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">상태 동기화</div>
+              <div class="info-val">
+                서버 응답 후 <code>DialogueUI.cs</code>에서
+                <code>GameManager.Instance</code>에 접근해 챕터·의심 게이지 갱신
+              </div>
+            </div>
+          </div>
+
+          <!-- InteractableObject -->
+          <h3 class="sub-heading" id="interactable">InteractableObject.cs</h3>
+          <p>
+            <code>Assets/Scripts/InteractableObject.cs</code> — 벨, 쓰레기통, 창문 등
+            고정 텍스트 상호작용 오브젝트
+          </p>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">기본 동작</span>
+              </div>
+              <div class="white-column-content">
+                히키가 일정 거리 이내에 있을 때 F키를 누르면 NarratorPanel을
+                활성화하고 지정 텍스트를 표시합니다.
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">벨 전용 모드</span>
+                <span class="white-column-layer-tech">isBell = true</span>
+              </div>
+              <div class="white-column-content">
+                누른 횟수에 따라 다른 텍스트를 순서대로 표시합니다.
+                <code>bellTexts[]</code> 배열로 Inspector에서 설정.
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">챕터별 텍스트</span>
+              </div>
+              <div class="white-column-content">
+                <code>GameManager.Instance.chapter</code> 값을 읽어 Ch.1이면
+                <code>defaultText</code>, Ch.2 이후면 <code>ch2Text</code>를 표시합니다.
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">단서 등록</span>
+              </div>
+              <div class="white-column-content">
+                상호작용 시 <code>GameManager.AddClue(clueId)</code>를 호출합니다.
+                <code>clueId</code>가 비어 있으면 호출하지 않습니다.
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">프롬프트 표시</span>
+              </div>
+              <div class="white-column-content">
+                히키가 범위 내에 들어오면 <code>promptObject</code>
+                (<code>[F] 살펴보기</code>)를 활성화, 벗어나면 비활성화합니다.
+              </div>
+            </div>
+          </div>
+
+          <!-- SceneTransition -->
+          <h3 class="sub-heading" id="scene-transition">SceneTransition.cs</h3>
+          <p>
+            <code>Assets/Scripts/SceneTransition.cs</code> — 트리거 범위 진입 시 씬
+            전환
+          </p>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">기본 동작</div>
+              <div class="info-val">
+                히키가 Collider 트리거 범위에 들어오면
+                <code>SceneManager.LoadScene(targetScene)</code> 호출
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">requiredClue</div>
+              <div class="info-val">
+                Inspector에서 단서 ID를 지정하면, 해당 단서를 보유한 경우에만 씬
+                전환을 허용합니다. 미보유 시 안내 텍스트 표시.
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">안내 텍스트</div>
+              <div class="info-val">
+                조건 미충족 시 NarratorPanel을 통해 이동 불가 이유를 플레이어에게
+                전달합니다.
+              </div>
+            </div>
+          </div>
+
+          <!-- PlayerMovement 수정 -->
+          <h3 class="sub-heading" id="player-movement">PlayerMovement.cs 수정</h3>
+          <p>기존 스크립트에 이동 범위 제한 필드 추가</p>
+          <div class="code-block">
+            <pre><span class="c-key">public bool</span>  <span class="c-line">limitMovement = false;</span>
+<span class="c-key">public float</span> <span class="c-line">minX, maxX, minY, maxY;</span>
+
+<span class="c-key">void</span> <span class="c-line">Update()</span>
+<span class="c-line">{</span>
+    <span class="c-comment">// ... 기존 이동 로직 ...</span>
+    <span class="c-line">transform.Translate(move);</span>
+
+    <span class="c-key">if</span> <span class="c-line">(limitMovement)</span>
+    <span class="c-line">{</span>
+        <span class="c-line">Vector3 pos = transform.position;</span>
+        <span class="c-line">pos.x = Mathf.Clamp(pos.x, minX, maxX);</span>
+        <span class="c-line">pos.y = Mathf.Clamp(pos.y, minY, maxY);</span>
+        <span class="c-line">transform.position = pos;</span>
+    <span class="c-line">}</span>
+<span class="c-line">}</span></pre>
+          </div>
+
+          <div class="highlight-box">
+            <p>
+              <strong>limitMovement</strong>를 Inspector에서 씬마다 개별 설정합니다.
+              KomoriHouseScene처럼 고정 배경 씬에서는 활성화하고,
+              카메라가 따라다니는 씬에서는 비활성화합니다.
+            </p>
+          </div>
+        </section>
+
+        <!-- ════════ PART 2 : KomoriHouseScene 구성 ════════ -->
+        <section class="section visible" id="part2">
+          <div class="sec-eyebrow">Part 2 — 씬 구성</div>
+          <h2 class="sec-heading">KomoriHouseScene 구성</h2>
+
+          <!-- 배경 이미지 -->
+          <h3 class="sub-heading" id="background">배경 이미지</h3>
+
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">생성 방식</div>
+              <div class="info-val">AI 이미지 생성 툴 (사이드뷰 일러스트 스타일)</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">컨셉</div>
+              <div class="info-val">
+                늦가을 일본 주택가 골목 / 낡은 단층 주택 외부 / 쓰레기 수거함
+              </div>
+            </div>
+          </div>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">Import 설정</span>
+                <span class="white-column-layer-tech">Inspector</span>
+              </div>
+              <div class="white-column-content">
+                <ul class="bullet-list">
+                  <li>Sprite Mode: <strong>Single</strong></li>
+                  <li>Pixels Per Unit: <strong>100</strong></li>
+                  <li>Filter Mode: <strong>Bilinear</strong></li>
+                  <li>Apply 클릭</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">레이어 순서</span>
+                <span class="white-column-layer-tech">Sprite Renderer</span>
+              </div>
+              <div class="white-column-content">
+                Order in Layer: <strong>-1</strong> — 히키(Order 1) 뒤에 렌더링
+              </div>
+            </div>
+          </div>
+
+          <!-- 씬 구성 -->
+          <h3 class="sub-heading" id="scene-setup">씬 구성</h3>
+
+          <div class="white-column-table">
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">고정 카메라</span>
+              </div>
+              <div class="white-column-content">
+                Main Camera → CameraFollow 컴포넌트 <strong>비활성화</strong>
+                (체크 해제). 배경이 고정이므로 카메라 추적 불필요.
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">이동 범위</span>
+              </div>
+              <div class="white-column-content">
+                Hiki → PlayerMovement → <strong>Limit Movement 활성화</strong>.
+                씬 배경에 맞춰 minX / maxX / minY / maxY 값 설정.
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">GameManager</span>
+              </div>
+              <div class="white-column-content">
+                빈 GameObject 생성 → 이름 <strong>GameManager</strong> →
+                Add Component → <strong>Game Manager</strong>
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">NarratorPanel</span>
+              </div>
+              <div class="white-column-content">
+                Canvas → UI → Panel → 앵커 <strong>상단 중앙(Top-Center)</strong>.
+                텍스트 컴포넌트 추가 후 초기 상태 <strong>비활성화</strong>.
+              </div>
+            </div>
+            <div class="white-column-row">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">Bell</span>
+                <span class="white-column-layer-tech">InteractableObject</span>
+              </div>
+              <div class="white-column-content">
+                현관문 앞에 빈 GameObject 배치 → Add Component →
+                <strong>Interactable Object</strong>
+                <ul class="bullet-list">
+                  <li>isBell: <strong>true</strong></li>
+                  <li>Narrator Panel: <code>NarratorPanel</code> 드래그</li>
+                  <li>Prompt Object: <code>BellPrompt</code> 드래그</li>
+                </ul>
+              </div>
+            </div>
+            <div class="white-column-row" style="border-bottom: none">
+              <div class="white-column-label">
+                <span class="white-column-layer-name">BellPrompt</span>
+              </div>
+              <div class="white-column-content">
+                Bell 오브젝트 자식으로 TextMeshPro 오브젝트 생성 →
+                텍스트: <code>[F] 살펴보기</code> → 초기 상태 <strong>비활성화</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ════════ PART 3 : 트러블슈팅 ════════ -->
+        <section class="section visible" id="part3">
+          <div class="sec-eyebrow">Part 3 — 트러블슈팅</div>
+          <h2 class="sec-heading">트러블슈팅</h2>
+
+          <!-- 카메라 줌 -->
+          <h3 class="sub-heading" id="camera-zoom">카메라 줌 문제</h3>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">증상</div>
+              <div class="info-val">씬 재생 시 히키가 화면을 꽉 채워 배경이 보이지 않음</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">원인</div>
+              <div class="info-val">
+                Orthographic Size 기본값이 너무 작아 화면 범위가 좁음
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결</div>
+              <div class="info-val">
+                Main Camera → Inspector →
+                <strong>Orthographic Size 값 증가</strong>. 배경 전체가 보일 때까지
+                조정.
+              </div>
+            </div>
+          </div>
+
+          <!-- Bell 위치 -->
+          <h3 class="sub-heading" id="bell-position">Bell 위치 문제</h3>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">증상</div>
+              <div class="info-val">Bell 오브젝트에 가까이 가도 상호작용 반응 없음</div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">원인</div>
+              <div class="info-val">
+                Bell Transform Position X = <strong>15.21</strong> — 화면 밖으로
+                배치되어 있었음
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">해결</div>
+              <div class="info-val">
+                Scene 뷰에서 현관문 앞으로 <strong>직접 드래그</strong> 후
+                Interact Distance를 <strong>5</strong>로 설정
+              </div>
+            </div>
+          </div>
+
+          <!-- BellPrompt 렌더링 -->
+          <h3 class="sub-heading" id="bell-prompt">BellPrompt 렌더링 문제</h3>
+          <div class="info-card">
+            <div class="info-card-row">
+              <div class="info-key">증상</div>
+              <div class="info-val">
+                <code>[F] 살펴보기</code> 텍스트가 투명한 검정색으로 보이거나,
+                흰색 배경이 생김
+              </div>
+            </div>
+            <div class="info-card-row">
+              <div class="info-key">원인</div>
+              <div class="info-val">
+                3D TextMeshPro + URP 환경에서 MALGUN SDF Material의 Face Color(검정)가
+                Vertex Color와 곱해져 검정으로 출력됨. Face Color를 흰색으로 바꾸면
+                글자 외 영역까지 흰색으로 렌더링됨
+              </div>
+            </div>
+          </div>
+
+          <h3 class="sub-heading">시도한 방법들</h3>
+          <table class="gen-table">
+            <thead>
+              <tr>
+                <th>방법</th>
+                <th>결과</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>3D TextMeshPro → World Space Canvas로 교체</td>
+                <td>실패</td>
+              </tr>
+              <tr>
+                <td>Material Face Color 흰색으로 변경</td>
+                <td>흰색 배경 문제 발생</td>
+              </tr>
+              <tr>
+                <td>Extract Material SubAsset / Ctrl+D 복제</td>
+                <td>Material Preset에 표시 안 됨</td>
+              </tr>
+              <tr>
+                <td>MALGUN_White SDF 새 폰트 에셋 생성</td>
+                <td>동일 문제 반복</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="highlight-box-yellow">
+            <p>
+              <strong>현재 상태</strong> — 기존 설정 복구 후 텍스트 화면 표시 중.
+              URP 환경 TextMeshPro 렌더링 방식은 추후 확정 필요.
+            </p>
+          </div>
+        </section>
+
+        <section class="comments-section">
+          <div class="comments-wrap">
+            <div class="sec-eyebrow" style="margin-bottom: 1.2rem">
+              Comments
+            </div>
+            <script
+              src="https://giscus.app/client.js"
+              data-repo="7101lemontea-rgb/7101lemontea-rgb.github.io"
+              data-repo-id="R_kgDORgqLUQ"
+              data-category="Announcements"
+              data-category-id="DIC_kwDORgqLUc4C4NNi"
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="0"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="light"
+              data-lang="ko"
+              crossorigin="anonymous"
+              async
+            ></script>
+          </div>
+        </section>
+      </article>
+    </div>
+
+    <!-- 이전/다음 -->
+    <div class="post-nav">
+      <a class="post-nav-card prev" href="komori_03_dev_0616.html">
+        <p class="post-nav-label">← 이전 글</p>
+        <p class="post-nav-title">Komori 03 - Unity 프로토타입 구현 SY 개발일지</p>
+        <p class="post-nav-meta">
+          <span class="tag">Komori</span>
+          <span class="tag">#작업문서</span>
+          <span class="date">· 2026.06.16</span>
+        </p>
+      </a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="post-footer">
+      <a href="index.html" class="footer-back">← 문서 목록</a>
+      <span class="footer-copy">© 2026 정서영</span>
+    </footer>
+
+    <script src="../../script.js"></script>
+  </body>
+</html>
